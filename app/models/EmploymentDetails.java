@@ -28,6 +28,7 @@ public class EmploymentDetails extends Model {
 	public String position;
 	public String startdate;
 	public String enddate;
+	public String expdesc;
 
 	@ManyToOne
 	public UserDetails user_details;

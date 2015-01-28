@@ -21,6 +21,7 @@ public class Admin extends Model {
 	public long id;
 	public String username;
 	public String password;
+	public String role;
 
 	
 	public static Finder<Long, Admin> find = new Finder<Long, Admin>(
@@ -33,4 +34,7 @@ public class Admin extends Model {
 				.findUnique();
 	}
 
+	public static Admin checkAdmin(String email){
+		return find.where().eq("username", email).findUnique();
+	}
 }

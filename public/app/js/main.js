@@ -372,6 +372,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		}
 	
 	  $scope.saveUserJob = function(){
+		  $('#myModal').modal('hide');
 		   console.log($scope.desiredSkills);
 		   $scope.requestNumber = $scope.jobData.requestNumber;
 		   
@@ -5777,6 +5778,16 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		});
 	}
 
+	$scope.init = function(){
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data) {
+				$scope.isAdmin = data;
+				console.log("admin"+$scope.isAdmin);
+			} 
+		});
+		
+	}
 	$scope.generatePdf = function(){
 		alert("in gen pdf fun");
 		$http.get('generatePDF')
@@ -5972,6 +5983,16 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	
 	$scope.init = function(){
 	
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data) {
+				$scope.isAdmin = data;
+				console.log("admin"+$scope.isAdmin);
+			} 
+		});
+		
+		
+		
 		$http.get('/getAllPosition')
     	.success(function(data) {
     		$scope.allPosition = data;
@@ -6076,18 +6097,24 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	
 		
 		$scope.otherSkill;
+		$scope.error = false;
 		$scope.saveOtherSkill = function(){
-			$http.get('saveOtherSkill/'+$scope.otherSkill)
-			.success(function(data){
-				if(data) {
-					$scope.skills.push(data.skillName);
-					//obj.isSelected = true;
-					$scope.result = data;
-					console.log(data);
-					$scope.otherSkill = " ";
-					// $scope.init();
-				} 
-			});
+			if(!angular.isUndefined($scope.otherSkill)){
+				$http.get('saveOtherSkill/'+$scope.otherSkill)
+				.success(function(data){
+					if(data) {
+						$scope.skills.push(data.skillName);
+						//obj.isSelected = true;
+						$scope.result = data;
+						console.log(data);
+						$scope.otherSkill = " ";
+						// $scope.init();
+					} 
+				});
+			}else{
+				$scope.error = true;
+			}
+			
 		}		
 		
 		

@@ -132,13 +132,14 @@
 														</label>
 													</div>
 													<div class="form-group">
+													
 														<div class="col-md-9">
 															<div class="col-md-5">
+															<span ng-show="error">Please enter Skill Name</span>
 																<input id="inputName" type="text" id="otherSkill"
 																	ng-model="otherSkill" name="otherSkill"
 																	placeholder="Other Skill" class="form-control">
 															</div>
-
 															<div class="col-md-4">
 																<button type="submit"
 																	ng-click="saveOtherSkill(otherSkill);"
@@ -192,12 +193,22 @@
 															</div>
 
 														</div>
+													 
+														
 														<div class="col-md-2">
 															<button class="btn btn-default"
 																ng-click="addNewEmphistory.splice(addNewEmphistory.length-1, 1)">
 																<i class="fa fa-trash-o"></i>
 															</button>
 														</div>
+														
+														  <div class="col-md-8">
+														  <br />
+														  <label class="col-md-6 ">Experiance Details</label>
+														<textarea rows="3" name="expdesc"
+															ng-model="emp.expdesc"
+															class="form-control" placeholder="e.g. Experiance Description"></textarea>
+													</div>
 													</div>
 												</div>
 												<div class="form-group">
