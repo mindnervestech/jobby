@@ -1,0 +1,41 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           					controllers.Application.index()
+GET		/login											controllers.Application.login()
+GET		/signup											controllers.Application.signup()
+POST	/SignIn                     					controllers.Application.SignIn()
+GET     /dashboard										controllers.Application.dashBoard()
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               					controllers.Assets.at(path="/public", file)
+GET		/LogOut   										controllers.Application.logOut()
+
+
+#User
+POST   /updateUserProfile                               controllers.Application.updateUserProfile()
+POST   /createNewUser                                   controllers.Application.createNewUser() 
+GET   /getAllPosition                                   controllers.Application.getAllPosition()
+GET   /getAllClearance                                  controllers.Application.getAllClearance()
+GET   /getUserProfile                                   controllers.Application.getUserProfile()  
+POST   /uploadExcel                     				controllers.Application.uploadandStoreExcel()
+GET    /getAllSkills                                     controllers.Application.getAllSkills()
+POST    /forgetPassword                                  controllers.Application.forgetPassword()
+POST     /getAllJobs/:currentPage/:jobType/:location  controllers.Application.getAllJobs(currentPage : Integer,jobType:String,location:String)
+GET    /saveOtherSkill/:otherSkill                      controllers.Application.saveOtherSkill(otherSkill : String)
+POST    /saveAppliedJob                                  controllers.Application.saveAppliedJob()
+
+
+
+
+#Admin
+GET      /getAllAppliedJobs                             controllers.Application.getAllAppliedJobs()
+GET      /generatePDF                                    controllers.Application.generatePDF()
+
+
+
+

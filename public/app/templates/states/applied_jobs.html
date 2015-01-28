@@ -1,0 +1,59 @@
+<style>
+.Color {
+	color: green
+}
+
+.redColor {
+	color: red
+}
+</style>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="portlet box">
+			<div class="portlet-header">
+				<div class="caption">Applied Jobs</div>
+			</div>
+			<div class="portlet-body">
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<!-- {{jobs}} -->
+						<div ng-init="getAllAppliedJobs()" class="table-responsive">
+							<div class="page-header">
+								<h3>
+									Applied Jobs <i class="icon-chevron-right"></i>
+								</h3>
+								<table id="table_id"
+									class="table table-hover table-striped table-bordered table-advanced tablesorter display">
+									<tbody>
+										<tr>
+											<th>User Name</th>
+											<th>Job Id</th>
+											<th>Location</th>
+											<th>Position Name</th>
+											<th>Download</th>
+										</tr>
+										<tr data-ng-repeat="appliedJobs in jobs"
+											style="background-color: #fff !important; left: -900">
+											<td ng-click="">{{appliedJobs.username}}</td>
+											<td ng-click="">{{appliedJobs.requestNumber}}</td>
+											<td ng-click="">{{appliedJobs.location}}</td>
+											<td ng-click="">{{appliedJobs.positionName}}</td>
+											<td><button id="genpdf" type="button"
+													ng-click="generatePdf()" class="btn btn-primary">Download</button></td>
+										</tr>
+									</tbody>
+								</table>
+								<button id="pre" type="button" ng-click="clickPre()"
+									class="btn btn-primary">Pre</button>
+								&nbsp;
+								<button id="next" type="button" ng-click="clickNext()"
+									class="btn btn-green">next</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>

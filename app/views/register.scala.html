@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>madmin</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<link rel="stylesheet"
+	href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700" />
+<link rel="stylesheet"
+	href="http://fonts.googleapis.com/css?family=Oswald:400,700,300" />
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/font-awesome/css/font-awesome.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap/css/bootstrap.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/intro.js/introjs.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/calendar/zabuto_calendar.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/sco.message/sco.message.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/animate.css/animate.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/iCheck/skins/all.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-notific8/jquery.notific8.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/sco.message/sco.message.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.1.1.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-markdown/css/bootstrap-markdown.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/summernote/summernote.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/ion.rangeSlider/css/ion.rangeSlider.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/nouislider/jquery.nouislider.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-nestable/nestable.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-toastr/toastr.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jstree/dist/themes/default/style.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-treetable/stylesheets/jquery.treetable.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-treetable/stylesheets/jquery.treetable.theme.custom.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datepicker/css/datepicker.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.print.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/lightbox/css/lightbox.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/DataTables/media/css/jquery.dataTables.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/DataTables/media/css/dataTables.bootstrap.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-tablesorter/themes/blue/style-custom.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/DataTables/media/css/dataTables.bootstrap.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datepicker/css/datepicker3.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/dropzone/css/dropzone.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-file-upload/css/jquery.fileupload.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-file-upload/css/jquery.fileupload-ui.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-file-upload/css/blueimp-gallery.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-steps/css/jquery.steps.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-colorpicker/css/colorpicker.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker-bs3.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-timepicker/css/bootstrap-timepicker.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-clockface/css/clockface.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-switch/css/bootstrap-switch.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/css/style.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jplist/html/css/jplist-custom.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/select2/select2-madmin.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-select/bootstrap-select.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/multi-select/css/multi-select-madmin.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/select2/lib/select2-madmin.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/css/bootstrap-editable.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.css")"/>
+ <link rel="stylesheet" href="@routes.Assets.at("app/css/themes/style1/pink-blue.css")"/> 
+<link rel="stylesheet" href="@routes.Assets.at("app/css/themes/{{style}}/{{theme}}.css")"/>
+<link rel="shortcut icon" href="@routes.Assets.at("app/images/icons/favicon.ico")"/>
+<link rel="apple-touch-icon" href="@routes.Assets.at("app/images/icons/favicon.png")"/>
+<link rel="apple-touch-icon" sizes="72x72" href="@routes.Assets.at("app/images/icons/favicon-72x72.png")"/>
+<link rel="apple-touch-icon" sizes="114x114" href="@routes.Assets.at("app/images/icons/favicon-114x114.png")"/>
+<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<!-- <script src="@routes.Assets.at("app/vendors/ckeditor/ckeditor.js")"></script> -->
+<!-- <script src="@routes.Assets.at("app/js/lib.js")"></script> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script>
+    	    <script src="@routes.Assets.at("app/bower_components/angular/angular.min.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular/angular-route.min.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular-bootstrap/ui-bootstrap.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-migrate-1.2.1.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-ui.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap/js/bootstrap.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-bootstrap-wizard/jquery.bootstrap.wizard.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/lightbox/js/lightbox.min.js")"></script>
+            <!-- <script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script> -->
+            <!--   <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.categories.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.pie.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.tooltip.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.resize.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.fillbetween.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.stack.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.spline.js")"></script>
+            --> <script src="@routes.Assets.at("app/vendors/calendar/zabuto_calendar.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/slimScroll/jquery.slimscroll.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/responsive-tabs/responsive-tabs.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js")"></script>
+            <!--    <script src="@routes.Assets.at("app/vendors/bootstrap-markdown/js/bootstrap-markdown.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script> -->
+            <!--  <script src="@routes.Assets.at("app/vendors/summernote/summernote.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-notific8/jquery.notific8.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/sco.message/sco.message.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-notific8/notific8.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-toastr/toastr.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/iCheck/color_change.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jstree/dist/jstree.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-treetable/javascripts/src/jquery.treetable.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/nouislider/jquery.nouislider.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-nestable/jquery.nestable.js")"></script>
+             -->       <script src="@routes.Assets.at("app/vendors/DataTables/media/js/jquery.dataTables.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/DataTables/media/js/dataTables.bootstrap.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/DataTables/jquery.jeditable.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-tablesorter/jquery.tablesorter.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-datepicker/js/bootstrap-datepicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-cookie/jquery.cookie.js")"></script>
+            <!-- <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highchart.js")"></script> -->
+             <!--    <script src="@routes.Assets.at("app/vendors/jquery-highcharts/funnel.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highcharts-more.js")"></script>
+             -->   
+            <!--     <script src="@routes.Assets.at("app/vendors/jquery-highcharts/data.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-highcharts/exporting.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/chart.js/Chart.min.js")"></script>
+            -->     <!-- <script src="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.min.js")"></script> -->
+            <!--   <script src="@routes.Assets.at("app/vendors/mixitup/src/jquery.mixitup.js")"></script>
+             <script src="@routes.Assets.at("app/vendors/jplist/html/js/vendor/modernizr.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jplist/html/js/jplist.min.js")"></script>
+             --> <script src="@routes.Assets.at("app/vendors/jquery-validate/jquery.validate.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-steps/js/jquery.steps.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/moment/moment.js")"></script>
+            <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")"></script>
+           -->   <script src="@routes.Assets.at("app/vendors/bootstrap-timepicker/js/bootstrap-timepicker.js")"></script>
+            <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-clockface/js/clockface.js")"></script>
+            -->   <script src="@routes.Assets.at("app/vendors/bootstrap-colorpicker/js/bootstrap-colorpicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-switch/js/bootstrap-switch.min.js")"></script>
+           <!--  <script src="@routes.Assets.at("app/vendors/jquery-maskedinput/jquery-maskedinput.js")"></script>
+             -->     <!--        <script src="@routes.Assets.at("app/vendors/dropzone/js/dropzone.js")"></script> -->
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js")"></script>
+           <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/tmpl.min.js")"></script>
+           -->  <!-- <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/load-image.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/canvas-to-blob.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/jquery.blueimp-gallery.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.iframe-transport.js")"></script>
+            --> <!-- <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-process.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-image.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-audio.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-video.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-validate.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-ui.js")"></script>
+             -->    <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/cors/jquery.xdr-transport.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/gmaps/gmaps.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/charCount.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-news-ticker/jquery.newsTicker.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/select2/select2.min.js")"></script>
+            --> <script src="@routes.Assets.at("app/vendors/bootstrap-select/bootstrap-select.min.js")"></script>
+            <!--   <script src="@routes.Assets.at("app/vendors/multi-select/js/jquery.multi-select.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/jquery.mockjax.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/select2/lib/select2.js")"></script>
+            -->  <script src="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/js/bootstrap-editable.min.js")"></script>
+            <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/typeaheadjs.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/wysihtml5/wysihtml5.js")"></script>
+             -->  <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.js")"></script>
+            -->   <!--  <script src="@routes.Assets.at("app/vendors/x-editable/demo-mock.js")"></script>
+            -->
+   
+    
+     </head>
+<body class="[header.menu_style, header.header_topbar, header.effect]"
+	class="animated">
+	
+<div id="signup-page">
+  <div class="page-form">
+    <form id="signup-form" method="POST" action="/createNewUser" class="form signup-form">
+      <div class="header-content">
+        <h1>Register</h1>
+      </div>
+      <div class="body-content">
+       <!--  <div class="form-group">
+          <div class="input-icon right"><i class="fa fa-user"></i>
+            <input type="text" placeholder="Username" name="username" class="form-control"/>
+          </div>
+        </div> -->
+        <div class="form-group">
+          <div class="input-icon right"><i class="fa fa-envelope"></i>
+            <input type="email" placeholder="Email address" name="email" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon right"><i class="fa fa-key"></i>
+            <input id="password" type="password" placeholder="Password" name="password" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon right"><i class="fa fa-key"></i>
+            <input type="password" placeholder="Confirm Password" name="passwordConfirm"  onClick="validatePassword();" class="form-control"/>
+          </div>
+        </div>
+        <hr/>
+       <div class="form-group">
+          <div class="input-icon right">
+              <input type="text" placeholder="Full Name" name="firstname" class="form-control"/>
+               <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
+          </div>
+        </div>
+       
+         <!--  <div class="col-lg-6">
+            <label>
+              <input type="text" placeholder="Last Name" name="lastname" class="form-control"/>
+            </label>
+          </div> -->
+       
+        <div class="form-group">
+          <label style="display: block" class="select">
+            <select name="gender" class="form-control">
+              <option value="0" selected="selected" disabled="disabled">Gender</option>
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+              <option value="3">Other</option>
+            </select>
+          </label>
+        </div>
+         </div>
+        <hr/>
+        <div class="form-group mbn"><a href="/login" class="btn btn-warning"><i class="fa fa-chevron-circle-left"></i>&nbsp;
+            Back</a>
+          <button type="submit" class="btn btn-info pull-right">
+            Submit
+            &nbsp;<i class="fa fa-chevron-circle-right"></i>
+          </button>
+        </div>
+        </form>
+      </div>
+    
+  </div>
+ <script>
+
+function validatePassword(){ 
+ var validator = $("#signup-form").validate({
+  rules: {                   
+	  password :"required",
+   passwordConfirm:{
+    equalTo: "#password"
+      }  
+     },                             
+     messages: {
+      password :" Enter Password",
+      passwordConfirm :" Enter Confirm Password Same as Password"
+     }
+ });
+ 
+}
+
+ </script>
+<!-- <script>
+alert("fh");
+$('#passwordConfirm').on('keyup', function () {
+    if ($(this).val() == $('#password').val()) {
+        $('#message').html('matching').css('color', 'green');
+    } else $('#message').html('not matching').css('color', 'red');
+});
+
+</script> -->
+</body>
+</html>
