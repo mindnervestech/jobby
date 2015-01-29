@@ -1,8 +1,6 @@
 package controllers;
 
-import java.awt.Color;
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,22 +13,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.mail.Session;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import models.CertificationDetails;
-
 import models.Admin;
 import models.AppliedJobs;
+import models.CertificationDetails;
 import models.EducationDetails;
 import models.EmploymentDetails;
 import models.StoreExcelFile;
@@ -43,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
+import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -52,6 +50,7 @@ import play.mvc.Result;
 import views.html.index;
 import views.html.register;
 import views.html.signin;
+
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -65,8 +64,11 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -106,14 +108,18 @@ public class Application extends Controller {
 		return redirect("/login");
 
 	}
-	public  static  Result  checkForadmin(){
+
+	public static Result checkForadmin() {
 		String email = session().get("email");
-		Admin ad =  Admin.checkAdmin(email);
-		String userExit = ad.username;
-		return ok((Json.stringify(Json.toJson(userExit))));
+		Admin ad = Admin.checkAdmin(email);
+		if (ad == null) {
+			return ok("notAdmin");
+		} else {
+			return ok((Json.stringify(Json.toJson(ad))));
+		}
+
 	}
-	
-	
+
 	public static Result SignIn() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
 		String uname = dynamicForm.get("username");
@@ -122,7 +128,8 @@ public class Application extends Controller {
 		if (as != null) {
 			session().clear();
 			session().put("email", as.username);
-			return redirect("/dashboard#/viewAppliedJobs");
+			session().put("role", as.role);
+			return redirect("/dashboard#/");
 
 		} else {
 
@@ -130,7 +137,7 @@ public class Application extends Controller {
 			if (ud != null) {
 				session().clear();
 				session().put("email", ud.email);
-				return redirect("/dashboard");
+				return redirect("/dashboard#/");
 			} else {
 				flash().put("error", "Login Failed");
 				return ok(signin.render());
@@ -855,7 +862,6 @@ public class Application extends Controller {
 
 	}
 
-	@JsonIgnore
 	public static Result getAllJobs(int currentPage, String jobType,
 			String location) {
 
@@ -1137,7 +1143,11 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			eds.enddate = addNewEmphistory.get(i).enddate;
+			if(addNewEmphistory.get(i).enddate == ""){
+				eds.enddate = "Present";
+			}else{
+				eds.enddate = addNewEmphistory.get(i).enddate;
+			}
 			eds.user_details = UserDetails.getUserByEmail(email);
 			eds.expdesc = addNewEmphistory.get(i).expdesc;
 			eds.save();
@@ -1315,21 +1325,6 @@ public class Application extends Controller {
 			e1.printStackTrace();
 		}
 
-		// List<ManadatorySkillsVM> manadatorySkills;
-		// List<DesiredSkillsVM> desiredSkills;
-		/*
-		 * JsonNode mSkills = json.path("manadatorySkills"); JsonNode dSkills =
-		 * json.get("desiredSkills");
-		 */
-		/*
-		 * JsonNode reqNo = json.get("requestNumber"); String email =
-		 * session().get("email"); AppliedJobs ajs = new AppliedJobs();
-		 * ajs.desiredSkil = json.get("desiredSkills").toString();
-		 * ajs.manadatorySkill = json.path("manadatorySkills").toString();
-		 * ajs.username = email; ajs.jobno = reqNo.asText(); ajs.jobStatus =
-		 * "New"; ajs.save();
-		 */
-
 		return ok();
 	}
 
@@ -1349,6 +1344,7 @@ public class Application extends Controller {
 
 	public static class AppliedJobVM {
 		public String username;
+		public int id;
 		public String requestNumber;
 		public String status;
 		public String location;
@@ -1358,16 +1354,13 @@ public class Application extends Controller {
 
 	}
 
-	
-
 	public static Result getAllAppliedJobs() {
 		List<AppliedJobs> ap = AppliedJobs.getAllJobs();
-
 		ArrayList<AppliedJobVM> appliedJobVM = new ArrayList<AppliedJobVM>();
 
 		for (AppliedJobs apj : ap) {
-
 			AppliedJobVM apvm = new AppliedJobVM();
+			apvm.id = apj.id;
 			apvm.dsSkills = getDesiredSkills(apj.desiredSkil);
 			apvm.msSkils = getMandtorySkills(apj.manadatorySkill);
 			apvm.username = apj.username;
@@ -1375,53 +1368,85 @@ public class Application extends Controller {
 			apvm.requestNumber = apj.jobno;
 			apvm.location = apj.location;
 			apvm.positionName = apj.positionname;
-
 			appliedJobVM.add(apvm);
 
 		}
 		return ok((Json.stringify(Json.toJson(appliedJobVM))));
 	}
 
-	public static Result generatePDF() {
+	public static Result generatePDF(String id) {
+		final String rootDir = Play.application().configuration()
+				.getString("resume.path");
+		System.out.println("rootdir"+rootDir);
+		
+		int ids = Integer.parseInt(id);
+		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
+		OutputStream file = null;
+		Document document = null;
 		try {
-
-			OutputStream file = new FileOutputStream(new File(
-					"D:\\Resume.pdf"));
-			Document document = new Document();
+			file = new FileOutputStream(new File(rootDir));
+			document = new Document();
 			PdfWriter.getInstance(document, file);
-			String email = "akashshinde44comp@gmail.com";
-			String reqNum = "2015-11079";
+			String email = ap.username;
 			UserDetails ud = UserDetails.getUserByEmail(email);
+			String candidiatename = ud.fullname;
 			List<UserSkill> skills = ud.userSkill;
+			// used for the table name (heading)
+			Font font = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD,
+					BaseColor.BLACK);
+			// used for the table column data
+			Font font1 = new Font(FontFamily.TIMES_ROMAN, 10, Font.NORMAL,
+					BaseColor.BLACK);
+			// used for the column name
+			Font font2 = new Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD,
+					BaseColor.BLACK);
 
-			Chunk chunkSkills = new Chunk("Mandatory Skill ");
-	          //  chunk.setUnderline(+1f,-2f);//1st co-ordinate is for line width,2nd is space between
+			// Mandatory skills
+			Chunk chunkSkills = new Chunk("Mandatory Skill".toUpperCase());
 			chunkSkills.setBackground(new BaseColor(230, 230, 250));
-	           
-			
-			Chunk chunk = new Chunk("Key Skill Area");
-          //  chunk.setUnderline(+1f,-2f);//1st co-ordinate is for line width,2nd is space between
-            chunk.setBackground(new BaseColor(230, 230, 250));
-            
-            Chunk eduChunk = new Chunk("EDUCATION");
-            //chunk.setUnderline(+1f,-2f);//1st co-ordinate is for line width,2nd is space between
-            eduChunk.setBackground(new BaseColor(230, 230, 250));
-          //  eduChunk.setHorizontalScaling(100);
-            
-            Chunk empChunk = new Chunk("EMPLOYMENT HISTORY");
-            //chunk.setUnderline(+1f,-2f);//1st co-ordinate is for line width,2nd is space between
-            empChunk.setBackground(new BaseColor(230, 230, 250));
-         //   empChunk.setHorizontalScaling(100);
-            
-            Chunk certChunk=new Chunk("CERTIFICATION HISTORY");
-            //chunk.setUnderline(+1f,-2f);//1st co-ordinate is for line width,2nd is space between
-            certChunk.setBackground(new BaseColor(230, 230, 250));
-            //certChunk.setHorizontalScaling(100);
-            
-			
-			PdfPTable table2 = new PdfPTable(2);
+			chunkSkills.setFont(font);
+
+			Chunk chunkExpDetails = new Chunk("Experiance".toUpperCase());
+			chunkExpDetails.setBackground(new BaseColor(230, 230, 250));
+			chunkExpDetails.setFont(font);
+
+			Chunk userName = new Chunk(candidiatename);
+			userName.setBackground(new BaseColor(230, 230, 250));
+			userName.setFont(font);
+
+			Chunk userNameDetails = new Chunk(email);
+			userNameDetails.setBackground(new BaseColor(230, 230, 250));
+			userNameDetails.setFont(font);
+
+			Chunk chunk = new Chunk("Key Skill Area".toUpperCase());
+			chunk.setBackground(new BaseColor(230, 230, 250));
+			chunk.setFont(font);
+
+			Chunk eduChunk = new Chunk("EDUCATION");
+			eduChunk.setBackground(new BaseColor(230, 230, 250));
+			eduChunk.setFont(font);
+
+			Chunk chunkDesired = new Chunk("DESIRED SKILLS");
+			chunkDesired.setBackground(new BaseColor(230, 230, 250));
+			chunkDesired.setFont(font);
+
+			Chunk chunkClearance = new Chunk("Security Clearance".toUpperCase());
+			chunkClearance.setBackground(new BaseColor(230, 230, 250));
+			chunkClearance.setFont(font);
+
+			Chunk empChunk = new Chunk("EMPLOYMENT HISTORY");
+			empChunk.setBackground(new BaseColor(230, 230, 250));
+			empChunk.setFont(font);
+
+			Chunk certChunk = new Chunk("CERTIFICATION HISTORY");
+			certChunk.setBackground(new BaseColor(230, 230, 250));
+			certChunk.setFont(font);
+
+			// skill table
+			PdfPTable table2 = new PdfPTable(4);
+			// table2.set
 			table2.setWidthPercentage(100);
-			float[] width2 = { 6f, 2f };
+			float[] width2 = { 2f, 2f, 2f, 2f };
 			table2.setWidths(width2);
 
 			PdfPCell cell2 = new PdfPCell(new Paragraph(
@@ -1434,16 +1459,32 @@ public class Application extends Controller {
 				// EmpHistorytable.addCell(cellemp);
 				cell2 = new PdfPCell(new Phrase(sk.skillName));
 				cell2.setBackgroundColor(new BaseColor(248, 248, 255));
+				// cell2.setFont(font1);
 				cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table2.addCell(cell2);
-
 			}
 
+			// for username and email
+			PdfPTable table4 = new PdfPTable(1);
+			table4.setWidthPercentage(100);
+			/*
+			 * float[] width3 = { 10f }; table2.setWidths(width3);
+			 */
+
+			PdfPCell cell4 = new PdfPCell(new Paragraph(
+					"Key Skill Area".toUpperCase()));
+			cell4 = new PdfPCell(new Phrase("Candidate’s Full Legal Name: "
+					+ "" + candidiatename + " (" + (email) + ")", font1));
+			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table4.addCell(cell4);
+
 			List<UserClearance> clearance = ud.userClearance;
-			PdfPTable table3 = new PdfPTable(2);
-			table2.setWidthPercentage(100);
-			float[] width3 = { 6f, 2f };
-			table2.setWidths(width3);
+			PdfPTable table3 = new PdfPTable(1);
+			table3.setWidthPercentage(100);
+			/*
+			 * float[] width3 = { 10f }; table2.setWidths(width3);
+			 */
 
 			PdfPCell cell3 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
@@ -1452,16 +1493,12 @@ public class Application extends Controller {
 			cell3.setPadding(10.0f);
 			cell3.setBackgroundColor(new BaseColor(140, 221, 8));
 			for (UserClearance uc : clearance) {
-				// EmpHistorytable.addCell(cellemp);
-				cell3 = new PdfPCell(new Phrase(uc.clearance));
+				cell3 = new PdfPCell(new Phrase(uc.clearance, font1));
 				cell3.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell3.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table3.addCell(cell3);
-
 			}
 
-			AppliedJobs ap = AppliedJobs.getUserAppliedJob(email.trim(),
-					reqNum.trim());
 			List<DesiredSkills> desiredSkills = getDesiredSkills(ap.desiredSkil);
 			PdfPTable table = new PdfPTable(2);
 			table.setWidthPercentage(100);
@@ -1474,14 +1511,15 @@ public class Application extends Controller {
 			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cell.setPadding(10.0f);
 			cell.setBackgroundColor(new BaseColor(140, 221, 8));
+
 			for (DesiredSkills ds : desiredSkills) {
 				// EmpHistorytable.addCell(cellemp);
-				cell = new PdfPCell(new Phrase(ds.dskill));
+				cell = new PdfPCell(new Phrase(ds.dskill, font1));
 				cell.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(ds.comment));
+				cell = new PdfPCell(new Phrase(ds.comment, font1));
 				cell.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(cell);
@@ -1501,12 +1539,12 @@ public class Application extends Controller {
 			cell1.setBackgroundColor(new BaseColor(140, 221, 8));
 			for (MandatorySkills ms : mandatorySkils) {
 				// EmpHistorytable.addCell(cellemp);
-				cell1 = new PdfPCell(new Phrase(ms.mskill));
+				cell1 = new PdfPCell(new Phrase(ms.mskill, font1));
 				cell1.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table1.addCell(cell1);
 
-				cell1 = new PdfPCell(new Phrase(ms.comment));
+				cell1 = new PdfPCell(new Phrase(ms.comment, font1));
 				cell1.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table1.addCell(cell1);
@@ -1522,40 +1560,48 @@ public class Application extends Controller {
 			cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellemp.setPadding(10.0f);
 			cellemp.setBackgroundColor(new BaseColor(140, 221, 8));
+
 			List<EmploymentDetails> eds = EmploymentDetails
 					.getEmploymentDetailsByUserEmail(email);
-			cellemp = new PdfPCell(new Phrase("Employee Name"));
+
+			cellemp = new PdfPCell(new Phrase("Employee Name", font2));
 			cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellemp.setBackgroundColor(new BaseColor(230, 230, 250));
 			EmpHistorytable.addCell(cellemp);
-			cellemp = new PdfPCell(new Phrase("Start Date"));
+
+			cellemp = new PdfPCell(new Phrase("Start Date", font2));
 			cellemp.setBackgroundColor(new BaseColor(230, 230, 250));
 			cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 			EmpHistorytable.addCell(cellemp);
-			cellemp = new PdfPCell(new Phrase("End Date"));
+
+			cellemp = new PdfPCell(new Phrase("End Date", font2));
 			cellemp.setBackgroundColor(new BaseColor(230, 230, 250));
 			cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 			EmpHistorytable.addCell(cellemp);
-			cellemp = new PdfPCell(new Phrase("Position Name/Title"));
+
+			cellemp = new PdfPCell(new Phrase("Position Name/Title", font2));
 			cellemp.setBackgroundColor(new BaseColor(230, 230, 250));
 			cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 			EmpHistorytable.addCell(cellemp);
 
 			for (EmploymentDetails emp : eds) {
 				// EmpHistorytable.addCell(cellemp);
-				cellemp = new PdfPCell(new Phrase(emp.companyName));
+				cellemp = new PdfPCell(new Phrase(emp.companyName, font1));
 				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
-				cellemp = new PdfPCell(new Phrase(emp.startdate));
+
+				cellemp = new PdfPCell(new Phrase(emp.startdate, font1));
 				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
-				cellemp = new PdfPCell(new Phrase(emp.enddate));
+
+				cellemp = new PdfPCell(new Phrase(emp.enddate, font1));
 				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
-				cellemp = new PdfPCell(new Phrase(emp.position));
+
+				cellemp = new PdfPCell(new Phrase(emp.position, font1));
 				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
@@ -1571,19 +1617,23 @@ public class Application extends Controller {
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			celledu.setPadding(10.0f);
 			celledu.setBackgroundColor(new BaseColor(140, 221, 8));
-			celledu = new PdfPCell(new Phrase("Degree"));
+
+			celledu = new PdfPCell(new Phrase("Degree", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
-			celledu = new PdfPCell(new Phrase("School Name"));
+
+			celledu = new PdfPCell(new Phrase("School Name", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
-			celledu = new PdfPCell(new Phrase("Degree Major"));
+
+			celledu = new PdfPCell(new Phrase("Degree Major", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
-			celledu = new PdfPCell(new Phrase("Completion Date"));
+
+			celledu = new PdfPCell(new Phrase("Completion Date", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
@@ -1592,34 +1642,29 @@ public class Application extends Controller {
 					.getEducationDetailsByUserEmail(email);
 			for (EducationDetails edu : ed) {
 				// edutable.addCell(celledu);
-				celledu = new PdfPCell(new Phrase(edu.degree));
+				celledu = new PdfPCell(new Phrase(edu.degree, font1));
 				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
 
-				celledu = new PdfPCell(new Phrase(edu.instituteName));
+				celledu = new PdfPCell(new Phrase(edu.instituteName, font1));
 				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
 
-				celledu = new PdfPCell(new Phrase(edu.degree));
+				celledu = new PdfPCell(new Phrase(edu.degree, font1));
 				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
 
-				celledu = new PdfPCell(new Phrase(edu.toDate));
+				celledu = new PdfPCell(new Phrase(edu.toDate, font1));
 				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
-
-				// edutable.addCell(edu.degree);
-				// edutable.addCell(edu.instituteName);
-				// edutable.addCell(edu.degree);
-				// edutable.addCell(edu.toDate);
-				// appliedJobVM.add(apvm);
 			}
 
 			PdfPTable certtable = new PdfPTable(2);
+			certtable.getDefaultCell().setBorder(0);
 			certtable.setWidthPercentage(100);
 			float[] cw = { 2f, 2f };
 			certtable.setWidths(cw);
@@ -1632,62 +1677,120 @@ public class Application extends Controller {
 			List<CertificationDetails> cd = CertificationDetails
 					.getCertificateDetailsByUserEmail(email);
 
-			cellcert = new PdfPCell(new Phrase("List of Certification"));
+			cellcert = new PdfPCell(new Phrase("List of Certification", font2));
 			cellcert.setBackgroundColor(new BaseColor(230, 230, 250));
 			cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 			certtable.addCell(cellcert);
 
-			cellcert = new PdfPCell(new Phrase("Award Date"));
+			cellcert = new PdfPCell(new Phrase("Award Date", font2));
 			cellcert.setBackgroundColor(new BaseColor(230, 230, 250));
 			cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 			certtable.addCell(cellcert);
 
 			for (CertificationDetails c : cd) {
 				// certtable.addCell(cellcert);
-				cellcert = new PdfPCell(new Phrase(c.certName));
+				cell.setBorder(Rectangle.NO_BORDER);
+				cellcert = new PdfPCell(new Phrase(c.certName, font1));
 				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 				certtable.addCell(cellcert);
-				cellcert = new PdfPCell(new Phrase(c.certYear));
+				cellcert.setBorder(Rectangle.NO_BORDER);
+				cellcert = new PdfPCell(new Phrase(c.certYear, font1));
 				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 				certtable.addCell(cellcert);
+				cellcert.setBorder(Rectangle.NO_BORDER);
 				// certtable.addCell(c.certName);
 				// certtable.addCell(c.certYear);
 			}
 
+			PdfPTable expDesctable = new PdfPTable(1);
+			expDesctable.getDefaultCell().setBorder(0);
+			expDesctable.setWidthPercentage(100);
+			float[] expcw = { 10f };
+			expDesctable.setWidths(expcw);
+
+			// PdfPCell cellExp = new PdfPCell(new
+			// Paragraph("CERTIFICATIONS:"));
+			PdfPCell cellExp = new PdfPCell(new Phrase("List of Certification",
+					font2));
+			Paragraph paragraph = new Paragraph();
+			paragraph.add(new Phrase("This is a chapter."));
+			// Chapter chapter = new Chapter(1);
+			for (EmploymentDetails emp : eds) {
+				/*
+				 * chapter.addSection(emp.companyName);
+				 * chapter.addSection(emp.position);
+				 * chapter.addSection(emp.expdesc);
+				 */
+				cellExp = new PdfPCell(new Phrase(emp.companyName + ", " + " "
+						+ emp.position + "(" + emp.startdate + " - "
+						+ emp.enddate + ")", font));
+				cellExp.setBackgroundColor(new BaseColor(230, 230, 250));
+				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cellExp.setBorder(Rectangle.NO_BORDER);
+				expDesctable.addCell(cellExp);
+
+				/*
+				 * cellExp = new PdfPCell(new Phrase(emp.position, font2));
+				 * cellExp .setBackgroundColor(new BaseColor(230, 230, 250));
+				 * cellExp .setHorizontalAlignment(Element.ALIGN_LEFT);
+				 * cellExp.setBorder(Rectangle.NO_BORDER);
+				 * expDesctable.addCell(cellExp);
+				 */
+
+				cellExp = new PdfPCell(new Phrase(emp.expdesc, font1));
+				// cellExp .setBackgroundColor(new BaseColor(230, 230, 250));
+				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cellExp.setBorder(Rectangle.NO_BORDER);
+				expDesctable.addCell(cellExp);
+
+			}
+
 			// Now Insert Every Thing Into PDF Document
 			document.open();// PDF document opened........
-			// document.add(image);
+			Paragraph date = new Paragraph("Document Generated On - "
+					+ new Date().toString());
+			date.setAlignment(Element.ALIGN_LEFT);
+			document.add(date);
+
 			document.add(Chunk.NEWLINE); // Something like in HTML :-)
-			document.add(new Paragraph("Candidate’s Name:"));
-			document.add(new Paragraph("Document Generated On - "
-					+ new Date().toString()));
+			// document.add(new Paragraph("Candidate’s Name:",font1));
+			document.add(table4);
+			// preface.setAlignment(Element.ALIGN_CENTER);
+			document.add(chunkClearance);
+			document.add(table3);// user clearance
+			document.add(chunkDesired);
+			document.add(table);// desired skills
+
+			document.add(Chunk.NEWLINE);
 			document.add(chunkSkills);
+			document.add(table1);// mandatory skills
+
 			document.add(Chunk.NEWLINE);
-			document.add(table3);
-			document.add(Chunk.NEWLINE);
-			document.add(table);
-			document.add(Chunk.NEWLINE);
-			document.add(table1);
-			// table.set
-			document.add(Chunk.NEWLINE); 
-			// Something like in HTML :-)
 			document.add(chunk);
-			document.add(table2);
+			document.add(table2);// skill table
+
 			document.add(Chunk.NEWLINE);
 			document.add(eduChunk);
 			document.add(edutable);
+
 			document.add(Chunk.NEWLINE);
 			document.add(empChunk);
 			document.add(EmpHistorytable);
+
 			document.add(Chunk.NEWLINE);
 			document.add(certChunk);
-			document.add(certtable);
 			document.add(Chunk.NEWLINE);
-
-			document.newPage(); // Opened new page
-			// document.add((Element) list); //In the new page we are going to
+			document.add(Chunk.NEWLINE);
+			document.add(certtable);
+			// document.add(Chunk.NEWLINE);
+			document.add(chunkExpDetails);
+			document.add(expDesctable);
+			// document.newPage(); // Opened new page.
+			response().setContentType("application/pdf");
+			response().setHeader("Content-Disposition",
+					"inline; filename=" + "Resume.pdf");
 			document.close();
 			file.close();
 			System.out.println("Pdf created successfully..");
@@ -1696,7 +1799,8 @@ public class Application extends Controller {
 			e.printStackTrace();
 		}
 
-		return null;
+		return ok(new File("D:\\Resume.pdf"));
+
 	}
 
 }

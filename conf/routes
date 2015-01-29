@@ -34,8 +34,8 @@ POST    /saveAppliedJob                                  controllers.Application
 
 #Admin
 GET      /getAllAppliedJobs                             controllers.Application.getAllAppliedJobs()
-GET      /generatePDF                                    controllers.Application.generatePDF()
-
+GET      /generatePDF/:id                                  controllers.Application.generatePDF(id : String)
+GET      /checkForadmin                                 controllers.Application.checkForadmin()
 
 
 

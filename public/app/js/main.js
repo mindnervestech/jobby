@@ -375,7 +375,6 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $('#myModal').modal('hide');
 		   console.log($scope.desiredSkills);
 		   $scope.requestNumber = $scope.jobData.requestNumber;
-		   
 		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
 			.success(function(data){
 				console.log("success");
@@ -5766,14 +5765,13 @@ App.controller('ExtraLockScreenController', function ($scope, $routeParams){
 
 
 App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $routeParams, $http, $upload){
-//	alert("in file ");
+
 	$scope.getAllAppliedJobs = function(){
-		
 		$http.get('getAllAppliedJobs')
 		.success(function(data){
 			if(data) {
 				$scope.jobs = data;
-				console.log(data);
+				console.log("data"+JSON.stringify(data));
 			} 
 		});
 	}
@@ -5788,15 +5786,15 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		});
 		
 	}
-	$scope.generatePdf = function(){
-		alert("in gen pdf fun");
-		$http.get('generatePDF')
-		.success(function(data){
-			if(data) {
-				$scope.jobs = data;
-				console.log(data);
-			} 
-		});
+	
+	$scope.generatePdf = function(id){
+	//	alert("in gen pdf fun");
+		$scope.jobId = id;
+		console.log($scope.jobId);
+		   var baseUrl = "/"
+		   var ifrm = document.getElementById('fred');
+			ifrm.setAttribute('src', baseUrl + 'generatePDF/' + $scope.jobId);
+		$('#viewresume').modal();
 	}
 	
 });
@@ -5804,7 +5802,6 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 
 
 App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams, $http, $upload){
-//	alert("in file ");
 	$scope.uploadSuccess;
 	$scope.uploadFaild;
 	$scope.uploadExcel = function(){
@@ -5849,23 +5846,6 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	
 });
 
-/*App.controller('ViewJobsController', function ($scope, $rootScope, $routeParams, $http, $upload){
-	
-	$scope.orderData=[];
-	
-	$scope.onJobLoad = function(){
-		$scope.pageno = 0;
-		$http.get('/getAllJobs/'+$scope.pageno)
-		.success(function(data) {
-			$scope.orderData = data.order;
-			
-		});
-	};
-	
-});*/
-
-
-
 
 App.controller('ForgetPasswordController', function ($scope, $rootScope, $routeParams, $http, $upload){
 	
@@ -5877,6 +5857,21 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		aextra : []	
 	};
 
+	/* $scope.open = function($event) {
+		    $event.preventDefault();
+		    $event.stopPropagation();
+
+		    $scope.opened = true;
+		  };
+
+		  $scope.dateOptions = {
+		    formatYear: 'yy',
+		    startingDay: 1
+		  };
+
+		  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+		  $scope.format = $scope.formats[2];
+	*/
 	/*
 		$('#startdateemp').datepicker({
 		    format: 'mm-dd-yyyy'
@@ -5992,7 +5987,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		});
 		
 		
-		
 		$http.get('/getAllPosition')
     	.success(function(data) {
     		$scope.allPosition = data;
@@ -6069,13 +6063,14 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     				});
     			});
     		
-    		console.log("$scope.allCleanrance"+$scope.allCleanrance);
-    		console.log("$scope.userClearance"+$scope.userClearance);
-    		var i,j,k;
+    		console.log("$scope.allCleanrance"+JSON.stringify($scope.allCleanrance.clearance));
+    		console.log("$scope.userClearance"+JSON.stringify($scope.userClearance));
+    		var i,j;
     		for(i=0;i<$scope.allCleanrance.length;i++) {
     		for(j=0;j<$scope.userClearance.length;j++) {
-    		if($scope.allCleanrance[j] == $scope.userClearance[i]) {
+    		if($scope.allCleanrance[j].clearance == $scope.userClearance[i]) {
     		$scope.allCleanrance[j].isSelected = true;
+    		$scope.isSelect = true;
     		}
     		
     		};
@@ -6091,6 +6086,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		console.log(skill);
 		if($(e.target).is(":checked")) {
 		$scope.skills.push(skill.skillName);
+		
 		} 
 
 		};
@@ -6103,8 +6099,9 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 				$http.get('saveOtherSkill/'+$scope.otherSkill)
 				.success(function(data){
 					if(data) {
-						$scope.skills.push(data.skillName);
-						//obj.isSelected = true;
+						$scope.skills.push(data);
+						data.isSelected = true;
+						$scope.allSkills.push(data);
 						$scope.result = data;
 						console.log(data);
 						$scope.otherSkill = " ";
@@ -7403,12 +7400,31 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
 	$scope.userData = {};
 	$scope.editIdImage = -1;
 	$rootScope.username;
+	$rootScope.isAdmin;
+	$rootScope.isUser;
+	//alert("main");
 		$http.get('/getUserProfileData')
     	.success(function(data) {
     		$scope.userData = data;
     		$rootScope.username = data.uname;
     	});
-	$rootScope.img = "/getImagePath?d="+new Date().getTime();
+		
+	
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+		
+		
+		
+		$rootScope.img = "/getImagePath?d="+new Date().getTime();
     setTimeout(function(){
         $.fn.Data.checkbox();
 

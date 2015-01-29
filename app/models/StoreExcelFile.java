@@ -59,12 +59,12 @@ public class StoreExcelFile {
 	public static Finder<Long, StoreExcelFile> find = new Finder<Long, StoreExcelFile>(
 			Long.class, StoreExcelFile.class);
 
-	@JsonIgnore
+	
 	public static StoreExcelFile getregNumber(String reqId) {
 		return find.where().eq("requestNumber", reqId).findUnique();
 	}
 
-	@JsonIgnore
+	
 	public static List<StoreExcelFile> getAllJobs(int currentPage,
 			int rowsPerPage) {
 

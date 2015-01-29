@@ -4,7 +4,7 @@
     <li class="user-panel">
       <!-- <div class="thumb"><img src={{img}} alt="" class="img-circle"/></div>
        --><div class="info">
-        <p>{{username}}</p>
+        <p></p>
         <ul class="list-inline list-unstyled">
           <li><a href="/dashboard#/extra-profile" data-hover="tooltip" title="Profile"><i class="fa fa-user"></i></a></li>
           <!-- <li><a href="/#/email-inbox" data-hover="tooltip" title="Mail"><i class="fa fa-envelope"></i></a></li>
@@ -14,12 +14,15 @@
       </div>
       <div class="clearfix"></div>
     </li>
-    <li  ><a  href="/dashboard#/extra-profile"><i class="fa fa-tachometer fa-fw">
+    <li ng-show ="isUser" ><a  href="/dashboard#/extra-profile"><i class="fa fa-tachometer fa-fw">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">My Profile</span></a></li>
-           <li ><a  href="/dashboard#/updateExcel"><i class="fa fa-tachometer fa-fw">
+           <li ng-show ="isUser" ><a  href="/dashboard#/updateExcel"><i class="fa fa-tachometer fa-fw">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">Excel File</span></a></li>
-         <li ><a  href="/dashboard#/viewJobs"><i class="fa fa-tachometer fa-fw">
+         <li ng-show ="isUser" ><a  href="/dashboard#/viewJobs"><i class="fa fa-tachometer fa-fw">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">View Jobs </span></a></li>
+          <li ng-show ="isAdmin" ><a  href="/dashboard#/viewAppliedJobs"><i class="fa fa-tachometer fa-fw">
+          <div class="icon-bg bg-orange"></div></i><span class="menu-title">View Applied Jobs </span></a></li>
+          
   <!--   <li ng-show="!isSuperAdmin" ><a ng-show="!isSuperAdmin" href="dashboard#/superAdmin_dashboard"><i class="">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">Dashboard</span></a></li>
     <li ng-show="!isSuperAdmin"> <a  href="dashboard#/All_Customer"><i class="fa fa-tachometer fa-fw">

@@ -21,7 +21,7 @@ public class AppliedJobs extends Model {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", length = 11)
-	private int id;
+	public int id;
 
 	public String manadatorySkill;
 	public String desiredSkil;
@@ -44,4 +44,9 @@ public class AppliedJobs extends Model {
 				.findUnique();
 	}
 
+	public static AppliedJobs getUserAppliedJobById(int id){
+		//int ids = Integer.parseInt(id);
+		return find.where().eq("id",id).findUnique();
+	}
+	
 }

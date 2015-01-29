@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
    "org.apache.poi" % "poi-ooxml" % "3.10-FINAL",
    "org.apache.poi" % "poi-ooxml-schemas" % "3.10-FINAL",
     "javax.mail" % "mail" % "1.4.1",
-    "com.itextpdf" % "itextpdf" % "5.0.6",
+    "com.itextpdf" % "itextpdf" % "5.5.4",
     "com.itextpdf.tool" % "xmlworker" % "1.0.0",
   javaJdbc,
   javaEbean,
