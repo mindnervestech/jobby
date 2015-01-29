@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1749,10 +1750,13 @@ public class Application extends Controller {
 
 			// Now Insert Every Thing Into PDF Document
 			document.open();// PDF document opened........
-			Paragraph date = new Paragraph("Document Generated On - "
-					+ new Date().toString());
-			date.setAlignment(Element.ALIGN_LEFT);
-			document.add(date);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+			String date = sdf.format(new Date()); 
+			System.out.println(date); //15/10/2013
+			Paragraph date1 = new Paragraph(date);
+			date1.setAlignment(Element.ALIGN_LEFT);
+			document.add(date1);
 
 			document.add(Chunk.NEWLINE); // Something like in HTML :-)
 			// document.add(new Paragraph("Candidate’s Name:",font1));
