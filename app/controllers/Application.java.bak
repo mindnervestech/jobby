@@ -1803,7 +1803,7 @@ public class Application extends Controller {
 			e.printStackTrace();
 		}
 
-		return ok(new File(rootDir));
+		return ok(new File(rootDir + "Resume.pdf"));
 
 	}
 
