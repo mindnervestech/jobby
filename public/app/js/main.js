@@ -187,7 +187,7 @@ App.controller('AppController', function ($scope, $rootScope, $routeParams, $loc
             $scope.header.animation = '';
         }, 100);
 
-      //  $scope.data = $.fn.Data.get(current.originalPath);
+      // $scope.data = $.fn.Data.get(current.originalPath);
         if(-1 == $.inArray(current.originalPath, ['/extra-500', '/extra-404', '/extra-lock-screen', '/extra-signup', '/extra-signin'])){
             $('body').removeClass('bounceInLeft');
             $("body>.default-page").show();
@@ -276,30 +276,78 @@ App.controller('AppController', function ($scope, $rootScope, $routeParams, $loc
 
 App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootScope,  $routeParams){
 	
-	$scope.jobsData=[];
+	$scope.jobsData = [];
 	$scope.pageno = 0;
 	
-	
-	 $scope.jobType = "jobType";
-	  $scope.location = "location" ;
-	
-	$scope.onOrderLoad = function(){
-		$scope.jobType = "jobType";
-		$scope.location = "location";
+	$scope.position = "notSelected";
+	 $scope.jobType = "All";
+	  $scope.location = false;
+	  $scope.allPosition;
+	  // called when page in loaded for getting all jobns form db
+	   $scope.onAllJobsLoad = function(){
+		$scope.jobType = "All";
+		$scope.location = false;
 		$scope.pageno = 0;
-		$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location)
+		$scope.matchedpos = false;
+		$scope.position = "notSelected";
+		$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 		.success(function(data) {
 			$scope.jobsData = data.jobs;
 			
 		});
+		
+		$http.get('/getAllPosition')
+    	.success(function(data) {
+    		$scope.allPosition = data;
+    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		// $scope.username = data.uname;
+    	});
+	
+		
 	};
 	  
+	$scope.matchedpos  = false;
+	$scope.getUserMatchedPosition = function(){
+		$scope.jobType = "usermatch";
+		$scope.location = false;
+		$scope.pageno = 0;
+		$scope.position = "notSelected";
+		if($scope.matchedpos == true){
+			$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+	    	.success(function(data) {
+	    		$scope.jobsData = data.jobs;
+	    		console.log("all position:"+JSON.stringify($scope.jobsData));
+	    		// $scope.username = data.uname;
+	    	});
+		}
+		
+	}
+	
+	// $scope.position;
+	$scope.getAllJobByPosition = function(){
+		$scope.jobType = "usermatch";
+		$scope.location = false;
+		$scope.pageno = 0;
+		$scope.matchedpos = false;
+		
+			$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+	    	.success(function(data) {
+	    		$scope.jobsData = data.jobs;
+	    		console.log("all position:"+JSON.stringify($scope.jobsData));
+	    		// $scope.username = data.uname;
+	    	});
+		
+		
+		
+	}
+	
+	
 	$scope.headerStatuspageno = 0;
 	
 	$scope.clickNext = function() {
 		console.log("nexdt");
 			  $scope.pageno++;
-			  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location)
+			  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 				.success(function(data) {
 					$scope.jobsData = data.jobs;
 					
@@ -308,9 +356,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		 
 
 	  $scope.clickPre = function() {
-		
+		 // $scope.position = "notSelected";
 	      $scope.pageno--;
-		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location)
+		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
 				if(data.orderCount <= 10){
@@ -321,24 +369,28 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			});
 		  }
  
-	 
+	 // called when user clicked on the job position typefor search
 	  $scope.getAllJobByType = function(){
 		  console.log("$scope.jobType"+$scope.jobType);
-		 
-		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location)
+		  $scope.matchedpos = false;
+		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
 				console.log("$scope.success"+$scope.jobsData);
-				 $scope.jobType = "jobType";
+				
 			});
 	  }
 	  
+	  // called when user clicked for location search
 	  $scope.onLocationClick =  function(){
-		 $scope.location = "true";
-		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location)
+		  $scope.position = "notSelected";
+		    console.log($scope.location);
+		   
+		    $scope.matchedpos = false;
+		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
-				$scope.location = "location";
+			
 				
 			});
 		  
@@ -347,6 +399,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  $scope.manadatorySkills = [];
 	  $scope.desiredSkills = [];
 	  $scope.jobData;
+
+	  
+	  // called when user click on applied button
 	  $scope.applyForJob = function(job){
 		  $scope.jobData = job;
 		  console.log(job);
@@ -361,16 +416,12 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  });
 		  
 			console.log("job"+$scope.jobData.desiredSkill);
-		
-			/*ngDialog.open({
-				template: 'assets/app/templates/states/site_setting_popup.html',
-				scope: $scope,
-				className: 'ngdialog-theme-default'
-			});*/
 			$('#myModal').modal();
 			
 		}
 	
+
+	  // save current user applied job
 	  $scope.saveUserJob = function(){
 		  $('#myModal').modal('hide');
 		   console.log($scope.desiredSkills);
@@ -383,6 +434,28 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  
 	  } 
 	 
+	  
+	  $http.get('/getUserName')
+		.success(function(data) {
+		// $scope.userData = data;
+			$rootScope.username = data;
+			console.log("data"+data);
+		});
+	  
+	// check for gthe admin
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+		
+	  
 	
 });
 
@@ -410,9 +483,9 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
         };
 
         new Chart(document.getElementById("line-chart").getContext("2d")).Line(lineChartData);
-        //END LINE CHART
+        // END LINE CHART
 
-        //BEGIN BAR CHART
+        // BEGIN BAR CHARTonAllJobsLoad
         var barChartData = {
             labels : ["January","February","March","April","May","June","July"],
             datasets : [
@@ -431,9 +504,9 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
         };
 
         new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
-        //END BAR CHART
+        // END BAR CHART
 
-        //BEGIN RADAR CHART
+        // BEGIN RADAR CHART
         var radarChartData = {
             labels : ["Eating","Drinking","Sleeping","Designing","Coding","Partying","Running"],
             datasets : [
@@ -456,9 +529,9 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
         };
 
         new Chart(document.getElementById("radar-chart").getContext("2d")).Radar(radarChartData,{scaleShowLabels : false, pointLabelFontSize : 10});
-        //END RADAR CHART
+        // END RADAR CHART
 
-        //BEGIN POLAR AREA CHART
+        // BEGIN POLAR AREA CHART
         var chartData = [
             {
                 value : Math.random(),
@@ -487,9 +560,9 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
         ];
 
         new Chart(document.getElementById("polar-area-chart").getContext("2d")).PolarArea(chartData);
-        //END POLAR AREA CHART
+        // END POLAR AREA CHART
 
-        //BEGIN PIE CHART
+        // BEGIN PIE CHART
         var pieData = [
             {
                 value: 30,
@@ -507,9 +580,9 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
         ];
 
         new Chart(document.getElementById("pie-chart").getContext("2d")).Pie(pieData);
-        //END PIE CHART
+        // END PIE CHART
 
-        //BEGIN DOUGHNUT CHART
+        // BEGIN DOUGHNUT CHART
         var doughnutData = [
             {
                 value: 30,
@@ -537,7 +610,7 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
         new Chart(document.getElementById("doughnut-chart").getContext("2d")).Doughnut(doughnutData);
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -550,14 +623,14 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -566,7 +639,7 @@ App.controller('ChartsChartJsController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('ChartsFlotChartController', function ($scope, $routeParams){
     setTimeout(function(){
@@ -616,9 +689,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             },
             shadowSize: 0
         });
-        //END LINE CHART
+        // END LINE CHART
 
-        //BEGIN LINE CHART SPLINE
+        // BEGIN LINE CHART SPLINE
         var d2_1 = [["Jan", 181],["Feb", 184],["Mar", 189],["Apr", 180],["May", 208],["Jun", 183],["Jul", 185],["Aug", 188],["Sep", 202]];
         var d2_2 = [["Jan", 170],["Feb", 152],["Mar", 133],["Apr", 146],["May", 164],["Jun", 151],["Jul", 120],["Aug", 127],["Sep", 161]];
         var d2_3 = [["Jan", 102],["Feb", 91],["Mar", 106],["Apr", 89],["May", 90],["Jun", 94],["Jul", 86],["Aug", 105],["Sep", 88]];
@@ -669,9 +742,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             },
             shadowSize: 0
         });
-        //END LINE CHART SPLINE
+        // END LINE CHART SPLINE
 
-        //BEGIN BAR CHART
+        // BEGIN BAR CHART
         var d3 = [["Jan", 93],["Feb", 78],["Mar", 47],["Apr", 35],["May", 48],["Jun", 26],["Jul", 49],["Aug", 96],["Sep", 54],["Oct", 99],["Nov", 92],["Dec", 43]];
         $.plot("#bar-chart", [{
             data: d3,
@@ -706,9 +779,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             },
             shadowSize: 0
         });
-        //END BAR CHART
+        // END BAR CHART
 
-        //BEGIN BAR CHART STACK
+        // BEGIN BAR CHART STACK
         var d4_1 = [["Jan", 126],["Feb", 73],["Mar", 94],["Apr", 54],["May", 92],["Jun", 141],["Jul", 29],["Aug", 44],["Sep", 30],["Oct", 40],["Nov", 67],["Dec", 92]];
         var d4_2 = [["Jan", 58],["Feb", 61],["Mar", 46],["Apr", 35],["May", 55],["Jun", 46],["Jul", 57],["Aug", 80],["Sep", 100],["Oct", 91],["Nov", 35],["Dec", 57]];
         $.plot("#bar-chart-stack", [{
@@ -749,9 +822,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             },
             shadowSize: 0
         });
-        //END BAR CHART STACK
+        // END BAR CHART STACK
 
-        //BEGIN AREA CHART
+        // BEGIN AREA CHART
         var d5_1 = [["Jan", 35],["Feb", 60],["Mar", 85],["Apr", 46],["May", 99],["Jun", 82],["Jul", 96]];
         var d5_2 = [["Jan", 47],["Feb", 74],["Mar", 36],["Apr", 83],["May", 39],["Jun", 10],["Jul", 51]];
         $.plot("#area-chart", [{
@@ -792,9 +865,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             },
             shadowSize: 0
         });
-        //END AREA CHART
+        // END AREA CHART
 
-        //BEGIN AREA CHART SPLINE
+        // BEGIN AREA CHART SPLINE
         var d6_1 = [["Jan", 67],["Feb", 91],["Mar", 36],["Apr", 150],["May", 28],["Jun", 123],["Jul", 38]];
         var d6_2 = [["Jan", 59],["Feb", 49],["Mar", 45],["Apr", 94],["May", 76],["Jun", 22],["Jul", 31]];
         $.plot("#area-chart-spline", [{
@@ -840,9 +913,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             },
             shadowSize: 0
         });
-        //END AREA CHART SPLINE
+        // END AREA CHART SPLINE
 
-        //BEGIN PIE CHART
+        // BEGIN PIE CHART
         var d7_1 = [40];
         var d7_2 = [20];
         var d7_3 = [40];
@@ -876,9 +949,9 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
                 }
             }
         });
-        //END PIE CHART
+        // END PIE CHART
 
-        //BEGIN PERCENTILES CHART
+        // BEGIN PERCENTILES CHART
         var males = {"15%": [[2, 88.0], [3, 93.3], [4, 102.0], [5, 108.5], [6, 115.7], [7, 115.6], [8, 124.6], [9, 130.3], [10, 134.3], [11, 141.4], [12, 146.5], [13, 151.7], [14, 159.9], [15, 165.4], [16, 167.8], [17, 168.7], [18, 169.5], [19, 168.0]], "90%": [[2, 96.8], [3, 105.2], [4, 113.9], [5, 120.8], [6, 127.0], [7, 133.1], [8, 139.1], [9, 143.9], [10, 151.3], [11, 161.1], [12, 164.8], [13, 173.5], [14, 179.0], [15, 182.0], [16, 186.9], [17, 185.2], [18, 186.3], [19, 186.6]], "25%": [[2, 89.2], [3, 94.9], [4, 104.4], [5, 111.4], [6, 117.5], [7, 120.2], [8, 127.1], [9, 132.9], [10, 136.8], [11, 144.4], [12, 149.5], [13, 154.1], [14, 163.1], [15, 169.2], [16, 170.4], [17, 171.2], [18, 172.4], [19, 170.8]], "10%": [[2, 86.9], [3, 92.6], [4, 99.9], [5, 107.0], [6, 114.0], [7, 113.5], [8, 123.6], [9, 129.2], [10, 133.0], [11, 140.6], [12, 145.2], [13, 149.7], [14, 158.4], [15, 163.5], [16, 166.9], [17, 167.5], [18, 167.1], [19, 165.3]], "mean": [[2, 91.9], [3, 98.5], [4, 107.1], [5, 114.4], [6, 120.6], [7, 124.7], [8, 131.1], [9, 136.8], [10, 142.3], [11, 150.0], [12, 154.7], [13, 161.9], [14, 168.7], [15, 173.6], [16, 175.9], [17, 176.6], [18, 176.8], [19, 176.7]], "75%": [[2, 94.5], [3, 102.1], [4, 110.8], [5, 117.9], [6, 124.0], [7, 129.3], [8, 134.6], [9, 141.4], [10, 147.0], [11, 156.1], [12, 160.3], [13, 168.3], [14, 174.7], [15, 178.0], [16, 180.2], [17, 181.7], [18, 181.3], [19, 182.5]], "85%": [[2, 96.2], [3, 103.8], [4, 111.8], [5, 119.6], [6, 125.6], [7, 131.5], [8, 138.0], [9, 143.3], [10, 149.3], [11, 159.8], [12, 162.5], [13, 171.3], [14, 177.5], [15, 180.2], [16, 183.8], [17, 183.4], [18, 183.5], [19, 185.5]], "50%": [[2, 91.9], [3, 98.2], [4, 106.8], [5, 114.6], [6, 120.8], [7, 125.2], [8, 130.3], [9, 137.1], [10, 141.5], [11, 149.4], [12, 153.9], [13, 162.2], [14, 169.0], [15, 174.8], [16, 176.0], [17, 176.8], [18, 176.4], [19, 177.4]]};
 
         var females = {"15%": [[2, 84.8], [3, 93.7], [4, 100.6], [5, 105.8], [6, 113.3], [7, 119.3], [8, 124.3], [9, 131.4], [10, 136.9], [11, 143.8], [12, 149.4], [13, 151.2], [14, 152.3], [15, 155.9], [16, 154.7], [17, 157.0], [18, 156.1], [19, 155.4]], "90%": [[2, 95.6], [3, 104.1], [4, 111.9], [5, 119.6], [6, 127.6], [7, 133.1], [8, 138.7], [9, 147.1], [10, 152.8], [11, 161.3], [12, 166.6], [13, 167.9], [14, 169.3], [15, 170.1], [16, 172.4], [17, 169.2], [18, 171.1], [19, 172.4]], "25%": [[2, 87.2], [3, 95.9], [4, 101.9], [5, 107.4], [6, 114.8], [7, 121.4], [8, 126.8], [9, 133.4], [10, 138.6], [11, 146.2], [12, 152.0], [13, 153.8], [14, 155.7], [15, 158.4], [16, 157.0], [17, 158.5], [18, 158.4], [19, 158.1]], "10%": [[2, 84.0], [3, 91.9], [4, 99.2], [5, 105.2], [6, 112.7], [7, 118.0], [8, 123.3], [9, 130.2], [10, 135.0], [11, 141.1], [12, 148.3], [13, 150.0], [14, 150.7], [15, 154.3], [16, 153.6], [17, 155.6], [18, 154.7], [19, 153.1]], "mean": [[2, 90.2], [3, 98.3], [4, 105.2], [5, 112.2], [6, 119.0], [7, 125.8], [8, 131.3], [9, 138.6], [10, 144.2], [11, 151.3], [12, 156.7], [13, 158.6], [14, 160.5], [15, 162.1], [16, 162.9], [17, 162.2], [18, 163.0], [19, 163.1]], "75%": [[2, 93.2], [3, 101.5], [4, 107.9], [5, 116.6], [6, 122.8], [7, 129.3], [8, 135.2], [9, 143.7], [10, 148.7], [11, 156.9], [12, 160.8], [13, 163.0], [14, 165.0], [15, 165.8], [16, 168.7], [17, 166.2], [18, 167.6], [19, 168.0]], "85%": [[2, 94.5], [3, 102.8], [4, 110.4], [5, 119.0], [6, 125.7], [7, 131.5], [8, 137.9], [9, 146.0], [10, 151.3], [11, 159.9], [12, 164.0], [13, 166.5], [14, 167.5], [15, 168.5], [16, 171.5], [17, 168.0], [18, 169.8], [19, 170.3]], "50%": [[2, 90.2], [3, 98.1], [4, 105.2], [5, 111.7], [6, 118.2], [7, 125.6], [8, 130.5], [9, 138.3], [10, 143.7], [11, 151.4], [12, 156.7], [13, 157.7], [14, 161.0], [15, 162.0], [16, 162.8], [17, 162.2], [18, 162.8], [19, 163.3]]};
@@ -919,7 +992,7 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -932,14 +1005,14 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -948,7 +1021,7 @@ App.controller('ChartsFlotChartController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
     setTimeout(function(){
@@ -966,7 +1039,8 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
             xAxis: {
                 labels: {
                     formatter: function() {
-                        return this.value; // clean, unformatted number for year
+                        return this.value; // clean, unformatted number for
+											// year
                     }
                 }
             },
@@ -1286,7 +1360,7 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
             }]
         });
 
-        /*  Area-spline */
+        /* Area-spline */
         $('#area-spline').highcharts({
             chart: {
                 type: 'areaspline'
@@ -1504,7 +1578,7 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -1517,14 +1591,14 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -1533,7 +1607,7 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('ChartsHighchartColumnBarController', function ($scope, $routeParams){
     setTimeout(function(){
@@ -1802,7 +1876,7 @@ App.controller('ChartsHighchartColumnBarController', function ($scope, $routePar
             }]
         });
 
-        /*  Stacked column */
+        /* Stacked column */
         $('#stacked-column').highcharts({
             chart: {
                 type: 'column'
@@ -2123,7 +2197,7 @@ App.controller('ChartsHighchartColumnBarController', function ($scope, $routePar
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -2136,14 +2210,14 @@ App.controller('ChartsHighchartColumnBarController', function ($scope, $routePar
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -2152,7 +2226,7 @@ App.controller('ChartsHighchartColumnBarController', function ($scope, $routePar
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 
 App.controller('ChartsHighchartCombinationController', function ($scope, $routeParams){
@@ -2463,7 +2537,7 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -2476,14 +2550,14 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -2492,7 +2566,7 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 
 App.controller('ChartsHighchartDynamicController', function ($scope, $routeParams){
@@ -2763,7 +2837,8 @@ App.controller('ChartsHighchartDynamicController', function ($scope, $routeParam
                     zoomType: 'x',
                     events: {
 
-                        // listen to the selection event on the master chart to update the
+                        // listen to the selection event on the master chart to
+						// update the
                         // extremes of the detail chart
                         selection: function(event) {
                             var extremesObject = event.xAxis[0],
@@ -2782,7 +2857,8 @@ App.controller('ChartsHighchartDynamicController', function ($scope, $routeParam
                                 }
                             });
 
-                            // move the plot bands to reflect the new detail span
+                            // move the plot bands to reflect the new detail
+							// span
                             xAxis.removePlotBand('mask-before');
                             xAxis.addPlotBand({
                                 id: 'mask-before',
@@ -2967,7 +3043,8 @@ App.controller('ChartsHighchartDynamicController', function ($scope, $routeParam
             }).highcharts(); // return chart
         }
 
-        // make the container smaller and add a second container for the master chart
+        // make the container smaller and add a second container for the master
+		// chart
         var $container = $('#master-detail-chart')
             .css('position', 'relative');
 
@@ -2985,7 +3062,7 @@ App.controller('ChartsHighchartDynamicController', function ($scope, $routeParam
         $("#master-detail-chart").parent().height("400px");
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -2998,14 +3075,14 @@ App.controller('ChartsHighchartDynamicController', function ($scope, $routeParam
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -3014,7 +3091,7 @@ App.controller('ChartsHighchartDynamicController', function ($scope, $routeParam
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 
 App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
@@ -3022,7 +3099,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
         $('#ajax-loaded-data').highcharts({
             title: {
                 text: 'Monthly Average Temperature',
-                x: -20 //center
+                x: -20 // center
             },
             subtitle: {
                 text: 'Source: WorldClimate.com',
@@ -3543,7 +3620,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
             }
         });
 
-        /*  Time data with irregular intervals */
+        /* Time data with irregular intervals */
         $('#time-data-with-irregular-intervals').highcharts({
             chart: {
                 type: 'spline'
@@ -3578,7 +3655,8 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
                 name: 'Winter 2007-2008',
                 // Define the data points. All series have a dummy year
                 // of 1970/71 in order to be compared on the same x axis. Note
-                // that in JavaScript, months start at 0 for January, 1 for February etc.
+                // that in JavaScript, months start at 0 for January, 1 for
+				// February etc.
                 data: [
                     [Date.UTC(1970,  9, 27), 0   ],
                     [Date.UTC(1970, 10, 10), 0.6 ],
@@ -3685,7 +3763,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
 
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -3698,14 +3776,14 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -3714,7 +3792,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
     setTimeout(function () {
@@ -3833,8 +3911,8 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
         /* Clock */
         $(function () {
             /**
-             * Get the current time
-             */
+			 * Get the current time
+			 */
             function getNow () {
                 var now = new Date();
 
@@ -3846,10 +3924,11 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
             }
 
             /**
-             * Pad numbers
-             */
+			 * Pad numbers
+			 */
             function pad(number, length) {
-                // Create an array of the remaining length +1 and join it with 0's
+                // Create an array of the remaining length +1 and join it with
+				// 0's
                 return new Array((length || 2) + 1 - String(number).length).join(0) + number;
             }
 
@@ -3995,15 +4074,13 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
         });
 
         // Extend jQuery with some easing (copied from jQuery UI)
-        /*$.extend($.easing, {
-            easeOutElastic: function (x, t, b, c, d) {
-                var s=1.70158;var p=0;var a=c;
-                if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
-                if (a < Math.abs(c)) { a=c; var s=p/4; }
-                else var s = p/(2*Math.PI) * Math.asin (c/a);
-                return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
-            }
-        });*/
+        /*
+		 * $.extend($.easing, { easeOutElastic: function (x, t, b, c, d) { var
+		 * s=1.70158;var p=0;var a=c; if (t==0) return b; if ((t/=d)==1) return
+		 * b+c; if (!p) p=d*.3; if (a < Math.abs(c)) { a=c; var s=p/4; } else
+		 * var s = p/(2*Math.PI) * Math.asin (c/a); return a*Math.pow(2,-10*t) *
+		 * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b; } });
+		 */
 
         /* Gauge with dual axes */
         $('#gauge-with-dual-axes').highcharts({
@@ -4657,7 +4734,7 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
                     neckWidth: '30%',
                     neckHeight: '25%'
 
-                    //-- Other available options
+                    // -- Other available options
                     // height: pixels or percent
                     // width: pixels or percent
                 }
@@ -4924,7 +5001,7 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -4937,14 +5014,14 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -4953,7 +5030,7 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('ChartsHighchartPieController', function($scope, $routeParams){
     setTimeout(function(){
@@ -5273,7 +5350,7 @@ App.controller('ChartsHighchartPieController', function($scope, $routeParams){
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -5286,14 +5363,14 @@ App.controller('ChartsHighchartPieController', function($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -5302,7 +5379,7 @@ App.controller('ChartsHighchartPieController', function($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('ChartsHighchartScatterBubbleController', function ($scope, $routeParams){
     setTimeout(function(){
@@ -5577,7 +5654,7 @@ App.controller('ChartsHighchartScatterBubbleController', function ($scope, $rout
         });
     }, 50);
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -5590,14 +5667,14 @@ App.controller('ChartsHighchartScatterBubbleController', function ($scope, $rout
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -5606,7 +5683,7 @@ App.controller('ChartsHighchartScatterBubbleController', function ($scope, $rout
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 ;(function($){
     $.fn.Data = function(){};
@@ -5766,6 +5843,8 @@ App.controller('ExtraLockScreenController', function ($scope, $routeParams){
 
 App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $routeParams, $http, $upload){
 
+	
+	// get all users applied jobs to admin
 	$scope.getAllAppliedJobs = function(){
 		$http.get('getAllAppliedJobs')
 		.success(function(data){
@@ -5776,19 +5855,30 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		});
 	}
 
-	$scope.init = function(){
-		$http.get('checkForadmin')
-		.success(function(data){
-			if(data) {
-				$scope.isAdmin = data;
-				console.log("admin"+$scope.isAdmin);
-			} 
-		});
-		
-	}
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
 	
+	
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	// used to genrate pdf and view pdf
 	$scope.generatePdf = function(id){
-	//	alert("in gen pdf fun");
+	// alert("in gen pdf fun");
 		$scope.jobId = id;
 		console.log($scope.jobId);
 		   var baseUrl = "/"
@@ -5804,6 +5894,8 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams, $http, $upload){
 	$scope.uploadSuccess;
 	$scope.uploadFaild;
+
+	// used to uplopad pdf (clicked on upload button)
 	$scope.uploadExcel = function(){
 		$http.post('/uploadExcel')
 		.success(function(data){
@@ -5812,10 +5904,20 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 		});
 		
 	}
+	
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
 	var file=null;
+	// called when file is selelcted
 	$scope.onFileSelect = function($files) {
 	    file=$files[0];
 	};
+	
 	$scope.succUpload = false;
 	$scope.errorUpload = false;
 	
@@ -5843,6 +5945,20 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 		}
 	};
 	
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	
 	
 });
 
@@ -5857,38 +5973,53 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		aextra : []	
 	};
 
-	/* $scope.open = function($event) {
-		    $event.preventDefault();
-		    $event.stopPropagation();
-
-		    $scope.opened = true;
-		  };
-
-		  $scope.dateOptions = {
-		    formatYear: 'yy',
-		    startingDay: 1
-		  };
-
-		  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-		  $scope.format = $scope.formats[2];
-	*/
+	
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
+	// check for the admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	
 	/*
-		$('#startdateemp').datepicker({
-		    format: 'mm-dd-yyyy'
-		});
+	 * $scope.open = function($event) { $event.preventDefault();
+	 * $event.stopPropagation();
+	 * 
+	 * $scope.opened = true; };
+	 * 
+	 * $scope.dateOptions = { formatYear: 'yy', startingDay: 1 };
+	 * 
+	 * $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy',
+	 * 'shortDate']; $scope.format = $scope.formats[2];
+	 */
+	/*
+	 * $('#startdateemp').datepicker({ format: 'mm-dd-yyyy' });
+	 * 
+	 * $('#enddateemp').datepicker({ format: 'mm-dd-yyyy' });
+	 */
 	
-		$('#enddateemp').datepicker({
-		    format: 'mm-dd-yyyy'
-		});*/
-	
-		/*$('#edudateform').datepicker({
-	    format: 'mm-dd-yyyy'
-		});
-	*/
+		/*
+		 * $('#edudateform').datepicker({ format: 'mm-dd-yyyy' });
+		 */
 		$('#dob').datepicker({
 	    format: 'mm-dd-yyyy'
 		});
 	
+		// used for init date picker in education form
 		$scope.initeduDateform = function(){
 			$('#edudateform').datepicker({
 			    format: 'mm-dd-yyyy'
@@ -5899,6 +6030,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			
 		}
 		
+		// used to init date picker in company form
 		$scope.initCmpDatePicker = function(){
 			$('#startdateemp').datepicker({
 			    format: 'mm-dd-yyyy'
@@ -5908,6 +6040,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 				});
 		} 
 		
+		// used to init date picker
 		$scope.initDatePicker  = function(){
 			
 			$('#certYear').datepicker({
@@ -5951,7 +6084,8 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		console.log("Clearance"+JSON.stringify($scope.userClearance));
 		console.log("position"+JSON.stringify($scope.userPosition));
 		
-		//chk for  the education,employee cmp,user posi/clearance selected or not if not gives gives error  
+		// chk for the education,employee cmp,user posi/clearance selected or
+		// not if not gives gives error
 		if(!(angular.isUndefined($scope.userClearance)) || !(angular.isUndefined($scope.userPosition))){
 		if($scope.addEducation.length == 0){
 			$scope.EducationError = true;
@@ -5998,7 +6132,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		$http.get('/getAllClearance')
     	.success(function(data) {
     		$scope.allCleanrance = data;
-    		//console.log($scope.userCleanrance);
+    		// console.log($scope.userCleanrance);
     		
     	});
 		
@@ -6065,17 +6199,30 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		
     		console.log("$scope.allCleanrance"+JSON.stringify($scope.allCleanrance.clearance));
     		console.log("$scope.userClearance"+JSON.stringify($scope.userClearance));
-    		var i,j;
-    		for(i=0;i<$scope.allCleanrance.length;i++) {
-    		for(j=0;j<$scope.userClearance.length;j++) {
-    		if($scope.allCleanrance[j].clearance == $scope.userClearance[i]) {
-    		$scope.allCleanrance[j].isSelected = true;
-    		$scope.isSelect = true;
-    		}
+    		/*
+			 * var i,j; for(i=0;i<$scope.allCleanrance.length;i++) { for(j=0;j<$scope.userClearance.length;j++) {
+			 * if($scope.allCleanrance[j].clearance == $scope.userClearance[i]) {
+			 * $scope.allCleanrance[j].isSelected = true; $scope.isSelect =
+			 * true; } }; };
+			 */
     		
-    		};
-    		};
-
+    		angular.forEach($scope.allCleanrance.clearance, function(obj, index){
+    			
+    			angular.forEach($scope.userClearance, function(obj1, index){
+    				if ((obj.clearance == obj1.clearance)) {
+    					console.log(obj1.clearance);
+    					console.log(obj.clearance);
+    					// $scope.skills.push(obj.skillName);
+    					obj.isSelect = true;
+    					};
+    				});
+    			});
+    		
+    		
+    		
+    		
+    		
+    		
     		
     		});
 	}
@@ -6323,7 +6470,7 @@ App.controller('ExtraSignupController', function ($scope, $routeParams){
     });
 });
 App.controller('ExtraUserListController', function ($scope, $rootScope, $routeParams, $location){
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -6336,23 +6483,22 @@ App.controller('ExtraUserListController', function ($scope, $rootScope, $routePa
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 /*
-                setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
-                    $(">.portlet-body", me).removeClass('wait');
-                }, 1000);*/
+ * setTimeout(function(){ //$(">.portlet-body>div", me).show();
+ * $(">.portlet-body", me).removeClass('wait'); }, 1000);
+ */
             }
             else if($(this).hasClass('fa-times')){
                 me.remove();
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('FormBasicController', function ($scope, $routeParams){
     if($('#demo-checkbox-radio').length <= 0){
@@ -6368,7 +6514,7 @@ App.controller('FormBasicController', function ($scope, $routeParams){
 });
 App.controller('FormComponentsController', function ($scope, $routeParams){
     setTimeout(function(){
-        //BEGIN PLUGINS DATE RANGE PICKER
+        // BEGIN PLUGINS DATE RANGE PICKER
         $('input[name="daterangepicker-default"]').daterangepicker();
         $('input[name="daterangepicker-date-time"]').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' });
         $('.reportrange').daterangepicker(
@@ -6389,9 +6535,9 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
             }
         );
         $('.reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-        //END PLUGINS DATE RANGE PICKER
+        // END PLUGINS DATE RANGE PICKER
 
-        //BEGIN PLUGINS DATE PICKER
+        // BEGIN PLUGINS DATE PICKER
         $('.datepicker-default').datepicker();
         $('.datepicker-years').datepicker({
             startView: 1,
@@ -6405,9 +6551,9 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
             startView: 2,
             minViewMode: 1
         });
-        //END PLUGINS DATE PICKER
+        // END PLUGINS DATE PICKER
 
-        //BEGIN PLUGINS DATETIME PICKER
+        // BEGIN PLUGINS DATETIME PICKER
         $('.datetimepicker-default').datetimepicker();
         $('.datetimepicker-disable-date').datetimepicker({
             pickDate: false
@@ -6423,9 +6569,9 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
         $('.datetimepicker-end').on("change.dp",function (e) {
             $('.datetimepicker-start').data("DateTimePicker").setEndDate(e.date);
         });
-        //END PLUGINS DATETIME PICKER
+        // END PLUGINS DATETIME PICKER
 
-        //BEGIN PLUGINS TIME PICKER
+        // BEGIN PLUGINS TIME PICKER
         $('.timepicker-default').timepicker();
         $('.timepicker-24hr').timepicker({
             autoclose: true,
@@ -6433,9 +6579,9 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
             showSeconds: true,
             showMeridian: false
         });
-        //END PLUGINS TIME PICKER
+        // END PLUGINS TIME PICKER
 
-        //BEGIN PLUGINS CLOCKFACE TIME PICKER
+        // BEGIN PLUGINS CLOCKFACE TIME PICKER
         $('.clockface-default').clockface();
         $('.clockface-component').clockface({
             format: 'HH:mm',
@@ -6450,10 +6596,10 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
         $('.clockface-inline').clockface({
             format: 'H:mm'
         }).clockface('show', '14:30');
-        //END PLUGINS CLOCKFACE TIME PICKER
+        // END PLUGINS CLOCKFACE TIME PICKER
 
 
-        //BEGIN PLUGINS COLOR PICKER
+        // BEGIN PLUGINS COLOR PICKER
         $('.colorpicker-default').colorpicker();
         $('.colorpicker-rgba').colorpicker();
         $('.colorpicker-component').colorpicker({
@@ -6462,7 +6608,7 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
                 $('.colorpicker-component span i').css('color',ev.color.toHex());
                 $('.colorpicker-component input').val(ev.color.toHex());
             });
-        //END PLUGINS COLOR PICKER
+        // END PLUGINS COLOR PICKER
 
         // BEGIN PLUGIN MASK INPUT
         $("#date").mask("99/99/9999");
@@ -6470,12 +6616,12 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
         $("#product-key").mask("(aa) 99-999");
         // END PLUGIN MASK INPUT
 
-        //$("[name='my-checkbox']").bootstrapSwitch();
+        // $("[name='my-checkbox']").bootstrapSwitch();
         setTimeout(function(){
             $('.make-switch').bootstrapSwitch();
         }, 50);
 
-        //BEGIN CHECKBOX & RADIO
+        // BEGIN CHECKBOX & RADIO
         if($('#demo-checkbox-radio').length <= 0){
             $('input[type="checkbox"]:not(".switch")').iCheck({
                 checkboxClass: 'icheckbox_minimal-grey',
@@ -6487,16 +6633,16 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
                 increaseArea: '20%' // optional
             });
         }
-        //END CHECKBOX & RADIO
-        //BEGIN CHARACTER COUNT
+        // END CHECKBOX & RADIO
+        // BEGIN CHARACTER COUNT
         $("#message1, #message2").charCount();
         $("#message3").charCount({
             allowed: 50,
             warning: 20,
             counterText: 'Characters left: '
         });
-        //END CHARACTER COUNT
-        //BEGIN PORTLET
+        // END CHARACTER COUNT
+        // BEGIN PORTLET
         $(".portlet").each(function(index, element) {
             var me = $(this);
             $(">.portlet-header>.tools>i", me).click(function(e){
@@ -6509,14 +6655,14 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
                     $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
                 }
                 else if($(this).hasClass('fa-cog')){
-                    //Show modal
+                    // Show modal
                 }
                 else if($(this).hasClass('fa-refresh')){
-                    //$(">.portlet-body", me).hide();
+                    // $(">.portlet-body", me).hide();
                     $(">.portlet-body", me).addClass('wait');
 
                     setTimeout(function(){
-                        //$(">.portlet-body>div", me).show();
+                        // $(">.portlet-body>div", me).show();
                         $(">.portlet-body", me).removeClass('wait');
                     }, 1000);
                 }
@@ -6525,7 +6671,7 @@ App.controller('FormComponentsController', function ($scope, $routeParams){
                 }
             });
         });
-        //END PORTLET
+        // END PORTLET
     }, 100);
 });
 App.controller('FormDropzoneFileUploadController', function($scope, $routeParams){
@@ -6544,7 +6690,7 @@ App.controller('FormMultipleFileUploadController', function ($scope, $routeParam
     $('#fileupload').fileupload({
         disableImageResize: false,
         // Uncomment the following to send cross-domain cookies:
-        //xhrFields: {withCredentials: true},
+        // xhrFields: {withCredentials: true},
         url: '../vendors/jquery-file-upload/server/php/'
     });
 
@@ -6787,8 +6933,8 @@ App.controller('FormWizardController', function ($scope, $routeParams){
         content: '<section><p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p></section>'
     });
 
-    /*************************************************/
-    /************ #rootwizard-custom-arrow ***********/
+    /** ********************************************** */
+    /** ********** #rootwizard-custom-arrow ********** */
     $('#rootwizard-tabdetail2').bootstrapWizard({
         onTabShow: function(tab, navigation, index) {
             var $total = navigation.find('li').length;
@@ -6834,7 +6980,7 @@ App.controller('FormWizardController', function ($scope, $routeParams){
             }
         },'tabClass': 'nav nav-pills','nextSelector': '.button-next', 'previousSelector': '.button-previous'
     });
-    /************ #rootwizard-custom-circle ***********/
+    /** ********** #rootwizard-custom-circle ********** */
     $('#rootwizard-custom-circle').bootstrapWizard({
         onTabShow: function(tab, navigation, index) {
             var $total = navigation.find('li').length;
@@ -6884,7 +7030,7 @@ App.controller('FormWizardController', function ($scope, $routeParams){
         'tabClass': 'bwizard-steps-o','nextSelector': '.button-next', 'previousSelector': '.button-previous'
     });
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -6897,14 +7043,14 @@ App.controller('FormWizardController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -6913,7 +7059,7 @@ App.controller('FormWizardController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('FormXeditableController', function ($scope, $routeParams){
     setTimeout(function(){
@@ -6930,7 +7076,7 @@ App.controller('FormXeditableController', function ($scope, $routeParams){
                 increaseArea: '20%' // optional
             });
         }
-        //defaults
+        // defaults
         $.fn.editable.defaults.inputclass = 'form-control';
         $.fn.editable.defaults.url = '/post';
 
@@ -6942,7 +7088,7 @@ App.controller('FormXeditableController', function ($scope, $routeParams){
             $.fn.editable.defaults.mode = 'popup';
         }
 
-        //editables
+        // editables
         $('#username').editable({
             url: '/post',
             type: 'text',
@@ -7100,7 +7246,7 @@ App.controller('FormXeditableController', function ($scope, $routeParams){
             }
         });
 
-        //enable / disable
+        // enable / disable
         $('#enable').on('switch-change', function () {
             $('#user .editable').editable('toggleDisabled');
         });
@@ -7134,15 +7280,15 @@ App.controller('GridDatepickerController', function ($scope, $routeParams){
         itemsBox: '.list',
         itemPath: '.list-item',
         panelPath: '.jplist-panel',
-        //save plugin state
-        storage: 'localstorage', //'', 'cookies', 'localstorage'
+        // save plugin state
+        storage: 'localstorage', // '', 'cookies', 'localstorage'
         storageName: 'date-picker-range-filter',
         controlTypes: {
             'date-picker-range-filter': {
                 className: 'DatePickerRangeFilter',
                 options: {
                     datepicker: function(input, options){
-                        //set options
+                        // set options
                         options.dateFormat = 'mm/dd/yy';
                         input.datepicker(options);
                     }
@@ -7158,7 +7304,7 @@ App.controller('GridDeepLinkingController', function ($scope, $routeParams){
             itemsBox: '.list',
             itemPath: '.list-item',
             panelPath: '.jplist-panel',
-            //deep linking
+            // deep linking
             deepLinking: true
         });
     },500);
@@ -7183,8 +7329,8 @@ App.controller('GridFilterWithUiLiController', function ($scope, $routeParams){
         itemsBox: '.list',
         itemPath: '.list-item',
         panelPath: '.jplist-panel',
-        //save plugin state
-        storage: 'localstorage', //'', 'cookies', 'localstorage'
+        // save plugin state
+        storage: 'localstorage', // '', 'cookies', 'localstorage'
         storageName: 'drop-down-filters-ul-li'
     });
 });
@@ -7213,8 +7359,8 @@ App.controller('GridLayoutDivController', function ($scope, $routeParams){
         itemsBox: '.list',
         itemPath: '.list-item',
         panelPath: '.jplist-panel',
-        //save plugin state
-        storage: 'localstorage', //'', 'cookies', 'localstorage'
+        // save plugin state
+        storage: 'localstorage', // '', 'cookies', 'localstorage'
         storageName: 'jplist-div-layout'
     });
 });
@@ -7225,8 +7371,8 @@ App.controller('GridLayoutTable1Controller', function ($scope, $routeParams){
         itemsBox: '.demo-tbl',
         itemPath: '.tbl-item',
         panelPath: '.jplist-panel',
-        //save plugin state
-        storage: 'localstorage', //'', 'cookies', 'localstorage'
+        // save plugin state
+        storage: 'localstorage', // '', 'cookies', 'localstorage'
         storageName: 'jplist-tabl'
     });
 });
@@ -7235,8 +7381,8 @@ App.controller('GridLayoutTable2Controller', function ($scope, $routeParams){
         itemsBox: '.demo-tbl tbody',
         itemPath: '.tbl-item',
         panelPath: '.jplist-panel',
-        //save plugin state
-        storage: 'localstorage', //'', 'cookies', 'localstorage'
+        // save plugin state
+        storage: 'localstorage', // '', 'cookies', 'localstorage'
         storageName: 'jplist-table-2',
         redrawCallback: function(){
             $('.tbl-item').each(function(index, el){
@@ -7255,8 +7401,8 @@ App.controller('GridLayoutUlLiController', function ($scope, $routeParams){
         itemsBox: '.ul-li-list',
         itemPath: '.list-item',
         panelPath: '.jplist-panel',
-        //save plugin state
-        storage: 'localstorage', //'', 'cookies', 'localstorage'
+        // save plugin state
+        storage: 'localstorage', // '', 'cookies', 'localstorage'
         storageName: 'jplist-ul-li'
     });
 });
@@ -7273,11 +7419,11 @@ App.controller('GridRangeSliderController', function ($scope, $routeParams){
         itemPath: '.list-item',
         panelPath: '.jplist-panel',
         controlTypes: {
-            //likes range slider
+            // likes range slider
             'range-slider-likes': {
                 className: 'RangeSlider',
                 options: {
-                    //jquery ui range slider
+                    // jquery ui range slider
                     ui_slider: function($slider, $prev, $next){
                         $slider.slider({
                             min: 0,
@@ -7297,11 +7443,11 @@ App.controller('GridRangeSliderController', function ($scope, $routeParams){
                 }
             },
 
-            //prices range slider
+            // prices range slider
             'range-slider-prices': {
                 className: 'RangeSlider',
                 options:{
-                    //jquery ui range slider
+                    // jquery ui range slider
                     ui_slider: function($slider, $prev, $next){
                         $slider.slider({
                             min: 0,
@@ -7321,11 +7467,11 @@ App.controller('GridRangeSliderController', function ($scope, $routeParams){
                 }
             },
 
-            //views range slider
+            // views range slider
             'range-slider-views':{
                 className: 'RangeSlider',
                 options: {
-                    //jquery ui range slider
+                    // jquery ui range slider
                     ui_slider: function($slider, $prev, $next){
                         $slider.slider({
                             min: 0,
@@ -7402,11 +7548,12 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
 	$rootScope.username;
 	$rootScope.isAdmin;
 	$rootScope.isUser;
-	//alert("main");
-		$http.get('/getUserProfileData')
+	// alert("main");
+		$http.get('/getUserName')
     	.success(function(data) {
-    		$scope.userData = data;
-    		$rootScope.username = data.uname;
+    	// $scope.userData = data;
+    		$rootScope.username = data;
+    		console.log("data"+data);
     	});
 		
 	
@@ -7428,13 +7575,13 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
     setTimeout(function(){
         $.fn.Data.checkbox();
 
-        //BEGIN CALENDAR
+        // BEGIN CALENDAR
         $("#my-calendar").zabuto_calendar({
             language: "en"
         });
-        //END CALENDAR
+        // END CALENDAR
 
-        //BEGIN TO-DO-LIST
+        // BEGIN TO-DO-LIST
         $('.todo-list').slimScroll({
             "width": '100%',
             "height": '250px',
@@ -7442,9 +7589,9 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
         });
         $( ".sortable" ).sortable();
         $( ".sortable" ).disableSelection();
-        //END TO-DO-LIST
+        // END TO-DO-LIST
 
-        //BEGIN CHAT FORM
+        // BEGIN CHAT FORM
         $('.chat-scroller').slimScroll({
             "width": '100%',
             "height": '270px',
@@ -7485,7 +7632,7 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
                     });
 
                     height += '';
-                    //alert(height);
+                    // alert(height);
                     $('.chat-scroller').slimScroll({
                         scrollTo: height
                     });
@@ -7530,12 +7677,13 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
             }
 
         });
-        //END CHAT FORM
+        // END CHAT FORM
 
-        //BEGIN COUNTER FOR SUMMARY BOX
+        // BEGIN COUNTER FOR SUMMARY BOX
         counterNum($(".profit h4 span:first-child"), 189, 112, 1, 30);
         counterNum($(".income h4 span:first-child"), 636, 812, 1, 50);
-        //counterNum($(".task h4 span:first-child"), 0, $scope.noOfOrders , 1, 100);
+        // counterNum($(".task h4 span:first-child"), 0, $scope.noOfOrders , 1,
+		// 100);
         counterNum($(".visit h4 span:first-child"), 310, 376, 1, 500);
         function counterNum(obj, start, end, step, duration) {
             $(obj).html(start);
@@ -7548,7 +7696,7 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
                 }
             },duration);
         }
-        //END COUNTER FOR SUMMARY BOX
+        // END COUNTER FOR SUMMARY BOX
         // MESSAGE ON TOP
         $('#message_trigger_ok').on('click', function(e) {
             e.preventDefault();
@@ -7563,12 +7711,10 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
 
         var style_rand = style_list[Math.floor(Math.random() * (style_list.length))];
         var msg_rand = msg_list[Math.floor(Math.random() * (msg_list.length))];
-      /*  setTimeout(function(){
-            $.notific8(msg_rand, {
-                theme: style_rand,
-                life: 4000
-            });
-        }, 5000);*/
+      /*
+		 * setTimeout(function(){ $.notific8(msg_rand, { theme: style_rand,
+		 * life: 4000 }); }, 5000);
+		 */
         // MESSAGE ON TOP - SCO.MESSAGE
         $('#message_trigger_ok').on('click', function(e) {
             e.preventDefault();
@@ -7593,10 +7739,12 @@ App.controller('PageCalendarController', function ($scope, $routeParams){
     $.fn.Data.checkbox();
 
     var eventDrag = function(el){
-        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+        // create an Event Object
+		// (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
         // it doesn't need to have a start or end
         var eventObject = {
-            title: $.trim(el.text()) // use the element's text as the event title
+            title: $.trim(el.text()) // use the element's text as the event
+										// title
         };
 
         // store the Event Object in the DOM element so we can get to it later
@@ -7606,7 +7754,7 @@ App.controller('PageCalendarController', function ($scope, $routeParams){
         el.draggable({
             zIndex: 999,
             revert: true,      // will cause the event to go back to its
-            revertDuration: 0  //  original position after the drag
+            revertDuration: 0  // original position after the drag
         });
     };
 
@@ -7614,8 +7762,10 @@ App.controller('PageCalendarController', function ($scope, $routeParams){
         eventDrag($(this));
     });
 
-    /* initialize the calendar
-     -----------------------------------------------------------------*/
+    /*
+	 * initialize the calendar
+	 * -----------------------------------------------------------------
+	 */
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
@@ -7623,13 +7773,16 @@ App.controller('PageCalendarController', function ($scope, $routeParams){
             right: 'month,agendaWeek,agendaDay'
         },
         editable: true,
-        droppable: true, // this allows things to be dropped onto the calendar !!!
-        drop: function(date, allDay) { // this function is called when something is dropped
+        droppable: true, // this allows things to be dropped onto the
+							// calendar !!!
+        drop: function(date, allDay) { // this function is called when
+										// something is dropped
 
             // retrieve the dropped element's stored Event Object
             var originalEventObject = $(this).data('eventObject');
 
-            // we need to copy it, so that multiple events don't have a reference to the same object
+            // we need to copy it, so that multiple events don't have a
+			// reference to the same object
             var copiedEventObject = $.extend({}, originalEventObject);
 
             // assign it the date that was reported
@@ -7637,7 +7790,8 @@ App.controller('PageCalendarController', function ($scope, $routeParams){
             copiedEventObject.allDay = allDay;
 
             // render the event on the calendar
-            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+            // the last `true` argument determines if the event "sticks"
+			// (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
             $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
 
             // is the "remove after drop" checkbox checked?
@@ -7692,7 +7846,7 @@ App.controller('TableActionController', function($scope, $routeParams){
         $(".spinner").spinner();
         $.fn.Data.checkbox();
 
-        //BEGIN CHECKBOX TABLE
+        // BEGIN CHECKBOX TABLE
         $('.checkall').on('ifChecked ifUnchecked', function(event) {
             if (event.type == 'ifChecked') {
                 $(this).closest('table').find('input[type=checkbox]').iCheck('check');
@@ -7700,7 +7854,7 @@ App.controller('TableActionController', function($scope, $routeParams){
                 $(this).closest('table').find('input[type=checkbox]').iCheck('uncheck');
             }
         });
-        //END CHECKBOX TABLE
+        // END CHECKBOX TABLE
     };
 });
 App.controller('TableAdvancedController', function ($scope, $routeParams){
@@ -7725,7 +7879,7 @@ App.controller('TableAdvancedController', function ($scope, $routeParams){
             });
         }
 
-        //BEGIN CHECKBOX TABLE
+        // BEGIN CHECKBOX TABLE
         $('.checkall').on('ifChecked ifUnchecked', function(event) {
             if (event.type == 'ifChecked') {
                 $(this).closest('table').find('input[type=checkbox]').iCheck('check');
@@ -7733,7 +7887,7 @@ App.controller('TableAdvancedController', function ($scope, $routeParams){
                 $(this).closest('table').find('input[type=checkbox]').iCheck('uncheck');
             }
         });
-        //END CHECKBOX TABLE
+        // END CHECKBOX TABLE
     };
 });
 
@@ -7827,7 +7981,8 @@ App.controller('TableAdvancedController', function ($scope, $routeParams){
         };
 
         base.unbind = function(){
-            // unbind window events by specifying handle so we don't remove too much
+            // unbind window events by specifying handle so we don't remove too
+			// much
             base.$window.off('.' + name, base.toggleHeaders);
             base.$window.off('.' + name, base.updateWidth);
             base.$el.off('.' + name);
@@ -7863,7 +8018,8 @@ App.controller('TableAdvancedController', function ($scope, $routeParams){
                     base.leftOffset = newLeft;
                     base.topOffset = newTopOffset;
 
-                    // make sure the width is correct: the user might have resized the browser while in static mode
+                    // make sure the width is correct: the user might have
+					// resized the browser while in static mode
                     base.updateWidth();
                 }
                 else if (base.isSticky) {
@@ -7960,7 +8116,7 @@ App.controller('TableDatatablesController', function ($scope, $routeParams){
             });
         }
 
-        //BEGIN CHECKBOX TABLE
+        // BEGIN CHECKBOX TABLE
         $('.checkall').on('ifChecked ifUnchecked', function(event) {
             if (event.type == 'ifChecked') {
                 $(this).closest('table').find('input[type=checkbox]').iCheck('check');
@@ -7968,7 +8124,7 @@ App.controller('TableDatatablesController', function ($scope, $routeParams){
                 $(this).closest('table').find('input[type=checkbox]').iCheck('uncheck');
             }
         });
-        //END CHECKBOX TABLE
+        // END CHECKBOX TABLE
     },50);
 
 });
@@ -8069,7 +8225,7 @@ App.controller('TableFilterController', function ($scope, $routeParams){
         });
     }
 
-    //BEGIN CHECKBOX TABLE
+    // BEGIN CHECKBOX TABLE
     $('.checkall').on('ifChecked ifUnchecked', function(event) {
         if (event.type == 'ifChecked') {
             $(this).closest('table').find('input[type=checkbox]').iCheck('check');
@@ -8077,11 +8233,11 @@ App.controller('TableFilterController', function ($scope, $routeParams){
             $(this).closest('table').find('input[type=checkbox]').iCheck('uncheck');
         }
     });
-    //END CHECKBOX TABLE
+    // END CHECKBOX TABLE
 });
 App.controller('TableSampleController', function ($scope, $routeParams){
     var spinner = $( ".spinner" ).spinner();
-    //BEGIN JQUERY TABLE SORTER
+    // BEGIN JQUERY TABLE SORTER
     $(".tablesorter").tablesorter({
         headers: {
             0: {
@@ -8089,13 +8245,13 @@ App.controller('TableSampleController', function ($scope, $routeParams){
             }
         }
     });
-    //END JQUERY TABLE SORTER
+    // END JQUERY TABLE SORTER
 
-    //BEGIN JQUERY DATE PICKER
+    // BEGIN JQUERY DATE PICKER
     $('.datepicker-filter').datepicker({
         autoclose: true
     });
-    //END JQUERY DATE PICKER
+    // END JQUERY DATE PICKER
 
     $('.submit-action').click(function(e) {
         if($('.table-group-action-select').val() > 0){
@@ -8107,7 +8263,7 @@ App.controller('TableSampleController', function ($scope, $routeParams){
         }
     });
 
-    //BEGIN PAGING TABLE
+    // BEGIN PAGING TABLE
     pager(0);
 
     $(".gw-prev").click(function(e){
@@ -8125,7 +8281,7 @@ App.controller('TableSampleController', function ($scope, $routeParams){
     $(".gw-pageSize").change(function(e){
         load();
     });
-    //END PAGING TABLE
+    // END PAGING TABLE
 
     function pager(p){
         var page = Math.max(1, (parseInt($(".gw-page").val()) + p));
@@ -8227,7 +8383,7 @@ App.controller('TableSampleController', function ($scope, $routeParams){
         });
     }
 
-    //BEGIN CHECKBOX TABLE
+    // BEGIN CHECKBOX TABLE
     $('.checkall').on('ifChecked ifUnchecked', function(event) {
         if (event.type == 'ifChecked') {
             $(this).closest('table').find('input[type=checkbox]').iCheck('check');
@@ -8235,7 +8391,7 @@ App.controller('TableSampleController', function ($scope, $routeParams){
             $(this).closest('table').find('input[type=checkbox]').iCheck('uncheck');
         }
     });
-    //END CHECKBOX TABLE
+    // END CHECKBOX TABLE
 });
 App.controller('CheckboxRadioController', function ($scope, $routeParams){
     $scope.updateCheckbox = function(){
@@ -8282,7 +8438,7 @@ App.controller('CheckboxRadioController', function ($scope, $routeParams){
 });
 App.controller('UiDropdownSelectController', function ($scope, $routeParams){
     setTimeout(function(){
-        //BEGIN PLUGINS SELECT2
+        // BEGIN PLUGINS SELECT2
         $('.select2-category').select2({
             placeholder: "Select an option",
             allowClear: true
@@ -8317,27 +8473,36 @@ App.controller('UiDropdownSelectController', function ($scope, $routeParams){
         $(".select2-loading-remote-data").select2({
             placeholder: "Search for a movie",
             minimumInputLength: 1,
-            ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+            ajax: { // instead of writing the function to execute the request we
+					// use Select2's convenient helper
                 url: "http://api.rottentomatoes.com/api/public/v1.0/movies.json",
                 dataType: 'jsonp',
                 data: function (term, page) {
                     return {
                         q: term, // search term
                         page_limit: 10,
-                        apikey: "ju6z9mjyajq2djue3gbvv26t" // please do not use so this example keeps working
+                        apikey: "ju6z9mjyajq2djue3gbvv26t" // please do not use
+															// so this example
+															// keeps working
                     };
                 },
-                results: function (data, page) { // parse the results into the format expected by Select2.
-                    // since we are using custom formatting functions we do not need to alter remote JSON data
+                results: function (data, page) { // parse the results into
+													// the format expected by
+													// Select2.
+                    // since we are using custom formatting functions we do not
+					// need to alter remote JSON data
                     return {
                         results: data.movies
                     };
                 }
             },
             initSelection: function (element, callback) {
-                // the input tag has a value attribute preloaded that points to a preselected movie's id
-                // this function resolves that id attribute to an object that select2 can render
-                // using its formatResult renderer - that way the movie name is shown preselected
+                // the input tag has a value attribute preloaded that points to
+				// a preselected movie's id
+                // this function resolves that id attribute to an object that
+				// select2 can render
+                // using its formatResult renderer - that way the movie name is
+				// shown preselected
                 var id = $(element).val();
                 if (id !== "") {
                     $.ajax("http://api.rottentomatoes.com/api/public/v1.0/movies/" + id + ".json", {
@@ -8350,12 +8515,16 @@ App.controller('UiDropdownSelectController', function ($scope, $routeParams){
                     });
                 }
             },
-            formatResult: movieFormatResult, // omitted for brevity, see the source of this page
-            formatSelection: movieFormatSelection, // omitted for brevity, see the source of this page
-            dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+            formatResult: movieFormatResult, // omitted for brevity, see the
+												// source of this page
+            formatSelection: movieFormatSelection, // omitted for brevity, see
+													// the source of this page
+            dropdownCssClass: "bigdrop", // apply css that makes the dropdown
+											// taller
             escapeMarkup: function (m) {
                 return m;
-            } // we do not want to escape markup since we are displaying html in results
+            } // we do not want to escape markup since we are displaying html
+				// in results
         });
         $(".select2-loading-data").select2({
             minimumInputLength: 1,
@@ -8369,16 +8538,16 @@ App.controller('UiDropdownSelectController', function ($scope, $routeParams){
                 query.callback(data);
             }
         });
-        //END PLUGINS SELECT2
+        // END PLUGINS SELECT2
 
-        //BEGIN PLUGINS BOOTSTRAP SELECT
+        // BEGIN PLUGINS BOOTSTRAP SELECT
         $('.selectpicker').selectpicker({
             iconBase: 'fa',
             tickIcon: 'fa-check'
         });
-        //END PLUGINS BOOTSTRAP SELECT
+        // END PLUGINS BOOTSTRAP SELECT
 
-        //BEGIN PLUGINS MULTI SELECT
+        // BEGIN PLUGINS MULTI SELECT
         $('#pre-selected-options').multiSelect();
         $('#callbacks').multiSelect({
             afterSelect: function(values){
@@ -8420,29 +8589,30 @@ App.controller('UiDropdownSelectController', function ($scope, $routeParams){
             return false;
         });
         $('#optgroup').multiSelect({ selectableOptgroup: true });
-    //END PLUGINS MULTI SELECT
+    // END PLUGINS MULTI SELECT
     },500);
 });
 App.controller('UiEditorsController', function ($scope, $routeParams){
-    //BEGIN BOOTSTRAP WYSIWYG5
+    // BEGIN BOOTSTRAP WYSIWYG5
     $('.wysihtml5').wysihtml5();
-    //END BOOTSTRAP WYSIWYG5
+    // END BOOTSTRAP WYSIWYG5
 
-    //BEGIN CKEDITOR
+    // BEGIN CKEDITOR
     CKEDITOR.replace( 'editor1' );
     CKEDITOR.disableAutoInline = true;
-    //END CKEDITOR
+    // END CKEDITOR
 
-    //BEGIN SUMMERNOTE EDITOR
+    // BEGIN SUMMERNOTE EDITOR
     $('#summernote-default').summernote();
     $('#summernote-edit').click(function() {
         $('.click2edit').summernote({focus: true});
     });
     $('#summernote-save').click(function() {
-        var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+        var aHTML = $('.click2edit').code(); // save HTML If you need(aHTML:
+												// array).
         $('.click2edit').destroy();
     });
-    //END SUMMERNOTE EDITOR
+    // END SUMMERNOTE EDITOR
 
     $("[data-provide='markdown']").markdown({autofocus:false,savable:false});
 });
@@ -8472,7 +8642,9 @@ App.controller('UiNestableListController', function ($scope, $routeParams){
         var list   = e.length ? e : $(e.target),
             output = list.data('output');
         if (window.JSON) {
-            output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+            output.val(window.JSON.stringify(list.nestable('serialize')));// ,
+																			// null,
+																			// 2));
         } else {
             output.val('JSON browser support required for this demo.');
         }
@@ -8538,7 +8710,7 @@ App.controller('UiPortletsController', function ($scope, $routeParams){
     $(".column").disableSelection();
 
 
-    //BEGIN PORTLET
+    // BEGIN PORTLET
     $(".portlet").each(function(index, element) {
         var me = $(this);
         $(">.portlet-header>.tools>i", me).click(function(e){
@@ -8551,14 +8723,14 @@ App.controller('UiPortletsController', function ($scope, $routeParams){
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
             }
             else if($(this).hasClass('fa-cog')){
-                //Show modal
+                // Show modal
             }
             else if($(this).hasClass('fa-refresh')){
-                //$(">.portlet-body", me).hide();
+                // $(">.portlet-body", me).hide();
                 $(">.portlet-body", me).addClass('wait');
 
                 setTimeout(function(){
-                    //$(">.portlet-body>div", me).show();
+                    // $(">.portlet-body>div", me).show();
                     $(">.portlet-body", me).removeClass('wait');
                 }, 1000);
             }
@@ -8567,7 +8739,7 @@ App.controller('UiPortletsController', function ($scope, $routeParams){
             }
         });
     });
-    //END PORTLET
+    // END PORTLET
 });
 App.controller('UiProgressbarsController', function ($scope, $routeParams){
     $scope.update_progressbar= function(){
@@ -8637,11 +8809,11 @@ App.controller('UiProgressbarsController', function ($scope, $routeParams){
 });
 App.controller('UiSlidersController', function ($scope, $routeParams){
     $scope.ui_slider_tab = function(){
-        //BEGIN JQUERY UI SLIDERS DEFAULT
+        // BEGIN JQUERY UI SLIDERS DEFAULT
         $( "#slider-default" ).slider();
         // END JQUERY UI SLIDERS DEFAULT
 
-        //BEGIN MULTIPLE SLIDERS
+        // BEGIN MULTIPLE SLIDERS
         $( "#slider-multi >  span" ).each(function() {
             // read initial values from markup and remove that
             var value = parseInt( $( this ).text(), 10 );
@@ -8652,9 +8824,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
                 orientation: "vertical"
             });
         });
-        //END MULTIPLE SLIDERS
+        // END MULTIPLE SLIDERS
 
-        //END RANGE SLIDER
+        // END RANGE SLIDER
         $( "#slider-range" ).slider({
             range: true,
             min: 0,
@@ -8666,9 +8838,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
         });
         $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
             " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-        //END RANGE SLIDER
+        // END RANGE SLIDER
 
-        //BEGIN RANGE MAXIMUM
+        // BEGIN RANGE MAXIMUM
         $( "#slider-range-max" ).slider({
             range: "max",
             min: 1,
@@ -8679,9 +8851,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
             }
         });
         $( "#amount-max" ).val( $( "#slider-range-max" ).slider( "value" ) );
-        //END RANGE MAXIMUM
+        // END RANGE MAXIMUM
 
-        //BEGIN RANGE MINIMUM
+        // BEGIN RANGE MINIMUM
         $( "#slider-range-min" ).slider({
             range: "min",
             value: 37,
@@ -8692,9 +8864,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
             }
         });
         $( "#amount-min" ).val( "$" + $( "#slider-range-min" ).slider( "value" ) );
-        //END RANGE MINIMUM
+        // END RANGE MINIMUM
 
-        //BEGIN SNAP TO INCREMENTS
+        // BEGIN SNAP TO INCREMENTS
         $( "#slider-snap" ).slider({
             value:100,
             min: 0,
@@ -8705,9 +8877,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
             }
         });
         $( "#amount-snap" ).val( "$" + $( "#slider-snap" ).slider( "value" ) );
-        //END SNAP TO INCREMENTS
+        // END SNAP TO INCREMENTS
 
-        //BEGIN VERTICAL SLIDER
+        // BEGIN VERTICAL SLIDER
         $( "#slider-vertical" ).slider({
             orientation: "vertical",
             range: "min",
@@ -8719,9 +8891,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
             }
         });
         $( "#amount-vertical" ).val( $( "#slider-vertical" ).slider( "value" ) );
-        //END VERTICAL SLIDER
+        // END VERTICAL SLIDER
 
-        //BEGIN VERTICAL RANGE SLIDER
+        // BEGIN VERTICAL RANGE SLIDER
         $( "#slider-vertical-range" ).slider({
             orientation: "vertical",
             range: true,
@@ -8732,11 +8904,11 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
         });
         $( "#amount-vertical-range" ).val( "$" + $( "#slider-vertical-range" ).slider( "values", 0 ) +
             " - $" + $( "#slider-vertical-range" ).slider( "values", 1 ) );
-        //END VERTICAL RANGE SLIDER
+        // END VERTICAL RANGE SLIDER
     };
 
     $scope.noui_slider_tab = function(){
-        //BEGIN NOUI SLIDER DEFAULT
+        // BEGIN NOUI SLIDER DEFAULT
         $('#noui-slider-default').noUiSlider({
             start: [ 4000, 8000 ],
             range: {
@@ -8744,9 +8916,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
                 'max': [ 10000 ]
             }
         });
-        //END NOUI SLIDER DEFAULT
+        // END NOUI SLIDER DEFAULT
 
-        //BEGIN NOUI SLIDER RANGE
+        // BEGIN NOUI SLIDER RANGE
         $('#noui-slider-range').noUiSlider({
             start: [ 4000 ],
             range: {
@@ -8761,9 +8933,9 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
                 ]
             }
         });
-        //END NOUI SLIDER RANGE
+        // END NOUI SLIDER RANGE
 
-        //BEGIN NOUI SLIDER STEPPING & SNAPPING TO VALUE
+        // BEGIN NOUI SLIDER STEPPING & SNAPPING TO VALUE
         $('#noui-slider-step-snap').noUiSlider({
             start: [ 4000 ],
             step: 1000,
@@ -8779,11 +8951,11 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
                 ]
             }
         });
-        //END NOUI SLIDER STEPPING & SNAPPING TO VALUE
+        // END NOUI SLIDER STEPPING & SNAPPING TO VALUE
     };
 
     $scope.ion_range_slider_tab = function(){
-        //BEGIN ION RANGE SLIDER
+        // BEGIN ION RANGE SLIDER
         $("#example-1").ionRangeSlider({
             type: "single",
             step: 100,
@@ -8832,12 +9004,12 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
             type: 'single',
             hasGrid: true
         });
-        //END ION RANGE SLIDER
+        // END ION RANGE SLIDER
     };
 
 });
 App.controller('UiTabsController', function ($scope, $routeParams){
-    //BEGIN ACCORDION WITH ICONS
+    // BEGIN ACCORDION WITH ICONS
     function toggleChevron(e) {
         $(e.target)
             .prev('.panel-heading')
@@ -8846,15 +9018,15 @@ App.controller('UiTabsController', function ($scope, $routeParams){
     }
     $('#accordion1').on('hidden.bs.collapse', toggleChevron);
     $('#accordion1').on('shown.bs.collapse', toggleChevron);
-    //END ACCORDION WITH ICONS
+    // END ACCORDION WITH ICONS
 
-    //BEGIN JQUERY SLIMSCROLL
+    // BEGIN JQUERY SLIMSCROLL
     $('.scrollspy-example').slimScroll({
         "height": "200",
         "railVisible": true,
         "alwaysVisible": true
     });
-    //END JQUERY SLIMSCROLL
+    // END JQUERY SLIMSCROLL
 });
 App.controller('UiToastrNotificationsController', function ($scope, $routeParams){
     var i = -1;
@@ -8948,7 +9120,11 @@ App.controller('UiToastrNotificationsController', function ($scope, $routeParams
                 + JSON.stringify(toastr.options, null, 2)
         );
 
-        var $toast = toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
+        var $toast = toastr[shortCutFunction](msg, title); // Wire up an event
+															// handler to a
+															// button in the
+															// toast, if it
+															// exists
         $toastlast = $toast;
         if ($toast.find('#okBtn').length) {
             $toast.delegate('#okBtn', 'click', function () {
@@ -8986,7 +9162,7 @@ App.controller('UiToastrNotificationsController', function ($scope, $routeParams
 });
 App.controller('UiTreeviewController', function ($scope, $routeParams){
     $scope.jstree_tab = function(){
-        //BEGIN JSTREEVIEW
+        // BEGIN JSTREEVIEW
         $('#tree1, #tree2, #tree3, #tree4, #tree6').jstree();
         $('#tree5').jstree({
             'core' : {
@@ -9068,12 +9244,12 @@ App.controller('UiTreeviewController', function ($scope, $routeParams){
         $("#tree16").jstree({
             "plugins" : [ "wholerow" ]
         });
-        //END JSTREEVIEW
+        // END JSTREEVIEW
     };
 
     $scope.family_treeview_tab = function(){
-        //BEGIN FAMILY TREEVIEW VERTICAL
-        //$('.family-tree-vertical li').hide();
+        // BEGIN FAMILY TREEVIEW VERTICAL
+        // $('.family-tree-vertical li').hide();
         $('.family-tree-vertical li:first').show();
         $('.family-tree-vertical li').on('click', function (e) {
             var children = $(this).find('> ul > li');
@@ -9081,10 +9257,10 @@ App.controller('UiTreeviewController', function ($scope, $routeParams){
             else children.show('fast');
             e.stopPropagation();
         });
-        //END FAMILY TREEVIEW VERTICAL
+        // END FAMILY TREEVIEW VERTICAL
 
-        //BEGIN FAMILY TREEVIEW HORIZONTAL
-        //$('.family-tree-horizontal li').hide();
+        // BEGIN FAMILY TREEVIEW HORIZONTAL
+        // $('.family-tree-horizontal li').hide();
         $('.family-tree-horizontal li:first').show();
         $('.family-tree-horizontal li').on('click', function (e) {
             var children = $(this).find('> ul > li');
@@ -9092,11 +9268,11 @@ App.controller('UiTreeviewController', function ($scope, $routeParams){
             else children.show('fast');
             e.stopPropagation();
         });
-        //END FAMILY TREEVIEW HORIZONTAL
+        // END FAMILY TREEVIEW HORIZONTAL
     };
 
     $scope.treetable_tab = function(){
-        //BEGIN JQUERY TREETABLE
+        // BEGIN JQUERY TREETABLE
         $("#example-basic").treetable({ expandable: true });
         $("#example-basic-static").treetable();
         $("#example-basic-expandable").treetable({ expandable: true });
@@ -9143,7 +9319,7 @@ App.controller('UiTreeviewController', function ($scope, $routeParams){
 
             return false;
         });
-        //END JQUERY TREETABLE
+        // END JQUERY TREETABLE
     };
 });
 App.directive("ngAccordion", function($parse, $compile){
@@ -9188,53 +9364,21 @@ App.directive("ngAnimation", function($parse, $compile){
 App.directive("ngAreachartspline", function(){
     return {
         link: function($scope, element, attributes){
-            //BEGIN AREA CHART SPLINE
+            // BEGIN AREA CHART SPLINE
             var d6_1 = [["Jan", 67],["Feb", 91],["Mar", 36],["Apr", 150],["May", 28],["Jun", 123],["Jul", 38]];
             var d6_2 = [["Jan", 59],["Feb", 49],["Mar", 45],["Apr", 94],["May", 76],["Jun", 22],["Jul", 31]];
-           /* $.plot("#area-chart-spline", [{
-                data: d6_1,
-                label: "Upload",
-                color: "#ffce54"
-            },{
-                data: d6_2,
-                label: "Download",
-                color: "#01b6ad"
-            }], {
-                series: {
-                    lines: {
-                        show: !1
-                    },
-                    splines: {
-                        show: !0,
-                        tension: 0.4,
-                        lineWidth: 2,
-                        fill: 0.8
-                    },
-                    points: {
-                        show: !0,
-                        radius: 4
-                    }
-                },
-                grid: {
-                    borderColor: "#fafafa",
-                    borderWidth: 1,
-                    hoverable: !0
-                },
-                tooltip: !0,
-                tooltipOpts: {
-                    content: "%x : %y",
-                    defaultTheme: true
-                },
-                xaxis: {
-                    tickColor: "#fafafa",
-                    mode: "categories"
-                },
-                yaxis: {
-                    tickColor: "#fafafa"
-                },
-                shadowSize: 0
-            });*/
-            //END AREA CHART SPLINE
+           /*
+			 * $.plot("#area-chart-spline", [{ data: d6_1, label: "Upload",
+			 * color: "#ffce54" },{ data: d6_2, label: "Download", color:
+			 * "#01b6ad" }], { series: { lines: { show: !1 }, splines: { show:
+			 * !0, tension: 0.4, lineWidth: 2, fill: 0.8 }, points: { show: !0,
+			 * radius: 4 } }, grid: { borderColor: "#fafafa", borderWidth: 1,
+			 * hoverable: !0 }, tooltip: !0, tooltipOpts: { content: "%x : %y",
+			 * defaultTheme: true }, xaxis: { tickColor: "#fafafa", mode:
+			 * "categories" }, yaxis: { tickColor: "#fafafa" }, shadowSize: 0
+			 * });
+			 */
+            // END AREA CHART SPLINE
         }
     };
 });
@@ -9247,19 +9391,19 @@ App.directive("ngDropzone", function($parse, $compile){
                 paramName: "uploadfile",
                 maxThumbnailFilesize: 5,
                 init: function() {
-                    //$scope.files.push({file: 'added'}); // here works
+                    // $scope.files.push({file: 'added'}); // here works
                     this.on('success', function(file, json) {
                     });
 
                     this.on('addedfile', function(file) {
                         $scope.$apply(function(){
-                            //alert(file);
-                            //$scope.files.push({file: 'added'});
+                            // alert(file);
+                            // $scope.files.push({file: 'added'});
                         });
                     });
 
                     this.on('drop', function(file) {
-                        //alert('file');
+                        // alert('file');
                     });
 
                 }
@@ -9362,11 +9506,11 @@ App.directive("ngTheme", function($parse, $compile){
 App.directive("ngZabutocalendar", function($parse, $compile){
     return {
         link: function($scope, element, attributes){
-            //BEGIN CALENDAR
+            // BEGIN CALENDAR
             $("#my-calendar").zabuto_calendar({
                 language: "en"
             });
-            //END CALENDAR
+            // END CALENDAR
         }
     };
 });
@@ -9407,13 +9551,15 @@ App.directive("scrollSpy", function($window){
                     spy = _ref[_i];
                     spy.out();
 
-                    // catch case where a `spy` does not have an associated `id` anchor
+                    // catch case where a `spy` does not have an associated `id`
+					// anchor
                     if (spyElems === null || spyElems[spy.id] === null || spyElems[spy.id].offset() === undefined) {
                         continue;
                     }
 
                     if ((pos = spyElems[spy.id].offset().top) - $window.scrollY <= 0) {
-                        // the window has been scrolled past the top of a spy element
+                        // the window has been scrolled past the top of a spy
+						// element
                         spy.pos = pos;
 
                         if (highlightSpy === null) {
@@ -9425,7 +9571,8 @@ App.directive("scrollSpy", function($window){
                     }
                 }
 
-                // select the last `spy` if the scrollbar is at the bottom of the page
+                // select the last `spy` if the scrollbar is at the bottom of
+				// the page
                 if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
                     spy.pos = pos;
                     highlightSpy = spy;

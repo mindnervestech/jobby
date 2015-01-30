@@ -6,7 +6,7 @@
        --><div class="info">
         <p></p>
         <ul class="list-inline list-unstyled">
-          <li><a href="/dashboard#/extra-profile" data-hover="tooltip" title="Profile"><i class="fa fa-user"></i></a></li>
+        <!--   <li><a href="/dashboard#/extra-profile" data-hover="tooltip" title="Profile"><i class="fa fa-user"></i></a></li> -->
           <!-- <li><a href="/#/email-inbox" data-hover="tooltip" title="Mail"><i class="fa fa-envelope"></i></a></li>
           <li><a href="javascript:void(0);" data-hover="tooltip" title="Setting" data-toggle="modal" data-target="#modal-config"><i class="fa fa-cog"></i></a></li>
           <li><a href="/#/extra-signin" data-hover="tooltip" title="Logout"><i class="fa fa-sign-out"></i></a></li> -->
@@ -14,13 +14,13 @@
       </div>
       <div class="clearfix"></div>
     </li>
-    <li ng-show ="isUser" ><a  href="/dashboard#/extra-profile"><i class="fa fa-tachometer fa-fw">
+    <li ng-show ="isUser" ><a  href="/dashboard#/extra-profile"><i class="glyphicon glyphicon-user">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">My Profile</span></a></li>
-           <li ng-show ="isUser" ><a  href="/dashboard#/updateExcel"><i class="fa fa-tachometer fa-fw">
+           <li ng-show ="isAdmin" ><a  href="/dashboard#/updateExcel"><i class="glyphicon glyphicon-edit">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">Excel File</span></a></li>
-         <li ng-show ="isUser" ><a  href="/dashboard#/viewJobs"><i class="fa fa-tachometer fa-fw">
+         <li ng-show ="isUser" ><a  href="/dashboard#/viewJobs"><i class="glyphicon glyphicon-eye-open">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">View Jobs </span></a></li>
-          <li ng-show ="isAdmin" ><a  href="/dashboard#/viewAppliedJobs"><i class="fa fa-tachometer fa-fw">
+          <li ng-show ="isAdmin" ><a  href="/dashboard#/viewAppliedJobs"><i class="glyphicon glyphicon-align-justify">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">View Applied Jobs </span></a></li>
           
   <!--   <li ng-show="!isSuperAdmin" ><a ng-show="!isSuperAdmin" href="dashboard#/superAdmin_dashboard"><i class="">

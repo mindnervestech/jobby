@@ -47,4 +47,6 @@ public class UserPosition extends Model {
 		return find.where().eq("position", pos).findUnique();
 	}
 
+	
+
 }

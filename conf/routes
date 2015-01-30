@@ -25,10 +25,10 @@ GET   /getUserProfile                                   controllers.Application.
 POST   /uploadExcel                     				controllers.Application.uploadandStoreExcel()
 GET    /getAllSkills                                     controllers.Application.getAllSkills()
 POST    /forgetPassword                                  controllers.Application.forgetPassword()
-POST     /getAllJobs/:currentPage/:jobType/:location  controllers.Application.getAllJobs(currentPage : Integer,jobType:String,location:String)
+POST     /getAllJobs/:currentPage/:jobType/:location/:matchedpos/:position  controllers.Application.getAllJobs(currentPage : Integer,jobType:String,location:Boolean,matchedpos:Boolean,position:String)
 GET    /saveOtherSkill/:otherSkill                      controllers.Application.saveOtherSkill(otherSkill : String)
 POST    /saveAppliedJob                                  controllers.Application.saveAppliedJob()
-
+#GET    /getUserPositionMatchedJob                         controllers.Application.getUserPositionMatchedJob()
 
 
 
@@ -36,6 +36,6 @@ POST    /saveAppliedJob                                  controllers.Application
 GET      /getAllAppliedJobs                             controllers.Application.getAllAppliedJobs()
 GET      /generatePDF/:id                                  controllers.Application.generatePDF(id : String)
 GET      /checkForadmin                                 controllers.Application.checkForadmin()
-
+GET     /getUserName                                      controllers.Application.getUserName()
 
 

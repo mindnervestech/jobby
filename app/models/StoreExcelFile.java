@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -59,12 +60,10 @@ public class StoreExcelFile {
 	public static Finder<Long, StoreExcelFile> find = new Finder<Long, StoreExcelFile>(
 			Long.class, StoreExcelFile.class);
 
-	
 	public static StoreExcelFile getregNumber(String reqId) {
 		return find.where().eq("requestNumber", reqId).findUnique();
 	}
 
-	
 	public static List<StoreExcelFile> getAllJobs(int currentPage,
 			int rowsPerPage) {
 
@@ -86,6 +85,14 @@ public class StoreExcelFile {
 				.orderBy("workLocation").findList();
 	}
 
+	public static List<StoreExcelFile> getAllJobsByLocationAndJobType(
+			int currentPage, int rowsPerPage, String jobType) {
+
+		return find.where().eq("positionType", jobType).findList();
+
+	
+	}
+
 	@JsonIgnore
 	public static long getAllJobsCount(int rowsPerPage) {
 		long totalPages = 0, size = 0;
@@ -100,5 +107,17 @@ public class StoreExcelFile {
 
 	public void update(StoreExcelFile storeExcelFile) {
 		Ebean.update(storeExcelFile);
+	}
+
+	public static List<StoreExcelFile> getALlUserMatchedJob(int rowsPerPage,
+			int currentPage, ArrayList<String> al) {
+
+		return find.where().in("labourCategory", al).findList();
+	}
+
+	public static List<StoreExcelFile> getALlUserJobByPosition(int currentPage,
+			int rowsPerPage, String position) {
+		return find.where().eq("labourCategory", position).findList();
+
 	}
 }

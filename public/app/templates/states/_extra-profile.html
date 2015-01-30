@@ -18,6 +18,24 @@
 .state-success input,.state-success select,.state-success textarea {
 	background: none !important;
 }
+
+fieldset.scheduler-border {
+	border: 1px groove !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #000;
+	box-shadow: 0px 0px 0px 0px #000;
+	border-color:#darkgrey;
+}
+
+legend.scheduler-border {
+	font-size: 1.0em !important;
+	text-align: left !important;
+	width: inherit;
+	padding: 0 10px;
+	border-bottom: none;
+	color: darkgray;
+}
 </style>
 <div class="row">
 	<div class="col-lg-12">
@@ -48,40 +66,47 @@
 											<form name="userProfileform" id="userProfileform"
 												class="form-horizontal ng-pristine ng-valid">
 												<div class="row">
-													
-															<div ng-show="userPoserror" style="color: red">
-																Please fill at least one Position/Security level.</div>
+
+													<div ng-show="userPoserror" style="color: red">
+														Please fill at least one Position/Security level.</div>
 													<div class="col-md-6">
+														<div class="">
+															<label class="">Full Name *</label>
+														</div>
 														<div class="form-group">
-															<label class="col-md-3 control-label">Full Name *</label>
 															<div class="col-md-9">
 																<input type="text" id="fullname" name="fullname"
 																	ng-model="userDetails.fullname"
-																	placeholder="Enter Full Name" class="form-control"
-																	required>
+																	placeholder="Enter Full Name" style="font-size: 12px;"
+																	class="form-control" required>
 															</div>
 														</div>
+														<div class="">
+															<label class="">Email Address *</label>
+														</div>
 														<div class="form-group">
-															<label class="col-md-3 control-label">Email
-																Address *</label>
 															<div class="col-md-9">
 																<div class="input-group">
 																	<span class="input-group-addon"><i
 																		class="fa fa-envelope"></i></span> <input type="email"
 																		placeholder="Email Address" name="email"
 																		ng-model="userDetails.email" id="email"
-																		class="form-control" required>
+																		class="form-control" style="font-size: 12px;" required>
 																</div>
 															</div>
 														</div>
+														<div class="">
+															<label class="">User Security Clearance Level *</label>
+														</div>
 														<div class="form-group">
-															<label class="col-md-3 control-label">User
-																Security Clearance Level *</label>
+															<!-- <label class="col-md-3 control-label"></label> -->
 															<div class="col-md-9">
 																<select multiple="multiple" name="userClearance"
 																	ng-model="userClearance" class="form-control">
 																	<option ng-repeat="clear in allCleanrance.clearance"
-																		value="{{clear.clearance}}"  ng-select ="isSelect  == true" required>{{clear.clearance}}</option>
+																		value="{{clear.clearance}}"
+																		ng-selected="isSelect  == true" style="font-size: 12px;"
+																		required>{{clear.clearance}}</option>
 																</select>
 															</div>
 														</div>
@@ -89,255 +114,321 @@
 													</div>
 													<div class="col-md-6">
 														<br /> <br /> <br />
+														<br />
+														<div class="">
+															<label class="">Date of Birth *</label>
+														</div>
 														<div class="form-group">
-															<div class="col-md-12">
-																<label class="col-md-3 control-label">Date of
-																	Birth *</label>
+															<div class="col-md-9">
+																<!-- <label class="col-md-3 control-label">Date of
+																	Birth *</label> -->
 																<div class="input-group">
 																	<input type="text" ng-model="userDetails.dob"
 																		name="dob" class="form-control " id="dob"
-																		ng-click="initempDatepicker();" required>
+																		ng-click="initempDatepicker();"
+																		style="font-size: 12px;" required>
 																	<div class="input-group-addon">
 																		<i class="fa fa-calendar"></i>
 																	</div>
 																</div>
 															</div>
 														</div>
+														<div class="">
+															<label class="">User Position/Title *</label>
+														</div>
 														<div class="form-group">
-															<label class="col-md-3 control-label">User
-																Position/Title *</label>
+															<!-- <label class="col-md-3 control-label">User
+																Position/Title *</label> -->
 															<div class="col-md-9">
 																<select multiple="multiple" name="userposition"
 																	ng-model="userPosition" class="form-control">
 																	<option ng-repeat="posi in allPosition.position"
-																		value="{{posi.position}}" required>{{posi.position}}</option>
+																		value="{{posi.position}}" style="font-size: 12px;"
+																		required>{{posi.position}}</option>
 																</select>
 															</div>
 														</div>
 													</div>
-													<div class="col-md-12 ">
+
+
+													<!-- <div class="col-md-12 ">
 														<hr class="mtxxl mbxxl">
 														<div class="col-md-6">
 															<label>User Key Skill Area * </label>
 														</div>
-													</div>
+													</div> -->
 
 													<div class="col-md-12">
-														<label ng-repeat="skill in allSkills"
-															class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
-															style="padding: 0px;"> <input type="checkbox"
-															name="allSkill" ng-click="skillClicked($event,skill)"
-															ng-model="skill.isSelected"> {{skill.skillName}}
+														<fieldset class="scheduler-border">
+															<legend class="scheduler-border">User Key Skill
+																Area</legend>
+															<label ng-repeat="skill in allSkills"
+																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+																style="padding: 0px;"> <input type="checkbox"
+																name="allSkill" ng-click="skillClicked($event,skill)"
+																ng-model="skill.isSelected"> {{skill.skillName}}
 
-														</label>
-													</div>
-													<div class="form-group">
-													
-														<div class="col-md-9">
-															<div class="col-md-5">
-															<span ng-show="error">Please enter Skill Name</span>
-																<input id="inputName" type="text" id="otherSkill"
-																	ng-model="otherSkill" name="otherSkill"
-																	placeholder="Other Skill" class="form-control">
+															</label>
+															<div class="form-group">
+
+																<div class="col-md-9">
+																	<div class="col-md-5">
+																		<span ng-show="error">Please enter Skill Name</span> <input
+																			id="inputName" type="text" id="otherSkill"
+																			ng-model="otherSkill" name="otherSkill"
+																			placeholder="Other Skill" style="font-size: 12px;"
+																			class="form-control">
+																	</div>
+																	<div class="col-md-4">
+																		<button type="submit"
+																			ng-click="saveOtherSkill(otherSkill);"
+																			class="btn btn-primary">Add</button>
+																	</div>
+																</div>
 															</div>
-															<div class="col-md-4">
-																<button type="submit"
-																	ng-click="saveOtherSkill(otherSkill);"
-																	class="btn btn-primary">Add</button>
-															</div>
-														</div>
+
+														</fieldset>
 													</div>
 
-
-													<div class="col-md-12 ">
+													<!-- 	<div class="col-md-12 ">
 														<hr class="mtxxl mbxxl">
 														<div class="col-md-6">
 															<label>Employment History </label>
 														</div>
+													</div> -->
+													<div class="col-md-12">
+														<fieldset class="scheduler-border">
+															<legend class="scheduler-border">Employment
+																History</legend>
+
+															<div class="col-md-12"
+																ng-repeat="emp in addNewEmphistory">
+																<br />
+																<div class="col-md-3">
+																	<label for="inputName" class="control-label">Company
+																		Name *</label>
+																	<div ng-show="empHistory" style="color: red">
+																		Please fill at least one Company Details</div>
+
+																	<div class="input-icon right">
+																		<input id="inputName" type="text" id="companyName"
+																			ng-model="emp.companyName" name="companyName"
+																			placeholder="Company Name" style="font-size: 12px;"
+																			class="form-control" required>
+																	</div>
+																</div>
+
+
+																<div class="col-md-3">
+																	<label for="inputName" class="control-label">Position
+																		*</label>
+																	<div class="input-icon right">
+																		<input id="position" type="text" name="position"
+																			ng-model="emp.position" placeholder="Position"
+																			class="form-control" style="font-size: 12px;"
+																			required>
+																	</div>
+																</div>
+																<label class="col-md-3 ">Date</label>
+																<div class="col-md-4">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">From</span> <input
+																			type="text" name="startdate" id="startdateemp"
+																			ng-click="initCmpDatePicker();" class="form-control"
+																			ng-model="emp.startdate" style="font-size: 12px;"
+																			required /><span class="input-group-addon">to</span>
+																		<input type="text" id="enddateemp"
+																			class="form-control" ng-model="emp.enddate"
+																			style="font-size: 12px;"
+																			ng-click="initCmpDatePicker();" required>
+
+																	</div>
+
+																</div>
+
+
+																<div class="col-md-2">
+																	<button class="btn btn-default"
+																		ng-click="addNewEmphistory.splice(addNewEmphistory.length-1, 1)">
+																		<i class="fa fa-trash-o"></i>
+																	</button>
+																</div>
+																
+																<div class="col-md-8">
+																 <label class="">Experiance Details</label>
+																	<textarea rows="3" name="expdesc"
+																		ng-model="emp.expdesc" class="form-control"
+																		placeholder="e.g. Experiance Description"
+																		style="font-size: 12px;"></textarea>
+																		
+																</div>
+													<div class="col-md-12">
+													<hr class="">
 													</div>
-													<div class="col-md-12" ng-repeat="emp in addNewEmphistory">
-														<div class="col-md-3">
-															<label for="inputName" class="control-label">Company
-																Name *</label>
-															<div ng-show="empHistory" style="color: red">
-																Please fill at least one Company Details</div>
-
-															<div class="input-icon right">
-																<input id="inputName" type="text" id="companyName"
-																	ng-model="emp.companyName" name="companyName"
-																	placeholder="Company Name" class="form-control"
-																	required>
 															</div>
-														</div>
-
-
-														<div class="col-md-3">
-															<label for="inputName" class="control-label">Position
-																*</label>
-															<div class="input-icon right">
-																<input id="position" type="text" name="position"
-																	ng-model="emp.position" placeholder="Position"
-																	class="form-control" required>
-															</div>
-														</div>
-														<label class="col-md-3 ">Date</label>
-														<div class="col-md-4">
-															<div class="input-group input-daterange">
-																<span class="input-group-addon">From</span> <input
-																	type="text" name="startdate" id="startdateemp" ng-click = "initCmpDatePicker();" 
-																	class="form-control" ng-model="emp.startdate" required/><span
-																	class="input-group-addon">to</span> <input type="text"
-																	 id="enddateemp" class="form-control"
-																	ng-model="emp.enddate" ng-click = "initCmpDatePicker();" required>
-																	
+															
+															<div class="form-group">
+																<div class="col-md-2">
+																	<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
+																	<button ng-click="addNewEmployment()">Add More</button>
+																	<span ng-show="addNewEmphistory.length > 0"> </span>
+																</div>
 															</div>
 
-														</div>
-													 
-														
-														<div class="col-md-2">
-															<button class="btn btn-default"
-																ng-click="addNewEmphistory.splice(addNewEmphistory.length-1, 1)">
-																<i class="fa fa-trash-o"></i>
-															</button>
-														</div>
-														
-														  <div class="col-md-8">
-														  <br />
-														  <label class="col-md-6 ">Experiance Details</label>
-														<textarea rows="3" name="expdesc"
-															ng-model="emp.expdesc"
-															class="form-control" placeholder="e.g. Experiance Description"></textarea>
+														</fieldset>
 													</div>
-													</div>
+											
+
 												</div>
-												<div class="form-group">
+												<!-- <div class="form-group">
 													<div class="col-md-2">
 														<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
 														<button ng-click="addNewEmployment()">Add More</button>
 														<span ng-show="addNewEmphistory.length > 0"> </span>
 													</div>
-												</div>
+												</div> -->
 
-												<div class="form-group ">
+												<!-- <div class="form-group ">
 													<hr class="mtxxl mbxxl">
 													<div class="col-md-6">
 														<div ng-show="EducationError" style="color: red">
 															Please fill at least one Education Details</div>
 														<label>Education History </label>
 													</div>
+												</div> -->
+												<div class="col-md-14">
+													<fieldset class="scheduler-border">
+														<legend class="scheduler-border">Education
+															History</legend>
+
+
+														<div class="col-md-12" ng-repeat="edu in addEducation">
+
+															<div class="col-md-3">
+																<label for="inputName" class="control-label">Institute
+																	Name *</label>
+																<div class="input-icon right">
+																	<input id="instituteName" name="instituteName"
+																		type="text" ng-model="edu.instituteName"
+																		placeholder="Institute Name" class="form-control"
+																		style="font-size: 12px;" required>
+																</div>
+															</div>
+
+
+															<div class="col-md-3">
+																<label for="inputName" class="control-label">Degree
+																	*</label>
+																<div class="input-icon right">
+																	<input id="degree" name="degree" type="text"
+																		ng-model="edu.degree" placeholder="Degree"
+																		class="form-control" style="font-size: 12px;" required>
+																</div>
+															</div>
+
+
+															<label class="col-md-3">Date</label>
+															<div class="col-md-4">
+																<div class="input-group input-daterange">
+																	<span class="input-group-addon">From</span> <input
+																		type="text" name="startdate" ng-model="edu.fromDate"
+																		class="form-control" id="edudateform"
+																		ng-click="initeduDateform();" style="font-size: 12px;"
+																		required /><span class="input-group-addon">to</span> <input
+																		ng-model="edu.toDate" type="text" name="enddate"
+																		class="form-control" id="edudateto"
+																		ng-click="initeduDateform();" style="font-size: 12px;"
+																		required />
+																</div>
+
+															</div>
+															<div class="col-md-2">
+																<button class="btn btn-default"
+																	ng-click="addEducation.splice(addEducation.length-1, 1)">
+																	<i class="fa fa-trash-o"></i>
+																</button>
+															</div>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-2">
+																<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
+																<button ng-click="addNewEducation()">Add More</button>
+																<span ng-show="addEducation.length > 0"> </span>
+															</div>
+														</div>
+													</fieldset>
 												</div>
 
-												<div class="col-md-12" ng-repeat="edu in addEducation">
-
-													<div class="col-md-3">
-														<label for="inputName" class="control-label">Institute
-															Name *</label>
-														<div class="input-icon right">
-															<input id="instituteName" name="instituteName"
-																type="text" ng-model="edu.instituteName"
-																placeholder="Institute Name" class="form-control"
-																required>
-														</div>
-													</div>
-
-
-													<div class="col-md-3">
-														<label for="inputName" class="control-label">Degree
-															*</label>
-														<div class="input-icon right">
-															<input id="degree" name="degree" type="text"
-																ng-model="edu.degree" placeholder="Degree"
-																class="form-control" required>
-														</div>
-													</div>
-
-
-													<label class="col-md-3">Date</label>
-													<div class="col-md-4">
-														<div class="input-group input-daterange">
-															<span class="input-group-addon">From</span> <input
-																type="text" name="startdate" ng-model="edu.fromDate"
-																class="form-control" id="edudateform" ng-click="initeduDateform();" required/><span
-																class="input-group-addon">to</span> <input
-																ng-model="edu.toDate" type="text" name="enddate"
-																class="form-control" id="edudateto"   ng-click="initeduDateform();" required/>
-														</div>
-
-													</div>
-													<div class="col-md-2">
-														<button class="btn btn-default"
-															ng-click="addEducation.splice(addEducation.length-1, 1)">
-															<i class="fa fa-trash-o"></i>
-														</button>
-													</div>
-
-												</div>
-												<div class="form-group">
-													<div class="col-md-2">
-														<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
-														<button ng-click="addNewEducation()">Add More</button>
-														<span ng-show="addEducation.length > 0"> </span>
-													</div>
-												</div>
-
-												<div class="form-group ">
+												<!-- <div class="form-group ">
 													<hr class="mtxxl mbxxl">
 													<div class="col-md-6">
 														<label>Certificate History </label>
 													</div>
-												</div>
-												<div class="form-group">
-													<div class="col-md-12" ng-repeat="cert in addCertificate">
+												</div> -->
+												<div class="col-md-14">
+													<fieldset class="scheduler-border">
+														<legend class="scheduler-border">Certificate
+															History</legend>
 
-														<div class="col-md-5">
-															<label for="inputName" class="control-label">Certificate
-																*</label>
-															<div class="input-icon right">
-																<input id="certName" name="certName" type="text"
-																	placeholder="Certificate" class="form-control"
-																	ng-model="cert.certName" required>
-															</div>
-														</div>
+														<div class="form-group">
+															<div class="col-md-12" ng-repeat="cert in addCertificate">
 
-														<div class='col-sm-3'>
-															<label class="col-md-3 control-label">Year</label>
-															<div class="form-group">
-
-																<div class='input-group date' >
-
-																	<input type='text' id="certYear"
-																		ng-model="cert.certYear" class="form-control"
-																		id="certdate" ng-click="initDatePicker();" required />
-																	<span class="input-group-addon"><span
-																		class="glyphicon glyphicon-calendar" ></span> </span>
-																	<div class="col-md-2">
-
-																		<button class="btn btn-default"
-																			ng-click="addCertificate.splice(addCertificate.length-1, 1)">
-																			<i class="fa fa-trash-o"></i>
-																		</button>
+																<div class="col-md-5">
+																	<label for="inputName" class="control-label">Certificate
+																		*</label>
+																	<div class="input-icon right">
+																		<small><input id="certName" name="certName"
+																			type="text" placeholder="Certificate"
+																			class="form-control" ng-model="cert.certName"
+																			style="font-size: 12px;" required></small>
 																	</div>
 																</div>
+
+																<div class='col-sm-3'>
+																	<label class="col-md-3 control-label">Year</label>
+																	<div class="form-group">
+
+																		<div class='input-group date'>
+
+																			<input type='text' id="certYear"
+																				ng-model="cert.certYear" class="form-control"
+																				id="certdate" ng-click="initDatePicker();"
+																				style="font-size: 12px;" required /> <span
+																				class="input-group-addon"><span
+																				class="glyphicon glyphicon-calendar"></span> </span>
+																			<div class="col-md-2">
+
+																				<button class="btn btn-default"
+																					ng-click="addCertificate.splice(addCertificate.length-1, 1)">
+																					<i class="fa fa-trash-o"></i>
+																				</button>
+																			</div>
+																		</div>
+																	</div>
+
+																</div>
+
 															</div>
-
-													</div>
-
+														</div>
+														<div class="form-group">
+															<div class="col-md-2">
+																<br />
+																<!-- <a style="float: right; margin-right: 60px;" ng-click="addNewEmployment()"> </i>Add Extra</a> -->
+																&nbsp;&nbsp;<i
+																	class="fa fa-plus-square"> </i>
+																<button ng-click="addNewCertificate()">Add More</button>
+																<span ng-show="addEducation.length > 0"> </span>
+															</div>
+														</div>
+													</fieldset>
 												</div>
 
-												<div class="form-group">
-													<div class="col-md-2">
-														<br />
-														<!-- <a style="float: right; margin-right: 60px;" ng-click="addNewEmployment()"> </i>Add Extra</a> -->
-														<i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
-														<button ng-click="addNewCertificate()">Add More</button>
-														<span ng-show="addEducation.length > 0"> </span>
-													</div>
-												</div>
+
 												<div class='col-sm-6'>
 													<label class="col-md-3 control-label"
-														ng-show="updateSuccess">Profile Updated
-														Successfully! </label>
+														ng-show="updateSuccess" style="font-size: 12px;">Profile
+														Updated Successfully! </label>
 												</div>
 
 												<div class="form-actions">
@@ -431,7 +522,7 @@
 						</script>
 
 					</div>
-				
+
 				</div>
 			</div>
 		</div>

@@ -110,6 +110,22 @@ public class Application extends Controller {
 
 	}
 
+	//called when user login to get there details 
+	public static Result getUserName(){
+	String uname = 	session().get("email");
+		Admin ad=  Admin.checkAdmin(uname);
+		if(ad == null){
+		  UserDetails ud = UserDetails.getUserByEmail(uname);
+		  
+			if(ud != null){
+				return ok(ud.fullname);
+			}
+		}
+		
+		return ok(ad.username);
+	}
+	
+	//called to check the usertype and also when page is refreshed
 	public static Result checkForadmin() {
 		String email = session().get("email");
 		Admin ad = Admin.checkAdmin(email);
@@ -121,6 +137,7 @@ public class Application extends Controller {
 
 	}
 
+	
 	public static Result SignIn() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
 		String uname = dynamicForm.get("username");
@@ -148,6 +165,7 @@ public class Application extends Controller {
 
 	}
 
+	//used to send the password to sign in user 
 	public static Result forgetPassword() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
 		String uname = dynamicForm.get("email");
@@ -196,6 +214,7 @@ public class Application extends Controller {
 
 	}
 
+	//upload the excel
 	public static Result uploadandStoreExcel() {
 		play.mvc.Http.MultipartFormData body = request().body()
 				.asMultipartFormData();
@@ -259,6 +278,16 @@ public class Application extends Controller {
 						break;
 					case Cell.CELL_TYPE_STRING:
 						// sd.labourCategory = c.getStringCellValue();
+						// used to add the Positon in UserPosition model when
+						// not present
+						UserPosition up = UserPosition.getPositionByPosName(c
+								.getStringCellValue());
+						if (up == null) {
+							UserPosition u = new UserPosition();
+							u.position = c.getStringCellValue();
+							u.save();
+						}
+
 						if (storeExcelFile != null) {
 							storeExcelFile.labourCategory = c
 									.getStringCellValue();
@@ -312,6 +341,18 @@ public class Application extends Controller {
 							sd.clearanceRequired = c.getNumericCellValue() + "";
 							break;
 						case Cell.CELL_TYPE_STRING:
+
+							// used to add the clearance in UserClearance model
+							// when not present
+							UserClearance uc = UserClearance
+									.getClearanceByName(c.getStringCellValue());
+							if (uc == null) {
+								UserClearance ucc = new UserClearance();
+								ucc.clearance = c.getStringCellValue();
+								ucc.save();
+
+							}
+
 							if (storeExcelFile != null) {
 								storeExcelFile.clearanceRequired = c
 										.getStringCellValue();
@@ -737,10 +778,21 @@ public class Application extends Controller {
 						}
 					}
 					if (storeExcelFile != null) {
-						storeExcelFile.update(storeExcelFile);
+						if (storeExcelFile.requestNumber != ""
+								|| storeExcelFile.requestNumber != null) {
+							storeExcelFile.update(storeExcelFile);
+						} else {
+
+						}
+
 						// System.out.println("in update");
 					} else {
-						sd.save(sd);
+						if (sd.requestNumber != "" || sd.requestNumber != null) {
+							sd.save(sd);
+						} else {
+
+						}
+
 						// System.out.println("in save");
 					}
 
@@ -773,6 +825,8 @@ public class Application extends Controller {
 		public String value;
 	}
 
+	
+	//method takes the input as json and split it add into list to show all the skills to user
 	public static List<DesiredSkills> getDesiredSkills(String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 		List<DesiredSkills> list = new ArrayList<DesiredSkills>();
@@ -785,6 +839,7 @@ public class Application extends Controller {
 		return list;
 	}
 
+	//method takes the input as json and split it add into list to show all the skills to user
 	public static List<MandatorySkills> getMandtorySkills(String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 		List<MandatorySkills> list = new ArrayList<MandatorySkills>();
@@ -863,24 +918,57 @@ public class Application extends Controller {
 
 	}
 
+	//called when user first  view job page loaded
 	public static Result getAllJobs(int currentPage, String jobType,
-			String location) {
+			Boolean location, Boolean usermatch, String position) {
 
 		List<StoreExcelFile> jobs = null;
-		if (!("jobType".equalsIgnoreCase(jobType.trim()))) {
+		// jobtype are selected for search
+		if (!("All".equalsIgnoreCase(jobType.trim()))) {
 			jobs = StoreExcelFile.getAllJobsByJobType(currentPage, 10, jobType);
 
 		}
 
-		if (!("location".equals(location.trim()))) {
+		// location are selected for search
+		if (!(false == location)) {
 			System.out.println("in  loca");
 			jobs = StoreExcelFile.getAllJobsByLocation(currentPage, 10);
 		}
 
-		if (("jobType".equalsIgnoreCase(jobType.trim()))
-				&& ("location".equals(location.trim()))) {
-			System.out.println("in both");
+		// both are selected for search
+		if (!(true == location)
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
+			jobs = StoreExcelFile.getAllJobsByLocationAndJobType(currentPage,
+					10, jobType);
+
+		}
+
+		// none is selected Default
+		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
 			jobs = StoreExcelFile.getAllJobs(currentPage, 10);
+		}
+
+		// called when the usermatches job type selected
+		if (usermatch == true) {
+			ArrayList<String> al = new ArrayList<>();
+
+			String email = session().get("email");
+			UserDetails u = UserDetails.getUserByEmail(email);
+			List<UserPosition> up = u.userPosition;
+			for (UserPosition upd : up) {
+				String pos = upd.position;
+				al.add(pos);
+
+				System.out.println("pos" + pos);
+			}
+
+			jobs = StoreExcelFile.getALlUserMatchedJob(currentPage, 10, al);
+		}
+
+		if (!("notSelected".equalsIgnoreCase(position.trim()))) {
+			jobs = StoreExcelFile.getALlUserJobByPosition(currentPage, 10,
+					position);
+
 		}
 
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
@@ -1046,6 +1134,8 @@ public class Application extends Controller {
 
 	}
 
+	
+	//called when user clicked to view there own profile
 	@JsonIgnore
 	public static Result getUserProfile() {
 		String email = session().get("email");
@@ -1068,15 +1158,22 @@ public class Application extends Controller {
 
 	}
 
+	//called when user add its own skill(if skill present none is added)
 	public static Result saveOtherSkill(String otherSkill) {
-		UserSkill u = new UserSkill();
-		u.skillName = otherSkill;
-		u.save();
-
-		return ok(Json.toJson(u));
+		// check if the skill is present or not if present does not add.
+		UserSkill us = UserSkill.getSkillByName(otherSkill);
+		if (us == null) {
+			UserSkill u = new UserSkill();
+			u.skillName = otherSkill;
+			u.save();
+			return ok(Json.toJson(u));
+		} else {
+			return ok("");
+		}
 
 	}
 
+	//update user profile
 	@JsonIgnore
 	public static Result updateUserProfile() {
 		JsonNode json = request().body().asJson();
@@ -1096,7 +1193,6 @@ public class Application extends Controller {
 		JsonNode userPosition = json.path("position");
 		JsonNode userSkills = json.path("skills");
 
-		
 		u.deleteManyToManyAssociations("userSkill");
 
 		ArrayNode skills = (ArrayNode) userSkills;
@@ -1144,9 +1240,9 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			if(addNewEmphistory.get(i).enddate == ""){
+			if (addNewEmphistory.get(i).enddate == "") {
 				eds.enddate = "Present";
-			}else{
+			} else {
 				eds.enddate = addNewEmphistory.get(i).enddate;
 			}
 			eds.user_details = UserDetails.getUserByEmail(email);
@@ -1378,8 +1474,8 @@ public class Application extends Controller {
 	public static Result generatePDF(String id) {
 		final String rootDir = Play.application().configuration()
 				.getString("resume.path");
-		System.out.println("rootdir"+rootDir);
-		
+		System.out.println("rootdir" + rootDir);
+
 		int ids = Integer.parseInt(id);
 		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
 		OutputStream file = null;
@@ -1750,10 +1846,10 @@ public class Application extends Controller {
 
 			// Now Insert Every Thing Into PDF Document
 			document.open();// PDF document opened........
-			
+
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
-			String date = sdf.format(new Date()); 
-			System.out.println(date); //15/10/2013
+			String date = sdf.format(new Date());
+			System.out.println(date); // 15/10/2013
 			Paragraph date1 = new Paragraph(date);
 			date1.setAlignment(Element.ALIGN_LEFT);
 			document.add(date1);
@@ -1803,8 +1899,10 @@ public class Application extends Controller {
 			e.printStackTrace();
 		}
 
-		return ok(new File("D:\\Resume.pdf"));
+		return ok(new File(rootDir));
 
 	}
+
+
 
 }
