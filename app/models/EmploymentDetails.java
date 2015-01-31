@@ -40,8 +40,8 @@ public class EmploymentDetails extends Model {
 			Long.class, EmploymentDetails.class);
 
 	@JsonIgnore
-	public static EmploymentDetails getEmploymentDetailsById(int id) {
-		return find.where().eq("id", id).findUnique();
+	public static EmploymentDetails getEmploymentDetailsByName(String name) {
+		return find.where().eq("companyName", name).findUnique();
 	}
 
 	@JsonIgnore

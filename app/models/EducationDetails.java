@@ -45,8 +45,8 @@ public class EducationDetails extends Model {
 			Long.class, EducationDetails.class);
 
 	@JsonIgnore
-	public static EducationDetails getEducationDetailsById(int id) {
-		return find.where().eq("id", id).findUnique();
+	public static EducationDetails getEducationDetailsByName(String degree) {
+		return find.where().eq("degree", degree).findUnique();
 	}
 
 	@JsonIgnore

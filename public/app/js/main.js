@@ -385,7 +385,11 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  $scope.onLocationClick =  function(){
 		  $scope.position = "notSelected";
 		    console.log($scope.location);
-		   
+		    if($scope.location == false){
+		    	$scope.location = true;
+		    } else if($scope.location == true){
+		    	$scope.location = false;
+		    }
 		    $scope.matchedpos = false;
 		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
@@ -394,6 +398,13 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 				
 			});
 		  
+		/*  $http.post('/getJobsByLocation/'+$scope.pageno+'/'+$scope.location)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+			
+				
+			});
+		  */
 	  }
 	  
 	  $scope.manadatorySkills = [];
@@ -455,8 +466,45 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			} 
 		});
 		
-	  
-	
+	    //check for all fields Coments if nor raise error if not eroor
+    	// goto the next  tab desirted skills
+		$scope.errorManaSkillComment = false;
+		$scope.checkAllFields  = function(){
+			angular.forEach($scope.manadatorySkills, function(obj1, index){
+				console.log("obj1.comment"+$scope.manadatorySkills);
+				//console.log) 
+					//console.log")
+				for(var i =0 ;i<$scope.manadatorySkills.length; i++ ){
+					if ((obj1.comment == " " )) {
+						console.log("comment i  if"+($scope.manadatorySkills));
+						$scope.errorManaSkillComment = true;
+						
+					}else{
+						console.log("in else")
+						$("#tab2").click();
+						$scope.errorManaSkillComment = false;
+					}
+				}
+				/*if ((obj1.comment == " " )) {
+					//console.log("comment"+(obj1.comment));
+					$scope.errorManaSkillComment = true;
+				}else{
+					if($scope.errorManaSkillComment == true){
+						
+					}else{
+						$("#tab2").click();
+						//$scope.errorManaSkillComment = false;
+					}
+					
+				}*/
+				});
+		}
+		//used to go to tab1 (mandatory skills )
+		$scope.preClicked = function(){
+			$("#tab1").click();
+		}
+		
+		
 });
 
 
@@ -5894,13 +5942,19 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams, $http, $upload){
 	$scope.uploadSuccess;
 	$scope.uploadFaild;
-
+	$scope.newRow;
+	$scope.updateRow;
 	// used to uplopad pdf (clicked on upload button)
 	$scope.uploadExcel = function(){
 		$http.post('/uploadExcel')
 		.success(function(data){
 			console.log("success");
 			$scope.uploadSuccess = true;
+			console.log("adas"+data);
+			$scope.newrowscount = data.newrowscount;
+			$scope.updatedRowsCount = data.updatedRowsCount;
+			$scope.newRow = true;
+			$scope.updateRow = true;
 		});
 		
 	}

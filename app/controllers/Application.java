@@ -110,22 +110,22 @@ public class Application extends Controller {
 
 	}
 
-	//called when user login to get there details 
-	public static Result getUserName(){
-	String uname = 	session().get("email");
-		Admin ad=  Admin.checkAdmin(uname);
-		if(ad == null){
-		  UserDetails ud = UserDetails.getUserByEmail(uname);
-		  
-			if(ud != null){
+	// called when user login to get there details
+	public static Result getUserName() {
+		String uname = session().get("email");
+		Admin ad = Admin.checkAdmin(uname);
+		if (ad == null) {
+			UserDetails ud = UserDetails.getUserByEmail(uname);
+
+			if (ud != null) {
 				return ok(ud.fullname);
 			}
 		}
-		
+
 		return ok(ad.username);
 	}
-	
-	//called to check the usertype and also when page is refreshed
+
+	// called to check the usertype and also when page is refreshed
 	public static Result checkForadmin() {
 		String email = session().get("email");
 		Admin ad = Admin.checkAdmin(email);
@@ -137,7 +137,6 @@ public class Application extends Controller {
 
 	}
 
-	
 	public static Result SignIn() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
 		String uname = dynamicForm.get("username");
@@ -155,7 +154,7 @@ public class Application extends Controller {
 			if (ud != null) {
 				session().clear();
 				session().put("email", ud.email);
-				return redirect("/dashboard#/");
+				return redirect("/dashboard#/viewJobs");
 			} else {
 				flash().put("error", "Login Failed");
 				return ok(signin.render());
@@ -165,7 +164,7 @@ public class Application extends Controller {
 
 	}
 
-	//used to send the password to sign in user 
+	// used to send the password to sign in user
 	public static Result forgetPassword() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
 		String uname = dynamicForm.get("email");
@@ -214,18 +213,22 @@ public class Application extends Controller {
 
 	}
 
-	//upload the excel
+	// upload the excel
 	public static Result uploadandStoreExcel() {
 		play.mvc.Http.MultipartFormData body = request().body()
 				.asMultipartFormData();
 		MultipartFormData.FilePart excelpart = body.getFile("file");
 		File excelfile = excelpart.getFile();
+		ArrayList<String> al = new ArrayList<>();
+		int newRows = 0;
+		int updatedRows = 0;
 		try {
 			FileInputStream file = new FileInputStream(excelfile);
 			HSSFWorkbook workbook = new HSSFWorkbook(file);
 			org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0);
 			StoreExcelFile storeExcelFile = null;
 			Row row;
+			String reqNo;
 			Iterator<Row> rowIterator = sheet.iterator();
 			rowIterator.next();
 			while (rowIterator.hasNext()) {
@@ -249,6 +252,8 @@ public class Application extends Controller {
 									.getStringCellValue();
 						} else {
 							sd.requestNumber = c.getStringCellValue();
+							System.out.println("sd.requestNumber"
+									+ c.getStringCellValue());
 						}
 
 						break;
@@ -778,22 +783,16 @@ public class Application extends Controller {
 						}
 					}
 					if (storeExcelFile != null) {
-						if (storeExcelFile.requestNumber != ""
-								|| storeExcelFile.requestNumber != null) {
-							storeExcelFile.update(storeExcelFile);
-						} else {
 
-						}
-
+						storeExcelFile.update(storeExcelFile);
+						updatedRows = updatedRows + 1;
 						// System.out.println("in update");
 					} else {
-						if (sd.requestNumber != "" || sd.requestNumber != null) {
+						if (sd.requestNumber != null) {
+							newRows = newRows + 1;
 							sd.save(sd);
-						} else {
-
 						}
 
-						// System.out.println("in save");
 					}
 
 				}
@@ -802,9 +801,16 @@ public class Application extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash().put("error", "Upload Failed");
-			return redirect("dashboard#/updateExcel");
+			return ok("");
 		}
-		return redirect("/dashboard#/updateExcel");
+		
+		String newrowscount = Integer.toString(newRows);
+		String  updatedRowsCount = Integer.toString(updatedRows);
+		System.out.println("updatedRowsCount"+updatedRowsCount);
+		al.add(newrowscount);
+		al.add(updatedRowsCount);
+		
+		return ok(Json.stringify(Json.toJson(al)));
 	}
 
 	public static class AdminVM {
@@ -825,8 +831,8 @@ public class Application extends Controller {
 		public String value;
 	}
 
-	
-	//method takes the input as json and split it add into list to show all the skills to user
+	// method takes the input as json and split it add into list to show all the
+	// skills to user
 	public static List<DesiredSkills> getDesiredSkills(String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 		List<DesiredSkills> list = new ArrayList<DesiredSkills>();
@@ -839,7 +845,8 @@ public class Application extends Controller {
 		return list;
 	}
 
-	//method takes the input as json and split it add into list to show all the skills to user
+	// method takes the input as json and split it add into list to show all the
+	// skills to user
 	public static List<MandatorySkills> getMandtorySkills(String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 		List<MandatorySkills> list = new ArrayList<MandatorySkills>();
@@ -918,38 +925,76 @@ public class Application extends Controller {
 
 	}
 
-	//called when user first  view job page loaded
+	// called when user first view job page loaded
 	public static Result getAllJobs(int currentPage, String jobType,
 			Boolean location, Boolean usermatch, String position) {
 
-		List<StoreExcelFile> jobs = null;
+		List<StoreExcelFile> jobs = new ArrayList<>();
+		List<StoreExcelFile> userJobs = null;
+
 		// jobtype are selected for search
 		if (!("All".equalsIgnoreCase(jobType.trim()))) {
-			jobs = StoreExcelFile.getAllJobsByJobType(currentPage, 10, jobType);
+			System.out.println("all");
+			userJobs = StoreExcelFile.getAllJobsByJobType(currentPage, 10,
+					jobType);
 
 		}
+		
+		
 
 		// location are selected for search
-		if (!(false == location)) {
-			System.out.println("in  loca");
-			jobs = StoreExcelFile.getAllJobsByLocation(currentPage, 10);
-		}
+		/*
+		 * if (!(false == location)) { System.out.println("in  loca"); jobs =
+		 * StoreExcelFile.getAllJobsByLocationDsc(currentPage, 10); }
+		 */
 
-		// both are selected for search
+		// location are selected for search
+		/*
+		 * if (!(true == location)) { System.out.println("in  loca"); jobs =
+		 * StoreExcelFile.getAllJobsByLocationAsc(currentPage, 10); }
+		 */
+		// both are selected for search(DSC)
 		if (!(true == location)
 				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
-			jobs = StoreExcelFile.getAllJobsByLocationAndJobType(currentPage,
-					10, jobType);
+			String emailId = session().get("email");
+			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAsc(
+					currentPage, 10, jobType);
+
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				}
+			}
 
 		}
 
-		// none is selected Default
-		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
+		// both are selected for search(DSC)
+		if (!(false == location)
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
+			String emailId = session().get("email");
+			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(
+					currentPage, 10, jobType);
+
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				}
+			}
+
+		}
+
+		
+		//for admin to view all jobs
+		/*if(jobType.equalsIgnoreCase("All") && location == false && usermatch == false && "notSelected".equals(position)){
 			jobs = StoreExcelFile.getAllJobs(currentPage, 10);
-		}
-
-		// called when the usermatches job type selected
-		if (usermatch == true) {
+		}*/
+		
+		// all jobs //selected Default(user profile job mtached job)
+		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
 			ArrayList<String> al = new ArrayList<>();
 
 			String email = session().get("email");
@@ -962,9 +1007,59 @@ public class Application extends Controller {
 				System.out.println("pos" + pos);
 			}
 
-			jobs = StoreExcelFile.getALlUserMatchedJob(currentPage, 10, al);
+			userJobs = StoreExcelFile.getALlUserMatchedJobDsc(currentPage, 10,
+					al);
+
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				}
+			}
+
 		}
 
+		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
+			/* jobs = StoreExcelFile.getAllJobs(currentPage, 10); */
+			ArrayList<String> al = new ArrayList<>();
+
+			String email = session().get("email");
+			UserDetails u = UserDetails.getUserByEmail(email);
+			List<UserPosition> up = u.userPosition;
+			for (UserPosition upd : up) {
+				String pos = upd.position;
+				al.add(pos);
+
+				System.out.println("pos" + pos);
+			}
+
+			userJobs = StoreExcelFile.getALlUserMatchedJobAsc(currentPage, 10,
+					al);
+
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				}
+			}
+
+		}
+
+		// called when the usermatches job type selected
+		/*
+		 * if (usermatch == true) { ArrayList<String> al = new ArrayList<>();
+		 * 
+		 * String email = session().get("email"); UserDetails u =
+		 * UserDetails.getUserByEmail(email); List<UserPosition> up =
+		 * u.userPosition; for (UserPosition upd : up) { String pos =
+		 * upd.position; al.add(pos);
+		 * 
+		 * System.out.println("pos" + pos); }
+		 * 
+		 * jobs = StoreExcelFile.getALlUserMatchedJob(currentPage, 10, al); }
+		 */
 		if (!("notSelected".equalsIgnoreCase(position.trim()))) {
 			jobs = StoreExcelFile.getALlUserJobByPosition(currentPage, 10,
 					position);
@@ -1134,8 +1229,7 @@ public class Application extends Controller {
 
 	}
 
-	
-	//called when user clicked to view there own profile
+	// called when user clicked to view there own profile
 	@JsonIgnore
 	public static Result getUserProfile() {
 		String email = session().get("email");
@@ -1158,7 +1252,7 @@ public class Application extends Controller {
 
 	}
 
-	//called when user add its own skill(if skill present none is added)
+	// called when user add its own skill(if skill present none is added)
 	public static Result saveOtherSkill(String otherSkill) {
 		// check if the skill is present or not if present does not add.
 		UserSkill us = UserSkill.getSkillByName(otherSkill);
@@ -1173,7 +1267,7 @@ public class Application extends Controller {
 
 	}
 
-	//update user profile
+	// update user profile
 	@JsonIgnore
 	public static Result updateUserProfile() {
 		JsonNode json = request().body().asJson();
@@ -1230,7 +1324,7 @@ public class Application extends Controller {
 				.constructCollectionType(List.class, AddEmpHistoryVM.class));
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
 			EmploymentDetails ed = EmploymentDetails
-					.getEmploymentDetailsById(addNewEmphistory.get(i).id);
+					.getEmploymentDetailsByName(addNewEmphistory.get(i).companyName);
 			if (ed != null) {
 				ed.delete();
 
@@ -1260,7 +1354,7 @@ public class Application extends Controller {
 						List.class, AddEducationVM.class));
 		for (int i = 0; i < addEducation.size(); i++) {
 			EducationDetails eds = EducationDetails
-					.getEducationDetailsById(addEducation.get(i).id);
+					.getEducationDetailsByName(addEducation.get(i).degree);
 			if (eds != null) {
 				eds.delete();
 			}
@@ -1478,6 +1572,9 @@ public class Application extends Controller {
 
 		int ids = Integer.parseInt(id);
 		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
+		//job id to be shown on resume
+		String JobId =ap.jobno;
+		
 		OutputStream file = null;
 		Document document = null;
 		try {
@@ -1503,7 +1600,7 @@ public class Application extends Controller {
 			chunkSkills.setBackground(new BaseColor(230, 230, 250));
 			chunkSkills.setFont(font);
 
-			Chunk chunkExpDetails = new Chunk("Experiance".toUpperCase());
+			Chunk chunkExpDetails = new Chunk("experience".toUpperCase());
 			chunkExpDetails.setBackground(new BaseColor(230, 230, 250));
 			chunkExpDetails.setFont(font);
 
@@ -1571,7 +1668,13 @@ public class Application extends Controller {
 			PdfPCell cell4 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
 			cell4 = new PdfPCell(new Phrase("Candidate’s Full Legal Name: "
-					+ "" + candidiatename + " (" + (email) + ")", font1));
+					+ "" + candidiatename, font1));
+			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table4.addCell(cell4);
+
+			// add email of canidiate at bottom of student full name
+			cell4 = new PdfPCell(new Phrase("Email: " + email, font1));
 			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
 			table4.addCell(cell4);
@@ -1821,7 +1924,7 @@ public class Application extends Controller {
 				 * chapter.addSection(emp.expdesc);
 				 */
 				cellExp = new PdfPCell(new Phrase(emp.companyName + ", " + " "
-						+ emp.position + "(" + emp.startdate + " - "
+						+ emp.position + " " + "(" + emp.startdate + " - "
 						+ emp.enddate + ")", font));
 				cellExp.setBackgroundColor(new BaseColor(230, 230, 250));
 				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -1903,6 +2006,13 @@ public class Application extends Controller {
 
 	}
 
-
+	/*
+	 * public static Result getJobsByLocation(String currentpage,String
+	 * location){
+	 * 
+	 * return ok()
+	 * 
+	 * }
+	 */
 
 }

@@ -79,20 +79,35 @@ public class StoreExcelFile {
 				.orderBy("workLocation").findList();
 	}
 
-	public static List<StoreExcelFile> getAllJobsByLocation(int currentPage,
+	public static List<StoreExcelFile> getAllJobsByLocationAsc(int currentPage,
+			int rowsPerPage) {
+		return find.setFirstRow(currentPage * 10).setMaxRows(rowsPerPage)
+				.orderBy("workLocation").findList();
+	}
+	
+	public static List<StoreExcelFile> getAllJobsByLocationDsc(int currentPage,
 			int rowsPerPage) {
 		return find.setFirstRow(currentPage * 10).setMaxRows(rowsPerPage)
 				.orderBy("workLocation").findList();
 	}
 
-	public static List<StoreExcelFile> getAllJobsByLocationAndJobType(
+	public static List<StoreExcelFile> getAllJobsByLocationAndJobTypeAsc(
 			int currentPage, int rowsPerPage, String jobType) {
 
-		return find.where().eq("positionType", jobType).findList();
+		return find.where().eq("positionType", jobType).order().asc("workLocation").findList();
 
 	
 	}
 
+	
+	public static List<StoreExcelFile> getAllJobsByLocationAndJobTypeDsc(
+			int currentPage, int rowsPerPage, String jobType) {
+
+		return find.where().eq("positionType", jobType).order().desc("workLocation").findList();
+
+	
+	}
+	
 	@JsonIgnore
 	public static long getAllJobsCount(int rowsPerPage) {
 		long totalPages = 0, size = 0;
@@ -102,6 +117,7 @@ public class StoreExcelFile {
 		if (size % rowsPerPage > 0) {
 			totalPages++;
 		}
+		
 		return totalPages;
 	}
 
@@ -109,11 +125,20 @@ public class StoreExcelFile {
 		Ebean.update(storeExcelFile);
 	}
 
-	public static List<StoreExcelFile> getALlUserMatchedJob(int rowsPerPage,
+	public static List<StoreExcelFile> getALlUserMatchedJobAsc(int rowsPerPage,
 			int currentPage, ArrayList<String> al) {
 
-		return find.where().in("labourCategory", al).findList();
+		return find.where().in("labourCategory", al).order().desc("workLocation").findList();
 	}
+	
+	
+	public static List<StoreExcelFile> getALlUserMatchedJobDsc(int rowsPerPage,
+			int currentPage, ArrayList<String> al) {
+
+		return find.where().in("labourCategory", al).order().asc("workLocation").findList();
+	}
+	
+	
 
 	public static List<StoreExcelFile> getALlUserJobByPosition(int currentPage,
 			int rowsPerPage, String position) {
