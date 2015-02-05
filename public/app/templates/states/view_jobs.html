@@ -68,7 +68,7 @@
 						<table class="demo-tbl">
 
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
-								<td class="td-block">
+								<td class="td-block" ng-if="job.jobStatus == 'active'">
 									<p class="date">
 										<button type="button" class="btn btn-green"
 											data-toggle="modal" ng-click="applyForJob(job)">Apply
@@ -98,23 +98,45 @@
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
 									</p>
-									<p class="desc">
+								<p class="desc">
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
-											popover="{{job.manadatorySkills}}" popover-placement="bottom"><a
+											href="#popupBottom" data-toggle="modal-popover" data-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
+									
+								 <div id="popupBottom" class="popover" style="margin-top: -5%;margin-left: -20%;">
+							        <div class="arrow"></div>
+							        <div class="popover-content">
+							            <p  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
+							            </p>
+							        </div>
+							    </div>
+							    
 									<p class="text-danger">
 										<small>Desired Skills</small>
 									</p>
-									<p class="desc">
+									<!-- <p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
-									</p>
-
+									</p>-->
+									<p class="desc">
+										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small><span
+											href="#popupBottom1" data-toggle="modal-popover" data-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									
+												 <div id="popupBottom1" class="popover" style="margin-top: -5%;margin-left: -19%;">
+												        <div class="arrow"></div>
+												        <div class="popover-content">
+												            <p  data-ng-repeat="job2 in job.desiredSkill">{{job2}}
+												            </p>
+                										  </div>
+											    </div>
+ 
 								</td>
 
 							</tr>
@@ -268,6 +290,7 @@
 
 </div>
 <style type="text/css">
+
 .popover {
 	max-width: 600px;
 }

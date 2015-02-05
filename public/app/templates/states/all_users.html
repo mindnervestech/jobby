@@ -1,7 +1,3 @@
-<script
-	src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
-
-
 <style>
 .Color {
 	color: green
@@ -10,59 +6,103 @@
 .redColor {
 	color: red
 }
-
-.state-success .form-control {
-	border-color: rgb(221, 216, 216) !important;
-}
-
-.state-success input,.state-success select,.state-success textarea {
-	background: none !important;
-}
-
-fieldset.scheduler-border {
-	border: 1px groove !important;
-	padding: 0 1.4em 1.4em 1.4em !important;
-	margin: 0 0 1.5em 0 !important;
-	-webkit-box-shadow: 0px 0px 0px 0px #000;
-	box-shadow: 0px 0px 0px 0px #000;
-	border-color:#darkgrey;
-}
-
-legend.scheduler-border {
-	font-size: 1.0em !important;
-	text-align: left !important;
-	width: inherit;
-	padding: 0 10px;
-	border-bottom: none;
-	color: darkgray;
-}
 </style>
+
 <div class="row">
 	<div class="col-lg-12">
-		<div class="portlet box">
+		<div class="portlet box" style="min-height:500px;">
 			<div class="portlet-header">
-				<div class="caption">My Profile</div>
+				<div class="caption">All users</div>
 			</div>
-			<div class="portlet-body">
-				<div class="row mbm">
+			<div class="portlet-body" ng-init="init();">
+				<div class="row mbm">	
 					<div class="col-lg-12">
-
-
-
-						<div id="page-user-profile" class="row" ng-init="init();">
-
-							<div class="row ng-scope">
-								<div class="col-lg-12">
-									<div class="portlet box portlet-blue">
-										<!-- <div class="portlet-header">
-					<div class="caption">My Profile</div>
-					<div class="tools">
-						<i class="fa fa-chevron-up"></i><i data-toggle="modal"
-							data-target="#modal-config" class="fa fa-cog"></i><i
-							class="fa fa-refresh"></i><i class="fa fa-times"></i>
+						<!-- {{jobs}} -->
+						<div ng-init="getAllUsers()" class="table-responsive">
+							<div class="page-header">
+								<h3>
+									All users <i class="icon-chevron-right"></i>
+								</h3>
+								<table id="table_id"
+									class="table table-hover table-striped table-bordered table-advanced tablesorter display">
+									<tbody>
+										<tr>
+											<th>Email</th>
+											<th>First Name</th>
+											<th>Mid Name</th>
+											<th>Last Name</th>
+											<th>Gender</th>
+											<th>DOB</th>
+											<th>Edit</th>
+											<th>Status</th>
+										</tr>
+										<tr data-ng-repeat="user in users.users"
+											style="background-color: #fff !important; left: -900">
+											<td ng-click="">{{user.email}}</td>
+											<td ng-click="">{{user.firstname}}</td>
+											<td ng-click="">{{user.middlename}}</td>
+											<td ng-click="">{{user.lastname}}</td>
+											<td ng-click="">{{user.gender}}</td>
+											<td ng-click="">{{user.dob}}</td>
+											
+											<td><button id="genpdf" type="button"
+													ng-click="editUserDetails(user);" data-toggle="modal"  class="btn btn-success">edit</button></td>
+								<td><button id="genpdf" type="button"
+													ng-click="changeUserStatus()" data-toggle="modal"  class="btn btn-success">Active</button></td>
+								
+								
+								 		</tr>
+									</tbody>
+								</table>
+								<button id="pre" type="button" ng-click="clickPre()"
+									class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+								&nbsp;
+								<button id="next" type="button" ng-click="clickNext()"
+									class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+							</div>
+						</div>
 					</div>
-				</div> -->
-										<div class="portlet-body">
+				
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Modal -->
+<div class="modal fade" id="viewresume" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Resume Preview</h4>
+      </div>
+      <div class="modal-body">
+					<div id="iframeContainer"
+						style="overflow: auto; padding: 10px 0 0 0">
+						<iframe id="fred"  src=" "
+							height="520" width="100%"> </iframe>
+					</div>
+
+				</div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal Edit user details-->
+<div class="modal fade" id="editUserDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+       	<div class="portlet-body">
 											<form name="userProfileform" id="userProfileform"
 												class="form-horizontal ng-pristine ng-valid">
 												<div class="row">
@@ -459,90 +499,39 @@ legend.scheduler-border {
 										</div>
 
 									</div>
-								</div>
-							</div>
-						</div>
-
-
-						<script type="text/javascript">
-							$(document)
-									.ready(
-											function() {
-												jQuery.validator
-														.addMethod(
-																"lettersonly",
-																function(value,
-																		element) {
-																	return this
-																			.optional(element)
-																			|| /^[a-z," "]+$/i
-																					.test(value);
-																},
-																"Letters and spaces only please");
-
-												$("#userProfileform")
-														.validate(
-																{
-
-																	rules : {
-
-																		fullname : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		companyName : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		position : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		instituteName : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		degree : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		certName : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		certYear : {
-																			required : true
-																		}
-
-																	},
-																	messages : {
-																		fullname : "Please enter name properly",
-																		companyName : "Please enter Company Name properly",
-																		position : "Please enter Position name properly",
-																		email : "Please enter email  properly",
-																		instituteName : "Please enter institute name   properly",
-																		degree : "Please enter degree   name properly",
-																		certName : "Please enter certificate name   properly",
-																		certYear : "Please enter certidficate year  properly",
-
-																	}
-																});
-
-											});
-						</script>
-
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
+<style type="text/css">
+.modal .modal-dialog {
+	width: 90%;
+}
 
+.modal .modal-body {
+	max-height: 620px;
+	overflow-y: auto;
+}
 
+fieldset.scheduler-border {
+	border: 1px groove !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #000;
+	box-shadow: 0px 0px 0px 0px #000;
+	border-color:#darkgrey;
+}
+
+legend.scheduler-border {
+	font-size: 1.0em !important;
+	text-align: left !important;
+	width: inherit;
+	padding: 0 10px;
+	border-bottom: none;
+	color: darkgray;
+}
+</style>

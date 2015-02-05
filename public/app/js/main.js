@@ -105,7 +105,9 @@ App.config(function ($routeProvider) {
         .when('/updateExcel', { templateUrl: 'assets/app/templates/states/storeexcel.html', controller: 'ExcelFileController'})
         .when('/forgetPassword', { templateUrl: 'assets/app/templates/states/forget_password.html', controller: 'ForgetPasswordController'})
         .when('/viewJobs', { templateUrl: 'assets/app/templates/states/view_jobs.html', controller: 'ViewJobsController'})
+        .when('/viewAllJobsforAdmin', { templateUrl: 'assets/app/templates/states/all_jobs_admin.html', controller: 'ViewAllForAdminJobsController'})
         .when('/viewAppliedJobs', { templateUrl: 'assets/app/templates/states/applied_jobs.html', controller: 'ViewAppliedJobsController'})
+        .when('/allUsers', { templateUrl: 'assets/app/templates/states/all_users.html', controller: 'ViewAllUsersController'})
         .when('/extra-signin', { templateUrl: 'assets/app/templates/states/extra-signin.html', controller: 'ExtraSigninController'})
         .when('/extra-signup', { templateUrl: 'assets/app/templates/states/extra-signup.html', controller: 'ExtraSignupController'})
         .when('/extra-lock-screen', { templateUrl: 'assets/app/templates/states/extra-lock-screen.html', controller: 'ExtraLockScreenController'})
@@ -274,6 +276,279 @@ App.controller('AppController', function ($scope, $rootScope, $routeParams, $loc
 });
 
 
+App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $http, $rootScope,  $routeParams){
+	
+	$scope.jobsData = [];
+	$scope.pageno = 0;
+	
+	$scope.position = "notSelected";
+	 $scope.jobType = "All";
+	  $scope.location = false;
+	  $scope.allPosition;
+	  // called when page in loaded for getting all jobns form db
+	  // get all jobs  for the Admin
+	   $scope.onJobsForAdminLoad = function(){
+		$scope.jobType = "All";
+		$scope.location = false;
+		$scope.pageno = 0;
+		$scope.matchedpos = false;
+		$scope.position = "notSelected";
+		$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+		.success(function(data) {
+			console.log(data);
+			$scope.jobsData = data.jobs;
+			
+		});
+		
+	/*	$http.get('/getAllPosition')
+    	.success(function(data) {
+    		$scope.allPosition = data;
+    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		// $scope.username = data.uname;
+    	});*/
+	
+		
+	};
+	  
+	$scope.matchedpos  = false;
+	$scope.getUserMatchedPosition = function(){
+		$scope.jobType = "usermatch";
+		$scope.location = false;
+		$scope.pageno = 0;
+		$scope.position = "notSelected";
+		if($scope.matchedpos == true){
+			$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+	    	.success(function(data) {
+	    		$scope.jobsData = data.jobs;
+	    		console.log("all position:"+JSON.stringify($scope.jobsData));
+	    		// $scope.username = data.uname;
+	    	});
+		}
+		
+	}
+	
+	// $scope.position;
+	$scope.getAllJobByPosition = function(){
+		$scope.jobType = "usermatch";
+		$scope.location = false;
+		$scope.pageno = 0;
+		$scope.matchedpos = false;
+		
+			$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+	    	.success(function(data) {
+	    		$scope.jobsData = data.jobs;
+	    		
+	    		console.log("all position:"+JSON.stringify($scope.jobsData));
+	    		// $scope.username = data.uname;
+	    	});
+		
+		
+		
+	}
+	
+	
+	$scope.headerStatuspageno = 0;
+	
+	$scope.clickNext = function() {
+		console.log("nexdt");
+			  $scope.pageno++;
+			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					
+				});
+		  }
+		 
+
+	  $scope.clickPre = function() {
+		 // $scope.position = "notSelected";
+	      $scope.pageno--;
+		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				if(data.orderCount <= 10){
+					$('#next').hide();
+				}else{
+					$('#next').show();
+				}
+			});
+		  }
+ 
+	 // called when user clicked on the job position typefor search
+	  $scope.getAllJobByType = function(){
+		  console.log("$scope.jobType"+$scope.jobType);
+		  $scope.matchedpos = false;
+		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				console.log("$scope.success"+$scope.jobsData);
+				
+			});
+	  }
+	  
+	  // called when user clicked for location search
+	  $scope.onLocationClick =  function(){
+		  $scope.position = "notSelected";
+		    console.log($scope.location);
+		    if($scope.location == false){
+		    	$scope.location = true;
+		    } else if($scope.location == true){
+		    	$scope.location = false;
+		    }
+		    $scope.matchedpos = false;
+		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+			
+				
+			});
+		  
+		/*  $http.post('/getJobsByLocation/'+$scope.pageno+'/'+$scope.location)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+			
+				
+			});
+		  */
+	  }
+	  
+	 // $scope.manadatorySkills = [];
+	//  $scope.desiredSkills = [];
+	  $scope.jobData;
+	  $scope.editJob;
+	  
+	  // called when user click on applied button
+	  $scope.editJob = function(job){
+			//console.log("job"+$scope.jobData.desiredSkill);
+		  $scope.editJob = job;
+		  console.log( JSON.stringify($scope.editJob));
+			$('#editJob').modal();
+			
+		}
+	  
+	  //used by admin to save the job (Edited) 
+      //save admin edited job
+	  $scope.saveEditJob =  function(){
+		  $('#editJob').modal('hide');
+		  $http.post('/saveEditJob',{editJob:$scope.editJob})
+			.success(function(data){
+				console.log("success");
+				$scope.updateSuccess = true;
+			});
+		  
+	  }
+
+	  // save current user applied job
+	  $scope.saveUserJob = function(){
+		  $('#myModal').modal('hide');
+		   console.log($scope.desiredSkills);
+		   $scope.requestNumber = $scope.jobData.requestNumber;
+		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
+			.success(function(data){
+				console.log("success");
+				$scope.updateSuccess = true;
+			});
+	  
+	  } 
+	 
+	  $scope.onInactiveJobClicked = function(job){
+		  $scope.requestNumber = job.requestNumber;
+		/*  $http.post('/inactiveJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
+			.success(function(data){
+				console.log("success");
+				$scope.updateSuccess = true;
+			});
+		  */
+		  $http.get('/inactiveJob/'+ $scope.requestNumber)
+			.success(function(data) {
+			// $scope.userData = data;
+				$rootScope.username = data;
+				$scope.onJobsForAdminLoad();
+				console.log("data"+data);
+			});
+	  }
+	  $scope.onActiveJobClicked = function(job){
+		  $scope.requestNumber = job.requestNumber;
+		/*  $http.post('/inactiveJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
+			.success(function(data){
+				console.log("success");
+				$scope.updateSuccess = true;
+			});
+		  */
+		  $http.get('/onactiveJob/'+ $scope.requestNumber)
+			.success(function(data) {
+			// $scope.userData = data;
+				$rootScope.username = data;
+				console.log("data"+data);
+				
+				$scope.onJobsForAdminLoad();
+			});
+	  }
+	  
+	  
+	  $http.get('/getUserName')
+		.success(function(data) {
+		// $scope.userData = data;
+			$rootScope.username = data;
+			console.log("data"+data);
+		});
+	  
+	// check for gthe admin
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+		
+	    //check for all fields Coments if nor raise error if not eroor
+    	// goto the next  tab desirted skills
+		$scope.errorManaSkillComment = false;
+		$scope.checkAllFields  = function(){
+			angular.forEach($scope.manadatorySkills, function(obj1, index){
+				console.log("obj1.comment"+$scope.manadatorySkills);
+				//console.log) 
+					//console.log")
+				for(var i =0 ;i<$scope.manadatorySkills.length; i++ ){
+					if ((obj1.comment == " " )) {
+						console.log("comment i  if"+($scope.manadatorySkills));
+						$scope.errorManaSkillComment = true;
+						
+					}else{
+						console.log("in else")
+						$("#tab2").click();
+						$scope.errorManaSkillComment = false;
+					}
+				}
+				/*if ((obj1.comment == " " )) {
+					//console.log("comment"+(obj1.comment));
+					$scope.errorManaSkillComment = true;
+				}else{
+					if($scope.errorManaSkillComment == true){
+						
+					}else{
+						$("#tab2").click();
+						//$scope.errorManaSkillComment = false;
+					}
+					
+				}*/
+				});
+		}
+		//used to go to tab1 (mandatory skills )
+		$scope.preClicked = function(){
+			$("#tab1").click();
+		}
+		
+		
+});
+
+
+
 App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootScope,  $routeParams){
 	
 	$scope.jobsData = [];
@@ -284,6 +559,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  $scope.location = false;
 	  $scope.allPosition;
 	  // called when page in loaded for getting all jobns form db
+	  // get all jobs  for the user
 	   $scope.onAllJobsLoad = function(){
 		$scope.jobType = "All";
 		$scope.location = false;
@@ -5889,6 +6165,229 @@ App.controller('ExtraLockScreenController', function ($scope, $routeParams){
 });
 
 
+App.controller('ViewAllUsersController', function ($scope, $rootScope, $routeParams, $http, $upload){
+
+	
+	// get all users applied jobs to admin
+	$scope.email;
+	$scope.getAllUsers = function(){
+		$http.get('getAllUsers')
+		.success(function(data){
+			if(data) {
+				$scope.users = data;
+				
+				console.log("data"+JSON.stringify(data));
+			} 
+		});
+	}
+
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
+	$scope.allSkills;
+	$scope.allCleanrance;
+	$scope.allPosition;
+	
+	
+	$scope.editUserDetails = function(user){
+		$scope.email = user.email;
+		$scope.userDetails = user;
+		console.log("users:"+user.email);
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data) {
+				$scope.isAdmin = data;
+				console.log("admin"+$scope.isAdmin);
+			} 
+		});
+		
+		$http.get('/getUserDetailsForAdmin/'+$scope.email)
+    	.success(function(data) {
+    		$scope.allPosition = data;
+    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		$scope.addNewEmphistory = data.employmentDetails;
+     		$scope.addEducation = data.educationDetails;
+     		$scope.addCertificate = data.certificationDetails;
+     		$scope.userSkill = user.userSkill;
+     		$scope.userClearance = user.userClearance;
+     		$scope.userPosition = user.userPosition;
+    		// $scope.username = data.uname;
+    	});
+		
+		angular.forEach($scope.allSkills, function(obj, index){
+			angular.forEach($scope.userSkill, function(obj1, index){
+				if ((obj.skillName == obj1.skillName)) {
+					console.log(obj1.skillName);
+					$scope.skills.push(obj.skillName);
+					obj.isSelected = true;
+					};
+				});
+			});
+		
+		
+		
+		$http.get('/getAllPosition')
+    	.success(function(data) {
+    		$scope.allPosition = data;
+    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		// $scope.username = data.uname;
+    	});
+	
+		
+		$http.get('/getAllClearance')
+    	.success(function(data) {
+    		$scope.allCleanrance = data;
+    		// console.log($scope.userCleanrance);
+    		
+    	});
+		
+		$http.get('/getAllSkills')
+    	.success(function(data) {
+    		$scope.allSkills = data.skills;
+    		console.log(JSON.stringify($scope.allSkills));
+    	});
+
+		$('#editUserDetails').modal();
+	}
+	
+	
+	
+	$('#dob').datepicker({
+	    format: 'mm-dd-yyyy'
+		});
+	
+		// used for init date picker in education form
+		$scope.initeduDateform = function(){
+			$('#edudateform').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+			$('#edudateto').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+			
+		}
+		
+		// used to init date picker in company form
+		$scope.initCmpDatePicker = function(){
+			$('#startdateemp').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+			$('#enddateemp').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+		} 
+		
+		// used to init date picker
+		$scope.initDatePicker  = function(){
+			
+			$('#certYear').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+		}
+		
+	$scope.addNewEmphistory = [{}];
+	$scope.addEducation = [{}];
+	$scope.addCertificate = [{}];
+	$scope.skills = [];
+	$scope.userDetails = {};
+	$scope.userPosition;
+	$scope.userClearance;
+	// $scope.skills = [];
+	
+	$scope.addNewEmployment = function(){
+		
+		$scope.addNewEmphistory.push({ });
+	}
+	
+	$scope.addNewEducation = function(){
+		$scope.addEducation.push({ });
+	}
+	
+	$scope.addNewCertificate = function(){
+		$scope.addCertificate.push({ });
+		
+	}
+	
+	
+	$scope.updateSuccess = false;
+	
+	$scope.submitUserProfile = function(){
+		$scope.EducationError  = false;
+		$scope.empHistory  =  false;
+		console.log("hi"+JSON.stringify($scope.addEducation.length));
+		console.log("hi"+JSON.stringify($scope.addNewEmphistory));
+		console.log("hi"+JSON.stringify($scope.addCertificate));
+		console.log("hi1234"+JSON.stringify($scope.userDetails));
+		console.log("Clearance"+JSON.stringify($scope.userClearance));
+		console.log("position"+JSON.stringify($scope.userPosition));
+		
+		// chk for the education,employee cmp,user posi/clearance selected or
+		// not if not gives gives error
+		if(!(angular.isUndefined($scope.userClearance)) || !(angular.isUndefined($scope.userPosition))){
+		if($scope.addEducation.length == 0){
+			$scope.EducationError = true;
+		}else if($scope.addNewEmphistory.length == 0){
+			$scope.empHistory = true;
+		}else{
+		$http.post('/updateUserProfile',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills})
+		.success(function(data){
+			console.log("success");
+			$scope.updateSuccess = true;
+		});
+		
+	}
+	}else{
+		$scope.userPoserror = true;
+	}
+		
+	}
+	
+	
+	
+	
+ 	
+	$scope.skillClicked = function(e, skill) {
+		console.log(skill);
+		if($(e.target).is(":checked")) {
+		$scope.skills.push(skill.skillName);
+		
+		} 
+
+		};
+	
+		
+		$scope.otherSkill;
+		$scope.error = false;
+		$scope.saveOtherSkill = function(){
+			if(!angular.isUndefined($scope.otherSkill)){
+				$http.get('saveOtherSkill/'+$scope.otherSkill)
+				.success(function(data){
+					if(data) {
+						$scope.skills.push(data);
+						data.isSelected = true;
+						$scope.allSkills.push(data);
+						$scope.result = data;
+						console.log(data);
+						$scope.otherSkill = " ";
+						// $scope.init();
+					} 
+				});
+			}else{
+				$scope.error = true;
+			}
+			
+		}		
+		
+		
+	
+});
+
+
+
 App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $routeParams, $http, $upload){
 
 	
@@ -5945,7 +6444,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	$scope.newRow;
 	$scope.updateRow;
 	// used to uplopad pdf (clicked on upload button)
-	$scope.uploadExcel = function(){
+	/*$scope.uploadExcel = function(){
 		$http.post('/uploadExcel')
 		.success(function(data){
 			console.log("success");
@@ -5957,7 +6456,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 			$scope.updateRow = true;
 		});
 		
-	}
+	}*/
 	
 	$http.get('/getUserName')
 	.success(function(data) {

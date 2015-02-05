@@ -176,6 +176,7 @@
       <div class="header-content">
         <h1>Register</h1>
       </div>
+      @flash.get("error");
       <div class="body-content">
        <!--  <div class="form-group">
           <div class="input-icon right"><i class="fa fa-user"></i>
@@ -189,7 +190,8 @@
         </div>
         <div class="form-group">
           <div class="input-icon right"><i class="fa fa-key"></i>
-            <input id="password" type="password" placeholder="Password" name="password"  minlength = "10"  class="form-control" />
+            <input id="password" type="password" placeholder="Password" name="password" onkeyup="validatePasswordstrong(this.value,document.getElementById('strendth'),document.getElementById('passError'));" minlength = "10"  class="form-control" />
+          	<span id="passError"></span><span id="strendth"></span>
           </div>
         </div>
         <div class="form-group">
@@ -200,7 +202,19 @@
         <hr/>
        <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="Full Name" name="firstname" class="form-control"/>
+              <input type="text" placeholder="First Name" name="firstname" class="form-control"/>
+               <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
+          </div>
+        </div>
+         <div class="form-group">
+          <div class="input-icon right">
+              <input type="text" placeholder="Middle Name" name="middlename" class="form-control"/>
+               <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
+          </div>
+        </div>
+         <div class="form-group">
+          <div class="input-icon right">
+              <input type="text" placeholder="Last Name" name="lastname" class="form-control"/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>
@@ -253,10 +267,81 @@ function validatePassword(){
 }
 
 
+function validatePasswordstrong(password,passwordStrength,errorField){
+	console.log(passwordStrength);
+		var desc = new Array();
+		desc[0] = "Very Weak";
+		desc[1] = "Weak";
+		desc[2] = "Better";
+		desc[3] = "Medium";
+		desc[4] = "Strong";
+		desc[5] = "Strongest";
 
+		var score   = 0;
+
+		//if password bigger than 6 give 1 point
+		if (password.length > 6) score++;
+
+		//if password has both lower and uppercase characters give 1 point
+		if ( ( password.match(/[a-z]/) ) && ( password.match(/[A-Z]/) ) ) score++;
+
+		//if password has at least one number give 1 point
+		if (password.match(/\d+/)) score++;
+
+		//if password has at least one special caracther give 1 point
+		 if ( password.match(/.[!)]/) ) score++;
+
+		//if password bigger than 12 give another 1 point
+		if (password.length > 12) score++;
+
+		passwordStrength.innerHTML = desc[score];
+		passwordStrength.className = "strength" + score;
+
+	
+}
 
 
  </script>
+ <style>
+ 
+ .strength0
+{
+width:250px;
+background:#cccccc;
+}
+
+.strength1
+{
+width:50px;
+background:#ff0000;
+}
+
+.strength2
+{
+width:100px;
+background:#ff5f5f;
+}
+
+.strength3
+{
+width:150px;
+background:#56e500;
+}
+
+.strength4
+{
+background:#4dcd00;
+width:200px;
+}
+
+.strength5
+{
+background:#399800;
+width:250px;
+}
+ 
+ 
+ </style>
 <!-- <script>
 alert("fh");
 $('#passwordConfirm').on('keyup', function () {

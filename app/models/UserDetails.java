@@ -26,7 +26,9 @@ public class UserDetails extends Model {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public String email;
 	public String password;
-	public String fullname;
+	public String firstname;
+	public String middlename;
+	public String lastname;
 	public String gender;
 	public String dob;
 
@@ -77,5 +79,10 @@ public class UserDetails extends Model {
 	public static UserDetails getPassword(String email) {
 		return find.where().eq("email", email).findUnique();
 
+	}
+	
+	
+	public static List<UserDetails>getAllUsers(){
+		return find.all();
 	}
 }

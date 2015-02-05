@@ -48,7 +48,8 @@ public class StoreExcelFile {
 	public String duetoPmo;
 	public String updateDate;
 	public String duetoGovt;
-
+	public String jobStatus = "active";
+	
 	public StoreExcelFile() {
 
 	}
@@ -138,11 +139,29 @@ public class StoreExcelFile {
 		return find.where().in("labourCategory", al).order().asc("workLocation").findList();
 	}
 	
-	
+	public static List<StoreExcelFile>getAllJobsForAdmin(int rowsPerPage,
+			int currentPage){
+		
+		return find.all();
+	}
 
 	public static List<StoreExcelFile> getALlUserJobByPosition(int currentPage,
 			int rowsPerPage, String position) {
 		return find.where().eq("labourCategory", position).findList();
 
 	}
+	
+	
+	public static List<StoreExcelFile> getAllJobsForAdminDsc(int rowsPerPage,
+			int currentPage) {
+
+		return find.where().order().desc("workLocation").findList();
+	}
+	
+	public static List<StoreExcelFile> getAllJobsForAdminAsc(int rowsPerPage,
+			int currentPage) {
+
+		return find.where().order().asc("workLocation").findList();
+	}
+	
 }

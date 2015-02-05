@@ -1,0 +1,461 @@
+
+<script
+	src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+	
+<div class="row" ng-init="onJobsForAdminLoad()">
+	<div class="col-lg-12">
+		<div class="panel" style="min-height: 500px;">
+			<div class="panel-body">
+				<div id="grid-layout-first-table" class="box jplist">
+					<div class="jplist-ios-button">
+						<i class="fa fa-sort"></i>jPList Actions
+					</div>
+					<div class="">
+
+						<div class="col-md-5 control-label">
+							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
+								name="jobType" ng-model="jobType" class="selectpicker"
+								ng-change="getAllJobByType();">
+								<option name="jobType" value="Full-Time">Full Time</option>
+								<option value="Part-Time">Part Time</option>
+								<option value="All">All</option>
+							</select>
+						</div>
+						<div class="col-md-3 control-label">
+							<!-- Sort by Location<br> <input type="checkbox"
+								ng-model="location" ng-change="onLocationClick();"
+								name="location">
+								<a class="aTagclass" ng-click="sortData()"><span class="spanClass">price</span><span class="setIcon soap-icon-roundtriangle-bottom"></span></a>
+						 -->		
+						
+					          <ul class="sort-bar clearfix block-sm">
+
+									<li class="sort-by-price active"  ng-if ="location == false"  ng-model = "location" ><a class="aTagclass" ng-click="onLocationClick()"><span class="spanClass">Location</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></a></li>
+									<li class="sort-by-price active" ng-if ="location == true"  ng-model = "location"><a class="aTagclass" ng-click="onLocationClick()"><span class="spanClass">Location</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></a></li>
+								</ul> 
+								
+						</div>
+
+
+					<!-- 	<div class="col-md-3 control-label">
+							Search by Position<br /> <select id="allposition"
+								name="position" ng-model="position" class="selectpicker"
+								ng-change="getAllJobByPosition();">
+								
+								<option 
+								ng-selected="$index == 3" ng-selected="selected"	ng-repeat="position in allPosition.position">{{position.position}}</option>
+							<option  value="All">All</option>
+							</select>
+
+						</div> -->
+
+						<!-- <div class="col-md-3 control-label">
+							Matched Position<br /> <input type="checkbox"
+								ng-model="matchedpos" ng-change="getUserMatchedPosition();"
+								name="matchedpos">
+						</div>
+ -->
+						<div class="pull-right">
+							<button id="pre" type="button" ng-click="clickPre()"
+								class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+							&nbsp;
+							<button id="next" type="button" ng-click="clickNext()"
+								class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+						</div>
+					</div>
+					<div class="box text-shadow">
+
+						<table class="demo-tbl">
+
+							<tr class="tbl-item" data-ng-repeat="job in jobsData">
+								<td class="td-block">
+									<p class="date">
+										<button type="button" class="btn btn-green"
+											ng-if="job.jobStatus == 'active'" ng-click="onInactiveJobClicked(job)">Inactive
+										</button>
+										<button type="button" class="btn btn-green"
+											ng-if="job.jobStatus == 'inactive'"  ng-click="onActiveJobClicked(job)">Activate
+										</button>
+									</p>
+									<p ng-click="editJob(job)">
+										<span class="title">{{job.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-pencil"></i></strong></span>
+									</p>
+									<p class="">
+										<strong><small><span><i
+													class="glyphicon glyphicon-map-marker"></i>&nbsp;{{job.workLocation}}</span></small></strong>
+										<span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-user"></i>&nbsp;{{job.requestType}}
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-screenshot"></i>&nbsp;{{job.performanceLevel}}
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-ok"></i>&nbsp;{{job.clearanceRequired}}
+											</small></strong></span>
+									</p>
+									<p class="desc">
+										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
+											data-placement="bottom"></small><small><span
+											popover="{{job.workDescription}}" popover-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>
+									<p class="text-danger">
+										<small>Mandatory Skills</small>
+									</p>
+								<p class="desc">
+										<small
+											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
+											data-placement="bottom"></small><small><span
+											href="#popupBottom" data-toggle="modal-popover" data-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>
+									
+								 <div id="popupBottom" class="popover" style="margin-top: -5%;margin-left: -20%;">
+							        <div class="arrow"></div>
+							        <div class="popover-content">
+							            <p  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
+							            </p>
+							        </div>
+							    </div>
+							    
+									<p class="text-danger">
+										<small>Desired Skills</small>
+									</p>
+									<!-- <p class="desc">
+										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small><span
+											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>-->
+									<p class="desc">
+										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small><span
+											href="#popupBottom1" data-toggle="modal-popover" data-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									
+												 <div id="popupBottom1" class="popover" style="margin-top: -5%;margin-left: -19%;">
+												        <div class="arrow"></div>
+												        <div class="popover-content">
+												            <p  data-ng-repeat="job2 in job.desiredSkill">{{job2}}
+												            </p>
+                										  </div>
+											    </div>
+ 
+								</td>
+
+							</tr>
+						</table>
+						<div class="pull-right">
+							<button id="pre" type="button" ng-click="clickPre()"
+								class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+							&nbsp;
+							<button id="next" type="button" ng-click="clickNext()"
+								class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="editJob" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Job</h4>
+      </div>
+      <div class="modal-body">
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Request Type</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="requestType" name="requestType"
+								ng-model="editJob.requestType" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div>
+					
+	
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Labour Category</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="labourCategory" name="labourCategory"
+								ng-model="editJob.labourCategory" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div>
+					
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Performance Level</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="performanceLevel" name="performanceLevel"
+								ng-model="editJob.performanceLevel" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Position Type</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="positionType" name="positionType"
+								ng-model="editJob.positionType" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Clearance Required</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="clearanceRequired" name="clearanceRequired"
+								ng-model="editJob.clearanceRequired" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Work Location</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="workLocation" name="workLocation"
+								ng-model="editJob.workLocation" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Work Description</label>
+						</div>
+						<div class="form-group">
+						<textarea rows="9" cols="9" id="workDescription" name="workDescription"
+								ng-model="editJob.workDescription" placeholder="Work Description"
+								style="font-size: 12px;" class="form-control" required></textarea>
+						
+							<!-- <input type="text" id="workDescription" name="workDescription"
+								ng-model="editJob.workDescription" placeholder="Work Description"
+								style="font-size: 12px;" class="form-control" required> -->
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Manadatory Skills</label>
+						</div>
+						<div class="form-group">
+						<textarea rows="9" cols="9" id="manadatorySkills" name="manadatorySkills"
+								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
+								style="font-size: 12px;" class="form-control" required></textarea>
+							<!-- <input type="text" id="manadatorySkills" name="manadatorySkills"
+								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
+								style="font-size: 12px;" class="form-control" required> -->
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Desired Skill</label>
+						</div>
+						<div class="form-group" >
+						<textarea rows="9" cols="9" id="desiredSkill" name="desiredSkill"
+								ng-model="editJob.desiredSkill" placeholder="Desired Skill"
+								style="font-size: 12px;" class="form-control" required></textarea>
+							
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Certification Required</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="certificationRequired" name="certificationRequired"
+								ng-model="editJob.certificationRequired" placeholder="Certification Required"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Conus Travel</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="conusTravel" name="conusTravel"
+								ng-model="editJob.conusTravel" placeholder="Conus Travel"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Oconus Travel</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="oconusTravel" name="oconusTravel"
+								ng-model="editJob.oconusTravel" placeholder="oconusTravel"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Regular hours per year</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="reghrperYear" name="reghrperYear"
+								ng-model="editJob.reghrperYear" placeholder="Regular hours per year"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Schedule Comments</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="scheduleComments" name="scheduleComments"
+								ng-model="editJob.scheduleComments" placeholder="Schedule Comments"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Non pub comments</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="nonpubComments" name="nonpubComments"
+								ng-model="editJob.nonpubComments" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Mission Critical</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="missionCritical" name="missionCritical"
+								ng-model="editJob.missionCritical" placeholder="Mission Critical"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Night Work</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="nightWork" name="nightWork"
+								ng-model="editJob.nightWork" placeholder="Night Work"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div>
+					
+	
+					
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Local traval using pov</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="localTravalusingpub" name="localTravalusingpub"
+								ng-model="editJob.localTravalusingpub" placeholder="Local traval using pov"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Pager Duty</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="pagerDuty" name="pagerDuty"
+								ng-model="editJob.pagerDuty" placeholder="Pager Duty"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Pager Duty Comments</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="pagerdutyComments" name="pagerdutyComments"
+								ng-model="editJob.pagerdutyComments" placeholder="Pager Duty Comments"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Work on Holiday</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="workonHoliday" name="workonHoliday"
+								ng-model="editJob.workonHoliday" placeholder="Work on Holiday"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Work on Weekends</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="workonWeekends" name="workonWeekends"
+								ng-model="editJob.workonWeekends" placeholder="Work on Weekends"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Shift Work</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="shiftWork" name="shiftWork"
+								ng-model="editJob.shiftWork" placeholder="Shift Work"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">War zone</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="warzone" name="warzone"
+								ng-model="editJob.warzone" placeholder="War Zone"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Coop</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="coop" name="coop"
+								ng-model="editJob.coop" placeholder="coop"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Due to Pmo</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="duetoPmo" name="duetoPmo"
+								ng-model="editJob.duetoPmo" placeholder="Due to Pmo"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div><div class="col-md-4">
+						<div class="">
+							<label class="">Update Date</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="updateDate" name="updateDate"
+								ng-model="editJob.updateDate" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Due to Govt</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="duetoGovt" name="duetoGovt"
+								ng-model="editJob.duetoGovt" placeholder="Due to Govt"
+								style="font-size: 12px;" class="form-control" required>
+						</div>
+					</div>
+					
+				</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<style type="text/css">
+.modal .modal-dialog {
+	width: 90%;
+}
+
+.modal .modal-body {
+	max-height: 620px;
+	overflow-y: auto;
+}
+</style>

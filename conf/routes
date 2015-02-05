@@ -37,5 +37,11 @@ GET      /getAllAppliedJobs                             controllers.Application.
 GET      /generatePDF/:id                                  controllers.Application.generatePDF(id : String)
 GET      /checkForadmin                                 controllers.Application.checkForadmin()
 GET     /getUserName                                      controllers.Application.getUserName()
+POST  /getAllJobsForAdmin/:currentPage/:jobType/:location/:matchedpos/:position      controllers.Application.getAllJobsForAdmin(currentPage : Integer,jobType:String,location:Boolean,matchedpos:Boolean,position:String)
+POST   /saveEditJob                                                  controllers.Application.saveEditJob()
+GET   /inactiveJob/:requestNumber                                 controllers.Application.inactiveJob(requestNumber :String)
 
+GET   /onactiveJob/:requestNumber                                 controllers.Application.onactiveJob(requestNumber :String)
+GET   /getAllUsers                                      controllers.Application.getAllUsers()
+GET   /getUserDetailsForAdmin/:email                                 controllers.Application.getUserDetailsForAdmin(email:String)
 
