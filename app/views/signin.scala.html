@@ -182,8 +182,8 @@
 		<div class="page-form">
 			<form action="/SignIn" method = "POST" class="form">
 				<p style = "color:red">@flash.get("error")</p>
+				<p style = "color:red">@flash.get("AccountError")</p>
 				<p   id="success" style = "color:red">@flash.get("email_success") </p>
-    
 				<div class="header-content">
 					<h1>Log In</h1>
 				</div>

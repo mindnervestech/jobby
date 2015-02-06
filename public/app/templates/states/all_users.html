@@ -38,7 +38,7 @@
 										</tr>
 										<tr data-ng-repeat="user in users.users"
 											style="background-color: #fff !important; left: -900">
-											<td ng-click="">{{user.email}}</td>
+											<td ng-click=""><a target="_blank"  href="mailto:{{user.email}}">{{user.email}}</a></td>
 											<td ng-click="">{{user.firstname}}</td>
 											<td ng-click="">{{user.middlename}}</td>
 											<td ng-click="">{{user.lastname}}</td>
@@ -47,8 +47,12 @@
 											
 											<td><button id="genpdf" type="button"
 													ng-click="editUserDetails(user);" data-toggle="modal"  class="btn btn-success">edit</button></td>
-								<td><button id="genpdf" type="button"
-													ng-click="changeUserStatus()" data-toggle="modal"  class="btn btn-success">Active</button></td>
+								<td><button type="button" class="btn btn-danger"
+											ng-if="user.userstatus == 'active'" ng-click="onInActiveUser(user)">Inactivate
+										</button>
+										<button type="button" class="btn btn-success"
+											ng-if="user.userstatus == 'inactive'"  ng-click="onActiveUser(user)">Activate
+										</button></td>
 								
 								
 								 		</tr>
@@ -99,7 +103,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Edit User</h4>
       </div>
       <div class="modal-body">
        	<div class="portlet-body">
@@ -162,7 +166,7 @@
 																	ng-model="userClearance" class="form-control">
 																	<option ng-repeat="clear in allCleanrance.clearance"
 																		value="{{clear.clearance}}"
-																		ng-selected="isSelect  == true" style="font-size: 12px;"
+																		ng-selected="clear.isSelect  == true" style="font-size: 12px;"
 																		required>{{clear.clearance}}</option>
 																</select>
 															</div>
@@ -199,7 +203,7 @@
 																<select multiple="multiple" name="userposition"
 																	ng-model="userPosition" class="form-control">
 																	<option ng-repeat="posi in allPosition.position"
-																		value="{{posi.position}}" style="font-size: 12px;"
+																		value="{{posi.position}}"  ng-selected="posi.isSelected  == true" style="font-size: 12px;"
 																		required>{{posi.position}}</option>
 																</select>
 															</div>
@@ -288,15 +292,18 @@
 																<label class="col-md-3 ">Date</label>
 																<div class="col-md-4">
 																	<div class="input-group input-daterange">
-																		<span class="input-group-addon">From</span> <input
+																		<span class="input-group-addon">From</span> <!-- <input
 																			type="text" name="startdate" id="startdateemp"
 																			ng-click="initCmpDatePicker();" class="form-control"
 																			ng-model="emp.startdate" style="font-size: 12px;"
-																			required /><span class="input-group-addon">to</span>
-																		<input type="text" id="enddateemp"
+																			required /> -->
+																			 <input class="form-control" validator="[required]" ng-click="initCmpDatePicker();" id="datepicker" ng-model="emp.startdate" style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																			<span class="input-group-addon">to</span>
+																		<!-- <input type="text" id="enddateemp"
 																			class="form-control" ng-model="emp.enddate"
 																			style="font-size: 12px;"
-																			ng-click="initCmpDatePicker();" required>
+																			ng-click="initCmpDatePicker();" required> -->
+																			<input class="form-control" validator="[required]" ng-click="initCmpDatePicker();" id="datepicker" ng-model="emp.enddate" style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
 
 																	</div>
 
@@ -386,15 +393,18 @@
 															<label class="col-md-3">Date</label>
 															<div class="col-md-4">
 																<div class="input-group input-daterange">
-																	<span class="input-group-addon">From</span> <input
+																	<span class="input-group-addon">From</span> <!-- <input
 																		type="text" name="startdate" ng-model="edu.fromDate"
 																		class="form-control" id="edudateform"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
-																		required /><span class="input-group-addon">to</span> <input
+																		required /> -->
+																		<input class="form-control" ng-click="initeduDateform();" id="datepicker" ng-model="edu.fromDate" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																		<span class="input-group-addon">to</span> <!-- <input
 																		ng-model="edu.toDate" type="text" name="enddate"
 																		class="form-control" id="edudateto"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
-																		required />
+																		required /> -->
+																		<input class="form-control" ng-click="initeduDateform();" id="datepicker" ng-model="edu.toDate" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
 																</div>
 
 															</div>
@@ -447,10 +457,12 @@
 
 																		<div class='input-group date'>
 
-																			<input type='text' id="certYear"
+																			<!-- <input type='text' id="certYear"
 																				ng-model="cert.certYear" class="form-control"
 																				id="certdate" ng-click="initDatePicker();"
-																				style="font-size: 12px;" required /> <span
+																				style="font-size: 12px;" required /> -->
+																				<input class="form-control" ng-click="initDatePicker();" id="datepicker" ng-model="cert.certYear" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																				 <span
 																				class="input-group-addon"><span
 																				class="glyphicon glyphicon-calendar"></span> </span>
 																			<div class="col-md-2">
@@ -460,8 +472,7 @@
 																					<i class="fa fa-trash-o"></i>
 																				</button>
 																			</div>
-																		</div>
-																	</div>
+																		</div>								</div>
 
 																</div>
 
@@ -488,9 +499,9 @@
 												</div>
 
 												<div class="form-actions">
-													<div class="col-md-offset-3 col-md-9">
-														<button type="submit" ng-click="submitUserProfile();"
-															class="btn btn-primary">Save</button>
+													<div class="pull-right">
+														<button type="submit" ng-click="updateUserProfileByAdmin();"
+															class="btn btn-primary">Update</button>
 														&nbsp;
 														<!-- <button type="button" class="btn btn-default">Cancel</button> -->
 													</div>
@@ -500,13 +511,13 @@
 
 									</div>
       </div>
-      <div class="modal-footer">
+     <!--  <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      </div> -->
     </div>
   </div>
-</div>
+
 <style type="text/css">
 .modal .modal-dialog {
 	width: 90%;
@@ -533,5 +544,9 @@ legend.scheduler-border {
 	padding: 0 10px;
 	border-bottom: none;
 	color: darkgray;
+}
+
+.clsDatePicker {
+    z-index: 100000;
 }
 </style>

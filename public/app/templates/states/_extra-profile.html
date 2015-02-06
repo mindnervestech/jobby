@@ -77,13 +77,13 @@ legend.scheduler-border {
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
-																<input type="text" id="fulltname" name="fulltname"
+																<input type="text" id="firstname" name="firstname"
 																	ng-model="userDetails.firstname"
 																	placeholder="Enter Full Name" style="font-size: 12px;"
 																	class="form-control" required>
 															</div>
 															<div class="col-md-4">
-																<input type="text" id="middlrname" name="middlrname"
+																<input type="text" id="middlename" name="middlename"
 																	ng-model="userDetails.middlename"
 																	placeholder="Enter Full Name" style="font-size: 12px;"
 																	class="form-control" required>
@@ -122,7 +122,7 @@ legend.scheduler-border {
 																	ng-model="userClearance" class="form-control">
 																	<option ng-repeat="clear in allCleanrance.clearance"
 																		value="{{clear.clearance}}"
-																		ng-selected="isSelect  == true" style="font-size: 12px;"
+																		ng-selected="clear.isSelect  == true" style="font-size: 12px;"
 																		required>{{clear.clearance}}</option>
 																</select>
 															</div>
@@ -159,7 +159,7 @@ legend.scheduler-border {
 																<select multiple="multiple" name="userposition"
 																	ng-model="userPosition" class="form-control">
 																	<option ng-repeat="posi in allPosition.position"
-																		value="{{posi.position}}" style="font-size: 12px;"
+																		value="{{posi.position}}"  ng-selected="posi.isSelected  == true"style="font-size: 12px;"
 																		required>{{posi.position}}</option>
 																</select>
 															</div>
@@ -248,15 +248,18 @@ legend.scheduler-border {
 																<label class="col-md-3 ">Date</label>
 																<div class="col-md-4">
 																	<div class="input-group input-daterange">
-																		<span class="input-group-addon">From</span> <input
+																		<span class="input-group-addon">From</span> <!-- <input
 																			type="text" name="startdate" id="startdateemp"
 																			ng-click="initCmpDatePicker();" class="form-control"
 																			ng-model="emp.startdate" style="font-size: 12px;"
-																			required /><span class="input-group-addon">to</span>
-																		<input type="text" id="enddateemp"
+																			required /> -->
+																			 <input class="form-control" validator="[required]" ng-click="initCmpDatePicker();" id="datepicker" ng-model="emp.startdate" style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																			<span class="input-group-addon">to</span>
+																		<!-- <input type="text" id="enddateemp"
 																			class="form-control" ng-model="emp.enddate"
 																			style="font-size: 12px;"
-																			ng-click="initCmpDatePicker();" required>
+																			ng-click="initCmpDatePicker();" required> -->
+																			<input class="form-control" validator="[required]" ng-click="initCmpDatePicker();" id="datepicker" ng-model="emp.enddate" style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
 
 																	</div>
 
@@ -346,15 +349,18 @@ legend.scheduler-border {
 															<label class="col-md-3">Date</label>
 															<div class="col-md-4">
 																<div class="input-group input-daterange">
-																	<span class="input-group-addon">From</span> <input
+																	<span class="input-group-addon">From</span> <!-- <input
 																		type="text" name="startdate" ng-model="edu.fromDate"
 																		class="form-control" id="edudateform"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
-																		required /><span class="input-group-addon">to</span> <input
+																		required /> -->
+																		<input class="form-control" ng-click="initeduDateform();" id="datepicker" ng-model="edu.fromDate" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																		<span class="input-group-addon">to</span> <!-- <input
 																		ng-model="edu.toDate" type="text" name="enddate"
 																		class="form-control" id="edudateto"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
-																		required />
+																		required /> -->
+																		<input class="form-control" ng-click="initeduDateform();" id="datepicker" ng-model="edu.toDate" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
 																</div>
 
 															</div>
@@ -407,10 +413,12 @@ legend.scheduler-border {
 
 																		<div class='input-group date'>
 
-																			<input type='text' id="certYear"
+																			<!-- <input type='text' id="certYear"
 																				ng-model="cert.certYear" class="form-control"
 																				id="certdate" ng-click="initDatePicker();"
-																				style="font-size: 12px;" required /> <span
+																				style="font-size: 12px;" required /> -->
+																				<input class="form-control" ng-click="initDatePicker();" id="datepicker" ng-model="cert.certYear" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																				 <span
 																				class="input-group-addon"><span
 																				class="glyphicon glyphicon-calendar"></span> </span>
 																			<div class="col-md-2">
@@ -448,7 +456,7 @@ legend.scheduler-border {
 												</div>
 
 												<div class="form-actions">
-													<div class="col-md-offset-3 col-md-9">
+													<div class="pull-right">
 														<button type="submit" ng-click="submitUserProfile();"
 															class="btn btn-primary">Save</button>
 														&nbsp;

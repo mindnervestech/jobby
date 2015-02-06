@@ -107,6 +107,7 @@ public class Application extends Controller {
 			u.middlename = middlename;
 			u.lastname = lastname;
 			u.gender = gender;
+			u.userstatus = "active";
 			Ebean.save(u);
 
 		}else{
@@ -126,7 +127,7 @@ public class Application extends Controller {
 			UserDetails ud = UserDetails.getUserByEmail(uname);
 
 			if (ud != null) {
-				return ok(ud.firstname,ud.lastname);
+				return ok(ud.firstname);
 			}
 		}
 
@@ -154,19 +155,28 @@ public class Application extends Controller {
 			session().clear();
 			session().put("email", as.username);
 			session().put("role", as.role);
-			return redirect("/dashboard#/");
+			return redirect("/dashboard#/viewAllJobsforAdmin");
 
 		} else {
 
 			UserDetails ud = UserDetails.isUser(uname, pass);
-			if (ud != null) {
-				session().clear();
-				session().put("email", ud.email);
-				return redirect("/dashboard#/viewJobs");
-			} else {
-				flash().put("error", "Login Failed");
-				return ok(signin.render());
-			}
+			
+				if (ud != null) {
+					if("active".equalsIgnoreCase(ud.userstatus)){
+						session().clear();
+						session().put("email", ud.email);
+						return redirect("/dashboard#/viewJobs");
+					}else{
+						flash().put("AccountError", "Account is not activated.Please wait!!! ");
+						return ok(signin.render());
+					}
+					
+				} else {
+					flash().put("error", "Login Failed");
+					return ok(signin.render());
+				}
+			
+			
 
 		}
 
@@ -822,18 +832,25 @@ public class Application extends Controller {
 			String newrowscount = Integer.toString(newRows);
 			String  updatedRowsCount = Integer.toString(updatedRows);
 			System.out.println("updatedRowsCount"+updatedRowsCount);
-			al.add(newrowscount);
-			al.add(updatedRowsCount);
-			return ok(Json.stringify(Json.toJson(al)));
+			Map map = new HashMap();
+			map.put("newrowscount", newrowscount);
+			map.put("updatedRowsCount", updatedRowsCount);
+//			model.addAttribute("map", Json.toJson(map));
+	//		al.add(newrowscount);
+		//	al.add(updatedRowsCount);
+			return ok(Json.stringify(Json.toJson(map)));
 		}
 		
 		String newrowscount = Integer.toString(newRows);
 		String  updatedRowsCount = Integer.toString(updatedRows);
 		System.out.println("updatedRowsCount"+updatedRowsCount);
-		al.add(newrowscount);
-		al.add(updatedRowsCount);
+		Map map = new HashMap();
+		map.put("newrowscount", newrowscount);
+		map.put("updatedRowsCount", updatedRowsCount);
+		//al.add(newrowscount);
+		//al.add(updatedRowsCount);
 		
-		return ok(Json.stringify(Json.toJson(al)));
+		return ok(Json.stringify(Json.toJson(map)));
 	}
 
 	public static class AdminVM {
@@ -975,8 +992,10 @@ public class Application extends Controller {
 	// called when user first  view job page loaded
 	public static Result getAllJobs(int currentPage, String jobType,
 			Boolean location, Boolean usermatch, String position) {
-
-		List<StoreExcelFile> jobs = new ArrayList<>();
+    
+		
+	
+		List<StoreExcelFile> jobs  = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 
 		// jobtype are selected for search
@@ -1051,7 +1070,6 @@ public class Application extends Controller {
 				String pos = upd.position;
 				al.add(pos);
 
-				System.out.println("pos" + pos);
 			}
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobDsc(currentPage, 10,
@@ -1077,8 +1095,7 @@ public class Application extends Controller {
 			for (UserPosition upd : up) {
 				String pos = upd.position;
 				al.add(pos);
-
-				System.out.println("pos" + pos);
+			
 			}
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobAsc(currentPage, 10,
@@ -1147,8 +1164,8 @@ public class Application extends Controller {
 			jobVM.pagerDuty = s.pagerDuty;
 			jobVM.pagerdutyComments  =s.pagerdutyComments;
 			jobVM.workonHoliday = s.workonHoliday;
-		jobVM.workonWeekends = s.workonWeekends;
-		jobVM.shiftWork  =s.shiftWork;
+			jobVM.workonWeekends = s.workonWeekends;
+			jobVM.shiftWork  =s.shiftWork;
 			jobVM.warzone = s.warzone;
 			jobVM.coop = s.coop;
 			jobVM.duetoPmo = s.duetoPmo;
@@ -1522,13 +1539,14 @@ public class Application extends Controller {
 	public static class UserInfoVM {
 
 		public String firstname;
+		public String middlename;
+		public String lastname;
 		public String dob;
 		public String gender;
 		// public String userposition;
 		public String email;
 		public String password;
-		public String midname;
-		public String lastname;
+	
 		
 	}
 
@@ -1726,10 +1744,167 @@ public class Application extends Controller {
 		try {
 			UserInfoVM ui = userinfoMapper.readValue(userDet.traverse(),
 					UserInfoVM.class);
+			System.out.println("firstname === "+ui.firstname);
+			u.setEmail(ui.email);
+			u.setDob(ui.dob);
+			u.setFirstname(ui.firstname);
+			u.setMiddlename(ui.middlename);
+			u.setLastname(ui.lastname);
+			
+		} catch (JsonParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		u.update();
+
+		return ok();
+	}
+	
+	
+	@JsonIgnore
+	public static Result updateUserProfileByAdmin(){
+		
+		JsonNode json = request().body().asJson();
+		System.out.println("json" + json);
+
+		List<AddEducationVM> addEducation;
+		List<AddEmpHistoryVM> addNewEmphistory;
+		List<AddCertificateVM> addCertificate;
+
+		String email = json.path("email").asText();
+		UserDetails u = UserDetails.getUserByEmail(email);
+
+		JsonNode eduJson = json.get("addEducation");
+		JsonNode empJson = json.get("addNewEmphistory");
+		JsonNode certJson = json.get("addCertificate");
+		JsonNode userClearance = json.path("clearance");
+		JsonNode userPosition = json.path("position");
+		JsonNode userSkills = json.path("skills");
+
+		u.deleteManyToManyAssociations("userSkill");
+
+		ArrayNode skills = (ArrayNode) userSkills;
+		for (int k = 0; k < skills.size(); k++) {
+			String s = skills.get(k).asText();
+			System.out.println(s);
+			UserSkill us = UserSkill.getSkillByName(s);
+			u.userSkill.add(us);
+		}
+
+		u.saveManyToManyAssociations("userSkill");
+
+		u.deleteManyToManyAssociations("userPosition");
+		ArrayNode positions = (ArrayNode) userPosition;
+		for (int j = 0; j < positions.size(); j++) {
+			String position = positions.get(j).asText();
+			UserPosition up = UserPosition.getPositionByPosName(position);
+			u.userPosition.add(up);
+		}
+
+		u.saveManyToManyAssociations("userPosition");
+
+		u.deleteManyToManyAssociations("userClearance");
+		ArrayNode clearance = (ArrayNode) userClearance;
+		for (int i = 0; i < clearance.size(); i++) {
+			String clea = clearance.get(i).asText();
+			UserClearance uc = UserClearance.getClearanceByName(clea);
+			u.userClearance.add(uc);
+		}
+
+		u.saveManyToManyAssociations("userClearance");
+
+		ObjectMapper mapper = new ObjectMapper();
+		addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
+				.constructCollectionType(List.class, AddEmpHistoryVM.class));
+		for (int i = 0; i < addNewEmphistory.size(); i++) {
+			EmploymentDetails ed = EmploymentDetails
+					.getEmploymentDetailsByName(addNewEmphistory.get(i).companyName);
+			if (ed != null) {
+				ed.delete();
+
+			}
+
+			EmploymentDetails eds = new EmploymentDetails();
+			eds.companyName = addNewEmphistory.get(i).companyName;
+			eds.position = addNewEmphistory.get(i).position;
+			eds.startdate = addNewEmphistory.get(i).startdate;
+			if (addNewEmphistory.get(i).enddate == "") {
+				eds.enddate = "Present";
+			} else {
+				eds.enddate = addNewEmphistory.get(i).enddate;
+			}
+			eds.user_details = UserDetails.getUserByEmail(email);
+			eds.expdesc = addNewEmphistory.get(i).expdesc;
+			eds.save();
+			u.employmentDetails.add(eds);
+
+		}
+
+		ObjectMapper addEducationmapper = new ObjectMapper();
+
+		addEducation = mapper.convertValue(
+				eduJson,
+				addEducationmapper.getTypeFactory().constructCollectionType(
+						List.class, AddEducationVM.class));
+		for (int i = 0; i < addEducation.size(); i++) {
+			EducationDetails eds = EducationDetails
+					.getEducationDetailsByName(addEducation.get(i).degree);
+			if (eds != null) {
+				eds.delete();
+			}
+
+			EducationDetails ed = new EducationDetails();
+			ed.instituteName = (addEducation.get(i).instituteName);
+			ed.degree = (addEducation.get(i).degree);
+			ed.fromDate = (addEducation.get(i).fromDate);
+			ed.toDate = (addEducation.get(i).toDate);
+			ed.user_details = UserDetails.getUserByEmail(email);
+			ed.save();
+
+			u.educationDetails.add(ed);
+
+		}
+
+		ObjectMapper certMapper = new ObjectMapper();
+		addCertificate = mapper.convertValue(
+				certJson,
+				certMapper.getTypeFactory().constructCollectionType(List.class,
+						AddCertificateVM.class));
+
+		for (int i = 0; i < addCertificate.size(); i++) {
+			CertificationDetails c = CertificationDetails
+					.getCetificateByName(addCertificate.get(i).certName);
+			if (c != null) {
+				c.delete();
+			}
+
+			CertificationDetails ce = new CertificationDetails();
+			ce.certName = addCertificate.get(i).certName;
+			ce.certYear = addCertificate.get(i).certYear;
+			ce.user_details = UserDetails.getUserByEmail(email);
+			ce.save();
+
+			u.certificationDetails.add(ce);
+
+		}
+
+		JsonNode userDet = json.path("userInfo");
+		ObjectMapper userinfoMapper = new ObjectMapper();
+
+		try {
+			UserInfoVM ui = userinfoMapper.readValue(userDet.traverse(),
+					UserInfoVM.class);
 			System.out.println("ui.firstname --"+ui.firstname);
 			u.email = ui.email;
 			u.firstname = ui.firstname;
-			u.middlename = ui.midname;
+			u.middlename = ui.middlename;
 			u.lastname = ui.lastname;
 			u.dob = ui.dob;
 		} catch (JsonParseException e1) {
@@ -1747,7 +1922,8 @@ public class Application extends Controller {
 
 		return ok();
 	}
-
+	
+	
 	@JsonIgnore
 	public static Result getAllSkills() {
 
@@ -2490,4 +2666,18 @@ public class Application extends Controller {
 		
 	}
 	
+	public static Result onActiveUser(String email){
+		UserDetails ud = UserDetails.getUserByEmail(email);
+		ud.userstatus = "active";
+		ud.update();
+		return ok("");
+	}
+	
+	
+	public static Result onInActiveUser(String email){
+		UserDetails ud = UserDetails.getUserByEmail(email);
+		ud.userstatus = "inactive";
+		ud.update();
+		return ok("");
+	}
 }

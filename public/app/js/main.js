@@ -453,34 +453,18 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	 
 	  $scope.onInactiveJobClicked = function(job){
 		  $scope.requestNumber = job.requestNumber;
-		/*  $http.post('/inactiveJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
-			.success(function(data){
-				console.log("success");
-				$scope.updateSuccess = true;
-			});
-		  */
+		
 		  $http.get('/inactiveJob/'+ $scope.requestNumber)
 			.success(function(data) {
-			// $scope.userData = data;
-				$rootScope.username = data;
 				$scope.onJobsForAdminLoad();
 				console.log("data"+data);
 			});
 	  }
 	  $scope.onActiveJobClicked = function(job){
 		  $scope.requestNumber = job.requestNumber;
-		/*  $http.post('/inactiveJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
-			.success(function(data){
-				console.log("success");
-				$scope.updateSuccess = true;
-			});
-		  */
 		  $http.get('/onactiveJob/'+ $scope.requestNumber)
 			.success(function(data) {
-			// $scope.userData = data;
-				$rootScope.username = data;
 				console.log("data"+data);
-				
 				$scope.onJobsForAdminLoad();
 			});
 	  }
@@ -1771,7 +1755,7 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
                 tooltip: {
                     crosshairs: true,
                     shared: true,
-                    valueSuffix: '°C'
+                    valueSuffix: '�C'
                 },
 
                 legend: {
@@ -1874,7 +1858,7 @@ App.controller('ChartsHighchartAreaController', function ($scope, $routeParams){
             tooltip: {
                 crosshairs: true,
                 shared: true,
-                valueSuffix: '°C'
+                valueSuffix: '�C'
             },
 
             legend: {
@@ -2478,12 +2462,12 @@ App.controller('ChartsHighchartColumnBarController', function ($scope, $routePar
 
             yAxis: {
                 title: {
-                    text: 'Temperature ( °C )'
+                    text: 'Temperature ( �C )'
                 }
             },
 
             tooltip: {
-                valueSuffix: '°C'
+                valueSuffix: '�C'
             },
 
             plotOptions: {
@@ -2491,7 +2475,7 @@ App.controller('ChartsHighchartColumnBarController', function ($scope, $routePar
                     dataLabels: {
                         enabled: true,
                         formatter: function () {
-                            return this.y + '°C';
+                            return this.y + '�C';
                         }
                     }
                 }
@@ -2650,7 +2634,7 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
             }],
             yAxis: [{ // Primary yAxis
                 labels: {
-                    format: '{value}°C',
+                    format: '{value}�C',
                     style: {
                         color: '#89A54E'
                     }
@@ -2704,7 +2688,7 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
                 type: 'spline',
                 data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
                 tooltip: {
-                    valueSuffix: '°C'
+                    valueSuffix: '�C'
                 }
             }]
         });
@@ -2727,7 +2711,7 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
             yAxis: [{ // Primary yAxis
                 labels: {
                     formatter: function() {
-                        return this.value +'°C';
+                        return this.value +'�C';
                     },
                     style: {
                         color: '#89A54E'
@@ -2818,7 +2802,7 @@ App.controller('ChartsHighchartCombinationController', function ($scope, $routeP
                 type: 'spline',
                 data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
                 tooltip: {
-                    valueSuffix: ' °C'
+                    valueSuffix: ' �C'
                 }
             }]
         });
@@ -3435,7 +3419,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: 'Temperature (�C)'
                 },
                 plotLines: [{
                     value: 0,
@@ -3444,7 +3428,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
                 }]
             },
             tooltip: {
-                valueSuffix: '°C'
+                valueSuffix: '�C'
             },
             legend: {
                 layout: 'vertical',
@@ -3483,14 +3467,14 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: 'Temperature (�C)'
                 }
             },
             tooltip: {
                 enabled: false,
                 formatter: function() {
                     return '<b>'+ this.series.name +'</b><br/>'+
-                        this.x +': '+ this.y +'°C';
+                        this.x +': '+ this.y +'�C';
                 }
             },
             plotOptions: {
@@ -3717,7 +3701,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
                 },
                 labels: {
                     formatter: function() {
-                        return this.value + '°';
+                        return this.value + '�';
                     }
                 },
                 lineWidth: 2
@@ -3727,7 +3711,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br/>',
-                pointFormat: '{point.x} km: {point.y}°C'
+                pointFormat: '{point.x} km: {point.y}�C'
             },
             plotOptions: {
                 spline: {
@@ -3764,7 +3748,7 @@ App.controller('ChartsHighchartLineController', function ($scope, $routeParams){
                 },
                 labels: {
                     formatter: function(){
-                        return this.value +'°';
+                        return this.value +'�';
                     }
                 }
             },
@@ -4653,7 +4637,7 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
                 max: 360,
                 labels: {
                     formatter: function () {
-                        return this.value + '°';
+                        return this.value + '�';
                     }
                 }
             },
@@ -4898,7 +4882,7 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
             yAxis: [{ // Primary yAxis
                 labels: {
                     formatter: function() {
-                        return this.value + '°C';
+                        return this.value + '�C';
                     },
                     style: {
                         color: '#89A54E'
@@ -4955,14 +4939,14 @@ App.controller('ChartsHighchartMoreController', function ($scope, $routeParams){
                 type: 'spline',
                 data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
                 tooltip: {
-                    pointFormat: '<span style="font-weight: bold; color: {series.color}">{series.name}</span>: <b>{point.y:.1f}°C</b> '
+                    pointFormat: '<span style="font-weight: bold; color: {series.color}">{series.name}</span>: <b>{point.y:.1f}�C</b> '
                 }
             }, {
                 name: 'Temperature error',
                 type: 'errorbar',
                 data: [[6, 8], [5.9, 7.6], [9.4, 10.4], [14.1, 15.9], [18.0, 20.1], [21.0, 24.0], [23.2, 25.3], [26.1, 27.8], [23.2, 23.9], [18.0, 21.1], [12.9, 14.0], [7.6, 10.0]],
                 tooltip: {
-                    pointFormat: '(error range: {point.low}-{point.high}°C)<br/>'
+                    pointFormat: '(error range: {point.low}-{point.high}�C)<br/>'
                 }
             }]
         });
@@ -6137,12 +6121,17 @@ App.controller('ChartsHighchartScatterBubbleController', function ($scope, $rout
         }
     };
 })(jQuery);
+
+
+
 App.controller('EmailComposeMailController', function ($scope, $routeParams){
     $('.wysihtml5').wysihtml5();
 });
+
 App.controller('EmailInboxController', function ($scope, $routeParams){
     $.fn.Data.checkbox();
 });
+
 App.controller('Extra404Controller', function ($scope, $routeParams){
     $('body').addClass('bounceInLeft');
     $("body>.default-page").hide();
@@ -6167,6 +6156,17 @@ App.controller('ExtraLockScreenController', function ($scope, $routeParams){
 
 App.controller('ViewAllUsersController', function ($scope, $rootScope, $routeParams, $http, $upload){
 
+	$scope.allSkills;
+	$scope.allCleanrance;
+	$scope.allPosition;
+	$scope.addNewEmphistory = [{}];
+	$scope.addEducation = [{}];
+	$scope.addCertificate = [{}];
+	$scope.skills = [];
+	$scope.userDetails = {};
+	$scope.userPosition;
+	$scope.userClearance;
+	
 	
 	// get all users applied jobs to admin
 	$scope.email;
@@ -6181,80 +6181,102 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		});
 	}
 
+	
+	
 	$http.get('/getUserName')
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
-		console.log("data"+data);
 	});
 	
-	$scope.allSkills;
-	$scope.allCleanrance;
-	$scope.allPosition;
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
 	
-	
+	$scope.userSkill;
+	$scope.userClearance;
 	$scope.editUserDetails = function(user){
-		$scope.email = user.email;
-		$scope.userDetails = user;
-		console.log("users:"+user.email);
-		$http.get('checkForadmin')
-		.success(function(data){
-			if(data) {
-				$scope.isAdmin = data;
-				console.log("admin"+$scope.isAdmin);
-			} 
+		
+		$http.get('/getAllSkills')
+		.success(function(data) {
+			$scope.allSkills = data.skills;
+			console.log(JSON.stringify($scope.allSkills));
+		});
+
+		$http.get('/getAllPosition')
+		.success(function(data) {
+			$scope.allPosition = data;
+			console.log("data"+JSON.stringify(data));
+			console.log("all position:"+JSON.stringify($scope.allPosition));
+			// $scope.username = data.uname;
+		});
+
+		
+		$http.get('/getAllClearance')
+		.success(function(data) {
+			$scope.allCleanrance = data;
+			// console.log($scope.userCleanrance);
+			
 		});
 		
+		$scope.email = user.email;
+		$scope.userDetails = user;
 		$http.get('/getUserDetailsForAdmin/'+$scope.email)
     	.success(function(data) {
-    		$scope.allPosition = data;
-    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		//$scope.allPosition = data;
+    		console.log(data);
     		$scope.addNewEmphistory = data.employmentDetails;
      		$scope.addEducation = data.educationDetails;
      		$scope.addCertificate = data.certificationDetails;
-     		$scope.userSkill = user.userSkill;
-     		$scope.userClearance = user.userClearance;
-     		$scope.userPosition = user.userPosition;
-    		// $scope.username = data.uname;
-    	});
-		
-		angular.forEach($scope.allSkills, function(obj, index){
-			angular.forEach($scope.userSkill, function(obj1, index){
-				if ((obj.skillName == obj1.skillName)) {
-					console.log(obj1.skillName);
-					$scope.skills.push(obj.skillName);
-					obj.isSelected = true;
-					};
-				});
-			});
-		
-		
-		
-		$http.get('/getAllPosition')
-    	.success(function(data) {
-    		$scope.allPosition = data;
-    		console.log("all position:"+JSON.stringify($scope.allPosition));
-    		// $scope.username = data.uname;
-    	});
-	
-		
-		$http.get('/getAllClearance')
-    	.success(function(data) {
-    		$scope.allCleanrance = data;
-    		// console.log($scope.userCleanrance);
+     		$scope.userSkill = data.certificationDetails[0].user_details.userSkill;
+     		
+     		$scope.userClearance = data.certificationDetails[0].user_details.userClearance;
+     		$scope.userPosition = data.certificationDetails[0].user_details.userPosition;
+     		
+     		angular.forEach($scope.allSkills, function(obj, index){
+    			angular.forEach($scope.userSkill, function(obj1, index){
+    				if ((obj.skillName == obj1.skillName)) {
+    					$scope.skills.push(obj.skillName);
+    					obj.isSelected = true;
+    					};
+    				});
+    			});
+     		
+     		
+     		
+     		angular.forEach($scope.allCleanrance.clearance, function(obj, index){
+    			angular.forEach($scope.userClearance, function(obj1, index){
+    				console.log(JSON.stringify($scope.userClearance));
+    				if ((obj.clearance == obj1.clearance)) {
+    					console.log(obj1.clearance);
+    					console.log(obj.clearance);
+    					obj.isSelect = true;
+    					};
+    				});
+    			});
     		
-    	});
-		
-		$http.get('/getAllSkills')
-    	.success(function(data) {
-    		$scope.allSkills = data.skills;
-    		console.log(JSON.stringify($scope.allSkills));
+    		angular.forEach($scope.allPosition.position, function(obj, index){
+    			angular.forEach($scope.userPosition, function(obj1, index){
+    				if ((obj.position == obj1.position)) {
+    					// $scope.skills.push(obj.skillName);
+    					obj.isSelected = true;
+    					};
+    				});
+    			});
     	});
 
+	
+		
 		$('#editUserDetails').modal();
 	}
-	
-	
 	
 	$('#dob').datepicker({
 	    format: 'mm-dd-yyyy'
@@ -6289,13 +6311,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 				});
 		}
 		
-	$scope.addNewEmphistory = [{}];
-	$scope.addEducation = [{}];
-	$scope.addCertificate = [{}];
-	$scope.skills = [];
-	$scope.userDetails = {};
-	$scope.userPosition;
-	$scope.userClearance;
+	
 	// $scope.skills = [];
 	
 	$scope.addNewEmployment = function(){
@@ -6315,7 +6331,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 	
 	$scope.updateSuccess = false;
 	
-	$scope.submitUserProfile = function(){
+	$scope.updateUserProfileByAdmin = function(){
 		$scope.EducationError  = false;
 		$scope.empHistory  =  false;
 		console.log("hi"+JSON.stringify($scope.addEducation.length));
@@ -6324,7 +6340,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		console.log("hi1234"+JSON.stringify($scope.userDetails));
 		console.log("Clearance"+JSON.stringify($scope.userClearance));
 		console.log("position"+JSON.stringify($scope.userPosition));
-		
+		$('#editUserDetails').modal('hide');
 		// chk for the education,employee cmp,user posi/clearance selected or
 		// not if not gives gives error
 		if(!(angular.isUndefined($scope.userClearance)) || !(angular.isUndefined($scope.userPosition))){
@@ -6333,7 +6349,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		}else if($scope.addNewEmphistory.length == 0){
 			$scope.empHistory = true;
 		}else{
-		$http.post('/updateUserProfile',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills})
+		$http.post('/updateUserProfileByAdmin',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills,email:$scope.email})
 		.success(function(data){
 			console.log("success");
 			$scope.updateSuccess = true;
@@ -6346,10 +6362,6 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		
 	}
 	
-	
-	
-	
- 	
 	$scope.skillClicked = function(e, skill) {
 		console.log(skill);
 		if($(e.target).is(":checked")) {
@@ -6382,7 +6394,24 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 			
 		}		
 		
+		//used to Activate the user
+		$scope.onActiveUser = function(user){
+			$scope.email = user.email;
+			$http.get('/onActiveUser/'+$scope.email)
+			.success(function(data) {
+				$scope.getAllUsers();
+				
+			});
+		}
 		
+		//used to Inactivate the user
+		$scope.onInActiveUser = function(user){
+			$scope.email = user.email;
+			$http.get('/onInActiveUser/'+$scope.email)
+			.success(function(data) {
+				$scope.getAllUsers();
+			});
+		}
 	
 });
 
@@ -6427,6 +6456,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	$scope.generatePdf = function(id){
 	// alert("in gen pdf fun");
 		$scope.jobId = id;
+	
 		console.log($scope.jobId);
 		   var baseUrl = "/"
 		   var ifrm = document.getElementById('fred');
@@ -6441,8 +6471,8 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams, $http, $upload){
 	$scope.uploadSuccess;
 	$scope.uploadFaild;
-	$scope.newRow;
-	$scope.updateRow;
+	$scope.newRow = false;
+	$scope.updateRow = false;
 	// used to uplopad pdf (clicked on upload button)
 	/*$scope.uploadExcel = function(){
 		$http.post('/uploadExcel')
@@ -6487,9 +6517,17 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				if(data){
+				
 					$scope.succUpload = true;
+					$scope.newRow = true;
+					$scope.updateRow = true;
+					$scope.newrowscount = data.newrowscount;
+					$scope.updatedRowsCount = data.updatedRowsCount;
+				
 				}else{
 					$scope.errorUpload = true;
+					$scope.newRow = false;
+					$scope.updateRow = false;
 				}
 				
 			});
@@ -6771,11 +6809,16 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     				});
     			});
     		
-    		
-    		
-    		
-    		
-    		
+    		angular.forEach($scope.allPosition.position, function(obj, index){
+    			angular.forEach($scope.userPosition, function(obj1, index){
+    				if ((obj.position == obj1.position)) {
+    					//console.log(obj1.clearance);
+    					//console.log(obj.clearance);
+    					// $scope.skills.push(obj.skillName);
+    					obj.isSelected = true;
+    					};
+    				});
+    			});
     		
     		});
 	}
@@ -9543,7 +9586,7 @@ App.controller('UiSlidersController', function ($scope, $routeParams){
             from: 0,
             type: 'single',
             step: 1,
-            postfix: "°",
+            postfix: "�",
             prettify: false,
             hasGrid: true
         });
@@ -10177,6 +10220,6 @@ angular.module('ng').filter('cut', function () {
             }
         }
 
-        return value + (tail || ' …');
+        return value + (tail || ' �');
     };
 });

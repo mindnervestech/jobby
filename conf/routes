@@ -13,7 +13,7 @@ GET     /dashboard										controllers.Application.dashBoard()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               					controllers.Assets.at(path="/public", file)
-GET		/LogOut   										controllers.Application.logOut()
+GET		/Logout   										controllers.Application.logOut()
 
 
 #User
@@ -44,4 +44,7 @@ GET   /inactiveJob/:requestNumber                                 controllers.Ap
 GET   /onactiveJob/:requestNumber                                 controllers.Application.onactiveJob(requestNumber :String)
 GET   /getAllUsers                                      controllers.Application.getAllUsers()
 GET   /getUserDetailsForAdmin/:email                                 controllers.Application.getUserDetailsForAdmin(email:String)
-
+POST  /updateUserProfileByAdmin                                   controllers.Application.updateUserProfileByAdmin()
+GET   /onActiveUser/:email 								controllers.Application.onActiveUser(email:String)
+GET   /onInActiveUser/:email 								controllers.Application.onInActiveUser(email:String)
+       

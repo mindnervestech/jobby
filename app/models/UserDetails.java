@@ -17,6 +17,46 @@ import play.db.ebean.Model;
 @Entity
 public class UserDetails extends Model {
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getMiddlename() {
+		return middlename;
+	}
+
+	public void setMiddlename(String middlename) {
+		this.middlename = middlename;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
 	/**
 	 * 
 	 */
@@ -31,6 +71,7 @@ public class UserDetails extends Model {
 	public String lastname;
 	public String gender;
 	public String dob;
+	public String userstatus;
 
 	@ManyToMany
 	public List<UserSkill> userSkill;

@@ -70,10 +70,10 @@
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
 								<td class="td-block">
 									<p class="date">
-										<button type="button" class="btn btn-green"
-											ng-if="job.jobStatus == 'active'" ng-click="onInactiveJobClicked(job)">Inactive
+										<button type="button" class="btn btn-danger"
+											ng-if="job.jobStatus == 'active'" ng-click="onInactiveJobClicked(job)">Inactivate
 										</button>
-										<button type="button" class="btn btn-green"
+										<button type="button" class="btn btn-success"
 											ng-if="job.jobStatus == 'inactive'"  ng-click="onActiveJobClicked(job)">Activate
 										</button>
 									</p>
