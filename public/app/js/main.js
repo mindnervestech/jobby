@@ -300,14 +300,6 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 			
 		});
 		
-	/*	$http.get('/getAllPosition')
-    	.success(function(data) {
-    		$scope.allPosition = data;
-    		console.log("all position:"+JSON.stringify($scope.allPosition));
-    		// $scope.username = data.uname;
-    	});*/
-	
-		
 	};
 	  
 	$scope.matchedpos  = false;
@@ -327,7 +319,6 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		
 	}
 	
-	// $scope.position;
 	$scope.getAllJobByPosition = function(){
 		$scope.jobType = "usermatch";
 		$scope.location = false;
@@ -341,11 +332,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	    		console.log("all position:"+JSON.stringify($scope.jobsData));
 	    		// $scope.username = data.uname;
 	    	});
-		
-		
-		
 	}
-	
 	
 	$scope.headerStatuspageno = 0;
 	
@@ -402,27 +389,15 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 			
 				
 			});
-		  
-		/*  $http.post('/getJobsByLocation/'+$scope.pageno+'/'+$scope.location)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-			
-				
-			});
-		  */
 	  }
 	  
-	 // $scope.manadatorySkills = [];
-	//  $scope.desiredSkills = [];
 	  $scope.jobData;
 	  $scope.editJob;
-	  
 	  // called when user click on applied button
-	  $scope.editJob = function(job){
-			//console.log("job"+$scope.jobData.desiredSkill);
-		  $scope.editJob = job;
-		  console.log( JSON.stringify($scope.editJob));
-			$('#editJob').modal();
+	  $scope.editUserJob = function(job){
+		    $scope.editJob = job;
+		    console.log($scope.editJob);
+		    $('#editJob').modal('show');
 			
 		}
 	  
@@ -438,18 +413,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		  
 	  }
 
-	  // save current user applied job
-	  $scope.saveUserJob = function(){
-		  $('#myModal').modal('hide');
-		   console.log($scope.desiredSkills);
-		   $scope.requestNumber = $scope.jobData.requestNumber;
-		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
-			.success(function(data){
-				console.log("success");
-				$scope.updateSuccess = true;
-			});
-	  
-	  } 
+	 
 	 
 	  $scope.onInactiveJobClicked = function(job){
 		  $scope.requestNumber = job.requestNumber;
@@ -460,6 +424,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 				console.log("data"+data);
 			});
 	  }
+	  
 	  $scope.onActiveJobClicked = function(job){
 		  $scope.requestNumber = job.requestNumber;
 		  $http.get('/onactiveJob/'+ $scope.requestNumber)
@@ -472,7 +437,6 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  
 	  $http.get('/getUserName')
 		.success(function(data) {
-		// $scope.userData = data;
 			$rootScope.username = data;
 			console.log("data"+data);
 		});
@@ -483,7 +447,6 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 			if(data == 'notAdmin') {
 				$rootScope.isUser = true;
 				$rootScope.isAdmin = false;
-				console.log("admin"+$rootScope.isAdmin);
 			}else{
 				$rootScope.isAdmin = true;
 				$rootScope.isUser = false;
@@ -496,8 +459,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$scope.checkAllFields  = function(){
 			angular.forEach($scope.manadatorySkills, function(obj1, index){
 				console.log("obj1.comment"+$scope.manadatorySkills);
-				//console.log) 
-					//console.log")
+
 				for(var i =0 ;i<$scope.manadatorySkills.length; i++ ){
 					if ((obj1.comment == " " )) {
 						console.log("comment i  if"+($scope.manadatorySkills));
@@ -509,18 +471,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 						$scope.errorManaSkillComment = false;
 					}
 				}
-				/*if ((obj1.comment == " " )) {
-					//console.log("comment"+(obj1.comment));
-					$scope.errorManaSkillComment = true;
-				}else{
-					if($scope.errorManaSkillComment == true){
-						
-					}else{
-						$("#tab2").click();
-						//$scope.errorManaSkillComment = false;
-					}
-					
-				}*/
+				
 				});
 		}
 		//used to go to tab1 (mandatory skills )

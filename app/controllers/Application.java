@@ -1124,11 +1124,11 @@ public class Application extends Controller {
 		 * 
 		 * jobs = StoreExcelFile.getALlUserMatchedJob(currentPage, 10, al); }
 		 */
-		if (!("notSelected".equalsIgnoreCase(position.trim()))) {
+		/*if (!("notSelected".equalsIgnoreCase(position.trim()))) {
 			jobs = StoreExcelFile.getALlUserJobByPosition(currentPage, 10,
 					position);
 
-		}
+		}*/
 
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
 
