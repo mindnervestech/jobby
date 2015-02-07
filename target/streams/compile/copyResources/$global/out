@@ -1,0 +1,9 @@
+[debug] Copy resource mappings: 
+[debug] 	(/home/jobby/conf/application.conf,/home/jobby/target/scala-2.10/classes/application.conf)
+[debug] 	(/home/jobby/conf/routes,/home/jobby/target/scala-2.10/classes/routes)
+[debug] 	(/home/jobby/conf/generated.keystore,/home/jobby/target/scala-2.10/classes/generated.keystore)
+[debug] 	(/home/jobby/conf/logger.xml,/home/jobby/target/scala-2.10/classes/logger.xml)
+[debug] 	(/home/jobby/conf/play.plugins,/home/jobby/target/scala-2.10/classes/play.plugins)
+[debug] 	(/home/jobby/conf/evolutions,/home/jobby/target/scala-2.10/classes/evolutions)
+[debug] 	(/home/jobby/conf/evolutions/default,/home/jobby/target/scala-2.10/classes/evolutions/default)
+[debug] 	(/home/jobby/conf/evolutions/default/1.sql,/home/jobby/target/scala-2.10/classes/evolutions/default/1.sql)

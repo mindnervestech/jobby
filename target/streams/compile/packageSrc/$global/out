@@ -1,0 +1,41 @@
+[info] Packaging /home/jobby/target/scala-2.10/uadmin_2.10-1.0-SNAPSHOT-sources.jar ...
+[debug] Input file mappings:
+[debug] 	models/UserClearance.java
+[debug] 	  /home/jobby/app/models/UserClearance.java
+[debug] 	models/CertificationDetails.java
+[debug] 	  /home/jobby/app/models/CertificationDetails.java
+[debug] 	models/UserSkill.java
+[debug] 	  /home/jobby/app/models/UserSkill.java
+[debug] 	controllers/Application.java
+[debug] 	  /home/jobby/app/controllers/Application.java
+[debug] 	evolutions/default
+[debug] 	  /home/jobby/conf/evolutions/default
+[debug] 	models/UserPosition.java
+[debug] 	  /home/jobby/app/models/UserPosition.java
+[debug] 	play.plugins
+[debug] 	  /home/jobby/conf/play.plugins
+[debug] 	logger.xml
+[debug] 	  /home/jobby/conf/logger.xml
+[debug] 	models/EmploymentDetails.java
+[debug] 	  /home/jobby/app/models/EmploymentDetails.java
+[debug] 	models/EducationDetails.java
+[debug] 	  /home/jobby/app/models/EducationDetails.java
+[debug] 	evolutions
+[debug] 	  /home/jobby/conf/evolutions
+[debug] 	evolutions/default/1.sql
+[debug] 	  /home/jobby/conf/evolutions/default/1.sql
+[debug] 	models/Admin.java
+[debug] 	  /home/jobby/app/models/Admin.java
+[debug] 	application.conf
+[debug] 	  /home/jobby/conf/application.conf
+[debug] 	models/UserDetails.java
+[debug] 	  /home/jobby/app/models/UserDetails.java
+[debug] 	models/StoreExcelFile.java
+[debug] 	  /home/jobby/app/models/StoreExcelFile.java
+[debug] 	models/AppliedJobs.java
+[debug] 	  /home/jobby/app/models/AppliedJobs.java
+[debug] 	routes
+[debug] 	  /home/jobby/conf/routes
+[debug] 	generated.keystore
+[debug] 	  /home/jobby/conf/generated.keystore
+[info] Done packaging.

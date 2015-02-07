@@ -1,0 +1,84 @@
+<style>
+.Color {
+	color: green
+}
+
+.redColor {
+	color: red
+}
+</style>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="portlet box" style="min-height:500px;">
+			<div class="portlet-header">
+				<div class="caption">Applied Jobs</div>
+			</div>
+			<div class="portlet-body" ng-init="init();">
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<!-- {{jobs}} -->
+						<div ng-init="getAllAppliedJobs()" class="table-responsive">
+							<div class="page-header">
+								<h3>
+									Applied Jobs <i class="icon-chevron-right"></i>
+								</h3>
+								<table id="table_id"
+									class="table table-hover table-striped table-bordered table-advanced tablesorter display">
+									<tbody>
+										<tr>
+											<th>Email</th>
+											<th>Job Id</th>
+											<th>Location</th>
+											<th>Position Name</th>
+											<th>View</th>
+										</tr>
+										<tr data-ng-repeat="appliedJobs in jobs"
+											style="background-color: #fff !important; left: -900">
+											<td ng-click=""><a target="_blank"  href="mailto:{{appliedJobs.username}}">{{appliedJobs.username}}</a></td>
+											<td ng-click="">{{appliedJobs.requestNumber}}</td>
+											<td ng-click="">{{appliedJobs.location}}</td>
+											<td ng-click="">{{appliedJobs.positionName}}</td>
+											<td><button id="genpdf" type="button"
+													ng-click="generatePdf(appliedJobs.id)" data-toggle="modal"  class="btn btn-success">View Resume</button></td>
+										</tr>
+									</tbody>	
+								</table>
+								<button id="pre" type="button" ng-click="clickPre()"
+									class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+								&nbsp;
+								<button id="next" type="button" ng-click="clickNext()"
+									class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Modal -->
+<div class="modal fade" id="viewresume" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Resume Preview</h4>
+      </div>
+      <div class="modal-body">
+					<div id="iframeContainer"
+						style="overflow: auto; padding: 10px 0 0 0">
+						<iframe id="fred"  src=" "
+							height="520" width="100%"> </iframe>
+					</div>
+
+				</div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+</div>

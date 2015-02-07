@@ -1,0 +1,30 @@
+[debug] 
+[debug] Initial source changes: 
+[debug] 	removed:Set()
+[debug] 	added: Set()
+[debug] 	modified: Set(/home/jobby/app/controllers/Application.java)
+[debug] Removed products: Set()
+[debug] Modified external sources: Set()
+[debug] Modified binary dependencies: Set()
+[debug] Initial directly invalidated sources: Set(/home/jobby/app/controllers/Application.java)
+[debug] 
+[debug] Sources indirectly invalidated by:
+[debug] 	product: Set()
+[debug] 	binary dep: Set()
+[debug] 	external source: Set()
+[debug] All initially invalidated sources: Set(/home/jobby/app/controllers/Application.java)
+[info] Compiling 1 Java source to /home/jobby/target/scala-2.10/classes...
+[debug] Attempting to call javac directly...
+[debug] com.sun.tools.javac.Main not found with appropriate method signature; forking javac instead
+[debug] Forking javac: javac @/tmp/sbt_dd0ab650/argfile
+[warn] Note: /home/jobby/app/controllers/Application.java uses unchecked or unsafe operations.
+[warn] Note: Recompile with -Xlint:unchecked for details.
+[debug] javac returned exit code: 0
+[debug] Java compilation took 5.714700917 s
+[debug] Java analysis took 1.277595554 s
+[debug] Invalidated by transitive public inheritance: Set()
+[debug] Invalidated by direct dependency: Set()
+[debug] New invalidations:
+[debug] 	Set()
+[debug] Previously invalidated, but (transitively) depend on new invalidations:
+[debug] 	Set()

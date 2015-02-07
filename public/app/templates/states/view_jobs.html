@@ -74,7 +74,7 @@
 											data-toggle="modal" ng-click="applyForJob(job)">Apply
 										</button>
 									</p>
-									<p>
+									<p ng-click="showJobDetails(job);">
 										<span class="title">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong></span>
 									</p>
@@ -102,15 +102,15 @@
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
-											href="#popupBottom" data-toggle="modal-popover" data-placement="bottom"><a
+											popover = "{{job.manadatorySkills}}" data-toggle="modal-popover" data-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									
-								 <div id="popupBottom" class="popover" style="margin-top: -5%;margin-left: -20%;">
+								 <div id="popupBottom" class="popover"  data-toggle="modal-popover" style="margin-top: -5%;margin-left: -20%;">
 							        <div class="arrow"></div>
 							        <div class="popover-content">
-							            <p  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
-							            </p>
+							            <small  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
+							            </small>
 							        </div>
 							    </div>
 							    
@@ -289,6 +289,77 @@
 	</div>
 
 </div>
+
+<!-- View Job Modal -->
+<div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Job Details</h4>
+      </div>
+      <div class="modal-body">
+       <div class="box text-shadow">
+
+						<table class="demo-tbl">
+
+							<tr class="tbl-item" >
+								<td class="td-block" >
+									
+									<p >
+										<span class="title">{{jobDetails.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{jobDetails.positionType}})</small></strong></span>
+									</p>
+									<p class="">
+										<strong><small><span><i
+													class="glyphicon glyphicon-map-marker"></i>&nbsp;{{jobDetails.workLocation}}</span></small></strong>
+										<span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-user"></i>&nbsp;{{jobDetails.requestType}}
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-screenshot"></i>&nbsp;{{jobDetails.performanceLevel}}
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-ok"></i>&nbsp;{{jobDetails.clearanceRequired}}
+											</small></strong></span>
+									</p>
+									<p class="desc">
+										<small ng-bind="jobDetails.workDescription"
+											data-placement="bottom"></small>
+									</p>
+									<p class="text-danger">
+										<small>Mandatory Skills</small>
+									</p>
+								<p class="desc">
+										<small
+											ng-bind="jobDetails.manadatorySkills"
+											data-placement="bottom"></small>									</p>
+							    
+									<p class="text-danger">
+										<small>Desired Skills</small>
+									</p>
+									<!-- <p class="desc">
+										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small><span
+											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>-->
+									<p class="desc">
+										<small ng-bind="jobDetails.desiredSkill"
+											data-placement="bottom"></small>
+								</td>
+
+							</tr>
+						</table>
+						
+					</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <style type="text/css">
 
 .popover {

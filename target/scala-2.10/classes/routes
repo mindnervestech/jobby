@@ -1,0 +1,50 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           					controllers.Application.index()
+GET		/login											controllers.Application.login()
+GET		/signup											controllers.Application.signup()
+POST	/SignIn                     					controllers.Application.SignIn()
+GET     /dashboard										controllers.Application.dashBoard()
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               					controllers.Assets.at(path="/public", file)
+GET		/Logout   										controllers.Application.logOut()
+
+
+#User
+POST   /updateUserProfile                               controllers.Application.updateUserProfile()
+POST   /createNewUser                                   controllers.Application.createNewUser() 
+GET   /getAllPosition                                   controllers.Application.getAllPosition()
+GET   /getAllClearance                                  controllers.Application.getAllClearance()
+GET   /getUserProfile                                   controllers.Application.getUserProfile()  
+POST   /uploadExcel                     				controllers.Application.uploadandStoreExcel()
+GET    /getAllSkills                                     controllers.Application.getAllSkills()
+POST    /forgetPassword                                  controllers.Application.forgetPassword()
+POST     /getAllJobs/:currentPage/:jobType/:location/:matchedpos/:position  controllers.Application.getAllJobs(currentPage : Integer,jobType:String,location:Boolean,matchedpos:Boolean,position:String)
+GET    /saveOtherSkill/:otherSkill                      controllers.Application.saveOtherSkill(otherSkill : String)
+POST    /saveAppliedJob                                  controllers.Application.saveAppliedJob()
+#GET    /getUserPositionMatchedJob                         controllers.Application.getUserPositionMatchedJob()
+
+
+
+#Admin
+GET      /getAllAppliedJobs                             controllers.Application.getAllAppliedJobs()
+GET      /generatePDF/:id                                  controllers.Application.generatePDF(id : String)
+GET      /checkForadmin                                 controllers.Application.checkForadmin()
+GET     /getUserName                                      controllers.Application.getUserName()
+POST  /getAllJobsForAdmin/:currentPage/:jobType/:location/:matchedpos/:position      controllers.Application.getAllJobsForAdmin(currentPage : Integer,jobType:String,location:Boolean,matchedpos:Boolean,position:String)
+POST   /saveEditJob                                                  controllers.Application.saveEditJob()
+GET   /inactiveJob/:requestNumber                                 controllers.Application.inactiveJob(requestNumber :String)
+
+GET   /onactiveJob/:requestNumber                                 controllers.Application.onactiveJob(requestNumber :String)
+GET   /getAllUsers                                      controllers.Application.getAllUsers()
+GET   /getUserDetailsForAdmin/:email                                 controllers.Application.getUserDetailsForAdmin(email:String)
+POST  /updateUserProfileByAdmin                                   controllers.Application.updateUserProfileByAdmin()
+GET   /onActiveUser/:email 								controllers.Application.onActiveUser(email:String)
+GET   /onInActiveUser/:email 								controllers.Application.onInActiveUser(email:String)
+       

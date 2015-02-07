@@ -20,13 +20,23 @@
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">Excel File</span></a></li>
           <li ng-show ="isUser" ><a  href="/dashboard#/viewJobs"><i class="glyphicon glyphicon-eye-open">
          <div class="icon-bg bg-orange"></div></i><span class="menu-title">View Jobs </span></a></li>
+          <li ng-show ="isUser" ><a  href="/dashboard#/userAppliedJobs"><i class="glyphicon glyphicon-import">
+         <div class="icon-bg bg-orange"></div></i><span class="menu-title">My Applied Jobs </span></a></li>
            <li ng-show ="isAdmin" ><a  href="/dashboard#/viewAllJobsforAdmin"><i class="glyphicon glyphicon-eye-open">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">All Jobs  </span></a></li>
-          <li ng-show ="isAdmin" ><a  href="/dashboard#/viewAppliedJobs"><i class="glyphicon glyphicon-align-justify">
+          <li ng-show ="isAdmin" ><a  href="/dashboard#/viewAppliedJobs"><i class="glyphicon glyphicon-th-list">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">View Applied Jobs </span></a></li>
+          <li ng-show ="isAdmin" ><a  href="/dashboard#/allAdmin"><i class="glyphicon glyphicon-plus">
+          <div class="icon-bg bg-orange"></div></i><span class="menu-title">Delegate Admin </span></a></li>
+          <li ng-show ="isAdmin" ><a  href="/dashboard#/allClearance"><i class="glyphicon glyphicon-ok">
+          <div class="icon-bg bg-orange"></div></i><span class="menu-title">All Clearance </span></a></li>
+           <li ng-show ="isAdmin" ><a  href="/dashboard#/allPosition"><i class="glyphicon glyphicon-user">
+          <div class="icon-bg bg-orange"></div></i><span class="menu-title">All Position </span></a></li>
           <li ng-show ="isAdmin" ><a  href="/dashboard#/allUsers"><i class="glyphicon glyphicon-align-justify">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">All Users </span></a></li>
-          
+          <li ng-show ="isUser" ><a  href="/dashboard#/helppage"><i class="glyphicon glyphicon-question-sign">
+         <div class="icon-bg bg-orange"></div></i><span class="menu-title">Help </span></a></li>
+        
   <!--   <li ng-show="!isSuperAdmin" ><a ng-show="!isSuperAdmin" href="dashboard#/superAdmin_dashboard"><i class="">
           <div class="icon-bg bg-orange"></div></i><span class="menu-title">Dashboard</span></a></li>
     <li ng-show="!isSuperAdmin"> <a  href="dashboard#/All_Customer"><i class="fa fa-tachometer fa-fw">

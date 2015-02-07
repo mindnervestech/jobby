@@ -1,0 +1,60 @@
+	
+		<div class="row" >
+		<div class="col-md-12">
+		<div class="panel">
+			<div class="panel-body"   style="min-height:500px;">
+			<div ng-show="succUpload" style="color:green">File uploaded successfully</div>
+			<div ng-show="errorUpload" style="color:red">File not uploaded ! please  check file.</div>
+			<div  ng-show = "updateRow"style="color:green">New Jobs added are &nbsp;&nbsp;<strong>{{newrowscount}}</strong></div>
+			<div  ng-show="newRow"style="color:green">Updated Jobs  are&nbsp;&nbsp; <strong>{{updatedRowsCount}}</strong></div>
+			
+			
+				<div class="col-md-12">
+					<h2>Upload Excel file</h2>
+					<br /> <br />
+				</div>
+				<div class="form-group">
+					<div class="manageGenButton">
+						<!-- <label class="col-md-3 control-label"> File:</label> -->
+						<div class="col-md-5">
+							<input style="margin-top: 5px;"
+								ng-file-select="onFileSelect($files)" name="" type="file" />
+						</div>
+
+						<!-- <div class="col-md-4">
+							<button type="submit" ng-click="fileUpload()"
+								class="btn btn-primary">Show</button>
+							<input type="button" class="btn btn-primary" value="Cancel"
+											ng-click = "resetProfileImage()">
+						</div> -->
+					</div>
+				</div>
+				<div class="form-group">
+
+					<button type="submit" ng-click="fileUpload()"
+						class="btn btn-primary">Upload</button>
+
+				</div>
+
+				<!--  <div class="col-md-12">
+   <form id="upoadFileform" method="post" action="/uploadExcel"
+		enctype="multipart/form-data">
+		<div class="col-md-5">
+		<input type='file' name="uploadFile" id="uploadFile" /> 
+				
+		<br />
+		<br />
+		<input
+			type="submit" name="Upload" id="Upload" value="Upload">
+		</div>
+	</form> 
+   
+   </div> -->
+		
+		</div>
+	
+
+</div>
+</div>
+</div>
+

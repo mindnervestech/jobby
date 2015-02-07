@@ -179,6 +179,7 @@ public class Application extends Controller {
 			
 
 		}
+		//return ok();
 
 	}
 
@@ -188,8 +189,10 @@ public class Application extends Controller {
 		String uname = dynamicForm.get("email");
 		UserDetails ud = UserDetails.getPassword(uname);
 
-		final String username = "support@arihantbooking.com";
-		final String password = "Adschela@123";
+		final String username = Play.application().configuration()
+				.getString("mail.id");
+		final String password = Play.application().configuration()
+				.getString("mail.password");
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -237,7 +240,7 @@ public class Application extends Controller {
 				.asMultipartFormData();
 		MultipartFormData.FilePart excelpart = body.getFile("file");
 		File excelfile = excelpart.getFile();
-		ArrayList<String> al = new ArrayList<>();
+	//	ArrayList<String> al = new ArrayList<>();
 		int newRows = 0;
 		int updatedRows = 0;
 		try {
@@ -832,28 +835,24 @@ public class Application extends Controller {
 			String newrowscount = Integer.toString(newRows);
 			String  updatedRowsCount = Integer.toString(updatedRows);
 			System.out.println("updatedRowsCount"+updatedRowsCount);
-			Map map = new HashMap();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("newrowscount", newrowscount);
 			map.put("updatedRowsCount", updatedRowsCount);
-//			model.addAttribute("map", Json.toJson(map));
-	//		al.add(newrowscount);
-		//	al.add(updatedRowsCount);
+
 			return ok(Json.stringify(Json.toJson(map)));
 		}
 		
 		String newrowscount = Integer.toString(newRows);
 		String  updatedRowsCount = Integer.toString(updatedRows);
 		System.out.println("updatedRowsCount"+updatedRowsCount);
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("newrowscount", newrowscount);
 		map.put("updatedRowsCount", updatedRowsCount);
-		//al.add(newrowscount);
-		//al.add(updatedRowsCount);
 		
 		return ok(Json.stringify(Json.toJson(map)));
 	}
 
-	public static class AdminVM {
+	/*public static class AdminVM {
 		public int id;
 		public String uname;
 		public String password;
@@ -864,7 +863,7 @@ public class Application extends Controller {
 		public boolean isParent;
 		public int cg;
 		public List<AdminExtra> aextra;
-	}
+	}*/
 
 	public static class AdminExtra {
 		public String name;
@@ -926,6 +925,7 @@ public class Application extends Controller {
 		public String display_name;
 		public boolean value;
 	}
+	
 
 	public static Result logOut() {
 		// saveActivityLog("LogOut");
@@ -1036,6 +1036,7 @@ public class Application extends Controller {
 
 		}
 
+		
 		// both are selected for search(DSC)
 		if (!(false == location)
 				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
@@ -1095,7 +1096,7 @@ public class Application extends Controller {
 			for (UserPosition upd : up) {
 				String pos = upd.position;
 				al.add(pos);
-			
+				
 			}
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobAsc(currentPage, 10,
@@ -1111,6 +1112,8 @@ public class Application extends Controller {
 
 		}
 
+		
+		
 		// called when the usermatches job type selected
 		/*
 		 * if (usermatch == true) { ArrayList<String> al = new ArrayList<>();
@@ -1130,6 +1133,8 @@ public class Application extends Controller {
 
 		}*/
 
+		
+		
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
 
 		if (currentPage > 10 && 10 != 0) {
@@ -1237,6 +1242,7 @@ public class Application extends Controller {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
+
 		map.put("totalPages", 10);
 		map.put("currentPage", currentPage);
 		map.put("jobs", jobVMs);
@@ -1938,13 +1944,96 @@ public class Application extends Controller {
 	@JsonIgnore
 	public static Result getAllPosition() {
 		List<UserPosition> up = UserPosition.getAllPosition();
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("position", up);
 		return ok((Json.stringify(Json.toJson(map))));
 
 	}
 
+	@JsonIgnore
+	public static Result addnewPosition(String position){
+	UserPosition up = UserPosition.getPositionByPosName(position);
+		if(up == null){
+		UserPosition u= new UserPosition();
+		u.position = position;
+		u.save();
+		return ok(Json.toJson(u));
+		}else{
+			return ok("");		
+		}
+		
+	}
+	
+	@JsonIgnore
+	public static Result addNewClearance(String clearance){
+		UserClearance uc = UserClearance.getClearanceByName(clearance);
+			if(uc == null){
+			UserClearance u = new UserClearance();
+			u.clearance = clearance;
+			u.save();
+			return ok(Json.toJson(u));
+			}else{
+				return ok("");		
+			}
+			
+		}
+	@JsonIgnore
+	public static Result deleteClearanceByName(String clearance){
+		UserClearance uc = UserClearance.getClearanceByName(clearance) ;
+		if(uc != null){
+			uc.delete();
+			return ok("deleted");
+		}else{
+			return  ok("");		
+		}
+		
+	
+	}
+	
+	@JsonIgnore
+	public static Result deletePositionByName(String position){
+		UserPosition up = UserPosition.getPositionByPosName(position) ;
+		if(up != null){
+			up.delete();
+			return ok("deleted");
+		}else{
+			return  ok("");		
+		}
+		
+	
+	}
+	
+	@JsonIgnore
+	public static Result editPositionName(String editPosition,String editPositionOld){
+		
+		UserPosition up = UserPosition.getPositionByPosName(editPositionOld);
+		if(up != null){
+			up.position = editPosition;
+			up.update();
+			
+		}		
+		return ok(Json.toJson(up));
+	}
+	
+	@JsonIgnore
+	public static  Result editClearanceName(String clerancenew ,String clearanceold){
+		
+		UserClearance uc =UserClearance.getClearanceByName(clearanceold);
+		
+		if(uc != null){
+			uc.clearance = clerancenew;
+			uc.update();
+			return ok(Json.toJson(uc));
+		}else{
+			
+		}
+		
+		return ok();
+	}
+	
+	
+	
+	
 	@JsonIgnore
 	public static Result getAllClearance() {
 		List<UserClearance> uc = UserClearance.getAllClearance();
@@ -1955,6 +2044,9 @@ public class Application extends Controller {
 
 	}
 
+	
+	
+	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class ManadatorySkillsVM {
 		public String comment;
@@ -2680,4 +2772,293 @@ public class Application extends Controller {
 		ud.update();
 		return ok("");
 	}
+	
+	
+	public static class AdminVM{
+		public long id;
+		public String username;
+		public String password;
+		public String role;
+	}
+	
+	
+	public static Result getallAdmin(){
+		
+		List<Admin> ad= Admin.getAllAdmin();		
+		ArrayList<AdminVM> al  = new ArrayList<AdminVM>(); 
+ 		for(Admin a : ad){
+ 			AdminVM avm  = new AdminVM();
+ 			avm.id = a.id;
+ 			avm.username = a.username;
+ 			avm.password =  a.password;
+ 			avm.role = a.role;
+ 			al.add(avm);
+ 		}
+		
+		Map<String  ,Object> map = new HashMap<String,Object>();
+		map.put("adminList",al);
+		return ok(Json.toJson(map)); 
+	} 
+	
+	
+	
+	public static Result addnewAdmin(String email,String password){
+		
+		Admin ad =Admin.getAdminByEmail(email);
+		if(ad == null){
+			Admin a = new Admin();
+			
+			a.password = password;
+			a.username = email;
+			a.role ="admin";
+			a.save();
+			
+			return ok(Json.toJson(a));
+		}else{
+			return ok();	
+		}
+		
+	}
+	
+	
+	public static Result deleteAminByEmail(String email){
+		Admin ad= Admin.getAdminByEmail(email);
+		if(ad  != null) {
+			ad.delete();
+			return ok("");
+		}else{
+	
+			return  ok("");
+
+		}
+		
+		}
+	
+	public static Result editAdminDetails(String emailnew,String emailold,String passnew,String passold){
+
+		Admin ad = Admin.isAdmin(emailold, passold);
+		if(ad != null ){
+			ad.username = emailnew;
+			ad.password = passnew;
+			ad.update();
+			return ok("");
+		}else{
+	
+			return ok("");
+
+		}
+		 
+	}
+
+	
+	public static Result getAllUserAppliedJobs(){
+		
+		List<StoreExcelFile> jobs  = new ArrayList<>();
+		List<StoreExcelFile> userJobs = null;
+		// both are selected for search(DSC)
+			String emailId = session().get("email");
+			userJobs = StoreExcelFile.getAllUserJobs();
+			
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
+						str.requestNumber);
+				
+				if (as != null) {
+					
+					jobs.add(str);
+				}
+			}
+
+		
+		List<JobVM> jobVMs = new ArrayList<JobVM>();
+
+	
+
+		String mskills;
+		String dSkills;
+
+		for (StoreExcelFile s : jobs) {
+
+			JobVM jobVM = new JobVM();
+
+			jobVM.requestNumber = s.requestNumber;
+			jobVM.requestType = s.requestType;
+			jobVM.labourCategory = s.labourCategory;
+			jobVM.performanceLevel = s.performanceLevel;
+			jobVM.positionType = s.positionType;
+			jobVM.clearanceRequired = s.clearanceRequired;
+			jobVM.workLocation = s.workLocation;
+			jobVM.workDescription = s.workDescription;
+
+			jobVM.certificationRequired = s.certificationRequired;
+			jobVM.conusTravel = s.conusTravel;
+			jobVM.oconusTravel = s.oconusTravel;
+			jobVM.reghrperYear = s.reghrperYear;
+			jobVM.scheduleComments = s.scheduleComments;
+			jobVM.nonpubComments = s.nonpubComments;
+			jobVM.missionCritical = s.missionCritical;
+			jobVM.nightWork = s.nightWork;
+			jobVM.localTravalusingpub = s.localTravalusingpub;
+			jobVM.pagerDuty = s.pagerDuty;
+			jobVM.pagerdutyComments  =s.pagerdutyComments;
+			jobVM.workonHoliday = s.workonHoliday;
+			jobVM.workonWeekends = s.workonWeekends;
+			jobVM.shiftWork  =s.shiftWork;
+			jobVM.warzone = s.warzone;
+			jobVM.coop = s.coop;
+			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.updateDate = s.updateDate;
+			jobVM.duetoGovt = s.duetoGovt;
+			
+			jobVM.jobStatus = s.jobStatus;
+			// check if the desired skill does not contain null value;
+			if (s.desiredSkill != null) {
+				dSkills = s.desiredSkill;
+			} else {
+				dSkills = " ";
+			}
+
+			// split the string with numbers
+			String[] tokendesiredsVal = dSkills
+					.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+
+			// prints the count of tokens
+			String numd = null;
+			ArrayList<String> desSkill = new ArrayList<String>();
+			for (String token : tokendesiredsVal) {
+				// check for the number
+				boolean b = token.matches("[-+]?\\d*\\.?\\d+");
+				if (b == true) {
+					numd = token;
+				} else {
+					// if number skip do not add to the list
+					// add the string with number
+					if (numd != null) {
+						desSkill.add(numd + "" + token);
+					}
+				}
+				System.out.print(token);
+			}
+
+			// check if the mandatory skill does not contain null value;
+			if (s.manadatorySkills != null) {
+				mskills = s.manadatorySkills;
+			} else {
+				mskills = " ";
+			}
+
+			// split the string with numbers
+			String[] tokensVal = mskills
+					.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+			// prints the count of tokens
+			String num = null;
+			ArrayList<String> manSkill = new ArrayList<String>();
+			for (String token : tokensVal) {
+				// check for the number
+				boolean b = token.matches("[-+]?\\d*\\.?\\d+");
+				if (b == true) {
+					num = token;
+				} else {
+					// if number skip dont add to the list
+					// add the string with number
+					if (num != null) {
+						manSkill.add(num + "" + token);
+					}
+				}
+			}
+
+			jobVM.manadatorySkills = manSkill;
+			jobVM.desiredSkill = desSkill;
+			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
+
+			jobVMs.add(jobVM);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("jobs", jobVMs);
+		return ok(Json.toJson(map));
+		
+	} 
+	
+	public static  class  SendMailVM{
+	public String 	subject;
+	public String name;
+	public  String email;
+	public  String content;
+		
+	}
+	
+	public static Result  sendFeedbackMail(){
+		JsonNode json = request().body().asJson();
+		System.out.println("josn"+json);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		SendMailVM sendMailVM;
+		try {
+
+			sendMailVM = objectMapper.readValue(json.get("contactus")
+					.traverse(), SendMailVM.class);
+			
+			
+			
+			
+			final String username = Play.application().configuration()
+					.getString("mail.id");;
+			final String password = Play.application().configuration()
+					.getString("mail.password");;
+			
+			Properties props = new Properties();
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.port", "587");
+
+			Session session = Session.getInstance(props,
+					new javax.mail.Authenticator() {
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication(username, password);
+						}
+					});
+
+			try {
+
+				Message feedback = new MimeMessage(session);
+				feedback.setFrom(new InternetAddress(username));
+				feedback.setRecipients(Message.RecipientType.TO,
+						InternetAddress.parse(sendMailVM.email
+								));
+				feedback.setSubject(sendMailVM.subject);
+				// message.setText();
+				BodyPart messageBodyPart = new MimeBodyPart();
+				// Now set the actual message
+				messageBodyPart.setText("\n Name of persion : " + sendMailVM.name + "\n PersonEmail:  "+ "\n "+sendMailVM.email +"\n Content: "
+						+ "\n"+sendMailVM.content);
+				// Create a multipar message
+				Multipart multipart = new MimeMultipart();
+				// Set text message part
+				multipart.addBodyPart(messageBodyPart);
+				// Send the complete message parts
+				feedback.setContent(multipart);
+				Transport.send(feedback);
+			} catch (MessagingException e) {
+				throw new RuntimeException(e);
+			}
+			
+
+		} catch (JsonParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return ok();
+	}
+	
+	
 }

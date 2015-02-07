@@ -29,7 +29,7 @@ POST     /getAllJobs/:currentPage/:jobType/:location/:matchedpos/:position  cont
 GET    /saveOtherSkill/:otherSkill                      controllers.Application.saveOtherSkill(otherSkill : String)
 POST    /saveAppliedJob                                  controllers.Application.saveAppliedJob()
 #GET    /getUserPositionMatchedJob                         controllers.Application.getUserPositionMatchedJob()
-
+POST    /getAllUserAppliedJobs                               controllers.Application.getAllUserAppliedJobs()
 
 
 #Admin
@@ -47,4 +47,14 @@ GET   /getUserDetailsForAdmin/:email                                 controllers
 POST  /updateUserProfileByAdmin                                   controllers.Application.updateUserProfileByAdmin()
 GET   /onActiveUser/:email 								controllers.Application.onActiveUser(email:String)
 GET   /onInActiveUser/:email 								controllers.Application.onInActiveUser(email:String)
-       
+GET  /addnewPosition/:position 								controllers.Application.addnewPosition(position:String)
+GET  /addNewClearance/:clearance        						controllers.Application.addNewClearance(clearance:String)
+GET  /deletePositionByName/:position                              controllers.Application.deletePositionByName(position:String)
+GET  /deleteClearanceByName/:clearance                         controllers.Application.deleteClearanceByName(clearance:String)
+GET  /editPositionName/:editPosition/:editPositionOld        controllers.Application.editPositionName(editPosition:String,editPositionOld:String)
+GET /editClearanceName/:editClearance/:editClearanceOld        controllers.Application.editClearanceName(editClearance:String,editClearanceOld:String) 
+GET /getallAdmin                                               controllers.Application.getallAdmin()
+GET  /addnewAdmin/:email/:password                        controllers.Application.addnewAdmin(email:String, password:String)
+GET  /deleteAminByEmail/:email                                      controllers.Application.deleteAminByEmail(email:String)
+GET  /editAdminDetails/:emailnew/:emailold/:passnew/:passold    controllers.Application.editAdminDetails(emailnew:String,emailold:String,passnew:String,passold:String)
+POST  /sendFeedbackMail                                           controllers.Application.sendFeedbackMail()

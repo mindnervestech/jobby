@@ -1,0 +1,364 @@
+<style>
+	.Color {
+		color : green
+	}
+	.redColor {
+		color : red
+	}
+	.state-success .form-control {
+		border-color: rgb(221, 216, 216) !important;
+	}
+	.state-success input, .state-success select, .state-success textarea {
+		background: none !important;
+	}
+	
+</style>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="portlet box">
+      <div class="portlet-header">
+        <div class="caption">Customer Table</div>
+      </div>
+      <div class="portlet-body">
+        <div class="row mbm">
+          <div class="col-lg-12">
+            <div id="superAdminModal" tabindex="-1" role="dialog" aria-labelledby="modal-responsive-label" aria-hidden="true" class="modal fade">
+		      <div class="modal-dialog ">
+		        <div class="modal-content panel">
+		          <div class="modal-header panel-heading">
+		            <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+		             <ul id="myTab" class="ul-edit nav nav-tabs">
+          				<li class="active"><a data-target="#custForm" data-toggle="tab">Customer Group</a></li>
+          				<!-- <li  ><a data-target="#adminExtra" ng-click = "" data-toggle="tab">Extra</a></li> -->
+					</ul>
+		          </div>
+		          <div id="myTabContent" class="tab-content">    
+			         <div id = "custForm" class="tab-pane fade in active">
+							<form style = "height:400px; overflow-x:hidden" class="form-horizontal form-validate">
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Name
+							    	<span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input ng-blur="isCustomerExists(item.cg_name)" id= "name" name="name" ng-model = "item.cg_name" class="form-control required name" />
+							    	<label ng-show = "ngdialogFlag" style = "color:red">{{saveUpdateMsg}}</label>
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Email
+							    	<span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input  id= "email" name="email" ng-model = "item.cg_email" class="form-control required name" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Group Category
+							    	<span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input ng-model = "item.customer_category" class="form-control required" />
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Custom TransForm 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="validIp" ng-model = "item.cgCustomTransForm" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							  	<label  class="col-sm-3 control-label">Customer Group NSId
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "item.cg_nsId" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							  	<label  class="col-sm-3 control-label">Customer Group Handling 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "item.cg_handling" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Price Level 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "item.cg_price_level" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Customer Group Shipping 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "item.cg_shipping" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Customer Group Skin 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "item.cg_skin" class="form-control required" />
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Trans Type 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "item.cgTransType" class="form-control required" />
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Memo
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<textarea name="transType" ng-model = "item.cg_memo" class="form-control required" ></textarea>
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Site
+							    </label>
+							    <div class="col-sm-4">
+								    <select style = "width: 100px; " ng-model = "item.site" class="form-control required"  data-ng-options="site for site in siteId" >
+									</select>
+								</div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Status</label>
+							    <div class="col-sm-4">
+							    <select  style = "width: 100px; " ng-model = "item.active" class="form-control required"  >
+											<option>Active</option>
+											<option>Inactive</option>
+								</select>
+								</div>
+							  </div>
+							 
+							 <!--  <div class="form-group">
+							    <div class="col-sm-offset-2 col-sm-10">
+							      <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+							      <button type="submit" ng-click= "submit(item);" data-dismiss="modal" class="btn btn-success">Submit</button>
+							    </div>
+							  </div> -->
+							  
+							  <div class="form-actions text-right pal">
+							  	<button type="submit" ng-click="submit(item);" data-dismiss="modal"
+									class="btn btn-primary">Submit</button>
+										&nbsp;
+								<button type="button" data-dismiss="modal"
+								class="btn btn-green">Cancel</button>
+							  </div>
+							</form>
+			          </div>
+			          <div  id = "adminExtra" class="tab-pane fade in" >
+						<form class="form-horizontal">
+							<div  data-ng-repeat="admin_extra in item.aextra" class="form-group">
+							<label class="col-sm-3 control-label">{{admin_extra.name}}</label>
+						    <div class="col-sm-8">
+						    	<input  type="text" ng-model ="admin_extra.value" class="form-control"/>
+						    </div>
+						</div>
+ 						<div class="form-group ">
+	 						<a style = "float: right;margin-right: 60px;" ng-click = "extra=true"><i class="fa fa-plus-square">
+	 						</i>Add Extra</a>
+ 						</div> 
+ 						<div ng-show = "extra" class="form-group ">
+	 						<label class="col-sm-3 control-label">Lable</label>
+						    <div class="col-sm-3">
+						    	<input  type="text" ng-model ="a_extra.name" class="form-control"/>
+						    </div>
+ 						</div>
+ 						<div ng-show = "extra" class="form-group ">
+	 						<label class="col-sm-3 control-label">value</label>
+						    <div class="col-sm-3">
+						    	<input  type="text" ng-model ="a_extra.value" class="form-control"/>
+						    </div>
+						    	<button type="button"  ng-click="addNewExtra(a_extra);extra = false;" class="btn ">Submit</button>&nbsp;
+						    	<button type="button"  ng-click="extra = false;" class="btn ">Cancle</button>&nbsp;
+ 						</div>
+					<!-- 	<div class="form-actions text-right pal">
+                    		<button type="submit"  ng-click="saveOrderExtra();closeThisDialog()" class="btn btn-primary">Submit</button>&nbsp;
+                    		<button type="button"  ng-click="closeThisDialog()" class="btn btn-green">Cancel</button>
+                  		</div> -->
+						</form>
+				  	 </div>
+			       </div>   
+		        </div>
+		      </div>
+		    </div>
+            <div  ng-init="onLoad()" class="table-responsive">
+            	<div  style = "margin-bottom: 10px;">
+                	<button type="button" data-target="#superAdminModal" ng-click= "loadParent()" data-toggle="modal" class="btn btn-yellow">Add New</button>
+          		</div>
+              <table id="table_id" class="table table-hover table-striped table-bordered table-advanced tablesorter display">
+      				<tbody>
+						<tr>
+							<th style="width: 15%;">Name</th>
+							<th style="width: 20%;">Customer Category</th>
+							<th style="width: 15%;">site</th>
+							<th style="width: 20%;">Custom TransForm</th>
+							<th style="width: 20%;">TransType</th>
+							<th style="width: 20%;">Active</th>
+						</tr>
+						<tr data-ng-repeat="cg in customerGroupData" style="background-color: #fff !important;left:-900">
+							<td ng-click = "updateCustomerGroup(cg)" >{{cg.cg_name}} </td>
+							<td ng-click = "updateCustomerGroup(cg)" >{{cg.customer_category}} </td>
+							<td ng-click = "updateCustomerGroup(cg)" >{{cg.site}}</td>
+							<td ng-click = "updateCustomerGroup(cg)" >{{cg.cgCustomTransForm}}</td>
+							<td ng-click = "updateCustomerGroup(cg)" >{{cg.cgTransType}}</td>
+							<td ng-click = "updateCustomerGroup(cg)" ng-class="cg.active === 'Active' ? 'Color': 'redColor' " >{{cg.active}}</td>
+						</tr>
+					</tbody>      
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/ng-template" id="customer_group.html">
+<div id="edit" class="modal-dialog ">
+<div class="modal-content panel">
+	<div class="modal-header panel-heading">
+		<ul id="myTab" class="ul-edit nav nav-tabs">
+			<li class="active"><a data-target="#basicInfo"
+				data-toggle="tab">Customer Group</a></li>
+		</ul>
+	</div>
+	<div id="myTabContent" class="tab-content">
+		<div id="basicInfo" class="modal-body tab-pane fade in active">
+			<form style = "height:400px; overflow-x:hidden" class="form-horizontal form-validate">
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Name
+							    	<span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input ng-blur="isCustomerExists(editItem.cg_name)" id= "name" name="name" ng-model = "editItem.cg_name" class="form-control required name" />
+							    	<label ng-show = "ngdialogFlag" style = "color:red">{{saveUpdateMsg}}</label>
+							    </div>
+							  </div>
+							   <div class="form-group">
+							    <label class="col-sm-3 control-label">Email
+							    	<span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input  id= "email" name="email" ng-model = "editItem.cg_email" class="form-control required name" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Group Category
+							    	<span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input ng-model = "editItem.customer_category" class="form-control required" />
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Custom TransForm 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="validIp" ng-model = "editItem.cgCustomTransForm" class="form-control required" />
+							    </div>
+							  </div>
+
+ 							  <div class="form-group">
+							  	<label  class="col-sm-3 control-label">Customer Group NSId
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "editItem.cg_nsId" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							  	<label  class="col-sm-3 control-label">Customer Group Handling 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "editItem.cg_handling" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Price Level 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "editItem.cg_price_level" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Customer Group Shipping 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "editItem.cg_shipping" class="form-control required" />
+							    </div>
+							  </div>
+							  
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Customer Group Skin 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "editItem.cg_skin" class="form-control required" />
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label  class="col-sm-3 control-label">Trans Type 
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<input name="transType" ng-model = "editItem.cgTransType" class="form-control required" />
+							    </div>
+							  </div>
+							  <div class="form-group">
+							  	<label  class="col-sm-3 control-label">Memo
+							    <span class="require">*</span>
+							    </label>
+							    <div class="col-sm-9">
+							    	<textarea name="transType" ng-model = "editItem.cg_memo" class="form-control required" ></textarea>
+							    </div>
+							  </div>
+							  <div class="form-group">
+							    <label class="col-sm-3 control-label">Status</label>
+							    <div class="col-sm-4">
+							    <select  style = "width: 100px; " ng-model = "editItem.active" class="form-control required"  >
+											<option>Active</option>
+											<option>Inactive</option>
+								</select>
+								</div>
+							  </div>
+							 
+							  <div class="form-group">
+							    <div class="col-sm-offset-2 col-sm-10">
+							      <button type="button" ng-click = "closeThisDialog()" class="btn btn-default">Close</button>
+							      <button type="submit" ng-click= "saveupdatedCustomerGroup(editItem);closeThisDialog()" class="btn btn-success">Submit</button>
+							    </div>
+							  </div>
+							</form>
+			          </div>
+			        </div>
+	</div>
+</div>
+</div>
+</script>
