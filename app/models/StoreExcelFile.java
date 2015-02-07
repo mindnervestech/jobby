@@ -163,5 +163,11 @@ public class StoreExcelFile {
 
 		return find.where().order().asc("workLocation").findList();
 	}
+
+	
+	public static List<StoreExcelFile> getAllUserJobs() {
+
+		return find.all();
+	}
 	
 }

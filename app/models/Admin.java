@@ -1,6 +1,8 @@
 package models;
 
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,6 +37,17 @@ public class Admin extends Model {
 	}
 
 	public static Admin checkAdmin(String email){
+		return find.where().eq("username", email).findUnique();
+	}
+	
+	public static List<Admin> getAllAdmin(){
+		
+		return find.all();
+		
+	}
+	
+	public static Admin getAdminByEmail(String email){
+		
 		return find.where().eq("username", email).findUnique();
 	}
 }

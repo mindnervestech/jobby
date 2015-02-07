@@ -108,6 +108,13 @@ App.config(function ($routeProvider) {
         .when('/viewAllJobsforAdmin', { templateUrl: 'assets/app/templates/states/all_jobs_admin.html', controller: 'ViewAllForAdminJobsController'})
         .when('/viewAppliedJobs', { templateUrl: 'assets/app/templates/states/applied_jobs.html', controller: 'ViewAppliedJobsController'})
         .when('/allUsers', { templateUrl: 'assets/app/templates/states/all_users.html', controller: 'ViewAllUsersController'})
+        .when('/allClearance', { templateUrl: 'assets/app/templates/states/all_clearance.html', controller: 'ViewAllClearanceController'})
+        .when('/allPosition', { templateUrl: 'assets/app/templates/states/all_position.html', controller: 'ViewAllPositionController'})
+        
+        .when('/allAdmin', { templateUrl: 'assets/app/templates/states/all_admin.html', controller: 'ViewAllAdminController'})
+        .when('/userAppliedJobs', { templateUrl: 'assets/app/templates/states/user_appliedjobs.html', controller: 'ViewAllUserAppliedController'})
+        .when('/helppage', { templateUrl: 'assets/app/templates/states/help.html', controller: 'HelpPageController'})
+
         .when('/extra-signin', { templateUrl: 'assets/app/templates/states/extra-signin.html', controller: 'ExtraSigninController'})
         .when('/extra-signup', { templateUrl: 'assets/app/templates/states/extra-signup.html', controller: 'ExtraSignupController'})
         .when('/extra-lock-screen', { templateUrl: 'assets/app/templates/states/extra-lock-screen.html', controller: 'ExtraLockScreenController'})
@@ -383,7 +390,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		    	$scope.location = false;
 		    }
 		    $scope.matchedpos = false;
-		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+		    $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
 			
@@ -482,6 +489,83 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		
 });
 
+
+
+App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootScope,  $routeParams){
+	 $http.get('/getUserName')
+		.success(function(data) {
+		// $scope.userData = data;
+			$rootScope.username = data;
+			console.log("data"+data);
+		});
+	  
+	// check for gthe admin
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+		
+		$scope.contactus = {};
+		$scope.feedbackSuccess;
+		$scope.onfeedBackClicked = function(){
+			
+			$http.post('/sendFeedbackMail',{contactus:$scope.contactus})
+			.success(function(data){
+				console.log("success");
+				$scope.feedbackSuccess = true;
+			});
+		}
+		
+});
+
+App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http, $rootScope,  $routeParams){
+	
+	
+	$scope.jobsData = [];
+	  $http.get('/getUserName')
+		.success(function(data) {
+		// $scope.userData = data;
+			$rootScope.username = data;
+			console.log("data"+data);
+		});
+	  
+	// check for gthe admin
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+	 $scope.getAllAppliedJobs = function(){
+		 console.log("hi");
+		 $http.post('getAllUserAppliedJobs')
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				console.log("$scope.jobsData"+JSON.stringify($scope.jobsData));
+			});
+		 
+	 }
+	 
+	 $scope.showappliedJobDetails = function(jobs){
+		 
+		 $scope.jobDetails = jobs;
+			$('#viewJobDetails').modal();
+		 
+	 }
+	
+});
 
 
 App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootScope,  $routeParams){
@@ -696,18 +780,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 						$scope.errorManaSkillComment = false;
 					}
 				}
-				/*if ((obj1.comment == " " )) {
-					//console.log("comment"+(obj1.comment));
-					$scope.errorManaSkillComment = true;
-				}else{
-					if($scope.errorManaSkillComment == true){
-						
-					}else{
-						$("#tab2").click();
-						//$scope.errorManaSkillComment = false;
-					}
-					
-				}*/
+				
 				});
 		}
 		//used to go to tab1 (mandatory skills )
@@ -715,6 +788,12 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$("#tab1").click();
 		}
 		
+		$scope.jobDetails;
+		$scope.showJobDetails = function(jobs){
+			$scope.jobDetails = jobs;
+			$('#viewJobDetails').modal();
+			
+		}
 		
 });
 
@@ -6233,6 +6312,9 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 	    format: 'mm-dd-yyyy'
 		});
 	
+	
+
+	
 		// used for init date picker in education form
 		$scope.initeduDateform = function(){
 			$('#edudateform').datepicker({
@@ -6257,9 +6339,14 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		// used to init date picker
 		$scope.initDatePicker  = function(){
 			
-			$('#certYear').datepicker({
+			/*$('#certYear').datepicker({
 			    format: 'mm-dd-yyyy'
-				});
+				});*/
+			
+			$('#idTourDateDetails').datepicker({
+			     dateFormat: 'dd-mm-yy',
+			  
+			 });
 		}
 		
 	
@@ -6365,6 +6452,340 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		}
 	
 });
+
+
+
+
+App.controller('ViewAllAdminController', function ($scope, $rootScope, $routeParams, $http, $upload){
+
+	
+	// get all  admin
+	$scope.getAllAdmin = function(){
+		$http.get('getallAdmin')
+		.success(function(data){
+			if(data) {
+				$scope.allAdmin = data.adminList;
+				console.log("data"+JSON.stringify(data));
+			} 
+		});
+	}
+
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
+	
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	$scope.emailnew;
+	$scope.passwordnew;
+	//add new Admin 
+	$scope.addNewAdmin =  function(){
+		console.log($scope.emailnew+""+""+$scope.passwordnew);
+		if((!$scope.emailnew == "") && (!$scope.passwordnew == "") && (!angular.isUndefined($scope.emailnew))){
+		$http.get('/addnewAdmin/'+$scope.emailnew+'/'+$scope.passwordnew).success(function(data){
+			console.log("added");
+			$scope.getAllAdmin();
+			$('#addadminpop').modal('hide');
+			$scope.emailnew = "";
+			$scope.passwordnew = "";
+			$scope.error = false;
+		});
+		
+	}else{
+		$scope.error = true;
+		
+	}
+ }
+
+	
+	//open add admin modal
+	$scope.pos;
+	$scope.addAdminpopup = function(){
+		$('#addadminpop').modal();
+		
+	}
+	
+	$scope.delPos;
+	//open delete admin modal
+	$scope.deleteAdminPopup = function(admin){
+		$scope.delAdmin =admin;
+		$('#deleteadminpopup').modal();
+	}
+
+	//Delete the existing Admin
+	$scope.deleteAdmin = function(){
+		console.log($scope.delAdmin);
+		$http.get('/deleteAminByEmail/'+$scope.delAdmin).success(function(data){
+			console.log("deleted");
+			$scope.getAllAdmin();
+			$('#deleteadminpopup').modal('hide');
+		});
+	}
+	
+	//used to take the new edited name
+	$scope.adminemailnew;
+	$scope.adminemailold;
+	$scope.adminpasswordnew;
+	$scope.adminpasswordold;
+	//Open edit ADMIN  modal
+	$scope.editAdminpopoup = function(email,pass){
+		$scope.adminemailnew = email ;
+		$scope.adminpasswordnew = pass;
+		//used to compare the email and pass for edited user  in backend
+		$scope.adminemailold = email;
+		$scope.adminpasswordold = pass;
+		$('#editadminPopup').modal();
+		
+	}
+	
+	// Edit/Update Admin Details
+	$scope.editAdminDetails = function(){
+		$http.get('/editAdminDetails/'+$scope.adminemailnew+"/"+$scope.adminemailold+"/"+$scope.adminpasswordnew+"/"+$scope.adminpasswordold).success(function(data){
+		console.log("success");
+		$scope.getAllAdmin();
+		$('#editadminPopup').modal('hide');
+		$scope.adminemailnew = "";
+		$scope.adminpasswordnew = "";
+	});
+	}
+	
+	
+});
+
+
+App.controller('ViewAllPositionController', function ($scope, $rootScope, $routeParams, $http, $upload){
+
+	
+	// get all users applied jobs to admin
+	$scope.getAllPosition = function(){
+		$http.get('getAllPosition')
+		.success(function(data){
+			if(data) {
+				$scope.allPosition = data;
+				console.log("data"+JSON.stringify(data));
+			} 
+		});
+	}
+
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
+	
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	$scope.positionname;
+	//add new position 
+	$scope.addNewPosition =  function(){
+		console.log($scope.positionname);
+		if((!angular.isUndefined($scope.positionname)) && (! $scope.positionname == "")){
+		$http.get('/addnewPosition/'+$scope.positionname).success(function(data){
+			console.log("added");
+			$scope.getAllPosition();
+			$('#addposition').modal('hide');
+			$scope.positionname = "";
+			$scope.error = false;
+		});
+		
+	}else{
+		$scope.error = true;
+		
+	}
+ }
+
+	
+	//open add position modal
+	$scope.pos;
+	$scope.addPosition = function(){
+		$('#addposition').modal();
+		
+	}
+	
+	$scope.delPos;
+	//open delete pos modal
+	$scope.deletePos = function(pos){
+		$scope.delPos = pos;
+		$('#deletePosition').modal();
+	}
+
+	//Delete the existing position
+	$scope.deletePosition = function(){
+		console.log($scope.delPos);
+		$http.get('/deletePositionByName/'+$scope.delPos).success(function(data){
+			console.log("deleted");
+			$scope.getAllPosition();
+			$('#deletePosition').modal('hide');
+		});
+	}
+	
+	//used to take the new edited name
+	$scope.editPosition;
+	//Open edit position  modal
+	$scope.editPosname = function(pos){
+		$scope.editPositionNew = pos ;
+		//used to compare the Position in backend 
+		$scope.editPositionOld = pos;
+		$('#editPositionModal').modal();
+		
+	}
+
+	$scope.editposerror;
+	// Edit/Update Position name
+	$scope.editPositionName = function(){
+		if((!angular.isUndefined($scope.editPositionNew)) && $scope.editPositionNew != ""){
+		$http.get('/editPositionName/'+$scope.editPositionNew+"/"+$scope.editPositionOld).success(function(data){
+		console.log("success");
+		$scope.getAllPosition();
+		$scope.editposerror  = false;
+		$('#editPositionModal').modal('hide');
+		$scope.editPositionNew = ""
+	});
+		}else{
+			$scope.editposerror  = true; 		
+		}
+	}
+	
+	
+});
+
+
+App.controller('ViewAllClearanceController', function ($scope, $rootScope, $routeParams, $http, $upload){
+
+	
+	// get all users applied jobs to admin
+	$scope.getAllClearance = function(){
+		$http.get('getAllClearance')
+		.success(function(data){
+			if(data) {
+				$scope.allClearance = data;
+				console.log("data"+JSON.stringify(data));
+			} 
+		});
+	}
+
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
+	
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	//open all clearance add popup
+	$scope.cls;
+	$scope.addClearance = function(clearance){
+	//	$scope.cls = clearance;
+		$('#addClearncemodal').modal();
+		
+	}
+	
+	$scope.clearancename;
+	//add new Clearance 
+	$scope.addNewClearance =  function(){
+		$('#addClearncemodal').modal();
+		if(!(angular.isUndefined($scope.clearancename))){
+			
+		$http.get('/addNewClearance/'+$scope.clearancename).success(function(data){
+			$scope.getAllClearance();
+			$('#addClearncemodal').modal('hide');
+			$scope.error = false;
+			$scope.clearancename = "";
+		});
+	
+		}else{
+			$scope.error = true;
+		}
+	}
+
+	
+	$scope.delClea;
+	//open delete clearance modal
+	$scope.deleteCls = function(cname){
+		$scope.delClea = cname;
+		$('#deleteClearance').modal();
+	}
+
+	//Delete the existing clearance
+	$scope.deleteClearance = function(){
+		console.log($scope.delClea);
+		$http.get('/deleteClearanceByName/'+$scope.delClea).success(function(data){
+			console.log("deleted");
+			$scope.getAllClearance();
+			$('#deleteClearance').modal('hide');
+		});
+	}
+	
+	//used to take the new edited name
+	$scope.editClearanceNew;
+	//Open edit position  modal
+	$scope.editCleaname = function(cname){
+		$scope.editClearanceNew = cname ;
+		//used to compare the Position in backend 
+		$scope.editClearanceOld = cname;
+		$('#editClearanceModal').modal();
+		
+	}
+
+	$scope.editclearanceerror;
+	// Edit/Update Position name
+	$scope.editClearanceName = function(){
+		if($scope.editClearanceNew != "" && (!angular.isUndefined($scope.editClearanceNew))){
+		$http.get('/editClearanceName/'+$scope.editClearanceNew+"/"+$scope.editClearanceOld).success(function(data){
+		console.log("success");
+		$scope.getAllClearance();
+		$('#editClearanceModal').modal('hide');
+		$scope.editclearanceerror = false;
+		$scope.editClearanceNew = "";
+	});
+		}else{
+			$scope.editclearanceerror = true;
+		}
+	}
+	
+});
+
 
 
 
@@ -6749,7 +7170,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			 */
     		
     		angular.forEach($scope.allCleanrance.clearance, function(obj, index){
-    			
     			angular.forEach($scope.userClearance, function(obj1, index){
     				if ((obj.clearance == obj1.clearance)) {
     					console.log(obj1.clearance);
