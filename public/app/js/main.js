@@ -304,6 +304,24 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		.success(function(data) {
 			console.log(data);
 			$scope.jobsData = data.jobs;
+			$scope.totalJobs = data.jobsCount;
+			if(data.jobsCount <= 10){
+				$('#next').hide();
+				$('#next1').hide();
+				$scope.JobPre = data.jobsCount;
+			}else{
+				$('#next').show();
+				$('#next1').show();
+				$scope.JobPre = 10;
+			}
+			
+			if($scope.pageno <= 0){
+				$('#pre').hide();
+				$('#pre1').hide();
+			}else{
+				$('#pre').show();
+				$('#pre1').show();
+			}
 			
 		});
 		
@@ -319,6 +337,13 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 			$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 	    	.success(function(data) {
 	    		$scope.jobsData = data.jobs;
+	    		if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
 	    		console.log("all position:"+JSON.stringify($scope.jobsData));
 	    		// $scope.username = data.uname;
 	    	});
@@ -335,7 +360,13 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 			$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 	    	.success(function(data) {
 	    		$scope.jobsData = data.jobs;
-	    		
+	    		if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
 	    		console.log("all position:"+JSON.stringify($scope.jobsData));
 	    		// $scope.username = data.uname;
 	    	});
@@ -343,31 +374,109 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	
 	$scope.headerStatuspageno = 0;
 	
-	$scope.clickNext = function() {
+	/*$scope.clickNext = function() {
 		console.log("nexdt");
 			  $scope.pageno++;
 			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 				.success(function(data) {
 					$scope.jobsData = data.jobs;
+					if(data.jobsCount <= 10){
+						$('#next').hide();
+						$('#next1').hide();
+					}else{
+						$('#next').show();
+						$('#next1').show();
+					}
+				});
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
+		  }
+		 */
+	$scope.nextCount  = 10;
+	$scope.clickNext = function() {
+		console.log("nexdt");
+			  $scope.pageno++;
+			  $scope.nextCount = parseInt( $scope.nextCount) + 10;
+			  var count= 0;
+			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+				.success(function(data) {
+					
+			     $scope.jobsData = data.jobs;
+				 count = parseInt(data.jobsCount);
+					console.log("count"+count);
+					
+					console.log("$scope.JobPre"+$scope.JobPre);
+					if(data.jobsCount <= 10){
+						$('#next1').hide();
+						$('#next').hide();
+						$scope.JobPre  = parseInt($scope.totalJobs);
+					}else{
+						$('#next1').show();
+						$('#next').show();
+					//	$scope.JobPre= 10;
+						$scope.JobPre =  parseInt($scope.JobPre) + 10;
+					}
+				});
+			  
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
+			  if(count > 10){
+					$scope.nextCount = parseInt( $scope.nextCount) + 10;
+				}
+		  }
+	
+	
+	
+	
+	  $scope.clickPre = function() {
+			 // $scope.position = "notSelected";
+		      $scope.pageno--;
+		      var count = 0;
+		      
+			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					
+					$scope.count = parseInt(data.jobsCount);
+					console.log("count"+count);
+					//$scope.JobPre = count - 10;
+					
+					if(data.jobsCount <= 10){
+						$('#next').hide();
+						$('#next1').hide();
+						//$scope.JobPre = data.jobsCount;
+						$scope.JobPre =  parseInt($scope.nextCount) - 10;
+					}else{
+						$('#next').show();
+						$('#next1').show();
+						//$scope.JobPre  = 10;
+						$scope.JobPre = parseInt($scope.nextCount) -  10;
+					}
+					
+					if($scope.nextCount > 10){
+						$scope.nextCount = parseInt( $scope.nextCount) - 10;
+					}
 					
 				});
-		  }
-		 
-
-	  $scope.clickPre = function() {
-		 // $scope.position = "notSelected";
-	      $scope.pageno--;
-		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-				if(data.orderCount <= 10){
-					$('#next').hide();
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
 				}else{
-					$('#next').show();
+					$('#pre').show();
+					$('#pre1').show();
 				}
-			});
-		  }
- 
+			  }
+	  
 	 // called when user clicked on the job position typefor search
 	  $scope.getAllJobByType = function(){
 		  console.log("$scope.jobType"+$scope.jobType);
@@ -375,6 +484,13 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
+				if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
 				console.log("$scope.success"+$scope.jobsData);
 				
 			});
@@ -393,6 +509,13 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		    $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
+				if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
 			
 				
 			});
@@ -548,11 +671,30 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 				$rootScope.isUser = false;
 			} 
 		});
-	 $scope.getAllAppliedJobs = function(){
+	
+		$scope.pageno = 0;
+	     $scope.getAllAppliedJobs = function(){
 		 console.log("hi");
-		 $http.post('getAllUserAppliedJobs')
+		 $http.post('/getAllUserAppliedJobs/'+$scope.pageno)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
+				$scope.totalJobs = data.jobsCount;
+				if(data.jobsCount <= 10){
+					$('#next1').hide();
+					$('#next').hide();
+					$scope.JobPre = data.jobsCount;
+				}else{
+					$('#next1').show();
+					$('#next').show();
+					$scope.JobPre = 10;
+				}
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
 				console.log("$scope.jobsData"+JSON.stringify($scope.jobsData));
 			});
 		 
@@ -565,6 +707,84 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 		 
 	 }
 	
+	
+		  
+			$scope.headerStatuspageno = 0;
+			$scope.nextCount  = 10;
+			$scope.clickNext = function() {
+				console.log("nexdt");
+					  $scope.pageno++;
+					  $scope.nextCount = parseInt( $scope.nextCount) + 10;
+					  var count= 0;
+					  $http.post('/getAllUserAppliedJobs/'+$scope.pageno)
+						.success(function(data) {
+							
+							$scope.jobsData = data.jobs;
+							var count = parseInt(data.jobsCount);
+							console.log("count"+count);
+							
+							console.log("$scope.JobPre"+$scope.JobPre);
+							if(data.jobsCount <= 10){
+								$('#next1').hide();
+								$('#next').hide();
+								$scope.JobPre  = parseInt($scope.totalJobs);
+							}else{
+								$('#next1').show();
+								$('#next').show();
+								$scope.JobPre = 10;
+								$scope.JobPre =  parseInt($scope.JobPre) + 10;
+							}
+						});
+					  if($scope.pageno <= 0){
+							$('#pre').hide();
+							$('#pre1').hide();
+						}else{
+							$('#pre').show();
+							$('#pre1').show();
+						}
+				  }
+				 
+
+			  $scope.clickPre = function() {
+				 // $scope.position = "notSelected";
+			      $scope.pageno--;
+			      var count = 0;
+			      
+				  $http.post('/getAllUserAppliedJobs/'+$scope.pageno)
+					.success(function(data) {
+						$scope.jobsData = data.jobs;
+						
+						$scope.count = parseInt(data.jobsCount);
+						console.log("count"+count);
+						//$scope.JobPre = count - 10;
+						
+						if(data.jobsCount <= 10){
+							$('#next').hide();
+							$('#next1').hide();
+							//$scope.JobPre = data.jobsCount;
+							$scope.JobPre =  parseInt($scope.nextCount) - 10;
+						}else{
+							$('#next').show();
+							$('#next1').show();
+							//$scope.JobPre  = 10;
+							$scope.JobPre = parseInt($scope.nextCount) -  10;
+						}
+						
+						if($scope.nextCount > 10){
+							$scope.nextCount = parseInt( $scope.nextCount) - 10;
+						}
+						
+					});
+				  if($scope.pageno <= 0){
+						$('#pre').hide();
+						$('#pre1').hide();
+					}else{
+						$('#pre').show();
+						$('#pre1').show();
+					}
+				  }
+		 
+	 
 });
 
 
@@ -588,7 +808,25 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 		.success(function(data) {
 			$scope.jobsData = data.jobs;
+			$scope.totalJobs = data.jobsCount;
 			
+			if(data.jobsCount <= 10){
+				$('#next').hide();
+				$('#next1').hide();
+				
+				$scope.JobPre = data.jobsCount;
+			}else{
+				$('#next').show();
+				$('#next1').show();
+				$scope.JobPre = 10;
+			}
+			if($scope.pageno <= 0){
+				$('#pre').hide();
+				$('#pre1').hide();
+			}else{
+				$('#pre').show();
+				$('#pre1').show();
+			}
 		});
 		
 		$http.get('/getAllPosition')
@@ -639,29 +877,84 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	
 	$scope.headerStatuspageno = 0;
 	
+	$scope.nextCount  = 10;
 	$scope.clickNext = function() {
 		console.log("nexdt");
 			  $scope.pageno++;
+			  $scope.nextCount = parseInt( $scope.nextCount) + 10;
+			  var count= 0;
 			  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 				.success(function(data) {
-					$scope.jobsData = data.jobs;
 					
+			     $scope.jobsData = data.jobs;
+				 count = parseInt(data.jobsCount);
+					console.log("count"+count);
+					
+					console.log("$scope.JobPre"+$scope.JobPre);
+					if(data.jobsCount <= 10){
+						$('#next1').hide();
+						$('#next').hide();
+						$scope.JobPre  = parseInt($scope.totalJobs);
+					}else{
+						$('#next1').show();
+						$('#next').show();
+					//	$scope.JobPre= 10;
+						$scope.JobPre =  parseInt($scope.JobPre) + 10;
+					}
+					
+					if($scope.pageno <= 0){
+						$('#pre').hide();
+						$('#pre1').hide();
+					}else{
+						$('#pre').show();
+						$('#pre1').show();
+					}
 				});
+			  
+				
+			  if(count > 10){
+					$scope.nextCount = parseInt( $scope.nextCount) + 10;
+				}
 		  }
 		 
 
 	  $scope.clickPre = function() {
 		 // $scope.position = "notSelected";
 	      $scope.pageno--;
+	      var count = 0;
+	      
 		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
-				if(data.orderCount <= 10){
+				
+				$scope.count = parseInt(data.jobsCount);
+				console.log("count"+count);
+				//$scope.JobPre = count - 10;
+				
+				if(data.jobsCount <= 10){
 					$('#next').hide();
+					$('#next1').hide();
+					//$scope.JobPre = data.jobsCount;
+					$scope.JobPre =  parseInt($scope.nextCount) - 10;
 				}else{
 					$('#next').show();
+					$('#next1').show();
+					//$scope.JobPre  = 10;
+					$scope.JobPre = parseInt($scope.nextCount) -  10;
 				}
+				
+				if($scope.nextCount > 10){
+					$scope.nextCount = parseInt( $scope.nextCount) - 10;
+				}
+				
 			});
+			if($scope.pageno <= 0){
+				$('#pre').hide();
+				$('#pre1').hide();
+			}else{
+				$('#pre').show();
+				$('#pre1').show();
+			}
 		  }
  
 	 // called when user clicked on the job position typefor search
@@ -672,8 +965,25 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
 				console.log("$scope.success"+$scope.jobsData);
-				
+				$scope.totalJobs = data.jobsCount;
+				if(data.jobsCount <= 10){
+					$('#next1').hide();
+					$('#next').hide();
+					$scope.JobPre  = parseInt($scope.totalJobs);
+				}else{
+					$('#next1').show();
+					$('#next').show();
+				//	$scope.JobPre= 10;
+					$scope.JobPre =  10 ;
+				}
 			});
+		  if($scope.pageno <= 0){
+				$('#pre').hide();
+				$('#pre1').hide();
+			}else{
+				$('#pre').show();
+				$('#pre1').show();
+			}
 	  }
 	  
 	  // called when user clicked for location search
@@ -713,33 +1023,87 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  console.log(job);
 		  $scope.mdSkill = $scope.jobData.manadatorySkills;
 		  $scope.dSkills = $scope.jobData.desiredSkill;
-		  angular.forEach($scope.dSkills,function(value,key) {
-			  $scope.desiredSkills.push({dskill:value,comment:" "});
-		  });
+		  $scope.jStatus = $scope.jobData.jobStatus;
+		  console.log("JStaus"+$scope.jStatus);
+		  console.log(" $scope.mdSkill"+ JSON.stringify($scope.jobData.manadatorySkills));
+		  $scope.jStatus = $scope.jobData.jobStatus;
+		  console.log("JStaus"+$scope.jStatus);
+			  
+		 
+			  angular.forEach($scope.dSkills,function(value,key) {
+				  $scope.desiredSkills.push({dskill:value,comment:" "});
+			  });
+			  
+			  angular.forEach($scope.mdSkill,function(value,key) {
+				  $scope.manadatorySkills.push({mskill:value,comment:" "});
+			  });
+		 
 		  
-		  angular.forEach($scope.mdSkill,function(value,key) {
-			  $scope.manadatorySkills.push({mskill:value,comment:" "});
-		  });
-		  
+		  console.log("job"+$scope.jobData.desiredSkill);
+			$('#savedJobsPopup1').modal();
+	  }
+	  
+	  // called when user click on applied button
+	  $scope.resumeUserJob = function(job){
+		  $scope.jobData = job;
+		  console.log(job);
+		  $scope.mdSkill = $scope.jobData.manadatorySkills;
+		  $scope.dSkills = $scope.jobData.desiredSkill;
+		  $scope.jStatus = $scope.jobData.jobStatus;
+		 
+			  angular.forEach($scope.dSkills,function(value,key) {
+				  $scope.desiredSkills.push({dskill:value,comment:" "});
+			  });	
+			  
+			  angular.forEach($scope.mdSkill,function(value,key) {
+				  $scope.manadatorySkills.push({mskill:value,comment:" "});
+			  });
+		 
 			console.log("job"+$scope.jobData.desiredSkill);
-			$('#myModal').modal();
+			$('#savedJobsPopup2').modal();
 			
 		}
 	
 
 	  // save current user applied job
 	  $scope.saveUserJob = function(){
-		  $('#myModal').modal('hide');
+		  $('#savedJobsPopup1').modal('hide');
 		   console.log($scope.desiredSkills);
 		   $scope.requestNumber = $scope.jobData.requestNumber;
 		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
 			.success(function(data){
 				console.log("success");
-				$scope.updateSuccess = true;
+				 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position)
+					.success(function(data) {
+						$scope.jobsData = data.jobs;
+						console.log("$scope.success"+$scope.jobsData);
+						$scope.totalJobs = data.jobsCount;
+						if(data.jobsCount <= 10){
+							$('#next1').hide();
+							$('#next').hide();
+							$scope.JobPre  = parseInt($scope.totalJobs);
+						}else{
+							$('#next1').show();
+							$('#next').show();
+						//	$scope.JobPre= 10;
+							$scope.JobPre =  10 ;
+						}
+					});
+				
 			});
 	  
 	  } 
 	 
+	  $scope.saveUserSavedJob = function(){
+		  $('#savedJobsPopup1').modal('hide');
+		  $http.post('/saveUserSavedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData})
+			.success(function(data){
+				console.log("success");
+				$scope.updateSuccess = true;
+			});
+		  
+	  }
+	  
 	  
 	  $http.get('/getUserName')
 		.success(function(data) {
@@ -793,6 +1157,82 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$scope.jobDetails = jobs;
 			$('#viewJobDetails').modal();
 			
+		}
+		
+		//save the user template
+		$scope.saveToTemplate = function(comment,templateName){
+			console.log("saveToTemplate");
+			$scope.userTemplate = comment;
+			$scope.templateName = templateName;
+			//$('#saveTemplate').modal();
+			 $('#saveTemplate').hide();
+			console.log("Comment"+$scope.userTemplate);
+			 $http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
+				.success(function(data) {
+					console.log("data"+data);
+				});
+			
+		}
+		
+		$scope.closeTemplatePopup  = function (){
+			 $('#saveTemplate').hide();
+		}
+		//open user template popup 
+		$scope.openTemplatepopup = function(){
+			$('#saveTemplate').modalPopover('show');
+		}
+		
+		$scope.closegetAllTemplatePopup = function(){
+			 $('#openTemplate').hide();
+		}
+		
+		 $scope.active = true;
+		$scope.userTemplateData;
+		$scope.openPreSavedTemplate = function(index){
+			$http.get('getSavedUserTemplate')
+			.success(function(data) {
+				$scope.userTemplateData = data.template;
+				console.log("data"+data);
+			});
+		    $scope.index= index;
+		    console.log("index"+index);
+			$('#openTemplate').modalPopover('show');
+			
+		}
+		
+		$scope.copyToTemplate = function(template){
+			console.log("copy"+template);
+			$scope.manadatorySkills.comment = template;
+			console.log("$scope.manadatorySkills.comment"+$scope.manadatorySkills.comment);
+			$scope.manadatorySkills[$scope.index].comment = template;
+			$scope.manadatorySkills.push($scope.manadatorySkills.comment);
+			$('#openTemplate').popover('hide');
+			$("#openTemplate").hide();
+			//$scope.checkAllFields();zAQ
+			
+		}
+		/*$scope.flag = true;
+		$scope.showManadatorySkills = function(){
+			
+			console.log("manadatory szkills"+$scope.flag);
+			if($scope.flag ==  true ){
+				$('#popupBottom').modalPopover('show');
+				$scope.flag = false;
+			}else if ($scope.flag == false){
+				$scope.flag = true;
+				$('#popupBottom').hide();
+			}
+			
+		}
+		*/
+		
+		$scope.getUserSavedJobs = function(){
+			$http.get('/getUserSavedJobs/'+$scope.pageno)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				console.log("$scope.success"+$scope.jobsData);
+				
+			});
 		}
 		
 });
@@ -6196,23 +6636,113 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 	$scope.userDetails = {};
 	$scope.userPosition;
 	$scope.userClearance;
+	$scope.userExperience;
+	
 	
 	
 	// get all users applied jobs to admin
 	$scope.email;
+	 $scope.pageno = 0;
 	$scope.getAllUsers = function(){
-		$http.get('getAllUsers')
+		$http.get('/getAllUsers/'+$scope.pageno)
 		.success(function(data){
 			if(data) {
-				$scope.users = data;
-				
+				$scope.users = data.users;
+				if(data.userCount <= 10){
+					$('#next1').hide();
+					$('#next').hide();
+					//$scope.JobPre  = parseInt($scope.totalJobs);
+				}else{
+					$('#next1').show();
+					$('#next').show();
+				//	$scope.JobPre= 10;
+					
+				}
 				console.log("data"+JSON.stringify(data));
 			} 
 		});
+		
+		if($scope.pageno <= 0){
+			$('#pre').hide();
+			$('#pre1').hide();
+		}else{
+			$('#pre').show();
+			$('#pre1').show();
+		}
 	}
 
-	
-	
+	$scope.clickNext = function() {
+		console.log("nexdt");
+			  $scope.pageno++;
+			 // $scope.nextCount = parseInt( $scope.nextCount) + 10;
+			 // var count= 0;
+			  $http.get('/getAllUsers/'+$scope.pageno)
+				.success(function(data) {
+					
+					$scope.users = data.users
+				// count = parseInt(data.jobsCount);
+					//console.log("count"+count);
+					
+					//console.log("$scope.JobPre"+$scope.JobPre);
+					if(data.userCount <= 10){
+						$('#next1').hide();
+						$('#next').hide();
+						//$scope.JobPre  = parseInt($scope.totalJobs);
+					}else{
+						$('#next1').show();
+						$('#next').show();
+					//	$scope.JobPre= 10;
+						
+					}
+				});
+			  
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
+			 
+		  }
+		 
+	 $scope.clickPre = function() {
+		 // $scope.position = "notSelected";
+	      $scope.pageno--;
+	     // var count = 0;
+	      
+		  $http.get('/getAllUsers/'+$scope.pageno)
+			.success(function(data) {
+				$scope.users = data.users
+				
+			//	$scope.count = parseInt(data.jobsCount);
+				//console.log("count"+count);
+				//$scope.JobPre = count - 10;
+				
+				if(data.userCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+					//$scope.JobPre = data.jobsCount;
+					//$scope.JobPre =  parseInt($scope.nextCount) - 10;
+				}else{
+					$('#next').show();
+					$('#next1').show();
+					//$scope.JobPre  = 10;
+					//$scope.JobPre = parseInt($scope.nextCount) -  10;
+				}
+				
+				
+				
+			});
+			if($scope.pageno <= 0){
+				$('#pre').hide();
+				$('#pre1').hide();
+			}else{
+				$('#pre').show();
+				$('#pre1').show();
+			}
+		  }
+ 
 	$http.get('/getUserName')
 	.success(function(data) {
 	// $scope.userData = data;
@@ -6233,6 +6763,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 	
 	$scope.userSkill;
 	$scope.userClearance;
+	$scope.userExperience;
 	$scope.editUserDetails = function(user){
 		
 		$http.get('/getAllSkills')
@@ -6257,6 +6788,15 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 			
 		});
 		
+		
+		$http.get('/getAllExperiance')
+		.success(function(data) {
+			$scope.allExperiance = data;
+			console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
+			// $scope.username = data.uname;
+		});
+		
+		
 		$scope.email = user.email;
 		$scope.userDetails = user;
 		$http.get('/getUserDetailsForAdmin/'+$scope.email)
@@ -6270,6 +6810,8 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
      		
      		$scope.userClearance = data.certificationDetails[0].user_details.userClearance;
      		$scope.userPosition = data.certificationDetails[0].user_details.userPosition;
+     		$scope.userExperience = data.certificationDetails[0].user_details.userExperience;
+     		console.log("JSON"+JSON.stringify($scope.userExperience));
      		
      		angular.forEach($scope.allSkills, function(obj, index){
     			angular.forEach($scope.userSkill, function(obj1, index){
@@ -6293,6 +6835,18 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
     				});
     			});
     		
+     		
+    		angular.forEach($scope.allExperiance.experiance, function(obj, index){
+    			angular.forEach($scope.userExperience, function(obj1, index){
+    				console.log(JSON.stringify($scope.userExperience));
+    				if ((obj.experianceLevel == obj1.experianceLevel)) {
+    					obj.isSelected = true;
+    					};
+    				});
+    			});
+    		
+     		
+     		
     		angular.forEach($scope.allPosition.position, function(obj, index){
     			angular.forEach($scope.userPosition, function(obj1, index){
     				if ((obj.position == obj1.position)) {
@@ -6334,6 +6888,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 			$('#enddateemp').datepicker({
 			    format: 'mm-dd-yyyy'
 				});
+			
 		} 
 		
 		// used to init date picker
@@ -6387,7 +6942,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		}else if($scope.addNewEmphistory.length == 0){
 			$scope.empHistory = true;
 		}else{
-		$http.post('/updateUserProfileByAdmin',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills,email:$scope.email})
+		$http.post('/updateUserProfileByAdmin',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills,email:$scope.email,experience:$scope.userExperience})
 		.success(function(data){
 			console.log("success");
 			$scope.updateSuccess = true;
@@ -6459,9 +7014,9 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 App.controller('ViewAllAdminController', function ($scope, $rootScope, $routeParams, $http, $upload){
 
 	
-	// get all  admin
+	/*// get all  admin
 	$scope.getAllAdmin = function(){
-		$http.get('getallAdmin')
+		$http.get('/getallAdmin/')
 		.success(function(data){
 			if(data) {
 				$scope.allAdmin = data.adminList;
@@ -6469,7 +7024,100 @@ App.controller('ViewAllAdminController', function ($scope, $rootScope, $routePar
 			} 
 		});
 	}
+*/
+	 $scope.pageno = 0;
+		$scope.getAllAdmin = function(){
+			$http.get('/getallAdmin/'+$scope.pageno)
+			.success(function(data){
+				if(data) {
+					$scope.allAdmin = data.adminList;
+					if(data.adminCount <= 10){
+						$('#next1').hide();
+						$('#next').hide();
+						//$scope.JobPre  = parseInt($scope.totalJobs);
+					}else{
+						$('#next1').show();
+						$('#next').show();
+					//	$scope.JobPre= 10;
+						
+					}
+					console.log("data"+JSON.stringify(data));
+				} 
+			});
+			
+			if($scope.pageno <= 0){
+				$('#pre').hide();
+				$('#pre1').hide();
+			}else{
+				$('#pre').show();
+				$('#pre1').show();
+			}
+		}
 
+		$scope.clickNext = function() {
+			console.log("nexdt");
+				  $scope.pageno++;
+				 
+				  $http.get('/getallAdmin/'+$scope.pageno)
+					.success(function(data) {
+						
+						$scope.allAdmin = data.adminList;
+					
+						if(data.adminCount <= 10){
+							$('#next1').hide();
+							$('#next').hide();
+							
+						}else{
+							$('#next1').show();
+							$('#next').show();
+						
+							
+						}
+					});
+				  
+					if($scope.pageno <= 0){
+						$('#pre').hide();
+						$('#pre1').hide();
+					}else{
+						$('#pre').show();
+						$('#pre1').show();
+					}
+				 
+			  }
+			 
+		 $scope.clickPre = function() {
+			 // $scope.position = "notSelected";
+		      $scope.pageno--;
+		     // var count = 0;
+		      
+			  $http.get('/getallAdmin/'+$scope.pageno)
+				.success(function(data) {
+					$scope.allAdmin = data.adminList;
+					
+				
+					if(data.adminCount <= 10){
+						$('#next').hide();
+						$('#next1').hide();
+						
+					}else{
+						$('#next').show();
+						$('#next1').show();
+						
+					}
+					
+					
+					
+				});
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
+			  }
+	
+	
 	$http.get('/getUserName')
 	.success(function(data) {
 	// $scope.userData = data;
@@ -6791,18 +7439,111 @@ App.controller('ViewAllClearanceController', function ($scope, $rootScope, $rout
 
 App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $routeParams, $http, $upload){
 
-	
+	$scope.pageno = 0;
 	// get all users applied jobs to admin
 	$scope.getAllAppliedJobs = function(){
-		$http.get('getAllAppliedJobs')
+		$http.get('/getAllAppliedJobs/'+$scope.pageno)
 		.success(function(data){
 			if(data) {
-				$scope.jobs = data;
-				console.log("data"+JSON.stringify(data));
+				$scope.jobs = data.appliedJobs;
+				
+				$scope.totalJobs = data.appliedJobCount;
+				if(data.appliedJobCount <= 10){
+					$('#next1').hide();
+					$('#next').hide();
+					$scope.JobPre = data.jobsCount;
+				}else{
+					$('#next1').show();
+					$('#next').show();
+					$scope.JobPre = 10;
+				}
+				
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
+				console.log("data"+JSON.stringify(data.appliedJobs));
 			} 
 		});
 	}
 
+	$scope.nextCount  = 10;
+	$scope.clickNext = function() {
+		console.log("nexdt");
+			  $scope.pageno++;
+			  $scope.nextCount = parseInt( $scope.nextCount) + 10;
+			  var count= 0;
+			  $http.get('/getAllAppliedJobs/'+$scope.pageno)
+				.success(function(data) {
+					
+					$scope.jobs = data.appliedJobs;
+					var count = parseInt(data.appliedJobCount);
+					console.log("count"+count);
+					
+					console.log("$scope.JobPre"+$scope.JobPre);
+					if(data.appliedJobCount <= 10){
+						$('#next1').hide();
+						$('#next').hide();
+						$scope.JobPre  = parseInt($scope.totalJobs);
+					}else{
+						$('#next1').show();
+						$('#next').show();
+						$scope.JobPre = 10;
+						$scope.JobPre =  parseInt($scope.JobPre) + 10;
+					}
+					if($scope.pageno <= 0){
+						$('#pre').hide();
+						$('#pre1').hide();
+					}else{
+						$('#pre').show();
+						$('#pre1').show();
+					}
+				});
+		  }
+		 
+
+	  $scope.clickPre = function() {
+		 // $scope.position = "notSelected";
+	      $scope.pageno--;
+	      var count = 0;
+	      
+		  $http.get('/getAllAppliedJobs/'+$scope.pageno)
+			.success(function(data) {
+				$scope.jobs = data.appliedJobs;
+				
+				$scope.count = parseInt(data.appliedJobCount);
+				console.log("count"+count);
+				//$scope.JobPre = count - 10;
+				
+				if(data.appliedJobCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+					//$scope.JobPre = data.jobsCount;
+					$scope.JobPre =  parseInt($scope.nextCount) - 10;
+				}else{
+					$('#next').show();
+					$('#next1').show();
+					//$scope.JobPre  = 10;
+					$scope.JobPre = parseInt($scope.nextCount) -  10;
+				}
+				if($scope.pageno <= 0){
+					$('#pre').hide();
+					$('#pre1').hide();
+				}else{
+					$('#pre').show();
+					$('#pre1').show();
+				}
+				if($scope.nextCount > 10){
+					$scope.nextCount = parseInt( $scope.nextCount) - 10;
+				}
+				
+			});
+		  }
+	
+	
 	$http.get('/getUserName')
 	.success(function(data) {
 	// $scope.userData = data;
@@ -7018,6 +7759,8 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	$scope.userDetails = {};
 	$scope.userPosition;
 	$scope.userClearance;
+	$scope.userExperience;
+	
 	// $scope.skills = [];
 	
 	$scope.addNewEmployment = function(){
@@ -7046,6 +7789,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		console.log("hi"+JSON.stringify($scope.userDetails));
 		console.log("Clearance"+JSON.stringify($scope.userClearance));
 		console.log("position"+JSON.stringify($scope.userPosition));
+		console.log("userExperience"+JSON.stringify($scope.userExperience));
 		
 		// chk for the education,employee cmp,user posi/clearance selected or
 		// not if not gives gives error
@@ -7055,7 +7799,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		}else if($scope.addNewEmphistory.length == 0){
 			$scope.empHistory = true;
 		}else{
-		$http.post('/updateUserProfile',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills})
+		$http.post('/updateUserProfile',{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills,experience:$scope.userExperience})
 		.success(function(data){
 			console.log("success");
 			$scope.updateSuccess = true;
@@ -7072,7 +7816,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	$scope.allSkills;
 	$scope.allCleanrance;
 	$scope.allPosition;
-	
+	$scope.allExperiance; 
 	$scope.init = function(){
 	
 		$http.get('checkForadmin')
@@ -7088,6 +7832,14 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     	.success(function(data) {
     		$scope.allPosition = data;
     		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		// $scope.username = data.uname;
+    	});
+		
+		
+		$http.get('/getAllExperiance')
+    	.success(function(data) {
+    		$scope.allExperiance = data;
+    		console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
     		// $scope.username = data.uname;
     	});
 	
@@ -7112,6 +7864,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		$scope.userPosition = data.userPosition;
     		$scope.userClearance = data.userClearance;
     		$scope.userDetails = data.userDetails;
+    		$scope.userExperience = data.userExperience;
          	if(data.educationDetails == ""){
          		
          	}else{
@@ -7148,7 +7901,11 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
          		$scope.userPosition = data.certificationDetails[0].user_details.userPosition;
          	}
          	
-    		
+         	if(data.certificationDetails[0].user_details.userExperience == ""){
+        		
+         	}else{
+         		$scope.userExperience = data.certificationDetails[0].user_details.userExperience;
+         	}
     			
     		angular.forEach($scope.allSkills, function(obj, index){
     			angular.forEach($scope.userSkill, function(obj1, index){
@@ -7192,6 +7949,18 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     			});
     		
     		});
+		
+		
+		angular.forEach($scope.allExperiance, function(obj, index){
+			angular.forEach($scope.userExperience, function(obj1, index){
+				if ((obj.experianceLevel == obj1.experianceLevel)) {
+				
+					obj.isSelected = true;
+					};
+				});
+			});
+		
+		
 	}
 
 	

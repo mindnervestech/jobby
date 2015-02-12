@@ -50,4 +50,18 @@ public class Admin extends Model {
 		
 		return find.where().eq("username", email).findUnique();
 	}
+	
+	
+	@JsonIgnore
+	public static List<Admin>getAllAdmin(int pageNumber, int rowperpage){
+		return find.
+		setFirstRow(pageNumber * 10).setMaxRows(rowperpage)
+		.findList();
+	}
+	
+	@JsonIgnore
+	public static int getAllAdminCount(int pageNo) {
+		return find.setFirstRow(pageNo * 10).setMaxRows(Admin.find.findRowCount())
+				.findList().size();
+	}
 }

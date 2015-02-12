@@ -61,6 +61,7 @@
 							&nbsp;
 							<button id="next" type="button" ng-click="clickNext()"
 								class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+								<div style="font-size:12px">{{JobPre}}/{{totalJobs}}</div>
 						</div>
 					</div>
 					<div class="box text-shadow">
@@ -82,7 +83,7 @@
 									<p ng-click="editUserJob(job)" >
 										<span class="title" >{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;<i
-													class="glyphicon glyphicoallln-pencil" ></i></strong></span>
+													class="glyphicon glyphicon-pencil" ></i></strong></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -108,11 +109,11 @@
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
-											href="#popupBottom" data-toggle="modal-popover" data-placement="bottom"><a
+											href="#popupBottom{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									
-								 <div id="popupBottom" class="popover" style="margin-top: -5%;margin-left: -20%;">
+								 <div id="popupBottom{{$index}}" class="popover" style="margin-top: -5%;margin-left: -20%;">
 							        <div class="arrow"></div>
 							        <div class="popover-content">
 							            <small  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
@@ -132,10 +133,10 @@
 									<p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
-											href="#popupBottom1" data-toggle="modal-popover" data-placement="bottom"><a
+											href="#popupBottom1{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									
-												 <div id="popupBottom1" class="popover" style="margin-top: -5%;margin-left: -19%;">
+												 <div id="popupBottom1{{$index}}" class="popover" style="margin-top: -5%;margin-left: -19%;">
 												        <div class="arrow"></div>
 												        <div class="popover-content">
 												            <small  data-ng-repeat="job2 in job.desiredSkill">{{job2}}
@@ -148,11 +149,12 @@
 							</tr>
 						</table>
 						<div class="pull-right">
-							<button id="pre" type="button" ng-click="clickPre()"
+							<button id="pre1" type="button" ng-click="clickPre()"
 								class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
 							&nbsp;
-							<button id="next" type="button" ng-click="clickNext()"
+							<button id="next1" type="button" ng-click="clickNext()"
 								class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+								<div style="font-size:12px">{{JobPre}}/{{totalJobs}}</div>
 						</div>
 					</div>
 				</div>

@@ -34,8 +34,10 @@ import models.EmploymentDetails;
 import models.StoreExcelFile;
 import models.UserClearance;
 import models.UserDetails;
+import models.UserExperiance;
 import models.UserPosition;
 import models.UserSkill;
+import models.UserTemplate;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -336,13 +338,22 @@ public class Application extends Controller {
 						break;
 					case Cell.CELL_TYPE_STRING:
 						// sd.performanceLevel = c.getStringCellValue();
+						
+						UserExperiance ue = UserExperiance.getExperianceByExperianceName(c
+								.getStringCellValue());
+						if (ue == null) {
+							UserExperiance u = new UserExperiance();
+							u.experianceLevel = c.getStringCellValue();
+							u.save();
+						}
+						
 						if (storeExcelFile != null) {
 							storeExcelFile.performanceLevel = c
 									.getStringCellValue();
 						} else {
 							sd.performanceLevel = c.getStringCellValue();
 						}
-
+						
 						break;
 					}
 
@@ -852,18 +863,7 @@ public class Application extends Controller {
 		return ok(Json.stringify(Json.toJson(map)));
 	}
 
-	/*public static class AdminVM {
-		public int id;
-		public String uname;
-		public String password;
-		public String date;
-		public String valid_ips;
-		public String status;
-		public String site;
-		public boolean isParent;
-		public int cg;
-		public List<AdminExtra> aextra;
-	}*/
+	
 
 	public static class AdminExtra {
 		public String name;
@@ -998,13 +998,17 @@ public class Application extends Controller {
 		List<StoreExcelFile> jobs  = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 
-		// jobtype are selected for search
+		int count = 0;
+		
+		
+		/*// jobtype are selected for search
 		if (!("All".equalsIgnoreCase(jobType.trim()))) {
 			System.out.println("all");
+			 count = StoreExcelFile.getAllJobsCount(currentPage);
 			userJobs = StoreExcelFile.getAllJobsByJobType(currentPage, 10,
 					jobType);
 
-		}
+		}*/
 		
 		
 
@@ -1023,32 +1027,55 @@ public class Application extends Controller {
 		if (!(true == location)
 				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
 			String emailId = session().get("email");
+			
+			UserDetails u = UserDetails.getUserByEmail(emailId);
+			ArrayList<String> al = new ArrayList<>();
+			List<UserPosition> up = u.userPosition;
+			for (UserPosition upd : up) {
+				String pos = upd.position;
+				al.add(pos);
+				
+			}
+			
+			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentPage,jobType);
 			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAsc(
-					currentPage, 10, jobType);
+					currentPage, 10, jobType,al);
 
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
+				}else{
+					count = count - 1;
+					System.out.println("count"+count);
 				}
 			}
 
 		}
 
-		
 		// both are selected for search(DSC)
 		if (!(false == location)
 				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
 			String emailId = session().get("email");
-			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(
-					currentPage, 10, jobType);
-
+			UserDetails u = UserDetails.getUserByEmail(emailId);
+			ArrayList<String> al = new ArrayList<>();
+			List<UserPosition> up = u.userPosition;
+			for (UserPosition upd : up) {
+				String pos = upd.position;
+				al.add(pos);
+				
+			}
+			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(currentPage, 10, jobType,al);
+			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeDsc(currentPage,jobType);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
+				}else{
+					count = count - 1;
+					System.out.println("count"+count);
 				}
 			}
 
@@ -1063,7 +1090,8 @@ public class Application extends Controller {
 		// all jobs //selected Default(user profile job mtached job)
 		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
 			ArrayList<String> al = new ArrayList<>();
-
+			System.out.println("jobType"+jobType);
+			count = StoreExcelFile.getAllJobsCount(currentPage);
 			String email = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(email);
 			List<UserPosition> up = u.userPosition;
@@ -1081,6 +1109,9 @@ public class Application extends Controller {
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
+				}else{
+					count = count - 1;
+					System.out.println("count"+count);
 				}
 			}
 
@@ -1089,7 +1120,7 @@ public class Application extends Controller {
 		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
 			/* jobs = StoreExcelFile.getAllJobs(currentPage, 10); */
 			ArrayList<String> al = new ArrayList<>();
-
+			count = StoreExcelFile.getAllJobsCount(currentPage);
 			String email = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(email);
 			List<UserPosition> up = u.userPosition;
@@ -1107,6 +1138,9 @@ public class Application extends Controller {
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
+				}else{
+					count = count - 1;
+					System.out.println("count"+count);
 				}
 			}
 
@@ -1141,6 +1175,7 @@ public class Application extends Controller {
 			currentPage--;
 		}
 
+		
 		String mskills;
 		String dSkills;
 
@@ -1246,7 +1281,7 @@ public class Application extends Controller {
 		map.put("totalPages", 10);
 		map.put("currentPage", currentPage);
 		map.put("jobs", jobVMs);
-
+		map.put("jobsCount", count);
 		return ok(Json.toJson(map));
 	}
 
@@ -1255,43 +1290,17 @@ public class Application extends Controller {
 
 	List<StoreExcelFile> jobs = new ArrayList<>();
 	//List<StoreExcelFile> userJobs = null;
-
+	int count = 0;
 	System.out.println("jobType:"+jobType);
-	/*// jobtype are selected for search
-	if (!("All".equalsIgnoreCase(jobType.trim()))) {
-		System.out.println("all");
-		userJobs = StoreExcelFile.getAllJobsByJobType(currentPage, 10,
-				jobType);
-
-	}
-	*/
 	
-
-	// location are selected for search
-	/*
-	 * if (!(false == location)) { System.out.println("in  loca"); jobs =
-	 * StoreExcelFile.getAllJobsByLocationDsc(currentPage, 10); }
-	 */
-
-	// location are selected for search
-	/*
-	 * if (!(true == location)) { System.out.println("in  loca"); jobs =
-	 * StoreExcelFile.getAllJobsByLocationAsc(currentPage, 10); }
-	 */
 	// both are selected for search(DSC)
 	if (!(true == location)
 			&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
 		//String emailId = session().get("email");
-		jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAsc(
+		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentPage,jobType);
+		jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminAsc(
 				currentPage, 10, jobType);
 
-		/*for (StoreExcelFile str : userJobs) {
-			AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
-					str.requestNumber);
-			if (as == null) {
-				jobs.add(str);
-			}
-		}*/
 
 	}
 
@@ -1299,95 +1308,27 @@ public class Application extends Controller {
 	if (!(false == location)
 			&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
 		//String emailId = session().get("email");
-		jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(
+		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeDsc(currentPage,jobType);
+		jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminDsc(
 				currentPage, 10, jobType);
 
-		/*for (StoreExcelFile str : userJobs) {
-			AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
-					str.requestNumber);
-			if (as == null) {
-				jobs.add(str);
-			}
-		}*/
+		
 
 	}
 
-	
-	//for admin to view all jobs
-	/*if(jobType.equalsIgnoreCase("All") && location == false && usermatch == false && "notSelected".equals(position)){
-		jobs = StoreExcelFile.getAllJobs(currentPage, 10);
-	}*/
-	
 	// all jobs //selected Default(user profile job mtached job)
 	if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
-		/*ArrayList<String> al = new ArrayList<>();
-		String email = session().get("email");
-		UserDetails u = UserDetails.getUserByEmail(email);
-		List<UserPosition> up = u.userPosition;
-		for (UserPosition upd : up) {
-			String pos = upd.position;
-			al.add(pos);
-
-			System.out.println("pos" + pos);
-		}
-		 */
-		
 		jobs = StoreExcelFile.getAllJobsForAdminDsc(currentPage, 10);
-
-		/*for (StoreExcelFile str : userJobs) {
-			AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
-					str.requestNumber);
-			if (as == null) {
-				jobs.add(str);
-			}
-		}*/
+		count = StoreExcelFile.getAllJobsCount(currentPage);
 
 	}
 
 	if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
-		/* jobs = StoreExcelFile.getAllJobs(currentPage, 10); */
-	/*	ArrayList<String> al = new ArrayList<>();
-
-		String email = session().get("email");
-		UserDetails u = UserDetails.getUserByEmail(email);
-		List<UserPosition> up = u.userPosition;
-		for (UserPosition upd : up) {
-			String pos = upd.position;
-			al.add(pos);
-
-			System.out.println("pos" + pos);
-		}*/
-
+		
+		count = StoreExcelFile.getAllJobsCount(currentPage);
 		jobs = StoreExcelFile.getAllJobsForAdminAsc(currentPage, 10);
-
-	/*	for (StoreExcelFile str : userJobs) {
-			AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
-					str.requestNumber);
-			if (as == null) {
-				jobs.add(str);
-			}
-		}
-*/
+	
 	}
-
-	// called when the usermatches job type selected
-	/*
-	 * if (usermatch == true) { ArrayList<String> al = new ArrayList<>();
-	 * 
-	 * String email = session().get("email"); UserDetails u =
-	 * UserDetails.getUserByEmail(email); List<UserPosition> up =
-	 * u.userPosition; for (UserPosition upd : up) { String pos =
-	 * upd.position; al.add(pos);
-	 * 
-	 * System.out.println("pos" + pos); }
-	 * 
-	 * jobs = StoreExcelFile.getALlUserMatchedJob(currentPage, 10, al); }
-	 */
-	/*if (!("notSelected".equalsIgnoreCase(position.trim()))) {
-		jobs = StoreExcelFile.getALlUserJobByPosition(currentPage, 10,
-				position);
-
-	}*/
 
 	List<JobVM> jobVMs = new ArrayList<JobVM>();
 
@@ -1498,7 +1439,7 @@ public class Application extends Controller {
 	map.put("totalPages", 10);
 	map.put("currentPage", currentPage);
 	map.put("jobs", jobVMs);
-
+	map.put("jobsCount", count);
 	return ok(Json.toJson(map));
 }
 	
@@ -1626,7 +1567,7 @@ public class Application extends Controller {
 		List<AddEducationVM> addEducation;
 		List<AddEmpHistoryVM> addNewEmphistory;
 		List<AddCertificateVM> addCertificate;
-
+		
 		String email = session().get("email");
 		UserDetails u = UserDetails.getUserByEmail(email);
 
@@ -1636,7 +1577,8 @@ public class Application extends Controller {
 		JsonNode userClearance = json.path("clearance");
 		JsonNode userPosition = json.path("position");
 		JsonNode userSkills = json.path("skills");
-
+		JsonNode userExperience = json.path("experience");
+		
 		u.deleteManyToManyAssociations("userSkill");
 
 		ArrayNode skills = (ArrayNode) userSkills;
@@ -1648,6 +1590,19 @@ public class Application extends Controller {
 		}
 
 		u.saveManyToManyAssociations("userSkill");
+		
+		
+		u.deleteManyToManyAssociations("userExperiance");
+
+		ArrayNode exp = (ArrayNode) userExperience;
+		for (int l = 0; l < exp.size(); l++) {
+			String s = exp.get(l).asText();
+			System.out.println(s);
+			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
+			u.userExperiance.add(ue);
+		}
+
+		u.saveManyToManyAssociations("userExperiance");
 
 		u.deleteManyToManyAssociations("userPosition");
 		ArrayNode positions = (ArrayNode) userPosition;
@@ -1793,6 +1748,7 @@ public class Application extends Controller {
 		JsonNode userClearance = json.path("clearance");
 		JsonNode userPosition = json.path("position");
 		JsonNode userSkills = json.path("skills");
+		JsonNode userExperience = json.path("experience");
 
 		u.deleteManyToManyAssociations("userSkill");
 
@@ -1803,9 +1759,20 @@ public class Application extends Controller {
 			UserSkill us = UserSkill.getSkillByName(s);
 			u.userSkill.add(us);
 		}
-
 		u.saveManyToManyAssociations("userSkill");
 
+		u.deleteManyToManyAssociations("userExperiance");
+		ArrayNode exp = (ArrayNode) userExperience;
+		for (int l = 0; l < exp.size(); l++) {
+			String s = exp.get(l).asText();
+			System.out.println(s);
+			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
+			u.userExperiance.add(ue);
+		}
+
+		u.saveManyToManyAssociations("userExperiance");
+		
+		
 		u.deleteManyToManyAssociations("userPosition");
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
@@ -1949,7 +1916,16 @@ public class Application extends Controller {
 		return ok((Json.stringify(Json.toJson(map))));
 
 	}
+	@JsonIgnore
+	public static Result getAllExperiance() {
+		List<UserExperiance> ue = UserExperiance.getAllExperiance();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("experiance", ue);
+		return ok((Json.stringify(Json.toJson(map))));
 
+	}
+	
+	
 	@JsonIgnore
 	public static Result addnewPosition(String position){
 	UserPosition up = UserPosition.getPositionByPosName(position);
@@ -2068,6 +2044,32 @@ public class Application extends Controller {
 	 * }
 	 */
 	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class mskill{
+		public String mskill;
+		public String comment;
+	}  
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class ManadatorySkills{
+		List<mskill> mskill;
+		public String comment;
+		
+	}
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class dskill{
+		public String dskill;
+		public String comment;
+	}  
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class DesiredSkillsVM1{
+		List<dskill>dskill;
+		public String comment;
+		
+	}
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class SaveAppliedJobsVM {
 		public String clearanceRequired;
 		public String labourCategory;
@@ -2077,32 +2079,89 @@ public class Application extends Controller {
 		public String requestType;
 		public String workDescription;
 		public String workLocation;
-		public String[] manadatorySkills;
-		public String[] desiredSkill;
+		public List<ManadatorySkills> manadatorySkills;
+		public List<DesiredSkillsVM> desiredSkill;
+		public String username; 	
+		public String jobStatus;
+		
+		public long id;
+
+	}
+	
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class UserSaveAppliedJobsVM {
+		public String clearanceRequired;
+		public String labourCategory;
+		public String performanceLevel;
+		public String positionType;
+		public String requestNumber;
+		public String requestType;
+		public String workDescription;
+		public String workLocation;
+		public String [] manadatorySkills;
+		public String [] desiredSkill;
+		public String username; 		
+		public String jobStatus;
 		public long id;
 
 	}
 
+	
 	@JsonIgnoreProperties
 	public static Result saveAppliedJob() {
 		JsonNode json = request().body().asJson();
 		System.out.println("json" + json);
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
+		
 		SaveAppliedJobsVM saveAppliedJobsVM;
 		try {
 
 			saveAppliedJobsVM = objectMapper.readValue(json.get("jobData")
 					.traverse(), SaveAppliedJobsVM.class);
 			
-			apj.desiredSkil = json.get("desiredSkills").toString();
-			apj.manadatorySkill = json.get("manadatorySkills").toString();
+		   // apj.desiredSkil = json.get("desiredSkills").toString();
+		    ArrayNode positions = (ArrayNode) json.get("manadatorySkills");
+		    ArrayNode dskills = (ArrayNode) json.get("desiredSkills");
+		   
+		    String manadatorySkills =  "";
+		    for (int j = 0; j < positions.size(); j++) {
+				String  position = positions.get(j).path("mskill").toString();
+				manadatorySkills += position; 
+				
+			}
+
+		    String desiredSkills =  "";
+		    for (int j = 0; j < dskills.size(); j++) {
+				String  desired = dskills.get(j).path("dskill").toString();
+				desiredSkills += desired; 
+				
+			}
+		    
+		    
+		  
+		    apj.manadatorySkill = manadatorySkills;
+		    apj.desiredSkil =desiredSkills;
+		     //apj.manadatorySkill = mskills.toString();
+		    //apj.manadatorySkill = json.get("manadatorySkills").toString();
 			apj.jobno = saveAppliedJobsVM.requestNumber;
 			String username = session().get("email");
 			apj.username = username;
-			apj.jobStatus = "Applied";
+			if( "draft".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+				apj.jobStatus = "Applied";
+			} 
+			if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+				apj.jobStatus = "Applied";
+			}
+			
 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
+			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
+			apj.reqType = saveAppliedJobsVM.requestType;
+			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
+			apj.workDesc    =saveAppliedJobsVM.workDescription;
+			apj.positiontype  =saveAppliedJobsVM.positionType;
 			apj.save();
 
 		} catch (JsonParseException e1) {
@@ -2119,6 +2178,59 @@ public class Application extends Controller {
 		return ok();
 	}
 
+	
+	
+	@JsonIgnoreProperties
+	public static Result saveUserSavedJob() {
+		JsonNode json = request().body().asJson();
+		System.out.println("json" + json);
+		AppliedJobs apj = new AppliedJobs();
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		UserSaveAppliedJobsVM saveAppliedJobsVM;
+		try {
+
+			saveAppliedJobsVM = objectMapper.readValue(json.get("jobData")
+					.traverse(), UserSaveAppliedJobsVM.class);
+			
+		  
+		    apj.manadatorySkill = json.get("manadatorySkills").toString();
+		    apj.desiredSkil =json.get("desiredSkills").toString();
+			apj.jobno = saveAppliedJobsVM.requestNumber;
+			String username = session().get("email");
+			apj.username = username;
+			if( "draft".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+				apj.jobStatus = "Draft";
+			} 
+			if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+				apj.jobStatus = "Applied";
+			}
+			apj.positionname = saveAppliedJobsVM.labourCategory;
+			apj.location = saveAppliedJobsVM.workLocation;
+			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
+			apj.reqType = saveAppliedJobsVM.requestType;
+			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
+			apj.workDesc    =saveAppliedJobsVM.workDescription;
+			apj.positiontype  =saveAppliedJobsVM.positionType;
+			apj.save();
+
+		} catch (JsonParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return ok();
+	}
+
+	
+	
+	
 	@JsonIgnoreProperties
 	public static class DesiredSkills {
 		public String dskill;
@@ -2133,6 +2245,7 @@ public class Application extends Controller {
 		public String comment;
 	}
 
+	@JsonIgnoreProperties
 	public static class AppliedJobVM {
 		public String username;
 		public int id;
@@ -2140,13 +2253,57 @@ public class Application extends Controller {
 		public String status;
 		public String location;
 		public String positionName;
+		public String workDesc;
+		public String jobStatus;
+		public String jobno;
+		public String positionname;
+		public String positiontype;
+		public String reqType;
+		public String performancelevel;
+		public String clearancereq;
+
 		public List<DesiredSkills> dsSkills;
 		public List<MandatorySkills> msSkils;
 
 	}
+	@JsonIgnoreProperties
+	public static class SavedJobVM {
+		public String username;
+		public int id;
+		/*public String requestNumber;
+		public String status;
+		public String location;
+		public String positionName;
+		public String workDesc;
+		public String jobStatus;
+		public String jobno;
+		public String positionname;
+		public String positiontype;
+		public String reqType;
+		public String performancelevel;
+		public String clearancereq;*/
+		public String requestNumber;
+		public String requestType;
+		public String labourCategory;
+		public String performanceLevel;
+		public String positionType;
+		public String clearanceRequired;
+		public String workLocation;
+		public String workDescription;
+		/*public String manadatorySkills;
+		public String desiredSkill;*/
+		public String jobStatus;
 
-	public static Result getAllAppliedJobs() {
-		List<AppliedJobs> ap = AppliedJobs.getAllJobs();
+		public List<MandatorySkills> manadatorySkills;
+		public List<DesiredSkills> desiredSkill;
+
+	}
+
+	public static Result getAllAppliedJobs(int pageNumber) {
+		String jobStatus ="Applied";
+		int count  = 0;
+	    count = AppliedJobs.getAllAppliedJobsCount(pageNumber, jobStatus);
+		List<AppliedJobs> ap = AppliedJobs.getAllAppliedJobs(pageNumber,10,jobStatus);
 		ArrayList<AppliedJobVM> appliedJobVM = new ArrayList<AppliedJobVM>();
 
 		for (AppliedJobs apj : ap) {
@@ -2162,7 +2319,10 @@ public class Application extends Controller {
 			appliedJobVM.add(apvm);
 
 		}
-		return ok((Json.stringify(Json.toJson(appliedJobVM))));
+		Map<String,Object> map =new HashMap<String, Object> ();
+		map.put("appliedJobs",appliedJobVM );
+		map.put("appliedJobCount", count);
+		return ok(Json.toJson(map));
 	}
 
 	public static Result generatePDF(String id) {
@@ -2186,6 +2346,7 @@ public class Application extends Controller {
 			//String candidiatename = ud.fullname;
 			String candidiatename = ud.firstname;
 			List<UserSkill> skills = ud.userSkill;
+			List <UserExperiance> userExperiance = ud.userExperiance;
 			// used for the table name (heading)
 			Font font = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD,
 					BaseColor.BLACK);
@@ -2237,6 +2398,46 @@ public class Application extends Controller {
 			certChunk.setBackground(new BaseColor(230, 230, 250));
 			certChunk.setFont(font);
 
+			Chunk chunkUserExp = new Chunk("Resource Submission Level".toUpperCase());
+			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
+			chunkUserExp.setFont(font);
+			
+			// Experiance  table
+						PdfPTable expLevelTable = new PdfPTable(1);
+						// table2.set
+						expLevelTable.setWidthPercentage(100);
+						/*float[] widthexp = { 2f};
+						expLevelTable.setWidths(widthexp);*/
+
+						PdfPCell cellexptble = new PdfPCell(new Paragraph(
+								"Resource Submission Level".toUpperCase()));
+						/*cellexptble.setColspan(3);
+						cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+						cellexptble.setPadding(10.0f);
+						cellexptble.setBackgroundColor(new BaseColor(140, 221, 8));
+						expLevelTable.addCell(cellexptble);*/
+						
+						
+						/*cellexptble = new PdfPCell(new Phrase("RESOURCE SUBMISSION LEVEL "
+								,font1));
+						cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
+						cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+						expLevelTable.addCell(cellexptble);*/
+						
+						for (UserExperiance ue : userExperiance) {
+							// EmpHistorytable.addCell(cellemp);
+							cellexptble = new PdfPCell(new Phrase(ue.experianceLevel,font1));
+							System.out.println("ue.experianceLevel"+ue.experianceLevel);
+							cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
+							// cell2.setFont(font1);
+							cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+							expLevelTable.addCell(cellexptble);
+						}
+			
+			
+			
+			
+			
 			// skill table
 			PdfPTable table2 = new PdfPTable(4);
 			// table2.set
@@ -2268,7 +2469,7 @@ public class Application extends Controller {
 
 			PdfPCell cell4 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
-			cell4 = new PdfPCell(new Phrase("Candidate’s Full Legal Name: "
+			cell4 = new PdfPCell(new Phrase("Candidate's Full Legal Name: "
 					+ "" + candidiatename, font1));
 			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -2564,8 +2765,11 @@ public class Application extends Controller {
 			document.add(date1);
 
 			document.add(Chunk.NEWLINE); // Something like in HTML :-)
-			// document.add(new Paragraph("Candidate’s Name:",font1));
+			// document.add(new Paragraph("Candidate's Name:",font1));
 			document.add(table4);
+			document.add(Chunk.NEWLINE);
+			document.add(chunkUserExp);
+			document.add(expLevelTable);
 			// preface.setAlignment(Element.ALIGN_CENTER);
 			document.add(chunkClearance);
 			document.add(table3);// user clearance
@@ -2683,7 +2887,7 @@ public class Application extends Controller {
 			storeExcel.scheduleComments  =editJobVM.scheduleComments;
 			storeExcel.nonpubComments  =editJobVM.nonpubComments;
 			storeExcel.missionCritical  = editJobVM.missionCritical;
-			storeExcel. nightWork =editJobVM.nightWork;
+			storeExcel.nightWork =editJobVM.nightWork;
 			storeExcel.localTravalusingpub  =editJobVM.localTravalusingpub;
 			storeExcel.pagerDuty  =editJobVM.pagerDuty;
 			storeExcel.pagerdutyComments  =editJobVM.pagerdutyComments;
@@ -2729,11 +2933,13 @@ public class Application extends Controller {
 		return ok("");
 	}
 	
-	public static Result  getAllUsers(){
-		
-		List<UserDetails> userDetails  = UserDetails.getAllUsers();
+	public static Result  getAllUsers(int pageNumber){
+		int count  = 0;
+		List<UserDetails> userDetails  = UserDetails.getAllUsers(pageNumber,10);
+		count  = UserDetails.getAllUsersCount(pageNumber);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("users", userDetails);
+		map.put("userCount", count);
 		return ok((Json.stringify(Json.toJson(map))));
 		
 	}
@@ -2782,9 +2988,11 @@ public class Application extends Controller {
 	}
 	
 	
-	public static Result getallAdmin(){
-		
-		List<Admin> ad= Admin.getAllAdmin();		
+	public static Result getallAdmin(int  pageNumber){
+		int count = 0;
+		List<Admin> ad= Admin.getAllAdmin(pageNumber,10);	
+		count  = Admin.getAllAdminCount(pageNumber);
+
 		ArrayList<AdminVM> al  = new ArrayList<AdminVM>(); 
  		for(Admin a : ad){
  			AdminVM avm  = new AdminVM();
@@ -2797,6 +3005,7 @@ public class Application extends Controller {
 		
 		Map<String  ,Object> map = new HashMap<String,Object>();
 		map.put("adminList",al);
+		map.put("adminCount", count);
 		return ok(Json.toJson(map)); 
 	} 
 	
@@ -2851,17 +3060,18 @@ public class Application extends Controller {
 	}
 
 	
-	public static Result getAllUserAppliedJobs(){
+	public static Result getAllUserAppliedJobs( int pageNumber){
 		
 		List<StoreExcelFile> jobs  = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 		// both are selected for search(DSC)
 			String emailId = session().get("email");
-			userJobs = StoreExcelFile.getAllUserJobs();
-			
+			userJobs = StoreExcelFile.getAllJobs(pageNumber,10);
+			int count = 0;
+			count =  AppliedJobs.getAllJobsCountByEmail(pageNumber,emailId);
 			for (StoreExcelFile str : userJobs) {
-				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
-						str.requestNumber);
+				AppliedJobs as = AppliedJobs.getUserAppliedJobDetails(emailId,
+						str.requestNumber,pageNumber,10);
 				
 				if (as != null) {
 					
@@ -2977,6 +3187,7 @@ public class Application extends Controller {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("jobs", jobVMs);
+		map.put("jobsCount", count);
 		return ok(Json.toJson(map));
 		
 	} 
@@ -3060,5 +3271,115 @@ public class Application extends Controller {
 		return ok();
 	}
 	
+	public static Result saveUserTemplate(String template, String templatename ){
+	String email = 	session().get("email");
+		UserTemplate ut = UserTemplate.getUserTemplateByName(templatename,email);  
+		if(ut != null){
+		ut.template = template;
+		ut.update();
+		return ok("");
+		}else{
+			UserTemplate userTemplate  = new UserTemplate();
+			userTemplate.email = email;
+			userTemplate.templateName = templatename;
+			userTemplate.template = template;
+			userTemplate.save();
+			return ok("");
+		}
+		//return ok("");
+	}
 	
+	
+	public static class UserTemnplateVM{
+		
+		
+		public int id;
+		public String email;
+		public String template;
+		public String templateName;
+	}
+	
+	public static Result  getSavedUserTemplate(){
+	String email = 	session().get("email");
+ 
+	List	<UserTemplate> usertemplate = UserTemplate.getUserTemplateByName(email); 
+    
+	ArrayList<UserTemnplateVM> userTemnplateVM	 = new ArrayList<UserTemnplateVM>();
+		for(UserTemplate ut: usertemplate){
+			
+			UserTemnplateVM utvm = new UserTemnplateVM();
+			utvm.id =  ut.id;
+			utvm.email = ut.email;
+			utvm.template = ut.template;
+			utvm.templateName = ut.templateName;
+			userTemnplateVM.add(utvm);
+		}
+		
+    Map<String, Object> map =new HashMap<String, Object>();
+    map.put("template", userTemnplateVM);
+    return ok(Json.toJson(map));
+	} 
+	
+	
+	public static Result getUserSavedJobs(String currentPage){
+	String email = session() .get("email");
+	
+	List	<AppliedJobs>  jobs =AppliedJobs.getUserAppliedJobByStatus(email);
+		
+	List<SavedJobVM> jobVMs = new ArrayList<SavedJobVM>();
+
+	for (AppliedJobs s : jobs) {
+
+		SavedJobVM jobVM = new SavedJobVM();
+
+		jobVM.requestNumber = s.jobno;
+		jobVM. requestType= s.reqType;
+		jobVM.labourCategory = s.positionname;
+		jobVM.performanceLevel = s.performancelevel;
+		jobVM.positionType = s.positiontype;
+		jobVM.clearanceRequired = s.clearancereq;
+		jobVM.workLocation = s.location;
+		jobVM.workDescription = s.workDesc;
+/*
+		jobVM.certificationRequired = s.certificationRequired;*/
+		/*jobVM.conusTravel = s.conusTravel;
+		jobVM.oconusTravel = s.oconusTravel;
+		jobVM.reghrperYear = s.reghrperYear;
+		jobVM.scheduleComments = s.scheduleComments;
+		jobVM.nonpubComments = s.nonpubComments;
+		jobVM.missionCritical = s.missionCritical;
+		jobVM.nightWork = s.nightWork;
+		jobVM.localTravalusingpub = s.localTravalusingpub;
+		jobVM.pagerDuty = s.pagerDuty;
+		jobVM.pagerdutyComments  =s.pagerdutyComments;
+		jobVM.workonHoliday = s.workonHoliday;
+		jobVM.workonWeekends = s.workonWeekends;
+		jobVM.shiftWork  =s.shiftWork;
+		jobVM.warzone = s.warzone;
+		jobVM.coop = s.coop;
+		jobVM.duetoPmo = s.duetoPmo;
+		jobVM.updateDate = s.updateDate;
+		jobVM.duetoGovt = s.duetoGovt;
+		*/
+		jobVM.jobStatus = s.jobStatus;
+		
+
+		jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
+		jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
+		
+		//System.out.println("jobVM.desiredSkill" + jobVM.dsSkills);
+
+		jobVMs.add(jobVM);
+	}
+
+	Map<String, Object> map = new HashMap<String, Object>();
+
+	map.put("totalPages", 10);
+	//map.put("currentPage", currentPage);
+	map.put("jobs", jobVMs);
+
+	return ok(Json.toJson(map));
+	
+	//return ok();
+	}
 }

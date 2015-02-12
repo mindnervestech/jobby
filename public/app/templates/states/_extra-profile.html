@@ -127,6 +127,21 @@ legend.scheduler-border {
 																</select>
 															</div>
 														</div>
+														<div class="">
+															<label class="">Select Experience Level *</label>
+														</div>
+														<div class="form-group">
+															<!-- <label class="col-md-3 control-label"></label> -->
+															<div class="col-md-9">
+																<select multiple="multiple" name="userExperience"
+																	ng-model="userExperience" class="form-control">
+																	<option ng-repeat="exp in allExperiance.experiance"
+																		value="{{exp.experianceLevel}}"
+																		ng-selected="exp.isSelect  == true" style="font-size: 12px;"
+																		required>{{exp.experianceLevel}} </option>
+																</select>
+															</div>
+														</div>
 
 													</div>
 													<div class="col-md-6">
@@ -458,7 +473,7 @@ legend.scheduler-border {
 												<div class="form-actions">
 													<div class="pull-right">
 														<button type="submit" ng-click="submitUserProfile();"
-															class="btn btn-primary">Save</button>
+															class="btn btn-success">Save</button>
 														&nbsp;
 														<!-- <button type="button" class="btn btn-default">Cancel</button> -->
 													</div>

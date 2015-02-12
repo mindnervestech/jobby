@@ -93,24 +93,24 @@ public class StoreExcelFile {
 	}
 
 	public static List<StoreExcelFile> getAllJobsByLocationAndJobTypeAsc(
-			int currentPage, int rowsPerPage, String jobType) {
+			int currentPage, int rowsPerPage, String jobType,ArrayList<String> al) {
 
-		return find.where().eq("positionType", jobType).order().asc("workLocation").findList();
+		return find.where().eq("positionType", jobType).in("labourCategory", al).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().asc("workLocation").findList();
 
 	
 	}
 
 	
 	public static List<StoreExcelFile> getAllJobsByLocationAndJobTypeDsc(
-			int currentPage, int rowsPerPage, String jobType) {
+			int currentPage, int rowsPerPage, String jobType, ArrayList<String> al) {
 
-		return find.where().eq("positionType", jobType).order().desc("workLocation").findList();
+		return find.where().eq("positionType", jobType).in("labourCategory", al).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("workLocation").findList();
 
 	
 	}
 	
 	@JsonIgnore
-	public static long getAllJobsCount(int rowsPerPage) {
+	/*public static long getAllJobsCount(int rowsPerPage) {
 		long totalPages = 0, size = 0;
 		size = find.findList().size();
 		totalPages = size / rowsPerPage;
@@ -120,7 +120,7 @@ public class StoreExcelFile {
 		}
 		
 		return totalPages;
-	}
+	}*/
 
 	public void update(StoreExcelFile storeExcelFile) {
 		Ebean.update(storeExcelFile);
@@ -168,6 +168,42 @@ public class StoreExcelFile {
 	public static List<StoreExcelFile> getAllUserJobs() {
 
 		return find.all();
+	}
+
+	@JsonIgnore
+	public static int getAllJobsCount(int pageNo) {
+		return find.setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
+				.findList().size();
+	}
+
+	@JsonIgnore
+	public static int getAllJobsCountByLocationAndJobTypeAsc(int pageNo,String jobType) {
+		return find.where().eq("positionType", jobType).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
+				.findList().size();
+	}
+	
+	@JsonIgnore
+	public static int getAllJobsCountByLocationAndJobTypeDsc(int pageNo,String jobType) {
+		return find.where().eq("positionType", jobType).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
+				.findList().size();
+	}
+	
+	@JsonIgnore
+	public static List<StoreExcelFile> getAllJobsByLocationAndJobTypeAdminDsc(
+			int currentPage, int rowsPerPage, String jobType) {
+
+		return find.where().eq("positionType", jobType).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("workLocation").findList();
+
+	
+	}
+	
+	@JsonIgnore
+	public static List<StoreExcelFile> getAllJobsByLocationAndJobTypeAdminAsc(
+			int currentPage, int rowsPerPage, String jobType) {
+
+		return find.where().eq("positionType", jobType).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("workLocation").findList();
+
+	
 	}
 	
 }

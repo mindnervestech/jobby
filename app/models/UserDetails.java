@@ -80,8 +80,11 @@ public class UserDetails extends Model {
 	public List<UserClearance> userClearance;
 
 	@ManyToMany
+	public List<UserExperiance> userExperiance;
+	
+	@ManyToMany
 	public List<UserPosition> userPosition;
-
+	
 	@JsonIgnore
 	@OneToMany
 	public List<EducationDetails> educationDetails;
@@ -122,8 +125,16 @@ public class UserDetails extends Model {
 
 	}
 	
+	@JsonIgnore
+	public static List<UserDetails>getAllUsers(int pageNumber, int rowperpage){
+		return find.
+		setFirstRow(pageNumber * 10).setMaxRows(rowperpage)
+		.findList();
+	}
 	
-	public static List<UserDetails>getAllUsers(){
-		return find.all();
+	@JsonIgnore
+	public static int getAllUsersCount(int pageNo) {
+		return find.setFirstRow(pageNo * 10).setMaxRows(UserDetails.find.findRowCount())
+				.findList().size();
 	}
 }
