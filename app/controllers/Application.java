@@ -1037,7 +1037,7 @@ public class Application extends Controller {
 				
 			}
 			
-			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentPage,jobType);
+			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypePositionAsc(currentPage,jobType,al);
 			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAsc(
 					currentPage, 10, jobType,al);
 
@@ -1051,7 +1051,7 @@ public class Application extends Controller {
 					System.out.println("count"+count);
 				}
 			}
-
+			
 		}
 
 		// both are selected for search(DSC)
@@ -1067,7 +1067,7 @@ public class Application extends Controller {
 				
 			}
 			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(currentPage, 10, jobType,al);
-			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeDsc(currentPage,jobType);
+			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypePositionDsc(currentPage,jobType,al);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
 						str.requestNumber);
@@ -1091,7 +1091,7 @@ public class Application extends Controller {
 		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
 			ArrayList<String> al = new ArrayList<>();
 			System.out.println("jobType"+jobType);
-			count = StoreExcelFile.getAllJobsCount(currentPage);
+			//count = StoreExcelFile.getAllJobsCount(currentPage);
 			String email = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(email);
 			List<UserPosition> up = u.userPosition;
@@ -1103,7 +1103,7 @@ public class Application extends Controller {
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobDsc(currentPage, 10,
 					al);
-
+			count = StoreExcelFile.getAllJobsCountByPositionMatched(currentPage,al);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
 						str.requestNumber);
@@ -1120,7 +1120,7 @@ public class Application extends Controller {
 		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
 			/* jobs = StoreExcelFile.getAllJobs(currentPage, 10); */
 			ArrayList<String> al = new ArrayList<>();
-			count = StoreExcelFile.getAllJobsCount(currentPage);
+			//count = StoreExcelFile.getAllJobsCount(currentPage,al);
 			String email = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(email);
 			List<UserPosition> up = u.userPosition;
@@ -1132,7 +1132,7 @@ public class Application extends Controller {
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobAsc(currentPage, 10,
 					al);
-
+			count = StoreExcelFile.getAllJobsCountByPositionMatched(currentPage,al);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
 						str.requestNumber);
