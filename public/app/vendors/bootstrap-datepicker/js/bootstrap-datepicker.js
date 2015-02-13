@@ -70,7 +70,7 @@
 		if (this.isRTL){
 			this.picker.addClass('datepicker-rtl');
 			this.picker.find('.prev i, .next i')
-						.toggleClass('icon-arrow-left icon-arrow-right');
+						.toggleClass('glyphicon-arrow-left glyphicon-arrow-right');
 		}
 		$(document).on('mousedown', function (e) {
 			// Clicked outside the datepicker, hide it
@@ -924,9 +924,9 @@
 		},
 		headTemplate: '<thead>'+
 							'<tr>'+
-								'<th class="prev"><i class="icon-arrow-left"/></th>'+
+								'<th class="prev"><i class="glyphicon glyphicon-arrow-left"/></th>'+
 								'<th colspan="5" class="switch"></th>'+
-								'<th class="next"><i class="icon-arrow-right"/></th>'+
+								'<th class="next"><i class="glyphicon glyphicon-arrow-right"/></th>'+
 							'</tr>'+
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
@@ -934,21 +934,21 @@
 	};
 	DPGlobal.template = '<div class="datepicker">'+
 							'<div class="datepicker-days">'+
-								'<table class=" table-condensed">'+
+								'<table class=" table">'+
 									DPGlobal.headTemplate+
 									'<tbody></tbody>'+
 									DPGlobal.footTemplate+
 								'</table>'+
 							'</div>'+
 							'<div class="datepicker-months">'+
-								'<table class="table-condensed">'+
+								'<table class="table">'+
 									DPGlobal.headTemplate+
 									DPGlobal.contTemplate+
 									DPGlobal.footTemplate+
 								'</table>'+
 							'</div>'+
 							'<div class="datepicker-years">'+
-								'<table class="table-condensed">'+
+								'<table class="table">'+
 									DPGlobal.headTemplate+
 									DPGlobal.contTemplate+
 									DPGlobal.footTemplate+

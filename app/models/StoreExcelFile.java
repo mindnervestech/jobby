@@ -126,24 +126,27 @@ public class StoreExcelFile {
 		Ebean.update(storeExcelFile);
 	}
 
+	@JsonIgnore
 	public static List<StoreExcelFile> getALlUserMatchedJobAsc(int  currentPage,
 			int rowsPerPage, ArrayList<String> al) {
 		return find.where().in("labourCategory", al).order().asc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 	}
 	
 	
+	@JsonIgnore
 	public static List<StoreExcelFile> getALlUserMatchedJobDsc(int currentPage,
 			int rowsPerPage, ArrayList<String> al) {
-
 		return find.where().in("labourCategory", al).order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 	}
 	
+	@JsonIgnore
 	public static List<StoreExcelFile>getAllJobsForAdmin(int rowsPerPage,
 			int currentPage){
 		
 		return find.all();
 	}
 
+	@JsonIgnore
 	public static List<StoreExcelFile> getALlUserJobByPosition(int currentPage,
 			int rowsPerPage, String position) {
 		return find.where().eq("labourCategory", position).findList();

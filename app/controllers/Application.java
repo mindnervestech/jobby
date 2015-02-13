@@ -3246,7 +3246,7 @@ public class Application extends Controller {
 				// message.setText();
 				BodyPart messageBodyPart = new MimeBodyPart();
 				// Now set the actual message
-				messageBodyPart.setText("\n Name of persion : " + sendMailVM.name + "\n PersonEmail:  "+ "\n "+sendMailVM.email +"\n Content: "
+				messageBodyPart.setText("\n Name of person : " + sendMailVM.name + "\n Person Email:  "+ "\n "+sendMailVM.email +"\n Content: "
 						+ "\n"+sendMailVM.content);
 				// Create a multipar message
 				Multipart multipart = new MimeMultipart();
