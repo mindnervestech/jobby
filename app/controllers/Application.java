@@ -2774,8 +2774,10 @@ public class Application extends Controller {
 			document.add(chunkUserExp);
 			document.add(expLevelTable);
 			// preface.setAlignment(Element.ALIGN_CENTER);
+			document.add(Chunk.NEWLINE);
 			document.add(chunkClearance);
 			document.add(table3);// user clearance
+			document.add(Chunk.NEWLINE);
 			document.add(chunkSkills);
 			document.add(table1);// mandatory skills
 
