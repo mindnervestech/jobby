@@ -186,14 +186,16 @@ public class StoreExcelFile {
 	
 	@JsonIgnore
 	public static int getAllJobsCountByPositionMatched(int pageNo,ArrayList<String> al) {
-		return find.where().in("labourCategory", al).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
+		String jobStatus = "active";
+		return find.where().in("labourCategory", al).eq("jobStatus",jobStatus).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
 				.findList().size();
 	}
 	
 
 	@JsonIgnore
 	public static int getAllJobsCountByLocationAndJobTypePositionAsc(int pageNo,String jobType,ArrayList<String> al) {
-		return find.where().eq("positionType", jobType).in("labourCategory", al).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
+		String jobStatus = "active"; 
+		return find.where().eq("positionType", jobType).eq("jobStatus",jobStatus).in("labourCategory", al).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
 				.findList().size();
 	}
 	@JsonIgnore
@@ -204,12 +206,14 @@ public class StoreExcelFile {
 	
 	@JsonIgnore
 	public static int getAllJobsCountByLocationAndJobTypePositionDsc(int pageNo,String jobType,ArrayList<String> al) {
-		return find.where().eq("positionType", jobType).in("labourCategory", al).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
+		String jobStatus = "active"; 
+		return find.where().eq("positionType", jobType).eq("jobStatus",jobStatus).in("labourCategory", al).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
 				.findList().size();
 	}
 	
 	@JsonIgnore
 	public static int getAllJobsCountByLocationAndJobTypeDsc(int pageNo,String jobType) {
+		
 		return find.where().eq("positionType", jobType).setFirstRow(pageNo * 10).setMaxRows(StoreExcelFile.find.findRowCount())
 				.findList().size();
 	}
