@@ -52,7 +52,8 @@ public class AppliedJobs extends Model {
 	}
 	
 	public static AppliedJobs getUserAppliedJobDetails(String email, String reqNo ,Integer  pageNumber,Integer rowperpage) {
-		return find.where().eq("username", email).eq("jobno", reqNo).setFirstRow(pageNumber * 10).setMaxRows(rowperpage).findUnique();
+		String jobStatus = "Applied".trim();
+		return find.where().eq("username", email).eq("jobno", reqNo).eq("jobStatus", jobStatus).findUnique();
 	}
 	
 	@JsonIgnore
@@ -74,15 +75,21 @@ public class AppliedJobs extends Model {
 	}
 	
 	@JsonIgnore
+	public static int getAllJobsCountByEmailAndJobStatus(int pageNo,String email) {
+		return find.where().eq("username", email).eq("jobStatus", "Applied".trim()).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
+				.findList().size();
+	}
+	
+	@JsonIgnore
 	public static List<AppliedJobs>getUserAppliedJobByStatus(String email){
-		String status =  "draft";
+		String status =  "Draft";
 		return find.where().eq("username", email).eq("jobStatus", status).findList();
 	} 
 	
 	
 	@JsonIgnore
 	public static List<AppliedJobs> getAllAppliedJobs(Integer  pageNumber,Integer rowperpage,String jobStatus) {
-		return find.where().eq("jobStatus", jobStatus.trim()).setFirstRow(pageNumber * 10).setMaxRows(rowperpage).findList();
+		return find.where().eq("jobStatus", jobStatus).setFirstRow(pageNumber * 10).setMaxRows(rowperpage).findList();
 	}
 	
 	@JsonIgnore

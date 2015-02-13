@@ -36,6 +36,8 @@ GET     /saveUserTemplate/:userTemplate/:templateName                  controlle
 GET     /getSavedUserTemplate                                        controllers.Application.getSavedUserTemplate()
 GET    /getUserSavedJobs/:currentPage                        controllers.Application.getUserSavedJobs(currentPage: String )
 POST   /saveUserSavedJob                          controllers.Application.saveUserSavedJob()
+POST  /saveUserJobToDraft                         controllers.Application.saveUserJobToDraft()
+
 
 
 #Admin

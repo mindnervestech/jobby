@@ -42,10 +42,10 @@
 
 						</div>
 
-						<!-- <div class="col-md-3 control-label">
-							My Saved Jobs<br /> <input type="checkbox" ng-model="matchedpos"
-								ng-change="getUserSavedJobs();" name="matchedpos">
-						</div> -->
+						 <div class="col-md-3 control-label">
+							<input type="checkbox" ng-model="savedJobs"
+								ng-change="getUserSavedJobs();" name="savedJobs">&nbsp;&nbsp;&nbsp;My Saved Jobs
+						</div> 
 						<!-- 	<div class="col-md-3 control-label">
 							Search by Position<br /> <select id="allposition"
 								name="position" ng-model="position" class="selectpicker"
@@ -64,7 +64,7 @@
 								name="matchedpos">
 						</div>
  -->
-						<div class="pull-right">
+						<div class="pull-right" ng-if="hidepagNo == false">
 							<button id="pre1" type="button" ng-click="clickPre()"
 								class="btn btn-primary">
 								<i class="glyphicon glyphicon-arrow-left"></i>
@@ -85,12 +85,12 @@
 
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
 								<td class="td-block"
-									ng-if="job.jobStatus == 'active' || job.jobStatus == 'draft'">
+									ng-if="job.jobStatus == 'active' || job.jobStatus == 'Draft'">
 									<p class="date">
 										<button type="button" ng-if="job.jobStatus == 'active'"
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Apply</button>
-										<button type="button" ng-if="job.jobStatus == 'draft'"
+										<button type="button" ng-if="job.jobStatus == 'Draft'"
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Resume</button>
 									</p>
@@ -118,7 +118,10 @@
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
 									</p>
-									<p class="desc">
+									
+									
+									<!--  manadatory Skills job content  -->
+									<p class="desc" ng-if="job.jobStatus == 'active'">
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
@@ -129,13 +132,39 @@
 
 									<div id="popupBottom{{$index}}" class="popover"
 										data-toggle="modal-popover"
-										style="margin-top: -5%; margin-left: -20%;">
+										style="margin-top: -5%; margin-left: -20%;" ng-if="job.jobStatus == 'active'">
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
 											</small>
 										</div>
 									</div>
+									
+									<!--  manadatory Skills job content end  -->
+									
+									<!-- user saved job content manadatory Skills  -->
+									<p class="desc" ng-if="job.jobStatus == 'Draft'">
+										<small
+											ng-bind="job.manadatorySkills[0].mskill |cut:true:200:'   ...'"
+											data-placement="bottom"></small> <small><span
+											href="#popupBottom{{$index}}" data-toggle="modal-popover"
+											data-placement="bottom"><a style="color: blue;">&nbsp;&nbsp;more</a>
+										</span></small>
+									</p>
+
+									<div id="popupBottom{{$index}}" class="popover"
+										data-toggle="modal-popover"
+										style="margin-top: -5%; margin-left: -20%;" ng-if="job.jobStatus == 'Draft'">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small data-ng-repeat="job1 in job.manadatorySkills">{{job1.mskill}}
+											</small>
+										</div>
+									</div>
+									<!-- user saved job content manadatory Skills  end -->
+									
+									
+									
 
 									<p class="text-danger">
 										<small>Desired Skills</small>
@@ -145,20 +174,45 @@
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>-->
-									<p class="desc">
+									
+									
+									<!-- user  job content  -->
+									<p class="desc" ng-if="job.jobStatus == 'active'">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small> <span
 											href="#popupDesiredSkill{{$index}}"
 											data-toggle="modal-popover" data-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>
 									<div id="popupDesiredSkill{{$index}}" class="popover"
-										style="margin-top: -5%; margin-left: -19%;">
+										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'active'">
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job2 in job.desiredSkill">{{job2}}</small>
 											<span ng-click="close">close</span>
 										</div>
 									</div>
+									<!-- user  job content   end-->
+									
+									
+									<!-- user saved job content Desired Skills start  -->
+									<p class="desc" ng-if="job.jobStatus == 'Draft'">
+										<small ng-bind="job.desiredSkill[0].dskill  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small> <span
+											href="#popupDesiredSkill{{$index}}"
+											data-toggle="modal-popover" data-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>
+									<div id="popupDesiredSkill{{$index}}" class="popover"
+										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'Draft'">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small data-ng-repeat="job2 in job.desiredSkill">{{job2.dskill}}</small>
+											<span ng-click="close">close</span>
+										</div>
+									</div>
+									
+									<!-- user saved job content Desired Skills end -->
 
 								</td>
 
@@ -166,7 +220,7 @@
 
 						</table>
 
-						<div class="pull-right">
+						<div class="pull-right"  ng-if="hidepagNo == false">
 							<button id="pre" type="button" ng-click="clickPre()"
 								class="btn btn-primary">
 								<i class="glyphicon glyphicon-arrow-left"></i>
@@ -219,6 +273,8 @@
 
 					<div class="portlet box portlet-green">
 						<div class="">
+						<span ng-show="errorManaSkillComment" style="color: red;">
+											Please give comment to all Mandatory Skills</span>
 							<div id="rootwizard-custom-circle">
 								<div class="">
 
@@ -238,24 +294,25 @@
 
 								<div class="tab-content">
 									<div id="tab1-wizard-custom-circle" class="tab-pane active">
-										<span ng-show="errorManaSkillComment" style="color: red;">
-											Please give comment to all Mandatory Skills</span>
+										
 										<div class="form-group" class="active">
+										
 											<div class="pull-right">
 												<button type="button" ng-if="jStatus == 'active'"
 													name="next" value="Next"
 													class="btn btn-info button-next mlm"
-													ng-click="saveUserSavedJob();"">
-													Save As &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+													ng-click="saveUserJobToDraft();">
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
 												<button type="button" ng-if="jStatus == 'draft'" name="next"
 													value="Next" class="btn btn-info button-next mlm"
 													ng-click="saveUserJob();">
-													Save As &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
 											</div>
-
+											
 											<div ng-if="jStatus == 'active'">
+											
 												<div class="form-group" ng-repeat="mskill in mdSkill">
 													<div class="form-group">
 														<label class="col-sm-10 control-label"
@@ -267,7 +324,7 @@
 														<div class="col-sm-8">
 															<div class="pull-right">
 																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopup();"></i> &nbsp;&nbsp;<i
+																	ng-click="openTemplatepopup($index);"></i> &nbsp;&nbsp;<i
 																	class="glyphicon glyphicon-eye-open"
 																	ng-click="openPreSavedTemplate($index);"></i>
 															</div>
@@ -279,7 +336,7 @@
 															</small>
 															<!-- Button to launch modal popover -->
 															<!-- template  user popup  content -->
-															<div id="saveTemplate" class="popover"
+															<div id="saveTemplate{{$index}}" class="popover"
 																style="z-index: 100;">
 																<div class="popover-content">
 																	<div class="form-group">
@@ -294,13 +351,13 @@
 																		<br />
 																		<button name="save" id="save"
 																			class="button btn-success"
-																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate);">Save
+																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
 																			As</button>
 																		<i class="glyphicon glyphicon-download"
-																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate);"></i>
+																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
 																			class="glyphicon glyphicon-remove"
-																			ng-click="closeTemplatePopup();"></i>
+																			ng-click="closeTemplatePopup($index);"></i>
 
 																	</div>
 																</div>
@@ -312,7 +369,7 @@
 											</div>
 
 
-											<!-- <div ng-if="jStatus == 'draft'">
+									 <div ng-if="jStatus == 'Draft'">
 											
 											<div class="form-group" ng-repeat="manadatorySkills in mdSkill">
 												<div class="form-group">
@@ -335,8 +392,7 @@
 																class="form-control" style="font-size: 12px;"
 																placeholder="e.g. Skill Desc" required></textarea>
 														</small>
-														Button to launch modal popover
-														template  user popup  content
+														
 														<div id="saveTemplate" class="popover"
 															style="z-index: 100;">
 															<div class="popover-content">
@@ -352,10 +408,10 @@
 																	<br />
 																	<button name="save" id="save"
 																		class="button btn-success"
-																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate);">Save
+																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
 																		As</button>
 																	<i class="glyphicon glyphicon-download"
-																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate);"></i>
+																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
 																	&nbsp;&nbsp;&nbsp;&nbsp;<i
 																		class="glyphicon glyphicon-remove"
 																		ng-click="closeTemplatePopup();"></i>
@@ -367,7 +423,7 @@
 												</div>
 
 											</div>
-											</div> -->
+											</div> 
 										</div>
 										<div class="pull-right">
 											<button type="button" name="next" value="Next"
@@ -389,14 +445,14 @@
 												<button type="button" ng-if="jStatus == 'active'"
 													name="next" value="Next"
 													class="btn btn-info button-next mlm"
-													ng-click="saveUserSavedJob();">
-													Save As &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+													ng-click="saveUserJobToDraft();">
+													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
-												<button type="button" ng-if="jStatus == 'draft'" name="next"
+												<!-- <button type="button" ng-if="jStatus == 'Draft'" name="next"
 													value="Next" class="btn btn-info button-next mlm"
 													ng-click="saveUserJob();">
-													Save As &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
-												</button>
+													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button> -->
 
 											</div>
 												<div ng-if="jStatus == 'active'">
@@ -420,7 +476,7 @@
 													</div>
 												</div>
 
-												<!-- <div ng-if="jStatus == 'draft'">
+												<div ng-if="jStatus == 'Draft'">
 												<div class="form-group" ng-repeat="desiredSkills in dSkills">
 													<div class="form-group">
 														<div class="form-group"
@@ -439,7 +495,7 @@
 														</div>
 													</div>
 												</div>
-												</div> -->
+												</div> 
 											</div>
 											
 										</div>
@@ -455,7 +511,7 @@
 												ng-click="saveUserSavedJob();">
 												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button>
-											<button type="button" ng-if="jStatus == 'draft'" name="next"
+											<button type="button" ng-if="jStatus == 'Draft'" name="next"
 												value="Next" class="btn btn-info button-next mlm"
 												ng-click="saveUserJob();">
 												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>

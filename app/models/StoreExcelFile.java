@@ -126,17 +126,16 @@ public class StoreExcelFile {
 		Ebean.update(storeExcelFile);
 	}
 
-	public static List<StoreExcelFile> getALlUserMatchedJobAsc(int rowsPerPage,
-			int currentPage, ArrayList<String> al) {
-
-		return find.where().in("labourCategory", al).order().desc("workLocation").findList();
+	public static List<StoreExcelFile> getALlUserMatchedJobAsc(int  currentPage,
+			int rowsPerPage, ArrayList<String> al) {
+		return find.where().in("labourCategory", al).order().asc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 	}
 	
 	
-	public static List<StoreExcelFile> getALlUserMatchedJobDsc(int rowsPerPage,
-			int currentPage, ArrayList<String> al) {
+	public static List<StoreExcelFile> getALlUserMatchedJobDsc(int currentPage,
+			int rowsPerPage, ArrayList<String> al) {
 
-		return find.where().in("labourCategory", al).order().asc("workLocation").findList();
+		return find.where().in("labourCategory", al).order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 	}
 	
 	public static List<StoreExcelFile>getAllJobsForAdmin(int rowsPerPage,
@@ -152,16 +151,22 @@ public class StoreExcelFile {
 	}
 	
 	
-	public static List<StoreExcelFile> getAllJobsForAdminDsc(int rowsPerPage,
-			int currentPage) {
+	public static List<StoreExcelFile> getAllJobsForAdminDsc(int  currentPage,
+			int rowsPerPage) {
+	//	String  jobType = "Full-Time";
+		return find.where().order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 
-		return find.where().order().desc("workLocation").findList();
+		//return find.where().order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 	}
 	
-	public static List<StoreExcelFile> getAllJobsForAdminAsc(int rowsPerPage,
-			int currentPage) {
+	public static List<StoreExcelFile> getAllJobsForAdminAsc(int  currentPage,
+			int rowsPerPage) {
 
-		return find.where().order().asc("workLocation").findList();
+		//return find.where().order().asc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	//	String  jobType = "Full-Time";
+		return find.where().order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+
+	
 	}
 
 	

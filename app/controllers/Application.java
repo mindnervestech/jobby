@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -997,32 +998,8 @@ public class Application extends Controller {
 	
 		List<StoreExcelFile> jobs  = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
-
 		int count = 0;
 		
-		
-		/*// jobtype are selected for search
-		if (!("All".equalsIgnoreCase(jobType.trim()))) {
-			System.out.println("all");
-			 count = StoreExcelFile.getAllJobsCount(currentPage);
-			userJobs = StoreExcelFile.getAllJobsByJobType(currentPage, 10,
-					jobType);
-
-		}*/
-		
-		
-
-		// location are selected for search
-		/*
-		 * if (!(false == location)) { System.out.println("in  loca"); jobs =
-		 * StoreExcelFile.getAllJobsByLocationDsc(currentPage, 10); }
-		 */
-
-		// location are selected for search
-		/*
-		 * if (!(true == location)) { System.out.println("in  loca"); jobs =
-		 * StoreExcelFile.getAllJobsByLocationAsc(currentPage, 10); }
-		 */
 		// both are selected for search(DSC)
 		if (!(true == location)
 				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
@@ -1081,12 +1058,7 @@ public class Application extends Controller {
 
 		}
 
-		
-		//for admin to view all jobs
-		/*if(jobType.equalsIgnoreCase("All") && location == false && usermatch == false && "notSelected".equals(position)){
-			jobs = StoreExcelFile.getAllJobs(currentPage, 10);
-		}*/
-		
+	
 		// all jobs //selected Default(user profile job mtached job)
 		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
 			ArrayList<String> al = new ArrayList<>();
@@ -1146,29 +1118,6 @@ public class Application extends Controller {
 
 		}
 
-		
-		
-		// called when the usermatches job type selected
-		/*
-		 * if (usermatch == true) { ArrayList<String> al = new ArrayList<>();
-		 * 
-		 * String email = session().get("email"); UserDetails u =
-		 * UserDetails.getUserByEmail(email); List<UserPosition> up =
-		 * u.userPosition; for (UserPosition upd : up) { String pos =
-		 * upd.position; al.add(pos);
-		 * 
-		 * System.out.println("pos" + pos); }
-		 * 
-		 * jobs = StoreExcelFile.getALlUserMatchedJob(currentPage, 10, al); }
-		 */
-		/*if (!("notSelected".equalsIgnoreCase(position.trim()))) {
-			jobs = StoreExcelFile.getALlUserJobByPosition(currentPage, 10,
-					position);
-
-		}*/
-
-		
-		
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
 
 		if (currentPage > 10 && 10 != 0) {
@@ -2122,39 +2071,49 @@ public class Application extends Controller {
 					.traverse(), SaveAppliedJobsVM.class);
 			
 		   // apj.desiredSkil = json.get("desiredSkills").toString();
-		    ArrayNode positions = (ArrayNode) json.get("manadatorySkills");
+			String email = session().get("email");
+			
+		   
+			//Delete the job having status 'Draft' and Change to Applied. for that(Current) user  
+		   AppliedJobs appliedJobs = AppliedJobs.getUserAppliedJob(email, saveAppliedJobsVM.requestNumber);
+		   if(appliedJobs != null){
+			   appliedJobs.delete();
+		   }else{
+			   
+		   }
+		   
+			ArrayNode positions = (ArrayNode) json.get("manadatorySkills");
 		    ArrayNode dskills = (ArrayNode) json.get("desiredSkills");
 		   
 		    String manadatorySkills =  "";
-		    for (int j = 0; j < positions.size(); j++) {
+		    for (int j = 0; j < positions.size()-1; j++) {
 				String  position = positions.get(j).path("mskill").toString();
-				manadatorySkills += position; 
+				manadatorySkills = position +","+manadatorySkills; 
 				
 			}
 
 		    String desiredSkills =  "";
-		    for (int j = 0; j < dskills.size(); j++) {
+		    for (int j = 0; j < dskills.size() -1; j++) {
 				String  desired = dskills.get(j).path("dskill").toString();
-				desiredSkills += desired; 
+				desiredSkills = desired + ","+ desiredSkills; 
 				
 			}
 		    
-		    
+		    desiredSkills = desiredSkills.replaceAll(",$", "");
+		    manadatorySkills = manadatorySkills.replaceAll(",$", "");
 		  
-		    apj.manadatorySkill = manadatorySkills;
-		    apj.desiredSkil =desiredSkills;
+		    apj.manadatorySkill = "["+manadatorySkills+"]";
+		    apj.desiredSkil = "["+desiredSkills+"]";
 		     //apj.manadatorySkill = mskills.toString();
 		    //apj.manadatorySkill = json.get("manadatorySkills").toString();
 			apj.jobno = saveAppliedJobsVM.requestNumber;
 			String username = session().get("email");
 			apj.username = username;
-			if( "draft".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+		    apj.jobStatus = "Applied";
+		    
+		    /*if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
 				apj.jobStatus = "Applied";
-			} 
-			if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
-				apj.jobStatus = "Applied";
-			}
-			
+			}*/
 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
 			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
@@ -2179,6 +2138,50 @@ public class Application extends Controller {
 	}
 
 	
+	
+	@JsonIgnoreProperties
+	public static Result saveUserJobToDraft() {
+		JsonNode json = request().body().asJson();
+		System.out.println("json" + json);
+		AppliedJobs apj = new AppliedJobs();
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		UserSaveAppliedJobsVM saveAppliedJobsVM;
+		try {
+
+			saveAppliedJobsVM = objectMapper.readValue(json.get("jobData")
+					.traverse(), UserSaveAppliedJobsVM.class);
+			
+			
+		  
+		    apj.manadatorySkill = json.get("manadatorySkills").toString();
+		    apj.desiredSkil =json.get("desiredSkills").toString();
+			apj.jobno = saveAppliedJobsVM.requestNumber;
+			String username = session().get("email");
+			apj.username = username;
+		    apj.jobStatus = "Draft";
+			apj.positionname = saveAppliedJobsVM.labourCategory;
+			apj.location = saveAppliedJobsVM.workLocation;
+			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
+			apj.reqType = saveAppliedJobsVM.requestType;
+			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
+			apj.workDesc    =saveAppliedJobsVM.workDescription;
+			apj.positiontype  =saveAppliedJobsVM.positionType;
+			apj.save();
+
+		} catch (JsonParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return ok();
+	}
 	
 	@JsonIgnoreProperties
 	public static Result saveUserSavedJob() {
@@ -3068,7 +3071,7 @@ public class Application extends Controller {
 			String emailId = session().get("email");
 			userJobs = StoreExcelFile.getAllJobs(pageNumber,10);
 			int count = 0;
-			count =  AppliedJobs.getAllJobsCountByEmail(pageNumber,emailId);
+			count =  AppliedJobs.getAllJobsCountByEmailAndJobStatus(pageNumber,emailId);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJobDetails(emailId,
 						str.requestNumber,pageNumber,10);
@@ -3377,7 +3380,6 @@ public class Application extends Controller {
 	map.put("totalPages", 10);
 	//map.put("currentPage", currentPage);
 	map.put("jobs", jobVMs);
-
 	return ok(Json.toJson(map));
 	
 	//return ok();
