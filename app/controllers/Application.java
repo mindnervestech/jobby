@@ -40,9 +40,15 @@ import models.UserPosition;
 import models.UserSkill;
 import models.UserTemplate;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import play.Play;
 import play.data.DynamicForm;
@@ -243,13 +249,31 @@ public class Application extends Controller {
 				.asMultipartFormData();
 		MultipartFormData.FilePart excelpart = body.getFile("file");
 		File excelfile = excelpart.getFile();
-	//	ArrayList<String> al = new ArrayList<>();
+		String filename = excelpart.getFilename();
+		System.out.println("filename"+filename);
+		// ArrayList<String> al = new ArrayList<>();
+		Workbook wb_xssf; //Declare XSSF WorkBook
+	    Workbook wb_hssf;//Declare HSSf WorkBook
+		
 		int newRows = 0;
 		int updatedRows = 0;
+		Sheet sheet = null;
 		try {
-			FileInputStream file = new FileInputStream(excelfile);
-			HSSFWorkbook workbook = new HSSFWorkbook(file);
-			org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0);
+			
+			 FileInputStream file = new FileInputStream(excelfile);
+			 String fileExtn = FilenameUtils.getExtension(filename);
+			
+			 if (fileExtn.equalsIgnoreCase("xlsx")){
+			       wb_xssf = new XSSFWorkbook(file);
+			       sheet = wb_xssf.getSheetAt(0);
+		      }
+
+			 if (fileExtn.equalsIgnoreCase("xls")){
+			      POIFSFileSystem fs = new POIFSFileSystem(file);
+		    	  wb_hssf = new HSSFWorkbook(fs);
+		    	  sheet = wb_hssf.getSheetAt(0);
+		      }
+			 
 			StoreExcelFile storeExcelFile = null;
 			Row row;
 			String reqNo = null;
