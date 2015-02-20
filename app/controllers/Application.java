@@ -2002,7 +2002,7 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			if (addNewEmphistory.get(i).enddate == "") {
+			if (!("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) ) {
 				eds.enddate = "Present";
 			} else {
 				eds.enddate = addNewEmphistory.get(i).enddate;
@@ -2169,7 +2169,7 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			if (addNewEmphistory.get(i).enddate == "") {
+			if (!("".equalsIgnoreCase(addNewEmphistory.get(i).enddate))) {
 				eds.enddate = "Present";
 			} else {
 				eds.enddate = addNewEmphistory.get(i).enddate;
