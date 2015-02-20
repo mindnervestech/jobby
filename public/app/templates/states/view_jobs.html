@@ -473,6 +473,8 @@
 																	ng-click="openTemplatepopup($index);"></i> &nbsp;&nbsp;<i
 																	class="glyphicon glyphicon-eye-open"
 																	ng-click="openPreSavedTemplate($index);"></i>
+																	&nbsp;&nbsp;
+																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Robert please provide instruction. "></i>
 															</div>
 															<small class="desc"> <textarea rows="3"
 																	name="comment"
@@ -530,6 +532,9 @@
 																ng-click="openTemplatepopup();"></i> &nbsp;&nbsp;<i
 																class="glyphicon glyphicon-eye-open"
 																ng-click="openPreSavedTemplate($index);"></i>
+																&nbsp;&nbsp;
+																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Robert please provide instruction. "></i>
+														
 														</div>
 														<small class="desc"> <textarea rows="3"
 																name="comment"
@@ -1384,6 +1389,7 @@
 	<h3 class="popover-title">My Previous Saved Template</h3>
 	<div class="popover-content">
 		<table data-ng-repeat="userT in userTemplateData">
+			
 			<tr class="pull-right">
 				<td><i class="glyphicon glyphicon-export"
 					ng-click="copyToTemplate(userT.template);"></i>&nbsp;&nbsp;&nbsp;&nbsp;
