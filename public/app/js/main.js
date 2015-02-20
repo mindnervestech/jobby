@@ -1203,6 +1203,8 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
  
 	 // called when user clicked on the job position typefor search
 	  $scope.getAllJobByType = function(){
+		  $scope.job_draft_application_success = false;
+		  $scope.job_application_success = false;
 		  console.log("$scope.jobType"+$scope.jobType);
 		  $scope.savedJobs = false;
 		  $scope.matchedpos = false;
@@ -1235,6 +1237,8 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	 
 	  // called when user clicked for location search
 	  $scope.onLocationClick =  function(){
+		  $scope.job_draft_application_success = false;
+		  $scope.job_application_success = false;
 		  $scope.position = "notSelected";
 		    console.log($scope.location);
 		    if($scope.location == false){
@@ -1610,6 +1614,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		*/
 		$scope.savedJobs = false;
 		$scope.getUserSavedJobs = function(){
+			$scope.allJobs = false;
+			 $scope.job_draft_application_success = false;
+			  $scope.job_application_success = false;
 		console.log($scope.savedJobs);
 			$http.get('/getUserSavedJobs/'+$scope.pageno)
 			.success(function(data) {
@@ -1631,6 +1638,8 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$scope.matchedpos = false;
 			$scope.position = "notSelected";
 			$scope.savedJobs = false;
+			 $scope.job_draft_application_success = false;
+			  $scope.job_application_success = false;
 			console.log($scope.allJobs);
 			$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position+'/'+$scope.allJobs+'/'+$scope.experiance)
 			.success(function(data) {

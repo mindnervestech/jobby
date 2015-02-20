@@ -2788,7 +2788,7 @@ public class Application extends Controller {
 			System.out.println("ud" + ud);
 			// String candidiatename = ud.fullname;
 			String candidiatename = "";
-			if (ud.middlename != "NA") {
+			if (!("NA".equalsIgnoreCase(ud.middlename))) {
 				candidiatename = ud.firstname + " " + ud.middlename + " "
 						+ ud.lastname;
 			} else {
