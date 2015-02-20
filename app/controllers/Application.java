@@ -129,13 +129,15 @@ public class Application extends Controller {
 			
 			MailUtility mail = new MailUtility();
 			mail.sendRegistrationMail(email,pass);
+			flash("registration_success", " Account is created ! Please  log in");
+			return redirect("/login");
 
 		} else {
 			flash("error", "Email ID Already Exist");
 			return redirect("/signup");
 		}
-		flash("registration_success", " Account is created ! Please  log in");
-		return redirect("/login");
+		
+		
 
 	}
 

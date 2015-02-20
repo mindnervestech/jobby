@@ -17,7 +17,7 @@
 								name="jobType" ng-model="jobType" class="selectpicker"
 								ng-change="getAllJobByType();">
 								<option name="jobType" value="Full-Time">Full Time</option>
-								<option value="Part-Time">Part Time</option>
+								<option value="Part Time">Part Time</option>
 								<option value="All">All</option>
 							</select>
 						</div>
@@ -84,7 +84,7 @@
 										</button>
 										
 									</p>
-									<p ng-click="editUserJob(job)" >
+									<p ng-click="editUserJob(job)" style="cursor:pointer;">
 										<span class="title" >{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-pencil" ></i></strong></span>
@@ -104,7 +104,7 @@
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.workDescription}}" popover-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
@@ -114,7 +114,7 @@
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									
 								 <div id="popupBottom{{$index}}" class="popover" style="margin-top: -5%;margin-left: -20%;">
@@ -138,7 +138,7 @@
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
 											href="#popupBottom1{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
 									
 												 <div id="popupBottom1{{$index}}" class="popover" style="margin-top: -5%;margin-left: -19%;">
 												        <div class="arrow"></div>

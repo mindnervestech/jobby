@@ -840,6 +840,8 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 			    $scope.allSkills = [];
 			    $scope.userAppSkills= [];
 			    $scope.skills = [];
+			    $scope.checked = 0;
+				$scope.limit = 12;
 			  // called when user click on applied button
 			  $scope.reApplyForJob = function(job){
 				  $scope.jobData = job;
@@ -875,6 +877,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					    				if ((obj.skillName == obj1.skillName)) {
 					    					$scope.skills.push(obj.skillName);
 					    					obj.isSelected = true;
+					    					 $scope.checked++;
 					    					$scope.userAppSkills.push(obj);
 					    					};
 					    				});
@@ -975,7 +978,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 							$scope.skills.push(skill.skillName);
 							$scope.userAppSkills.push(skill);
 							$scope.maxSkillError = false;
-							
+							$scope.checked++;
 						}else{
 							$scope.maxSkillError = true;
 							index = $scope.userAppSkills.indexOf(skill);
@@ -987,13 +990,15 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						index = $scope.userAppSkills.indexOf(skill);
 						console.log(index);
 						$scope.userAppSkills.splice(index,1);
+						$scope.checked--;
 					} 
 					
 					};
 				
 					$scope.otherSkill;
 					$scope.error = false;
-					$scope.saveOtherSkill = function(){
+					$scope.saveOtherSkill = function(otherSkill){
+						$scope.otherSkill = otherSkill;
 						if(($scope.otherSkill !=  "")){
 							$http.get('saveOtherSkill/'+$scope.otherSkill)
 							.success(function(data){
@@ -1006,6 +1011,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 										$scope.result = data;
 										console.log(data);
 										$scope.otherSkill = " ";
+										$scope.checked++;
 									}else{
 										$scope.maxSkillError = true;
 									}
@@ -1281,7 +1287,8 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		    $scope.allSkills = [];
 		    $scope.userAppSkills= [];
 		    
-		   
+		    $scope.checked = 0;
+			$scope.limit = 12;
 		    $http.get('/getAllSkills')
 			.success(function(data) {
 				$scope.allSkills = data.skills;
@@ -1297,6 +1304,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		    					console.log("in sME");
 		    					$scope.skills.push(obj.skillName);
 		    					obj.isSelected = true;
+		    					$scope.checked++;
 		    					$scope.userAppSkills.push(obj);
 		    					};
 		    				});
@@ -1314,9 +1322,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 							angular.forEach($scope.allSkills, function(obj, index){
 				    			angular.forEach($scope.userSkill, function(obj1, index){
 				    				if ((obj.skillName == obj1.skillName)) {
-				    					console.log("in sME");
 				    					$scope.skills.push(obj.skillName);
 				    					obj.isSelected = true;
+				    					$scope.checked++;
 				    					$scope.userAppSkills.push(obj);
 				    					};
 				    				});
@@ -1622,6 +1630,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$scope.pageno = 0;
 			$scope.matchedpos = false;
 			$scope.position = "notSelected";
+			$scope.savedJobs = false;
 			console.log($scope.allJobs);
 			$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.matchedpos+'/'+$scope.position+'/'+$scope.allJobs+'/'+$scope.experiance)
 			.success(function(data) {
@@ -1685,14 +1694,19 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		
 		$scope.skills = [];
 		
+		$scope.checked = 0;
+		$scope.limit = 12;
+		var index = 0;
 		$scope.skillClicked = function(e, skill) {
 			console.log(skill);
-			var index;
+			
 			if($(e.target).is(":checked")) {
 				if($scope.skills.length<=12){
 					$scope.skills.push(skill.skillName);
 					$scope.userAppSkills.push(skill);
 					$scope.maxSkillError = false;
+					$scope.checked++;
+					console.log($scope.checked);
 					/*index = $scope.userAppSkills.indexOf(skill);
 					console.log(index);
 					$scope.userAppSkills.splice(index,1);*/
@@ -1702,31 +1716,34 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 					index = $scope.userAppSkills.indexOf(skill);
 					console.log(index);
 					$scope.userAppSkills.splice(index,1);
+					//$scope.checked --;
 				}
 			
 			}else{
 				index = $scope.userAppSkills.indexOf(skill);
 				console.log(index);
 				$scope.userAppSkills.splice(index,1);
+				$scope.checked--;
 			} 
 			
 			};
 		
 			$scope.otherSkill;
 			$scope.error = false;
-			$scope.saveOtherSkill = function(){
+			$scope.saveOtherSkill = function(otherSkill){
+				$scope.otherSkill = otherSkill;
 				if(($scope.otherSkill !=  "")){
 					$http.get('saveOtherSkill/'+$scope.otherSkill)
 					.success(function(data){
 						if(data) {
 							if($scope.skills.length<=12){
-								$scope.skills.push(skill.skillName);
-								$scope.maxSkillError = false;
 								data.isSelected = true;
 								$scope.allSkills.push(data);
+								$scope.userAppSkills.push(skill);
 								$scope.result = data;
 								console.log(data);
 								$scope.otherSkill = " ";
+								$scope.checked++;
 							}else{
 								$scope.maxSkillError = true;
 							}
@@ -7338,7 +7355,9 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
     				if ((obj.clearance == obj1.clearance)) {
     					console.log(obj1.clearance);
     					console.log(obj.clearance);
+    					$scope.userClearance.push(obj.clearance);
     					obj.isSelect = true;
+    					$scope.userClearance.push(obj.clearance);
     					};
     				});
     			});
@@ -7347,6 +7366,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
     			angular.forEach($scope.userExperience, function(obj1, index){
     				if ((obj.experianceLevel == obj1.experianceLevel)) {
     					obj.isSelect = true;
+    					$scope.userExperience.push(obj.experianceLevel);
     					};
     				});
     			});
@@ -7355,14 +7375,12 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
     			angular.forEach($scope.userPosition, function(obj1, index){
     				if ((obj.position == obj1.position)) {
     					// $scope.skills.push(obj.skillName);
+    					$scope.userPosition.push(obj.position);
     					obj.isSelected = true;
     					};
     				});
     			});
     	});
-
-	
-		
 		$('#editUserDetails').modal();
 	}
 	
@@ -7675,7 +7693,8 @@ App.controller('ViewAllSkillsController', function ($scope, $rootScope, $routePa
 	
 	$scope.skillname;
 	//add new Admin 
-	$scope.addNewSkill =  function(){
+	$scope.addNewSkill =  function(skillname){
+		$scope.skillname = skillname;
 		console.log($scope.skillname);
 		if((!$scope.skillname == "") ){
 		$http.get('/saveOtherSkill/'+$scope.skillname).success(function(data){
@@ -7717,6 +7736,7 @@ App.controller('ViewAllSkillsController', function ($scope, $rootScope, $routePa
 	//Open edit Skill  modal
 	$scope.editSkillpopoup = function(skill){
 		$scope.oldSkill = skill ;
+		$scope.editSkillNew = skill;
 		$('#editSkillModal').modal();
 	}
 	
@@ -8483,6 +8503,8 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	$scope.userPosition;
 	$scope.userClearance;
 	$scope.userExperience;
+	$scope.checked = 0;
+	$scope.limit = 12;
 	
 	// $scope.skills = [];
 	
@@ -8600,6 +8622,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     				if ((obj.skillName == obj1.skillName)) {
     					console.log(obj1.skillName);
     					$scope.skills.push(obj.skillName);
+    					$scope.checked++;
     					obj.isSelected = true;
     					};
     				});
@@ -8619,7 +8642,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     					console.log(obj.clearance);
     					// $scope.skills.push(obj.skillName);
     					obj.isSelect = true;
-    					$scope.userClearance.push(obj);
+    					$scope.userClearance.push(obj.clearance);
     					
     					};
     				});
@@ -8632,7 +8655,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     					//console.log(obj.clearance);
     					// $scope.skills.push(obj.skillName);
     					obj.isSelected = true;
-    					$scope.userPosition.push(obj);
+    					$scope.userPosition.push(obj.position);
     					};
     				});
     			});
@@ -8642,7 +8665,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     			angular.forEach($scope.userExperience, function(obj1, index){
     				if ((obj.experianceLevel == obj1.experianceLevel)) {
     					obj.isSelect = true;
-    					$scope.userExperience.push(obj);
+    					$scope.userExperience.push(obj.experianceLevel);
     					};
     				});
     			});
@@ -8652,14 +8675,16 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		
 	}
 
-	
+	    
  	
 	$scope.skillClicked = function(e, skill) {
 		console.log(skill);
 		if($(e.target).is(":checked")) {
 		$scope.skills.push(skill.skillName);
-		
-		} 
+		$scope.checked++;
+		} else{
+			$scope.checked--;
+		}
 
 		};
 	
@@ -8726,6 +8751,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 							$scope.cleranceUError = false;
 							$scope.positionUError = false;
 							$scope.empHistory = false;
+							$scope.init();
 						});
 					}
 					}else{

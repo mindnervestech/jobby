@@ -114,7 +114,7 @@ legend.scheduler-border {
 														</div>
 														<div class="">
 															<label class="">User Security Clearance Level *</label><br />
-															<label class=""><small>You can select multiple security Clearance</small></label>
+															<label class=""><small>You can select multiple security Clearance(use Ctrl)</small></label>
 															
 														</div>
 														<div class="form-group">
@@ -134,7 +134,7 @@ legend.scheduler-border {
 														</div>
 														<div class="">
 															<label class="">Select Experience Level *</label><br />
-															<label class=""><small>You can select multiple Experience Level</small> </label>
+															<label class=""><small>You can select multiple Experience Level(use Ctrl)</small> </label>
 															
 														</div>
 														<div class="form-group">
@@ -175,7 +175,7 @@ legend.scheduler-border {
 														</div>
 														<div class="">
 															<label class="">User Position/Title *</label><br />
-																<label class=""><small>You can select multiple Position </small></label>
+																<label class=""><small>You can select multiple Position(use Ctrl) </small></label>
 														
 														</div>
 														<div class="form-group">
@@ -207,11 +207,12 @@ legend.scheduler-border {
 														<fieldset class="scheduler-border">
 															<legend class="scheduler-border"><i class="glyphicon glyphicon-screenshot"></i> &nbsp;&nbsp;User Key Skill
 																Area</legend>
+																<div class="col-md-10">You can select maximum 12 Skills</div>
 															<label ng-repeat="skill in allSkills"
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 																style="padding: 0px;"> <input type="checkbox"
 																name="allSkill" ng-click="skillClicked($event,skill)"
-																ng-model="skill.isSelected"> {{skill.skillName}}
+																ng-model="skill.isSelected" ng-disabled="checked == limit && !skill.isSelected"> {{skill.skillName}}
 
 															</label>
 															<div class="form-group">

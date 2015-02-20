@@ -47,8 +47,8 @@
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-steps/css/jquery.steps.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-colorpicker/css/colorpicker.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker-bs3.css")"/>
-<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")"/>
-<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-timepicker/css/bootstrap-timepicker.min.css")"/>
+<!-- <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")"/>
+ --><link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-timepicker/css/bootstrap-timepicker.min.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-clockface/css/clockface.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-switch/css/bootstrap-switch.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/css/style.css")"/>
@@ -320,17 +320,17 @@
 						<h4>Forgotten your Password?</h4>
 						<span>
 							no worries, click <a ng-click='getForgetPassword()' 
-								class='btn-forgot-pwd'>here to reset your password.</a>
+								class='btn-forgot-pwd'><strong style="cursor:pointer">here to reset your password.</strong></a>
 						</span>
 					</div>
 				<!-- 	<hr /> -->
 				 <span>
-						Don't have an account? <a id="btn-register" href="/signup">Register
-							Now</a>
+						Don't have an account? <a id="btn-register" href="/signup"><strong style="cursor:pointer">Register
+							Now</strong></a>
 					</span>
 					<br />
 					 <span>
-						 <a id="btn-register" ng-click ="openContactAdminForm();">Contact Admin
+						 <a id="btn-register" ng-click ="openContactAdminForm();"><strong style="cursor:pointer">Contact Admin</strong>
 							</a>
 					</span>
 					

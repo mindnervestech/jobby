@@ -121,12 +121,12 @@
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Resume</button>
 									</p>
-									<p ng-click="showJobDetails(job);" ng-if= "job.jobStatus == 'active'">
+									<p ng-click="showJobDetails(job);" ng-if= "job.jobStatus == 'active'" style="cursor:pointer;">
 										<span class="title">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong></span>
 									</p>
 									
-									<p ng-click="showDraftJobDetails(job);" ng-if= "job.jobStatus == 'Draft'">
+									<p ng-click="showDraftJobDetails(job);" ng-if= "job.jobStatus == 'Draft'" style="cursor:pointer;">
 										<span class="title">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong></span>
 									</p>
@@ -147,7 +147,7 @@
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.workDescription}}" popover-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
@@ -160,7 +160,7 @@
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover"
-											data-placement="bottom"><a style="color: blue;">&nbsp;&nbsp;more</a>
+											data-placement="bottom"><a style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a>
 										</span></small>
 									</p>
 
@@ -182,7 +182,7 @@
 											ng-bind="job.manadatorySkills[0].mskill |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover"
-											data-placement="bottom"><a style="color: blue;">&nbsp;&nbsp;more</a>
+											data-placement="bottom"><a style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a>
 										</span></small>
 									</p>
 
@@ -216,7 +216,7 @@
 											data-placement="bottom"></small><small> <span
 											href="#popupDesiredSkill{{$index}}"
 											data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<div id="popupDesiredSkill{{$index}}" class="popover"
 										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'active'">
@@ -335,8 +335,8 @@
 								<div class="tab-content">
 								
 								<div id="tab1-wizard-custom-circle" class="tab-pane active">
-										<span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
-												
+										<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
+										 -->		
 										<div class="form-group" class="active">
 										
 											<div class="pull-right">
@@ -354,13 +354,13 @@
 											</div>
 											<div ng-if="jStatus == 'active'">
 												<div class="form-group" >
-												
+												 <div class ="col-md-10">You can select maximum 12 Skills</div>
 													<div class="col-md-5" ng-repeat="skill in allSkills">
 														<label 
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 																style="padding: 0px;"> <input type="checkbox"
 																name="allSkill" ng-click="skillClicked($event,skill)"
-																ng-model="skill.isSelected"> {{skill.skillName}}
+																ng-model="skill.isSelected" ng-disabled="checked == limit && !skill.isSelected"> {{skill.skillName}}
 															</label>
 													</div>
 													</div>
@@ -386,15 +386,15 @@
 												
 											</div>
 											<div ng-if="jStatus == 'Draft'">
-												<span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
-												
+												<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span> -->
+												 <div class ="col-md-10">You can select maximum 12 Skills</div>
 												<div class="form-group" >
 													<div class="col-md-5" ng-repeat="skill in allSkills">
 														<label 
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 																style="padding: 0px;"> <input type="checkbox"
 																name="allSkill" ng-click="skillClicked($event,skill)"
-																ng-model="skill.isSelected"> {{skill.skillName}}
+																ng-model="skill.isSelected" ng-disabled="checked == limit && !skill.isSelected"> {{skill.skillName}}
 															</label>
 													</div>
 													</div>

@@ -41,7 +41,7 @@
 										</tr>
 										<tr data-ng-repeat="user in users"
 											style="background-color: #fff !important; left: -900">
-											<td ng-click=""><a target="_blank"  href="mailto:{{user.email}}">{{user.email}}</a></td>
+											<td ng-click=""><a   href="mailto:{{user.email}}">{{user.email}}</a></td>
 											<td ng-click="">{{user.firstname}}</td>
 											<td ng-click="">{{user.middlename}}</td>
 											<td ng-click="">{{user.lastname}}</td>
@@ -53,7 +53,7 @@
 													<td><button id="genpdf" type="button"
 													ng-click="changeUserPassword(user);" data-toggle="modal"  class="btn btn-success">Change </button></td>
 								<td><button type="button" class="btn btn-danger"
-											ng-if="user.userstatus == 'active'" ng-click="onInActiveUser(user)">Inactivate
+											ng-if="user.userstatus == 'active'" ng-click="onInActiveUser(user)">Deactivate
 										</button>
 										<button type="button" class="btn btn-success"
 											ng-if="user.userstatus == 'inactive'"  ng-click="onActiveUser(user)">Activate
