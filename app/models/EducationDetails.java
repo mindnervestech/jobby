@@ -59,5 +59,11 @@ public class EducationDetails extends Model {
 	public void update(EducationDetails ud) {
 		Ebean.update(ud);
 	}
+	@JsonIgnore
+	public static List <EducationDetails> checkUserProfileFilldOrNotByEmail(
+			String emailid) {
+		return find.where().eq("user_details.email", emailid).findList();
+	}
+	
 
 }

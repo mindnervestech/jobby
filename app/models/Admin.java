@@ -54,7 +54,8 @@ public class Admin extends Model {
 	
 	@JsonIgnore
 	public static List<Admin>getAllAdmin(int pageNumber, int rowperpage){
-		return find.
+		String admin = "admin";
+		return find.where().eq("role", admin).
 		setFirstRow(pageNumber * 10).setMaxRows(rowperpage)
 		.findList();
 	}

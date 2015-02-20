@@ -132,9 +132,14 @@ public class UserDetails extends Model {
 		.findList();
 	}
 	
+	
 	@JsonIgnore
-	public static int getAllUsersCount(int pageNo) {
-		return find.setFirstRow(pageNo * 10).setMaxRows(UserDetails.find.findRowCount())
+	public static int getAllUsersCount(int pageNumber) {
+		// TODO Auto-generated method stub
+		return find.setFirstRow(pageNumber * 10).setMaxRows(UserDetails.find.findRowCount())
 				.findList().size();
 	}
+	
+	
+	
 }

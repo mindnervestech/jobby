@@ -34,7 +34,10 @@
 											<th>Gender</th>
 											<th>DOB</th>
 											<th>Edit</th>
+											<th>Change Password</th>
 											<th>Status</th>
+											<th>Delete</th>
+											
 										</tr>
 										<tr data-ng-repeat="user in users"
 											style="background-color: #fff !important; left: -900">
@@ -47,12 +50,17 @@
 											
 											<td><button id="genpdf" type="button"
 													ng-click="editUserDetails(user);" data-toggle="modal"  class="btn btn-success">Edit</button></td>
+													<td><button id="genpdf" type="button"
+													ng-click="changeUserPassword(user);" data-toggle="modal"  class="btn btn-success">Change </button></td>
 								<td><button type="button" class="btn btn-danger"
 											ng-if="user.userstatus == 'active'" ng-click="onInActiveUser(user)">Inactivate
 										</button>
 										<button type="button" class="btn btn-success"
 											ng-if="user.userstatus == 'inactive'"  ng-click="onActiveUser(user)">Activate
 										</button></td>
+										
+										<td><button id="deleteuser" type="button"
+													ng-click="openUserdeletepopup(user);" data-toggle="modal"  class="btn btn-danger">Delete</button></td>
 								
 								
 								 		</tr>
@@ -115,7 +123,7 @@
 												<div class="row">
 
 													<div ng-show="userPoserror" style="color: red">
-														Please fill at least one Position/Security level.</div>
+														Please fill at least one Position/Security/Experience level.</div>
 														<div class="col-md-12">
 														<div class="">
 																<label class="">First Name *</label>
@@ -173,6 +181,7 @@
 																		required>{{clear.clearance}}</option>
 																</select>
 															</div>
+															<label class="" ng-if = "cleranceUError == true" ><small><code>Please select  security Clearance</code></small></label>
 														</div>
 														
 														<div class="">
@@ -189,8 +198,9 @@
 																		required>{{exp.experianceLevel}} </option>
 																</select>
 															</div>
+															<label class="" ng-if = "expUError == true"><small><code>Please  select Experience Level</code></small></label>
+																
 														</div>
-														
 
 													</div>
 													<div class="col-md-6">
@@ -227,6 +237,7 @@
 																		required>{{posi.position}}</option>
 																</select>
 															</div>
+															<label class="" ng-if = "positionUError == true"><small><code>Please  select Position </code></small></label>
 														</div>
 													</div>
 
@@ -537,6 +548,72 @@
       </div> -->
     </div>
   </div>
+<!-- Edit Position Module -->
+<div class="modal fade" id="changeuserPassModule" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width: 60%;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Change Password</h4>
+			</div>
+			<div class="modal-body"  style="min-height:100px;">
+				<div class="form-group">
+				<span ng-if ="errorPass == true"><code>Please Enter  some value in New  Passoword field.</code> </span>
+					<div class="col-md-12">
+						<div class="col-md-6">
+						<label class="col-md-3 control-label">Email</label>
+						 <input 
+								id="useremail" type="email" id="useremail"
+								ng-model="useremail" name="useremail"
+								placeholder="Email Id" style="font-size: 12px;"
+								class="form-control">
+						</div>
+							 <div class="col-md-6">
+							 <label class="col-md-6 control-label">New  Password</label>
+						 <input
+								id="inputName" type="password" id="userpassnew"
+								ng-model="userpassnew" name="userpassnew"
+								placeholder="Password" style="font-size: 12px;"
+								class="form-control">
+						</div>
+						
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"
+					data-ng-click="updateUserPassword();">Update</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Delete Position Module -->
+<div class="modal fade" id="deleteUserModule" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width:60%;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Delete User</h4>
+			</div>
+			<div class="modal-body" id="deleteArticleBody">
+				Are you sure want to delete this user?
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"
+					data-ng-click="deleteUser();">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <style type="text/css">
 .modal .modal-dialog {
@@ -569,4 +646,8 @@ legend.scheduler-border {
 .clsDatePicker {
     z-index: 100000;
 }
+</style>
+
+<style>
+.datepicker{z-index:1151 !important;}
 </style>

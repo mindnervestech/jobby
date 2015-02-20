@@ -19,11 +19,19 @@
 								<div style="font-size:12px">{{JobPre}}/{{totalJobs}}</div>
 						</div> 
 					<div class="box text-shadow">
-
+					<span style="color:green;" ng-if="job_application_success == true" class="pull-left">  Your application has been recieved, Thank you for applying</span> 
+						
 						<table class="demo-tbl">
-
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
 								<td class="td-block" >
+								<div class = "pull-right">
+								<button type="button" 
+													name="edit" value="edit"
+													class="btn btn-success"
+													ng-click="reApplyForJob(job);">
+													Reapply &nbsp;&nbsp;
+												</button>
+												</div>
 									<!-- <p class="date">
 										<button type="button" class="btn btn-green"
 											data-toggle="modal" ng-click="applyForJob(job)">Apply
@@ -53,7 +61,7 @@
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
 									</p>
-								<p class="desc">
+								<!-- <p class="desc">
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
@@ -67,7 +75,30 @@
 							            <small  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
 							            </small>
 							        </div>
-							    </div>
+							    </div> -->
+							    
+							    <!--  manadatory Skills job content end  -->
+									
+									<!-- user saved job content manadatory Skills  -->
+									<p class="desc" ng-if="job.jobStatus == 'Applied'">
+										<small
+											ng-bind="job.manadatorySkills[0].mskill |cut:true:200:'   ...'"
+											data-placement="bottom"></small> <small><span
+											href="#popupBottom{{$index}}" data-toggle="modal-popover"
+											data-placement="bottom"><a style="color: blue;">&nbsp;&nbsp;more</a>
+										</span></small>
+									</p>
+
+									<div id="popupBottom{{$index}}" class="popover"
+										data-toggle="modal-popover"
+										style="margin-top: -5%; margin-left: -20%;" ng-if="job.jobStatus == 'Applied'">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small data-ng-repeat="job1 in job.manadatorySkills">{{job1.mskill}}
+											</small>
+										</div>
+									</div>
+									<!-- user saved job content manadatory Skills  end -->
 							    
 									<p class="text-danger">
 										<small>Desired Skills</small>
@@ -78,7 +109,7 @@
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>-->
-									<p class="desc">
+									<!-- <p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
 											href="#popupBottom1{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
@@ -90,13 +121,35 @@
 												            <small  data-ng-repeat="job2 in job.desiredSkill">{{job2}}
 												            </small>
                 										  </div>
-											    </div>
+											    </div> -->
+											    
+											    <!-- user  job content   end-->
+									
+									
+									<!-- user saved job content Desired Skills start  -->
+									<p class="desc" ng-if="job.jobStatus == 'Applied'">
+										<small ng-bind="job.desiredSkill[0].dskill  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small> <span
+											href="#popupDesiredSkill{{$index}}"
+											data-toggle="modal-popover" data-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>
+									<div id="popupDesiredSkill{{$index}}" class="popover"
+										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'Applied'">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small data-ng-repeat="job2 in job.desiredSkill">{{job2.dskill}}</small>
+											<span ng-click="close">close</span>
+										</div>
+									</div>
+									
+									<!-- user saved job content Desired Skills end -->
  
 								</td>
 
 							</tr>
 						</table>
-						 <div class="pull-right">
+					 <div class="pull-right">
 							<button id="pre1" type="button" ng-click="clickPre()"
 								class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
 							&nbsp;
@@ -153,10 +206,10 @@
 										<small>Mandatory Skills</small>
 									</p>
 								<p class="desc">
-										<small
+										<!-- <small
 											ng-bind="jobDetails.manadatorySkills"
-											data-placement="bottom"></small>									</p>
-							    
+											data-placement="bottom"></small> -->									</p>
+							    <small data-ng-repeat="job in jobDetails.manadatorySkills" data-placement="bottom">{{job.mskill}}</small>
 									<p class="text-danger">
 										<small>Desired Skills</small>
 									</p>
@@ -167,8 +220,10 @@
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>-->
 									<p class="desc">
-										<small ng-bind="jobDetails.desiredSkill"
-											data-placement="bottom"></small>
+									 <small data-ng-repeat="job2 in jobDetails.desiredSkill" data-placement="bottom">{{job2.dskill}}</small>
+								
+										<!-- <small ng-bind="jobDetails.desiredSkill"
+											data-placement="bottom"></small> -->
 								</td>
 
 							</tr>
@@ -183,6 +238,384 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="appliedJobsPopup" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Job Application</h4>
+				</div>
+
+				<div class="modal-body">
+					<!-- <form id="mSkill" name="mSkill" method="post" action="/">
+					<div class="form-group" ng-repeat="mskill in mdSkill">
+						<div class="form-group">
+							<label class="col-sm-12 control-label"> <small>{{mskill}}
+							</small></label>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-8">
+								<textarea rows="3" name="skillDesc" ng-model="skillDesc"
+									class="form-control" placeholder="e.g. Skill Desc"></textarea>
+							</div>
+						</div>
+					</div>
+				</form> -->
+
+					<div class="portlet box portlet-green">
+						<div class="">
+						<span ng-show="errorManaSkillComment" style="color: red;">
+											Please give comment to all Mandatory Skills</span>
+							<div id="rootwizard-custom-circle">
+								<div class="">
+
+									<ul>
+									
+									<li class="active"><a id="tab1"
+											data-target="#tab1-wizard-custom-circle" data-toggle="tab">
+												<!-- <i class="glyphicon glyphicon-user"></i> -->
+												<p class="anchor">1.Select Skills</p>
+										</a></li>
+										<li ><a id="tab2"
+											data-target="#tab2-wizard-custom-circle" data-toggle="tab">
+												<!-- <i class="glyphicon glyphicon-user"></i> -->
+												<p class="anchor">2.Manadatory Skills</p>
+										</a></li>
+										<!--  <p class="description"></p></a></li> -->
+										<li><a data-target="#tab3-wizard-custom-circle"
+											data-toggle="tab" id="tab3"> <!-- <i class="glyphicon glyphicon-send mln"></i> -->
+												<p class="anchor">3.Desired Skills</p></a></li>
+									</ul>
+
+								</div>
+
+								<div class="tab-content">
+								
+										
+								<div id="tab1-wizard-custom-circle" class="tab-pane active">
+										<div class="form-group" class="active">
+											<div class="pull-right">
+												<button type="button" ng-if="jStatus == 'active'"
+													name="next" value="Next"
+													class="btn btn-info button-next mlm"
+													ng-click="saveUserJobToDraft();">
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+												<button type="button" ng-if="jStatus == 'draft'" name="next"
+													value="Next" class="btn btn-info button-next mlm"
+													ng-click="saveUserJob();">
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+											</div>
+											<div ng-if="jStatus == 'Applied'">
+												<div class="form-group" >
+												<span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
+													<div class="col-md-5" ng-repeat="skill in allSkills">
+														<label 
+																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+																style="padding: 0px;"> <input type="checkbox"
+																name="allSkill" ng-click="skillClicked($event,skill)"
+																ng-model="skill.isSelected"> {{skill.skillName}}
+															</label>
+													</div>
+													</div>
+													
+													<br /><br />
+													<div class="form-group">
+																<div class="col-md-9">
+																	<div class="col-md-5">
+																		<span ng-show="error">Please enter Skill Name</span> <input
+																			id="inputName" type="text" id="otherSkill"
+																			ng-model="otherSkill" name="otherSkill"
+																			placeholder="Other Skill" style="font-size: 12px;"
+																			class="form-control">
+																	</div>
+																	<div class="col-md-4">
+																		<button type="submit"
+																			ng-click="saveOtherSkill(otherSkill);"
+																			class="btn btn-primary">Add</button>
+																	</div>
+																</div>
+															</div>
+													
+												
+											</div>
+											
+											<div ng-if="jStatus == 'Draft'">
+												<div class="form-group" ng-repeat="mskill in mdSkill">
+													<div class="form-group">
+														<label class="col-sm-10 control-label"
+															ng-model="manadatorySkills.skillName"> <small
+															class="desc">{{mskill}} </small></label>
+													</div>
+												</div>
+											</div>
+									
+										</div>
+										<div class="pull-right">
+											<button type="button" name="next" value="Next"
+												class="btn btn-info button-next mlm"
+												ng-click="gotoNext();" style="margin-top: 48%;">
+												Next<i class="fa fa-arrow-circle-o-right mlx"></i>
+											</button>
+										</div>
+
+									</div>
+								
+									<div id="tab2-wizard-custom-circle" class="tab-pane">
+										
+										<div class="form-group" class="">
+										
+											<!-- <div class="pull-right">
+												<button type="button" ng-if="jStatus == 'draft'"
+													name="next" value="Next"
+													class="btn btn-info button-next mlm"
+													ng-click="saveUserJobToDraft();">
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+												<button type="button" ng-if="jStatus == 'draft'" name="next"
+													value="Next" class="btn btn-info button-next mlm"
+													ng-click="saveUserJob();">
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+											</div>
+											 -->
+										<!-- 	<div ng-if="jStatus == 'active'">
+											
+												<div class="form-group" ng-repeat="mskill in mdSkill">
+													<div class="form-group">
+														<label class="col-sm-10 control-label"
+															ng-model="manadatorySkills.skillName"> <small
+															class="desc">{{mskill}} </small></label>
+
+													</div>
+													<div class="form-group">
+														<div class="col-sm-8">
+															<div class="pull-right">
+																<i class="glyphicon glyphicon-download"
+																	ng-click="openTemplatepopup($index);"></i> &nbsp;&nbsp;<i
+																	class="glyphicon glyphicon-eye-open"
+																	ng-click="openPreSavedTemplate($index);"></i>
+															</div>
+															<small class="desc"> <textarea rows="3"
+																	name="comment"
+																	ng-model="manadatorySkills[$index].comment"
+																	class="form-control" style="font-size: 12px;"
+																	placeholder="e.g. Skill Desc" required></textarea>
+															</small>
+															Button to launch modal popover
+															template  user popup  content
+															<div id="saveTemplate{{$index}}" class="popover"
+																style="z-index: 100;">
+																<div class="popover-content">
+																	<div class="form-group">
+																		<label class="">Save As </label>
+																		<div>
+
+																			<input type="text" id="userTemplate"
+																				name="userTemplate" ng-model="userTemplate"
+																				placeholder="Template Name" style="font-size: 12px;"
+																				class="form-control" required>
+																		</div>
+																		<br />
+																		<button name="save" id="save"
+																			class="button btn-success"
+																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
+																			As</button>
+																		<i class="glyphicon glyphicon-download"
+																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
+																		&nbsp;&nbsp;&nbsp;&nbsp;<i
+																			class="glyphicon glyphicon-remove"
+																			ng-click="closeTemplatePopup($index);"></i>
+
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+											</div> -->
+
+
+									 <div ng-if="jStatus == 'Applied'">
+											
+											<div class="form-group" ng-repeat="manadatorySkills in mdSkill">
+												<div class="form-group">
+													<label class="col-sm-10 control-label"
+														ng-model="manadatorySkills.skillName"> <small
+														class="desc">{{manadatorySkills.mskill}} </small></label>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-8">
+														<div class="pull-right">
+															<i class="glyphicon glyphicon-download"
+																ng-click="openTemplatepopup();"></i> &nbsp;&nbsp;<i
+																class="glyphicon glyphicon-eye-open"
+																ng-click="openPreSavedTemplate($index);"></i>
+														</div>
+														<small class="desc"> <textarea rows="3"
+																name="comment"
+																ng-model="manadatorySkills.comment"
+																class="form-control" style="font-size: 12px;"
+																placeholder="e.g. Skill Desc" required></textarea>
+														</small>
+														
+														<div id="saveTemplate" class="popover"
+															style="z-index: 100;">
+															<div class="popover-content">
+																<div class="form-group">
+																	<label class="">Save As </label>
+																	<div>
+
+																		<input type="text" id="userTemplate"
+																			name="userTemplate" ng-model="userTemplate"
+																			placeholder="Template Name" style="font-size: 12px;"
+																			class="form-control" required>
+																	</div>
+																	<br />
+																	<button name="save" id="save"
+																		class="button btn-success"
+																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
+																		As</button>
+																	<i class="glyphicon glyphicon-download"
+																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
+																	&nbsp;&nbsp;&nbsp;&nbsp;<i
+																		class="glyphicon glyphicon-remove"
+																		ng-click="closeTemplatePopup();"></i>
+
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											</div> 
+										</div>
+										<div class="pull-right">
+											<button type="button" name="previous" value="Previous"
+												class="btn btn-info button-previous"
+												data-target="#tab1-wizard-custom-circle"
+												ng-click="preClickedfirst();"  style="margin-top: 48%;"data-toggle="tab">
+												<i class="fa fa-arrow-circle-o-left mrx"></i>Prev
+											</button>
+											
+											<button type="button" name="next" value="Next"
+												class="btn btn-info button-next mlm"
+												ng-click="checkAllFields();" style="margin-top: 48%;">
+												Next<i class="fa fa-arrow-circle-o-right mlx"></i>
+											</button>
+										</div>
+										
+										
+
+									</div>
+
+
+									<div id="tab3-wizard-custom-circle" class="tab-pane">
+										<!-- <h3 class="mbxl">Desired Skills</h3> -->
+										<div class="row">
+										
+											<div class="col-md-12">
+											<!-- <div class="pull-right">
+												<button type="button" ng-if="jStatus == 'active'"
+													name="next" value="Next"
+													class="btn btn-info button-next mlm"
+													ng-click="saveUserJobToDraft();">
+													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+												<button type="button" ng-if="jStatus == 'Draft'" name="next"
+													value="Next" class="btn btn-info button-next mlm"
+													ng-click="saveUserJob();">
+													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+
+											</div> -->
+												<!-- <div ng-if="jStatus == 'active'">
+													<div class="form-group" ng-repeat="dskill in dSkills">
+														<div class="form-group">
+															<div class="form-group"
+																ng-model="desiredSkills[$index].dskill">
+																<label class="col-sm-12 control-label" value="">
+																	<small class="desc">{{dskill}} </small>
+																</label>
+															</div>
+															<div class="form-group">
+																<div class="col-sm-8">
+																	<textarea rows="3" name="skillDesc"
+																		ng-model="desiredSkills[$index].comment"
+																		class="form-control" style="font-size: 12px;"
+																		placeholder="e.g. Skill Desc"></textarea>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div> -->
+
+												<div ng-if="jStatus == 'Applied'">
+												<div class="form-group" ng-repeat="desiredSkills in dSkills">
+													<div class="form-group">
+														<div class="form-group"
+															ng-model="desiredSkills[$index].dskill">
+															<label class="col-sm-12 control-label" value="">
+																<small class="desc">{{desiredSkills.dskill}} </small>
+															</label>
+														</div>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<textarea rows="3" name="skillDesc"
+																	ng-model="desiredSkills.comment"
+																	class="form-control" style="font-size: 12px;"
+																	placeholder="e.g. Skill Desc"></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+												</div> 
+											</div>
+											
+										</div>
+										<div class="action text-right">
+											<button type="button" name="previous" value="Previous"
+												class="btn btn-info button-previous"
+												data-target="#tab2-wizard-custom-circle"
+												ng-click="preClicked();" data-toggle="tab">
+												<i class="fa fa-arrow-circle-o-left mrx"></i>Prev
+											</button>
+											<!-- <button type="button" ng-if="jStatus == 'active'" name="next"
+												value="Next" class="btn btn-info button-next mlm"
+												ng-click="saveUserSavedJob();">
+												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
+											</button> -->
+											<button type="button" ng-if="jStatus == 'Applied'" name="next"
+												value="Next" class="btn btn-info button-next mlm"
+												ng-click="resaveUserJob();">
+												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
+											</button>
+
+											
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary"
+						ng-click="saveUserJob();">Save changes</button>
+				</div> -->
+	</div>
 
 <style type="text/css">
 

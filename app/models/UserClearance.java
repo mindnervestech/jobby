@@ -23,6 +23,7 @@ public class UserClearance extends Model {
 
 	public String clearance;
 
+
 	/*
 	 * view
 	 * 

@@ -73,10 +73,14 @@
 								<td class="td-block" >
 									<p class="date">
 										<button type="button" class="btn btn-danger"
-											ng-if="job.jobStatus == 'active'" ng-click="onInactiveJobClicked(job)">Inactivate
+											ng-if="job.jobStatus == 'active'" ng-click="onInactiveJobClicked(job)">Deactivate
 										</button>
 										<button type="button" class="btn btn-success"
 											ng-if="job.jobStatus == 'inactive'"  ng-click="onActiveJobClicked(job)">Activate
+										</button>
+										
+										<button type="button" class="btn btn-danger"
+										 ng-click="openDeleteJobPopup(job)">Delete
 										</button>
 										
 									</p>
@@ -184,25 +188,41 @@
 					
 	
 					<div class="col-md-4">
-						<div class="">
+						 <div class="">
 							<label class="">Labour Category</label>
 						</div>
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<input type="text" id="labourCategory" name="labourCategory"
 								ng-model="editJob.labourCategory" placeholder="Enter Full Name"
 								style="font-size: 12px;" class="form-control" required>
-						</div>
+						</div> -->
+						 <div class="form-group">
+						<select 
+								ng-model="editJob.labourCategory"
+								ng-change="onLabourCategoryChange()"
+								class="form-control" >
+								<option   ng-selected="pos.position == editJob.labourCategory" ng-repeat="pos in allPosition.position" >{{pos.position}}</option>
+							</select>
+							</div>
 					</div>
 					
 					<div class="col-md-4">
 						<div class="">
 							<label class="">Performance Level</label>
 						</div>
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<input type="text" id="performanceLevel" name="performanceLevel"
 								ng-model="editJob.performanceLevel" placeholder="Enter Full Name"
 								style="font-size: 12px;" class="form-control" required>
-						</div>
+						</div> -->
+						<div class="form-group">
+						<select 
+								ng-model="editJob.performanceLevel"
+								ng-change="onPositionChange()"	
+								class="form-control" >
+								<option   ng-selected="per.experianceLevel == editJob.experianceLevel" ng-repeat="per in allExperiance.experiance" >{{per.experianceLevel}}</option>
+							</select>
+							</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Position Type</label>
@@ -216,11 +236,20 @@
 						<div class="">
 							<label class="">Clearance Required</label>
 						</div>
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<input type="text" id="clearanceRequired" name="clearanceRequired"
 								ng-model="editJob.clearanceRequired" placeholder="Enter Full Name"
 								style="font-size: 12px;" class="form-control" required>
+						</div> -->
+						<div class="form-group">
+						<select 
+								ng-model="editJob.clearanceRequired"
+								ng-change="onClearanceChange()"	
+								class="form-control" >
+								<option   ng-selected="clr.clearance == editJob.clearanceRequired" ng-repeat="clr in allCleanrance.clearance" >{{clr.clearance}}</option>
+							</select>
 						</div>
+						
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Work Location</label>
@@ -274,34 +303,45 @@
 								ng-model="editJob.certificationRequired" placeholder="Certification Required"
 								style="font-size: 12px;" class="form-control" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="">Conus Travel</label>
+							<label class="">Due to Pmo</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="conusTravel" name="conusTravel"
-								ng-model="editJob.conusTravel" placeholder="Conus Travel"
-								style="font-size: 12px;" class="form-control" required>
-						</div>
-					</div><div class="col-md-4">
-						<div class="">
-							<label class="">Oconus Travel</label>
-						</div>
-						<div class="form-group">
-							<input type="text" id="oconusTravel" name="oconusTravel"
-								ng-model="editJob.oconusTravel" placeholder="oconusTravel"
-								style="font-size: 12px;" class="form-control" required>
+							<!-- <input type="text" id="duetoPmo" name="duetoPmo"
+								ng-model="editJob.duetoPmo" placeholder="Due to Pmo"
+								style="font-size: 12px;" class="form-control" required> -->
+								
+								<input class="form-control" ng-click="initduetoPmoDatePicker();" id="duetoPmo" ng-model="editJob.duetoPmo"  required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+								
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Regular hours per year</label>
+							<label class="">Update Date</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="reghrperYear" name="reghrperYear"
-								ng-model="editJob.reghrperYear" placeholder="Regular hours per year"
-								style="font-size: 12px;" class="form-control" required>
+							<!-- <input type="text" id="updateDate" name="updateDate"
+								ng-model="editJob.updateDate" placeholder="Enter Full Name"
+								style="font-size: 12px;" class="form-control" required> -->
+								
+								<input class="form-control" ng-click="initDatePicker();" id="datepicker" ng-model="editJob.updateDate"required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																			
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Due to Govt</label>
+						</div>
+						<div class="form-group">
+							<!-- <input type="text" id="duetoGovt" name="duetoGovt"
+								ng-model="editJob.duetoGovt" placeholder="Due to Govt"
+								style="font-size: 12px;" class="form-control" required> -->
+								<input class="form-control" ng-click="initduetoGovtDatePicker();" id="duetoGovt" ng-model="editJob.duetoGovt" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+								
+						</div>
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Schedule Comments</label>
 						</div>
@@ -310,32 +350,73 @@
 								ng-model="editJob.scheduleComments" placeholder="Schedule Comments"
 								style="font-size: 12px;" class="form-control" required>
 						</div>
+					</div>
+					
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Pager Duty Comments</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="pagerdutyComments" name="pagerdutyComments"
+								ng-model="editJob.pagerdutyComments" 
+								style="font-size: 12px;"  class = "form-control" required>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Regular hours per year</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="reghrperYear" name="reghrperYear"
+								ng-model="editJob.reghrperYear" 
+								style="font-size: 12px;"  class="form-control" required>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Conus Travel</label>
+						</div>
+						
+							<input type="checkbox" id="conusTravel" name="conusTravel"
+								ng-model="editJob.conusTravel"  ng-checked = "editJob.conusTravel == 'Y'" 
+								style="font-size: 12px;"  >
+						
+					</div>
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Oconus Travel</label>
+						</div>
+						<div class="form-group">
+							<input type="checkbox" id="oconusTravel" name="oconusTravel"
+								ng-model="editJob.oconusTravel" 
+								style="font-size: 12px;" ng-checked ="editJob.oconusTravel == 'Y'" >
+						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Non pub comments</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="nonpubComments" name="nonpubComments"
-								ng-model="editJob.nonpubComments" placeholder="Enter Full Name"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="nonpubComments" name="nonpubComments"
+								ng-model="editJob.nonpubComments" ng-checked = "editJob.nonpubComments == 'Y'"
+								style="font-size: 12px;" required>
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Mission Critical</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="missionCritical" name="missionCritical"
-								ng-model="editJob.missionCritical" placeholder="Mission Critical"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="missionCritical" name="missionCritical"
+								ng-model="editJob.missionCritical" ng-checked = "editJob.missionCritical == 'Y'"
+								style="font-size: 12px;" required>
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Night Work</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="nightWork" name="nightWork"
-								ng-model="editJob.nightWork" placeholder="Night Work"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="nightWork" name="nightWork"
+								ng-model="editJob.nightWork" 
+								style="font-size: 12px;"  ng-checked = "editJob.nightWork == 'Y'" required>
 						</div>
 					</div>
 					
@@ -346,112 +427,98 @@
 							<label class="">Local traval using pov</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="localTravalusingpub" name="localTravalusingpub"
-								ng-model="editJob.localTravalusingpub" placeholder="Local traval using pov"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="localTravalusingpub" name="localTravalusingpub"
+								ng-model="editJob.localTravalusingpub" 
+								style="font-size: 12px;"  ng-checked = "editJob.localTravalusingpub == 'Y'" required>
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Pager Duty</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="pagerDuty" name="pagerDuty"
-								ng-model="editJob.pagerDuty" placeholder="Pager Duty"
-								style="font-size: 12px;" class="form-control" required>
-						</div>
-					</div><div class="col-md-4">
-						<div class="">
-							<label class="">Pager Duty Comments</label>
-						</div>
-						<div class="form-group">
-							<input type="text" id="pagerdutyComments" name="pagerdutyComments"
-								ng-model="editJob.pagerdutyComments" placeholder="Pager Duty Comments"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="pagerDuty" name="pagerDuty"
+								ng-model="editJob.pagerDuty" 
+								style="font-size: 12px;"   ng-checked = "editJob.pagerDuty == 'Y'" required>
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Work on Holiday</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="workonHoliday" name="workonHoliday"
-								ng-model="editJob.workonHoliday" placeholder="Work on Holiday"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="workonHoliday" name="workonHoliday"
+								ng-model="editJob.workonHoliday" ng-checked = "editJob.workonHoliday == 'Y'"
+								style="font-size: 12px;"  required>
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Work on Weekends</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="workonWeekends" name="workonWeekends"
-								ng-model="editJob.workonWeekends" placeholder="Work on Weekends"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="workonWeekends" name="workonWeekends"
+								ng-model="editJob.workonWeekends" ng-checked = "editJob.workonWeekends == 'Y'"
+								style="font-size: 12px;"  required>
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Shift Work</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="shiftWork" name="shiftWork"
-								ng-model="editJob.shiftWork" placeholder="Shift Work"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="shiftWork" name="shiftWork"
+								ng-model="editJob.shiftWork"  ng-checked = "editJob.shiftWork == 'Y'"
+								style="font-size: 12px;"  >
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">War zone</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="warzone" name="warzone"
-								ng-model="editJob.warzone" placeholder="War Zone"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="warzone" name="warzone"
+								ng-model="editJob.warzone" 
+								style="font-size: 12px;" ng-checked = "editJob.warzone == 'Y'" >
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
 							<label class="">Coop</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="coop" name="coop"
-								ng-model="editJob.coop" placeholder="coop"
-								style="font-size: 12px;" class="form-control" required>
-						</div>
-					</div><div class="col-md-4">
-						<div class="">
-							<label class="">Due to Pmo</label>
-						</div>
-						<div class="form-group">
-							<input type="text" id="duetoPmo" name="duetoPmo"
-								ng-model="editJob.duetoPmo" placeholder="Due to Pmo"
-								style="font-size: 12px;" class="form-control" required>
-						</div>
-					</div><div class="col-md-4">
-						<div class="">
-							<label class="">Update Date</label>
-						</div>
-						<div class="form-group">
-							<input type="text" id="updateDate" name="updateDate"
-								ng-model="editJob.updateDate" placeholder="Enter Full Name"
-								style="font-size: 12px;" class="form-control" required>
+							<input type="checkbox" id="coop" name="coop"
+								ng-model="editJob.coop" 
+								style="font-size: 12px;" ng-checked = "editJob.coop == 'Y'">
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="">
-							<label class="">Due to Govt</label>
-						</div>
-						<div class="form-group">
-							<input type="text" id="duetoGovt" name="duetoGovt"
-								ng-model="editJob.duetoGovt" placeholder="Due to Govt"
-								style="font-size: 12px;" class="form-control" required>
-						</div>
-					</div>
+					
 					
 				</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Save changes</button>
+        <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Update</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Delete Position Module -->
+<div class="modal fade" id="deleteJobModule" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Delete Job</h4>
+			</div>
+			<div class="modal-body" id="deleteArticleBody">
+				Are you sure want to delete this Job?
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"
+					data-ng-click="deleteSelectedJob();">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 <style type="text/css">
 .modal .modal-dialog {
@@ -462,4 +529,7 @@
 	max-height: 620px;
 	overflow-y: auto;
 }
+</style>
+<style>
+.datepicker{z-index:1151 !important;}
 </style>

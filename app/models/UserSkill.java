@@ -42,7 +42,22 @@ public class UserSkill extends Model {
 	public static UserSkill getSkillByName(String name) {
 		return find.where().eq("skillName", name).findUnique();
 	}
+	
+	
+	@JsonIgnore
+	public static List <UserSkill> getAllSkillsForAdmin(int currentPage,  int rowsPerPage) {
 
+		return find
+				.setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	
+	@JsonIgnore
+	public static int getAllSkillsCountForAdmin(int pageNo,int rowsPerPage) {
+		return find.setFirstRow(pageNo * 10).setMaxRows(UserSkill.find.findRowCount())
+				.findList().size();
+	}
+	
 	public UserSkill() {
 
 	}

@@ -2,6 +2,8 @@ package controllers;
 
 import java.io.File;
 
+
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,6 +63,8 @@ import views.html.index;
 import views.html.register;
 import views.html.signin;
 
+import Utility.MailUtility;
+
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -111,19 +115,26 @@ public class Application extends Controller {
 			UserDetails u = new UserDetails();
 			u.email = email;
 			u.password = pass;
-			//u.fullname = firstname;
+			// u.fullname = firstname;
 			u.firstname = firstname;
-			u.middlename = middlename;
+			if (middlename == null || "NA".equalsIgnoreCase(middlename)) {
+				u.middlename = "NA";
+			} else {
+				u.middlename = middlename;
+			}
 			u.lastname = lastname;
 			u.gender = gender;
 			u.userstatus = "active";
 			Ebean.save(u);
+			
+			MailUtility mail = new MailUtility();
+			mail.sendRegistrationMail(email,pass);
 
-		}else{
+		} else {
 			flash("error", "Email ID Already Exist");
 			return redirect("/signup");
 		}
-
+		flash("registration_success", " Account is created ! Please  log in");
 		return redirect("/login");
 
 	}
@@ -169,33 +180,43 @@ public class Application extends Controller {
 		} else {
 
 			UserDetails ud = UserDetails.isUser(uname, pass);
-			
-				if (ud != null) {
-					if("active".equalsIgnoreCase(ud.userstatus)){
-						session().clear();
-						session().put("email", ud.email);
+
+			if (ud != null) {
+				if ("active".equalsIgnoreCase(ud.userstatus)) {
+					session().clear();
+					session().put("email", ud.email);
+					// check for the user profile filled or not if filled
+					// redirect to vieew jobd else redirect to user profile page
+					List<EducationDetails> edu = EducationDetails
+							.checkUserProfileFilldOrNotByEmail(uname);
+					if (edu.size() == 0) {
+						return redirect("/dashboard#/extra-profile");
+					} else {
 						return redirect("/dashboard#/viewJobs");
-					}else{
-						flash().put("AccountError", "Account is not activated.Please wait!!! ");
-						return ok(signin.render());
 					}
-					
+
 				} else {
-					flash().put("error", "Login Failed");
+					flash().put("AccountError",
+							"Account is not activated.Please wait!!! ");
 					return ok(signin.render());
 				}
-			
-			
+
+			} else {
+				flash().put("error", "Login Failed");
+				return ok(signin.render());
+			}
 
 		}
-		//return ok();
+		// return ok();
 
 	}
 
 	// used to send the password to sign in user
-	public static Result forgetPassword() {
-		DynamicForm dynamicForm = Form.form().bindFromRequest();
-		String uname = dynamicForm.get("email");
+	public static Result forgetPassword(String uname) {
+		/*
+		 * DynamicForm dynamicForm = Form.form().bindFromRequest(); String uname
+		 * = dynamicForm.get("email");
+		 */
 		UserDetails ud = UserDetails.getPassword(uname);
 
 		final String username = Play.application().configuration()
@@ -243,6 +264,8 @@ public class Application extends Controller {
 
 	}
 
+	
+	
 	// upload the excel
 	public static Result uploadandStoreExcel() {
 		play.mvc.Http.MultipartFormData body = request().body()
@@ -277,7 +300,7 @@ public class Application extends Controller {
 			StoreExcelFile storeExcelFile = null;
 			Row row;
 			String reqNo = null;
-			
+
 			Iterator<Row> rowIterator = sheet.iterator();
 			rowIterator.next();
 			while (rowIterator.hasNext()) {
@@ -300,9 +323,8 @@ public class Application extends Controller {
 						if (storeExcelFile != null) {
 							storeExcelFile.requestNumber = c
 									.getStringCellValue();
-							reqNo = c
-									.getStringCellValue();
-							
+							reqNo = c.getStringCellValue();
+
 						} else {
 							sd.requestNumber = c.getStringCellValue();
 							System.out.println("sd.requestNumber"
@@ -363,22 +385,23 @@ public class Application extends Controller {
 						break;
 					case Cell.CELL_TYPE_STRING:
 						// sd.performanceLevel = c.getStringCellValue();
-						
-						UserExperiance ue = UserExperiance.getExperianceByExperianceName(c
-								.getStringCellValue());
+
+						UserExperiance ue = UserExperiance
+								.getExperianceByExperianceName(c
+										.getStringCellValue());
 						if (ue == null) {
 							UserExperiance u = new UserExperiance();
 							u.experianceLevel = c.getStringCellValue();
 							u.save();
 						}
-						
+
 						if (storeExcelFile != null) {
 							storeExcelFile.performanceLevel = c
 									.getStringCellValue();
 						} else {
 							sd.performanceLevel = c.getStringCellValue();
 						}
-						
+
 						break;
 					}
 
@@ -795,7 +818,32 @@ public class Application extends Controller {
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
-							sd.duetoPmo = c.getNumericCellValue() + "";
+							if (storeExcelFile != null) {
+								if (DateUtil.isCellDateFormatted(c)) {
+									Date date = c.getDateCellValue();
+									System.out.println("date" + date);
+									if (date != null) {
+										String DATE_FORMAT_NOW = "MM/dd/yyyy";
+										SimpleDateFormat sdf = new SimpleDateFormat(
+												DATE_FORMAT_NOW);
+										storeExcelFile.duetoPmo = sdf
+												.format(date);
+									}
+
+								}
+							} else {
+								if (DateUtil.isCellDateFormatted(c)) {
+									Date date = c.getDateCellValue();
+									if (date != null) {
+										String DATE_FORMAT_NOW = "MM/dd/yyyy";
+										SimpleDateFormat sdf = new SimpleDateFormat(
+												DATE_FORMAT_NOW);
+										sd.duetoPmo = sdf.format(date);
+
+									}
+
+								}
+							}
 							break;
 						case Cell.CELL_TYPE_STRING:
 							if (storeExcelFile != null) {
@@ -813,7 +861,32 @@ public class Application extends Controller {
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
-							sd.updateDate = c.getNumericCellValue() + "";
+							if (storeExcelFile != null) {
+
+								if (DateUtil.isCellDateFormatted(c)) {
+									Date date = c.getDateCellValue();
+									if (date != null) {
+										String DATE_FORMAT_NOW = "MM/dd/yyyy";
+										SimpleDateFormat sdf = new SimpleDateFormat(
+												DATE_FORMAT_NOW);
+										storeExcelFile.updateDate = sdf
+												.format(date);
+									}
+
+								}
+							} else {
+								if (DateUtil.isCellDateFormatted(c)) {
+									Date date = c.getDateCellValue();
+									if (date != null) {
+										String DATE_FORMAT_NOW = "MM/dd/yyyy";
+										SimpleDateFormat sdf = new SimpleDateFormat(
+												DATE_FORMAT_NOW);
+										sd.updateDate = sdf.format(date);
+									}
+
+								}
+							}
+
 							break;
 						case Cell.CELL_TYPE_STRING:
 							if (storeExcelFile != null) {
@@ -830,38 +903,71 @@ public class Application extends Controller {
 					c = row.getCell(28);
 					if (c != null) {
 						switch (c.getCellType()) {
+
 						case Cell.CELL_TYPE_NUMERIC:
-							sd.duetoGovt = c.getNumericCellValue() + "";
+							if (storeExcelFile != null) {
+								if (DateUtil.isCellDateFormatted(c)) {
+									Date date = c.getDateCellValue();
+									System.out.println(date);
+									if (date != null) {
+										String DATE_FORMAT_NOW = "MM/dd/yyyy";
+										SimpleDateFormat sdf = new SimpleDateFormat(
+												DATE_FORMAT_NOW);
+										storeExcelFile.duetoGovt = sdf
+												.format(date);
+
+									}
+
+								}
+							} else {
+								if (DateUtil.isCellDateFormatted(c)) {
+									Date date = c.getDateCellValue();
+									if (date != null) {
+										System.out.println(date);
+										String DATE_FORMAT_NOW = "MM/dd/yyyy";
+										SimpleDateFormat sdf = new SimpleDateFormat(
+												DATE_FORMAT_NOW);
+										sd.duetoGovt = sdf.format(date);
+									}
+
+								}
+							}
 							break;
 						case Cell.CELL_TYPE_STRING:
 							if (storeExcelFile != null) {
 								storeExcelFile.duetoGovt = c
 										.getStringCellValue();
+								System.out.println("c.getStringCellValue()"
+										+ c.getStringCellValue());
 							} else {
 								sd.duetoGovt = c.getStringCellValue();
+								System.out.println("c.getStringCellValue()"
+										+ c.getStringCellValue());
 							}
 
 							break;
 						}
 					}
 					if (storeExcelFile != null) {
-                         
+
 						storeExcelFile.update(storeExcelFile);
-						if(reqNo != null){
+						if (reqNo != null) {
 							updatedRows = updatedRows + 1;
-							System.out.println("updatedRows"+updatedRows+"reqNo"+reqNo);
+							System.out.println("updatedRows" + updatedRows
+									+ "reqNo" + reqNo);
 						}
-						
+
 						// System.out.println("in update");
 					} else {
 						if (sd.requestNumber != null) {
-							System.out.println("storeExcelFile"+storeExcelFile);
+							System.out.println("storeExcelFile"
+									+ storeExcelFile);
 							newRows = newRows + 1;
 							sd.save(sd);
 						}
 
 					}
-					
+
 				}
 			}
 			file.close();
@@ -869,26 +975,24 @@ public class Application extends Controller {
 			e.printStackTrace();
 			flash().put("error", "Upload Failed");
 			String newrowscount = Integer.toString(newRows);
-			String  updatedRowsCount = Integer.toString(updatedRows);
-			System.out.println("updatedRowsCount"+updatedRowsCount);
+			String updatedRowsCount = Integer.toString(updatedRows);
+			System.out.println("updatedRowsCount" + updatedRowsCount);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("newrowscount", newrowscount);
 			map.put("updatedRowsCount", updatedRowsCount);
 
 			return ok(Json.stringify(Json.toJson(map)));
 		}
-		
+
 		String newrowscount = Integer.toString(newRows);
-		String  updatedRowsCount = Integer.toString(updatedRows);
-		System.out.println("updatedRowsCount"+updatedRowsCount);
+		String updatedRowsCount = Integer.toString(updatedRows);
+		System.out.println("updatedRowsCount" + updatedRowsCount);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("newrowscount", newrowscount);
 		map.put("updatedRowsCount", updatedRowsCount);
-		
+
 		return ok(Json.stringify(Json.toJson(map)));
 	}
-
-	
 
 	public static class AdminExtra {
 		public String name;
@@ -909,6 +1013,7 @@ public class Application extends Controller {
 		return list;
 	}
 
+	
 	// method takes the input as json and split it add into list to show all the
 	// skills to user
 	public static List<MandatorySkills> getMandtorySkills(String jsonString) {
@@ -926,6 +1031,24 @@ public class Application extends Controller {
 		}
 		return list;
 	}
+	
+	// method takes the input as json and split it add into list to show all the
+		// skills to user
+		public static List<UserSkillsVM> getAllUserSkill(String jsonString) {
+			ObjectMapper mapper = new ObjectMapper();
+			List<UserSkillsVM> list = new ArrayList<UserSkillsVM>();
+			try {
+				list = mapper
+						.readValue(
+								jsonString,
+								TypeFactory.defaultInstance()
+										.constructCollectionType(List.class,
+												UserSkillsVM.class));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return list;
+		}
 
 	public static Result dashBoard() {
 		return ok(index.render());
@@ -950,7 +1073,6 @@ public class Application extends Controller {
 		public String display_name;
 		public boolean value;
 	}
-	
 
 	public static Result logOut() {
 		// saveActivityLog("LogOut");
@@ -1008,56 +1130,81 @@ public class Application extends Controller {
 		public String updateDate;
 		public String duetoGovt;
 		public String jobStatus;
-		
 
 	}
 
-	
-	
-	// called when user first  view job page loaded
+	// called when user first view job page loaded
 	public static Result getAllJobs(int currentPage, String jobType,
-			Boolean location, Boolean usermatch, String position) {
-    
-		
-	
-		List<StoreExcelFile> jobs  = new ArrayList<>();
+			Boolean location, Boolean usermatch, String position,
+			Boolean allJobs ,Boolean explevel) {
+
+		List<StoreExcelFile> jobs = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 		int count = 0;
-		
+
 		// both are selected for search(DSC)
 		if (!(true == location)
-				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))
+				&& allJobs == false) {
 			String emailId = session().get("email");
-			
+
 			UserDetails u = UserDetails.getUserByEmail(emailId);
 			ArrayList<String> al = new ArrayList<>();
 			List<UserPosition> up = u.userPosition;
 			for (UserPosition upd : up) {
 				String pos = upd.position;
 				al.add(pos);
-				
+
 			}
-			
-			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypePositionAsc(currentPage,jobType,al);
+
+			count = StoreExcelFile
+					.getAllJobsCountByLocationAndJobTypePositionAsc(
+							currentPage, jobType, al);
 			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAsc(
-					currentPage, 10, jobType,al);
+					currentPage, 10, jobType, al);
 
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
-				}else{
+				} else {
 					count = count - 1;
-					System.out.println("count"+count);
+					System.out.println("count" + count);
 				}
 			}
+
+		}
+
+		// both are selected for search(DSC)
+		if (!(true == location)
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))
+				&& allJobs == true ) {
+
+			String emailId = session().get("email");
+			count = StoreExcelFile.getAllJobsCountByLocationJobTypeAsc(
+					currentPage, jobType);
+			userJobs = StoreExcelFile.getAllJobsByLocationJobTypeAsc(
+					currentPage, 10, jobType);
 			
+			
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				} else {
+					count = count - 1;
+					System.out.println("count" + count);
+				}
+			}
+
 		}
 
 		// both are selected for search(DSC)
 		if (!(false == location)
-				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))
+				&& allJobs == false ) {
 			String emailId = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(emailId);
 			ArrayList<String> al = new ArrayList<>();
@@ -1065,29 +1212,53 @@ public class Application extends Controller {
 			for (UserPosition upd : up) {
 				String pos = upd.position;
 				al.add(pos);
-				
+
 			}
-			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(currentPage, 10, jobType,al);
-			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypePositionDsc(currentPage,jobType,al);
+			userJobs = StoreExcelFile.getAllJobsByLocationAndJobTypeDsc(
+					currentPage, 10, jobType, al);
+			count = StoreExcelFile
+					.getAllJobsCountByLocationAndJobTypePositionDsc(
+							currentPage, jobType, al);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
-				}else{
+				} else {
 					count = count - 1;
-					System.out.println("count"+count);
+					System.out.println("count" + count);
 				}
 			}
 
 		}
 
-	
+		if (!(false == location)
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))
+				&& allJobs == true ) {
+			userJobs = StoreExcelFile.getAllJobsByLocationJobTypeDesc(
+					currentPage, 10, jobType);
+			count = StoreExcelFile.getAllJobsCountByLocationJobTypeDesc(
+					currentPage, jobType);
+			String emailId = session().get("email");
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				} else {
+					count = count - 1;
+					System.out.println("count" + count);
+				}
+			}
+
+		}
+
 		// all jobs //selected Default(user profile job mtached job)
-		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
+		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)
+				&& allJobs == false) {
 			ArrayList<String> al = new ArrayList<>();
-			System.out.println("jobType"+jobType);
-			//count = StoreExcelFile.getAllJobsCount(currentPage);
+			System.out.println("jobType" + jobType);
+			// count = StoreExcelFile.getAllJobsCount(currentPage);
 			String email = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(email);
 			List<UserPosition> up = u.userPosition;
@@ -1099,47 +1270,93 @@ public class Application extends Controller {
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobDsc(currentPage, 10,
 					al);
-			count = StoreExcelFile.getAllJobsCountByPositionMatched(currentPage,al);
+			count = StoreExcelFile.getAllJobsCountByPositionMatched(
+					currentPage, al);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
-				}else{
+				} else {
 					count = count - 1;
-					System.out.println("count"+count);
+					System.out.println("count" + count);
 				}
 			}
 
 		}
 
-		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
+		// all jobs //selected Default(user profile job mtached job)
+		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)
+				&& allJobs == true ) {
+
+			userJobs = StoreExcelFile.getAllJobsByLocationDsc(currentPage, 10);
+			count = StoreExcelFile.getAllJobsByLocationCountDesc(currentPage,
+					jobType);
+			
+			String emailId = session().get("email");
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(emailId,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				} else {
+					count = count - 1;
+					System.out.println("count" + count);
+				}
+			}
+
+		}
+
+		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)
+				&& allJobs == false) {
 			/* jobs = StoreExcelFile.getAllJobs(currentPage, 10); */
 			ArrayList<String> al = new ArrayList<>();
-			//count = StoreExcelFile.getAllJobsCount(currentPage,al);
+			// count = StoreExcelFile.getAllJobsCount(currentPage,al);
 			String email = session().get("email");
 			UserDetails u = UserDetails.getUserByEmail(email);
 			List<UserPosition> up = u.userPosition;
 			for (UserPosition upd : up) {
 				String pos = upd.position;
 				al.add(pos);
-				
+
 			}
 
 			userJobs = StoreExcelFile.getALlUserMatchedJobAsc(currentPage, 10,
 					al);
-			count = StoreExcelFile.getAllJobsCountByPositionMatched(currentPage,al);
+			count = StoreExcelFile.getAllJobsCountByPositionMatched(
+					currentPage, al);
 			for (StoreExcelFile str : userJobs) {
 				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
 						str.requestNumber);
 				if (as == null) {
 					jobs.add(str);
-				}else{
+				} else {
 					count = count - 1;
-					System.out.println("count"+count);
+					System.out.println("count" + count);
 				}
 			}
 
+		}
+
+		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)
+				&& allJobs == true ) {
+
+			userJobs = StoreExcelFile.getAllJobsByLocationAsc(currentPage, 10);
+			count = StoreExcelFile.getAllJobsByLocationCountAsc(currentPage,
+					jobType);
+			
+			String email = session().get("email");
+			for (StoreExcelFile str : userJobs) {
+				AppliedJobs as = AppliedJobs.getUserAppliedJob(email,
+						str.requestNumber);
+				if (as == null) {
+					jobs.add(str);
+				} else {
+					count = count - 1;
+					System.out.println("count" + count);
+				}
+			}
+			
 		}
 
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
@@ -1148,7 +1365,6 @@ public class Application extends Controller {
 			currentPage--;
 		}
 
-		
 		String mskills;
 		String dSkills;
 
@@ -1175,16 +1391,16 @@ public class Application extends Controller {
 			jobVM.nightWork = s.nightWork;
 			jobVM.localTravalusingpub = s.localTravalusingpub;
 			jobVM.pagerDuty = s.pagerDuty;
-			jobVM.pagerdutyComments  =s.pagerdutyComments;
+			jobVM.pagerdutyComments = s.pagerdutyComments;
 			jobVM.workonHoliday = s.workonHoliday;
 			jobVM.workonWeekends = s.workonWeekends;
-			jobVM.shiftWork  =s.shiftWork;
+			jobVM.shiftWork = s.shiftWork;
 			jobVM.warzone = s.warzone;
 			jobVM.coop = s.coop;
 			jobVM.duetoPmo = s.duetoPmo;
 			jobVM.updateDate = s.updateDate;
 			jobVM.duetoGovt = s.duetoGovt;
-			
+
 			jobVM.jobStatus = s.jobStatus;
 			// check if the desired skill does not contain null value;
 			if (s.desiredSkill != null) {
@@ -1194,24 +1410,17 @@ public class Application extends Controller {
 			}
 
 			// split the string with numbers
-			String[] tokendesiredsVal = dSkills
-					.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+			String[] tokendesiredsVal = dSkills.split("(?=(\\d)(\\.)(\\s+))");
 
 			// prints the count of tokens
-			String numd = null;
 			ArrayList<String> desSkill = new ArrayList<String>();
 			for (String token : tokendesiredsVal) {
-				// check for the number
-				boolean b = token.matches("[-+]?\\d*\\.?\\d+");
-				if (b == true) {
-					numd = token;
-				} else {
-					// if number skip do not add to the list
-					// add the string with number
-					if (numd != null) {
-						desSkill.add(numd + "" + token);
-					}
+
+				// add the string with number
+				if (token.trim().length() != 0) {
+					desSkill.add(token);
 				}
+
 				System.out.print(token);
 			}
 
@@ -1223,26 +1432,22 @@ public class Application extends Controller {
 			}
 
 			// split the string with numbers
-			String[] tokensVal = mskills
-					.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-			// prints the count of tokens
-			String num = null;
+			String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
+			// prints the count of tokens  
 			ArrayList<String> manSkill = new ArrayList<String>();
 			for (String token : tokensVal) {
 				// check for the number
-				boolean b = token.matches("[-+]?\\d*\\.?\\d+");
-				if (b == true) {
-					num = token;
-				} else {
-					// if number skip dont add to the list
-					// add the string with number
-					if (num != null) {
-						manSkill.add(num + "" + token);
-					}
+
+				if (token.trim().length() != 0) {
+					manSkill.add(token);
 				}
+				System.out.print(token);
+
 			}
 
 			jobVM.manadatorySkills = manSkill;
+			System.out.println("jobVM.manadatorySkills"
+					+ jobVM.manadatorySkills);
 			jobVM.desiredSkill = desSkill;
 			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
 
@@ -1258,167 +1463,351 @@ public class Application extends Controller {
 		return ok(Json.toJson(map));
 	}
 
-	public static  Result getAllJobsForAdmin(int currentPage, String jobType,
-		Boolean location, Boolean usermatch, String position){
-
-	List<StoreExcelFile> jobs = new ArrayList<>();
-	//List<StoreExcelFile> userJobs = null;
-	int count = 0;
-	System.out.println("jobType:"+jobType);
-	
-	// both are selected for search(DSC)
-	if (!(true == location)
-			&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
-		//String emailId = session().get("email");
-		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentPage,jobType);
-		jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminAsc(
-				currentPage, 10, jobType);
-
-
-	}
-
-	// both are selected for search(DSC)
-	if (!(false == location)
-			&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
-		//String emailId = session().get("email");
-		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeDsc(currentPage,jobType);
-		jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminDsc(
-				currentPage, 10, jobType);
-
+	public static Result getAllJobsOnlogin(int currentpage,String jobType,String sortName) {
+		List<StoreExcelFile> jobs = new ArrayList<>();
+		int count = 0;
+		System.out.println("jobtype"+jobType+"sortnamea"+sortName);
+		 
+		if("AllAsc".equalsIgnoreCase(sortName)){
 		
-
-	}
-
-	// all jobs //selected Default(user profile job mtached job)
-	if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
-		jobs = StoreExcelFile.getAllJobsForAdminDsc(currentPage, 10);
-		count = StoreExcelFile.getAllJobsCount(currentPage);
-
-	}
-
-	if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
-		
-		count = StoreExcelFile.getAllJobsCount(currentPage);
-		jobs = StoreExcelFile.getAllJobsForAdminAsc(currentPage, 10);
-	
-	}
-
-	List<JobVM> jobVMs = new ArrayList<JobVM>();
-
-	if (currentPage > 10 && 10 != 0) {
-		currentPage--;
-	}
-
-	String mskills;
-	String dSkills;
-
-	for (StoreExcelFile s : jobs) {
-
-		JobVM jobVM = new JobVM();
-          jobVM.id = s.id;
-		jobVM.requestNumber = s.requestNumber;
-		jobVM.requestType = s.requestType;
-		jobVM.labourCategory = s.labourCategory;
-		jobVM.performanceLevel = s.performanceLevel;
-		jobVM.positionType = s.positionType;
-		jobVM.clearanceRequired = s.clearanceRequired;
-		jobVM.workLocation = s.workLocation;
-		jobVM.workDescription = s.workDescription;
-		jobVM.certificationRequired = s.certificationRequired;
-		jobVM.conusTravel = s.conusTravel;
-		jobVM.oconusTravel = s.oconusTravel;
-		jobVM.reghrperYear = s.reghrperYear;
-		jobVM.scheduleComments = s.scheduleComments;
-		jobVM.nonpubComments = s.nonpubComments;
-		jobVM.missionCritical = s.missionCritical;
-		jobVM.nightWork = s.nightWork;
-		jobVM.localTravalusingpub = s.localTravalusingpub;
-		jobVM.pagerDuty = s.pagerDuty;
-		jobVM.pagerdutyComments  =s.pagerdutyComments;
-		jobVM.workonHoliday = s.workonHoliday;
-		jobVM.workonWeekends = s.workonWeekends;
-		jobVM.shiftWork  =s.shiftWork;
-		jobVM.warzone = s.warzone;
-		jobVM.coop = s.coop;
-		jobVM.duetoPmo = s.duetoPmo;
-		jobVM.updateDate = s.updateDate;
-		jobVM.duetoGovt = s.duetoGovt;
-		jobVM.jobStatus = s.jobStatus;
-		
-		// check if the desired skill does not contain null value;
-		if (s.desiredSkill != null) {
-			dSkills = s.desiredSkill;
-		} else {
-			dSkills = " ";
-		}
-
-		// split the string with numbers
-		String[] tokendesiredsVal = dSkills
-				.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-
-		// prints the count of tokens
-		String numd = null;
-		ArrayList<String> desSkill = new ArrayList<String>();
-		for (String token : tokendesiredsVal) {
-			// check for the number
-			boolean b = token.matches("[-+]?\\d*\\.?\\d+");
-			if (b == true) {
-				numd = token;
-			} else {
-				// if number skip do not add to the list
-				// add the string with number
-				if (numd != null) {
-					desSkill.add(numd + "" + token);
+			if("All".equalsIgnoreCase(jobType)){
+				count = StoreExcelFile.getAllJobsCount(currentpage);
+				jobs = StoreExcelFile.getAllJobsForUserAsc(currentpage, 10);
+			}else{
+				count = StoreExcelFile.getAllJobsCount(currentpage);
+				jobs = StoreExcelFile.getAllJobsForUserTypeAsc(currentpage, 10,jobType);
+			}
+				
+			}else if ("AllDesc".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserDesc(currentpage, 10);
+				}else{
+					
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserTypeDesc(currentpage, 10,jobType);
 				}
 			}
-			System.out.print(token);
-		}
+		
+		    if("PositionAsc".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserByPositionAsc(currentpage, 10);
+				}else{
+					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByPositionTypeAsc(currentpage, 10,jobType);
+				}
+		    	
+			} else if("PositionDesc".equalsIgnoreCase(sortName)){
+				
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserByPositionDesc(currentpage, 10);
+				}else{
+					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+				}
+				
+			}
+			
+		    if("LocationAsc".equalsIgnoreCase(sortName)){
+		    	if("All".equalsIgnoreCase(jobType)){
+		    		count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserLocationAsc(currentpage, 10);
+		    	}else{
+		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserLocationTypeAsc(currentpage, 10,jobType);
+		    		
+		    	}
+				
+			}else if("LocationDesc".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserLocationDesc(currentpage, 10);
+				}else{
+					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserLocationTypeDesc(currentpage, 10,jobType);
+				}
+				
+			}
+			
+		    if("ClearanceAsc".equalsIgnoreCase(sortName)){
+		    	if("All".equalsIgnoreCase(jobType)){
+		    		count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserClearanceAsc(currentpage, 10);
+		    	}else{
+		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserClearanceTypeAsc(currentpage, 10,jobType);
+		    	}
+				
+			}else if("ClearanceDesc".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserClearanceDesc(currentpage, 10);
+				}else{
+					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserClearanceTypeDesc(currentpage, 10,jobType);
+		
+				}
+			}
+			
+		    if("ExperianceAsc".equalsIgnoreCase(sortName)){
+		    	if("All".equalsIgnoreCase(jobType)){
+		    		count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserExpAsc(currentpage, 10);
+		    	}else{
+		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserExpTypeAsc(currentpage, 10,jobType);
+		    	}
+				
+			}else if ("ExperianceDesc".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserExpTypeDesc(currentpage, 10,jobType);
+				}else{
+					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserExpTypeDesc(currentpage, 10,jobType);
+				}
+				
+			}
+			
+		List<JobVM> jobVMs = new ArrayList<JobVM>();
+		String mskills;
+		String dSkills;
 
-		// check if the mandatory skill does not contain null value;
-		if (s.manadatorySkills != null) {
-			mskills = s.manadatorySkills;
-		} else {
-			mskills = " ";
-		}
+		for (StoreExcelFile s : jobs) {
 
-		// split the string with numbers
-		String[] tokensVal = mskills
-				.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-		// prints the count of tokens
-		String num = null;
-		ArrayList<String> manSkill = new ArrayList<String>();
-		for (String token : tokensVal) {
-			// check for the number
-			boolean b = token.matches("[-+]?\\d*\\.?\\d+");
-			if (b == true) {
-				num = token;
+			JobVM jobVM = new JobVM();
+			jobVM.id = s.id;
+			jobVM.requestNumber = s.requestNumber;
+			jobVM.requestType = s.requestType;
+			jobVM.labourCategory = s.labourCategory;
+			jobVM.performanceLevel = s.performanceLevel;
+			jobVM.positionType = s.positionType;
+			jobVM.clearanceRequired = s.clearanceRequired;
+			jobVM.workLocation = s.workLocation;
+			jobVM.workDescription = s.workDescription;
+			jobVM.certificationRequired = s.certificationRequired;
+			jobVM.conusTravel = s.conusTravel;
+			jobVM.oconusTravel = s.oconusTravel;
+			jobVM.reghrperYear = s.reghrperYear;
+			jobVM.scheduleComments = s.scheduleComments;
+			jobVM.nonpubComments = s.nonpubComments;
+			jobVM.missionCritical = s.missionCritical;
+			jobVM.nightWork = s.nightWork;
+			jobVM.localTravalusingpub = s.localTravalusingpub;
+			jobVM.pagerDuty = s.pagerDuty;
+			jobVM.pagerdutyComments = s.pagerdutyComments;
+			jobVM.workonHoliday = s.workonHoliday;
+			jobVM.workonWeekends = s.workonWeekends;
+			jobVM.shiftWork = s.shiftWork;
+			jobVM.warzone = s.warzone;
+			jobVM.coop = s.coop;
+			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.updateDate = s.updateDate;
+			jobVM.duetoGovt = s.duetoGovt;
+			jobVM.jobStatus = s.jobStatus;
+
+			// check if the desired skill does not contain null value;
+			if (s.desiredSkill != null) {
+				dSkills = s.desiredSkill;
 			} else {
+				dSkills = " ";
+			}
+
+			// split the string with numbers
+			String[] tokendesiredsVal = dSkills.split("(?=(\\d)(\\.)(\\s+))");
+
+			// prints the count of tokens
+			String numd = null;
+			ArrayList<String> desSkill = new ArrayList<String>();
+			for (String token : tokendesiredsVal) {
+				// check for the number
+				if (token.trim().length() != 0) {
+					desSkill.add(token);
+				}
+				System.out.print(token);
+			}
+
+			// check if the mandatory skill does not contain null value;
+			if (s.manadatorySkills != null) {
+				mskills = s.manadatorySkills;
+			} else {
+				mskills = " ";
+			}
+
+			// split the string with numbers
+			String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
+			// prints the count of tokens
+			ArrayList<String> manSkill = new ArrayList<String>();
+			for (String token : tokensVal) {
+
+				if (token.trim().length() != 0) {
+					manSkill.add(token);
+				}
+
+			}
+
+			jobVM.manadatorySkills = manSkill;
+			jobVM.desiredSkill = desSkill;
+			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
+
+			jobVMs.add(jobVM);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("totalPages", 10);
+		map.put("currentPage", currentpage);
+		map.put("jobs", jobVMs);
+		map.put("jobsCount", count);
+		return ok(Json.toJson(map));
+
+	}
+
+	public static Result getAllJobsForAdmin(int currentPage, String jobType,
+			Boolean location, Boolean usermatch, String position) {
+
+		List<StoreExcelFile> jobs = new ArrayList<>();
+		// List<StoreExcelFile> userJobs = null;
+		int count = 0;
+		System.out.println("jobType:" + jobType);
+
+		// both are selected for search(DSC)
+		if (!(true == location)
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
+			// String emailId = session().get("email");
+			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(
+					currentPage, jobType);
+			jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminAsc(
+					currentPage, 10, jobType);
+
+		}
+
+		// both are selected for search(DSC)
+		if (!(false == location)
+				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
+			// String emailId = session().get("email");
+			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeDsc(
+					currentPage, jobType);
+			jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminDsc(
+					currentPage, 10, jobType);
+
+		}
+
+		// all jobs //selected Default(user profile job mtached job)
+		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
+			jobs = StoreExcelFile.getAllJobsForAdminDsc(currentPage, 10);
+			count = StoreExcelFile.getAllJobsCount(currentPage);
+
+		}
+
+		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
+
+			count = StoreExcelFile.getAllJobsCount(currentPage);
+			jobs = StoreExcelFile.getAllJobsForAdminAsc(currentPage, 10);
+
+		}
+
+		List<JobVM> jobVMs = new ArrayList<JobVM>();
+
+		if (currentPage > 10 && 10 != 0) {
+			currentPage--;
+		}
+
+		String mskills;
+		String dSkills;
+
+		for (StoreExcelFile s : jobs) {
+
+			JobVM jobVM = new JobVM();
+			jobVM.id = s.id;
+			jobVM.requestNumber = s.requestNumber;
+			jobVM.requestType = s.requestType;
+			jobVM.labourCategory = s.labourCategory;
+			jobVM.performanceLevel = s.performanceLevel;
+			jobVM.positionType = s.positionType;
+			jobVM.clearanceRequired = s.clearanceRequired;
+			jobVM.workLocation = s.workLocation;
+			jobVM.workDescription = s.workDescription;
+			jobVM.certificationRequired = s.certificationRequired;
+			jobVM.conusTravel = s.conusTravel;
+			jobVM.oconusTravel = s.oconusTravel;
+			jobVM.reghrperYear = s.reghrperYear;
+			jobVM.scheduleComments = s.scheduleComments;
+			jobVM.nonpubComments = s.nonpubComments;
+			jobVM.missionCritical = s.missionCritical;
+			jobVM.nightWork = s.nightWork;
+			jobVM.localTravalusingpub = s.localTravalusingpub;
+			jobVM.pagerDuty = s.pagerDuty;
+			jobVM.pagerdutyComments = s.pagerdutyComments;
+			jobVM.workonHoliday = s.workonHoliday;
+			jobVM.workonWeekends = s.workonWeekends;
+			jobVM.shiftWork = s.shiftWork;
+			jobVM.warzone = s.warzone;
+			jobVM.coop = s.coop;
+			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.updateDate = s.updateDate;
+
+			jobVM.duetoGovt = s.duetoGovt;
+			jobVM.jobStatus = s.jobStatus;
+
+			// check if the desired skill does not contain null value;
+			if (s.desiredSkill != null) {
+				dSkills = s.desiredSkill;
+			} else {
+				dSkills = " ";
+			}
+
+			// split the string with numbers
+			String[] tokendesiredsVal = dSkills.split("(?=(\\d)(\\.)(\\s+))");
+
+			// prints the count of tokens
+			ArrayList<String> desSkill = new ArrayList<String>();
+			for (String token : tokendesiredsVal) {
+				// check for the number
+				if (token.trim().length() != 0) {
+					desSkill.add(token);
+				}
+				System.out.print(token);
+			}
+
+			// check if the mandatory skill does not contain null value;
+			if (s.manadatorySkills != null) {
+				mskills = s.manadatorySkills;
+			} else {
+				mskills = " ";
+			}
+
+			// split the string with numbers
+			String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
+			// prints the count of tokens
+			ArrayList<String> manSkill = new ArrayList<String>();
+			for (String token : tokensVal) {
+				// check for the number
+
 				// if number skip dont add to the list
 				// add the string with number
-				if (num != null) {
-					manSkill.add(num + "" + token);
+				if (token.trim().length() != 0) {
+					manSkill.add(token);
 				}
+
 			}
+
+			jobVM.manadatorySkills = manSkill;
+			jobVM.desiredSkill = desSkill;
+			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
+
+			jobVMs.add(jobVM);
 		}
 
-		jobVM.manadatorySkills = manSkill;
-		jobVM.desiredSkill = desSkill;
-		System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
-
-		jobVMs.add(jobVM);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("totalPages", 10);
+		map.put("currentPage", currentPage);
+		map.put("jobs", jobVMs);
+		map.put("jobsCount", count);
+		return ok(Json.toJson(map));
 	}
 
-	Map<String, Object> map = new HashMap<String, Object>();
-	map.put("totalPages", 10);
-	map.put("currentPage", currentPage);
-	map.put("jobs", jobVMs);
-	map.put("jobsCount", count);
-	return ok(Json.toJson(map));
-}
-	
-	
-	
-	
 	public static class FilterOrderVM {
 		public String customer_name;
 		public String marketplace;
@@ -1466,8 +1855,7 @@ public class Application extends Controller {
 		// public String userposition;
 		public String email;
 		public String password;
-	
-		
+
 	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
@@ -1540,7 +1928,7 @@ public class Application extends Controller {
 		List<AddEducationVM> addEducation;
 		List<AddEmpHistoryVM> addNewEmphistory;
 		List<AddCertificateVM> addCertificate;
-		
+
 		String email = session().get("email");
 		UserDetails u = UserDetails.getUserByEmail(email);
 
@@ -1551,7 +1939,7 @@ public class Application extends Controller {
 		JsonNode userPosition = json.path("position");
 		JsonNode userSkills = json.path("skills");
 		JsonNode userExperience = json.path("experience");
-		
+
 		u.deleteManyToManyAssociations("userSkill");
 
 		ArrayNode skills = (ArrayNode) userSkills;
@@ -1563,11 +1951,11 @@ public class Application extends Controller {
 		}
 
 		u.saveManyToManyAssociations("userSkill");
-		
-		
+
 		u.deleteManyToManyAssociations("userExperiance");
 
 		ArrayNode exp = (ArrayNode) userExperience;
+	
 		for (int l = 0; l < exp.size(); l++) {
 			String s = exp.get(l).asText();
 			System.out.println(s);
@@ -1583,10 +1971,10 @@ public class Application extends Controller {
 			String position = positions.get(j).asText();
 			UserPosition up = UserPosition.getPositionByPosName(position);
 			u.userPosition.add(up);
+
 		}
 
 		u.saveManyToManyAssociations("userPosition");
-
 		u.deleteManyToManyAssociations("userClearance");
 		ArrayNode clearance = (ArrayNode) userClearance;
 		for (int i = 0; i < clearance.size(); i++) {
@@ -1678,13 +2066,13 @@ public class Application extends Controller {
 		try {
 			UserInfoVM ui = userinfoMapper.readValue(userDet.traverse(),
 					UserInfoVM.class);
-			System.out.println("firstname === "+ui.firstname);
+		
 			u.setEmail(ui.email);
 			u.setDob(ui.dob);
 			u.setFirstname(ui.firstname);
 			u.setMiddlename(ui.middlename);
 			u.setLastname(ui.lastname);
-			
+
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -1700,11 +2088,10 @@ public class Application extends Controller {
 
 		return ok();
 	}
-	
-	
+
 	@JsonIgnore
-	public static Result updateUserProfileByAdmin(){
-		
+	public static Result updateUserProfileByAdmin() {
+
 		JsonNode json = request().body().asJson();
 		System.out.println("json" + json);
 
@@ -1744,8 +2131,7 @@ public class Application extends Controller {
 		}
 
 		u.saveManyToManyAssociations("userExperiance");
-		
-		
+
 		u.deleteManyToManyAssociations("userPosition");
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
@@ -1847,7 +2233,7 @@ public class Application extends Controller {
 		try {
 			UserInfoVM ui = userinfoMapper.readValue(userDet.traverse(),
 					UserInfoVM.class);
-			System.out.println("ui.firstname --"+ui.firstname);
+			System.out.println("ui.firstname --" + ui.firstname);
 			u.email = ui.email;
 			u.firstname = ui.firstname;
 			u.middlename = ui.middlename;
@@ -1868,8 +2254,7 @@ public class Application extends Controller {
 
 		return ok();
 	}
-	
-	
+
 	@JsonIgnore
 	public static Result getAllSkills() {
 
@@ -1889,6 +2274,7 @@ public class Application extends Controller {
 		return ok((Json.stringify(Json.toJson(map))));
 
 	}
+
 	@JsonIgnore
 	public static Result getAllExperiance() {
 		List<UserExperiance> ue = UserExperiance.getAllExperiance();
@@ -1897,92 +2283,94 @@ public class Application extends Controller {
 		return ok((Json.stringify(Json.toJson(map))));
 
 	}
-	
-	
+
 	@JsonIgnore
-	public static Result addnewPosition(String position){
-	UserPosition up = UserPosition.getPositionByPosName(position);
-		if(up == null){
-		UserPosition u= new UserPosition();
-		u.position = position;
-		u.save();
-		return ok(Json.toJson(u));
-		}else{
-			return ok("");		
+	public static Result addnewPosition(String position) {
+		UserPosition up = UserPosition.getPositionByPosName(position);
+		if (up == null) {
+			UserPosition u = new UserPosition();
+			u.position = position;
+			u.save();
+			return ok(Json.toJson(u));
+		} else {
+			return ok("");
 		}
-		
+
 	}
-	
+
 	@JsonIgnore
-	public static Result addNewClearance(String clearance){
+	public static Result addNewClearance(String clearance) {
 		UserClearance uc = UserClearance.getClearanceByName(clearance);
-			if(uc == null){
+		if (uc == null) {
 			UserClearance u = new UserClearance();
 			u.clearance = clearance;
 			u.save();
 			return ok(Json.toJson(u));
-			}else{
-				return ok("");		
-			}
-			
+		} else {
+			return ok("");
 		}
+
+	}
+
 	@JsonIgnore
-	public static Result deleteClearanceByName(String clearance){
-		UserClearance uc = UserClearance.getClearanceByName(clearance) ;
-		if(uc != null){
+	public static Result deleteClearanceByName() {
+		JsonNode json = request().body().asJson();
+	    String clearance = json.get("clearance").asText();
+		UserClearance uc = UserClearance.getClearanceByName(clearance);
+		if (uc != null) {
 			uc.delete();
 			return ok("deleted");
-		}else{
-			return  ok("");		
+		} else {
+			return ok("");
 		}
-		
-	
+
 	}
-	
+
 	@JsonIgnore
-	public static Result deletePositionByName(String position){
-		UserPosition up = UserPosition.getPositionByPosName(position) ;
-		if(up != null){
+	public static Result deletePositionByName(String position) {
+		UserPosition up = UserPosition.getPositionByPosName(position);
+		if (up != null) {
 			up.delete();
 			return ok("deleted");
-		}else{
-			return  ok("");		
+		} else {
+			return ok("");
 		}
-		
-	
+
 	}
-	
+
 	@JsonIgnore
-	public static Result editPositionName(String editPosition,String editPositionOld){
-		
+	public static Result editPositionName(String editPosition,
+			String editPositionOld) {
+
 		UserPosition up = UserPosition.getPositionByPosName(editPositionOld);
-		if(up != null){
+		if (up != null) {
 			up.position = editPosition;
 			up.update();
-			
-		}		
+
+		}
 		return ok(Json.toJson(up));
 	}
-	
+
 	@JsonIgnore
-	public static  Result editClearanceName(String clerancenew ,String clearanceold){
+	public static Result editClearanceName() {
+
+		JsonNode json = request().body().asJson();
+	    String clearancenew = json.get("editClearanceNew").asText();
+	    String clearanceold = json.get("editClearanceOld").asText();
 		
-		UserClearance uc =UserClearance.getClearanceByName(clearanceold);
-		
-		if(uc != null){
-			uc.clearance = clerancenew;
+		UserClearance uc = UserClearance.getClearanceByName(clearanceold);
+
+		if (uc != null) {
+			uc.clearance = clearancenew;
 			uc.update();
 			return ok(Json.toJson(uc));
-		}else{
-			
+		} else {
+
 		}
-		
+
 		return ok();
 	}
-	
-	
-	
-	
+
 	@JsonIgnore
 	public static Result getAllClearance() {
 		List<UserClearance> uc = UserClearance.getAllClearance();
@@ -1993,9 +2381,6 @@ public class Application extends Controller {
 
 	}
 
-	
-	
-	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class ManadatorySkillsVM {
 		public String comment;
@@ -2017,31 +2402,31 @@ public class Application extends Controller {
 	 * }
 	 */
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class mskill{
+	public static class mskill {
 		public String mskill;
 		public String comment;
-	}  
-	
+	}
+
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class ManadatorySkills{
+	public static class ManadatorySkills {
 		List<mskill> mskill;
 		public String comment;
-		
+
 	}
-	
+
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class dskill{
+	public static class dskill {
 		public String dskill;
 		public String comment;
-	}  
-	
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class DesiredSkillsVM1{
-		List<dskill>dskill;
-		public String comment;
-		
 	}
-	
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class DesiredSkillsVM1 {
+		List<dskill> dskill;
+		public String comment;
+
+	}
+
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class SaveAppliedJobsVM {
 		public String clearanceRequired;
@@ -2054,14 +2439,13 @@ public class Application extends Controller {
 		public String workLocation;
 		public List<ManadatorySkills> manadatorySkills;
 		public List<DesiredSkillsVM> desiredSkill;
-		public String username; 	
+		public String username;
 		public String jobStatus;
-		
+
 		public long id;
 
 	}
-	
-	
+
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class UserSaveAppliedJobsVM {
 		public String clearanceRequired;
@@ -2072,81 +2456,95 @@ public class Application extends Controller {
 		public String requestType;
 		public String workDescription;
 		public String workLocation;
-		public String [] manadatorySkills;
-		public String [] desiredSkill;
-		public String username; 		
+		public String[] manadatorySkills;
+		public String[] desiredSkill;
+		public String [] skills;
+		public String username;
 		public String jobStatus;
 		public long id;
 
 	}
 
-	
 	@JsonIgnoreProperties
 	public static Result saveAppliedJob() {
 		JsonNode json = request().body().asJson();
 		System.out.println("json" + json);
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
-		
 		SaveAppliedJobsVM saveAppliedJobsVM;
-		try {
 
+		try {
 			saveAppliedJobsVM = objectMapper.readValue(json.get("jobData")
 					.traverse(), SaveAppliedJobsVM.class);
-			
-		   // apj.desiredSkil = json.get("desiredSkills").toString();
+
+			// apj.desiredSkil = json.get("desiredSkills").toString();
 			String email = session().get("email");
-			
-		   
-			//Delete the job having status 'Draft' and Change to Applied. for that(Current) user  
-		   AppliedJobs appliedJobs = AppliedJobs.getUserAppliedJob(email, saveAppliedJobsVM.requestNumber);
-		   if(appliedJobs != null){
-			   appliedJobs.delete();
-		   }else{
-			   
-		   }
-		   
-			ArrayNode positions = (ArrayNode) json.get("manadatorySkills");
-		    ArrayNode dskills = (ArrayNode) json.get("desiredSkills");
-		   
-		    String manadatorySkills =  "";
-		    for (int j = 0; j < positions.size()-1; j++) {
-				String  position = positions.get(j).path("mskill").toString();
-				manadatorySkills = position +","+manadatorySkills; 
-				
+
+			// Delete the job having status 'Draft' and Change to Applied. for
+			// that(Current) user
+			AppliedJobs appliedJobs = AppliedJobs.getUserAppliedJob(email,
+					saveAppliedJobsVM.requestNumber);
+			if (appliedJobs != null) {
+				appliedJobs.delete();
+			} else {
+
 			}
 
-		    String desiredSkills =  "";
-		    for (int j = 0; j < dskills.size() -1; j++) {
-				String  desired = dskills.get(j).path("dskill").toString();
-				desiredSkills = desired + ","+ desiredSkills; 
-				
+			ArrayNode positions = (ArrayNode) json.get("manadatorySkills");
+			ArrayNode dskills = (ArrayNode) json.get("desiredSkills");
+
+			String manadatorySkills = "";
+			int  pos =positions.size();
+			System.out.println("pos"+pos);
+			for (int j = pos-1; j >=0 ; j--) {
+				String position = positions.get(j).path("mskill").toString();
+				manadatorySkills = position + "," + manadatorySkills  ;
+
 			}
-		    
-		    desiredSkills = desiredSkills.replaceAll(",$", "");
-		    manadatorySkills = manadatorySkills.replaceAll(",$", "");
-		  
-		    apj.manadatorySkill = "["+manadatorySkills+"]";
-		    apj.desiredSkil = "["+desiredSkills+"]";
-		     //apj.manadatorySkill = mskills.toString();
-		    //apj.manadatorySkill = json.get("manadatorySkills").toString();
+
+			String desiredSkills = "";
+			int des = dskills.size();
+			for (int j = des-1 ; j >= 0 ; j--) {
+				String desired = dskills.get(j).path("dskill").toString();
+				desiredSkills =  desired+","+desiredSkills ;
+
+			}
+
+			desiredSkills = desiredSkills.replaceAll(",$", "");
+			manadatorySkills = manadatorySkills.replaceAll(",$", "");
+
+			apj.manadatorySkill = "[" + manadatorySkills + "]";
+			apj.desiredSkil = "[" + desiredSkills + "]";
+			// apj.manadatorySkill = mskills.toString();
+			// apj.manadatorySkill = json.get("manadatorySkills").toString();
 			apj.jobno = saveAppliedJobsVM.requestNumber;
+			//apj.skills = json.get("skills").toString();
 			String username = session().get("email");
 			apj.username = username;
-		    apj.jobStatus = "Applied";
-		    
-		    /*if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
-				apj.jobStatus = "Applied";
-			}*/
+			apj.jobStatus = "Applied";
+
+			/*
+			 * if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+			 * apj.jobStatus = "Applied"; }
+			 */
+			
+			apj.skills = json.get("skills").toString();
 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
 			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
 			apj.reqType = saveAppliedJobsVM.requestType;
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
-			apj.workDesc    =saveAppliedJobsVM.workDescription;
-			apj.positiontype  =saveAppliedJobsVM.positionType;
+			apj.workDesc = saveAppliedJobsVM.workDescription;
+			apj.positiontype = saveAppliedJobsVM.positionType;
 			apj.save();
 
+			//String email = session().get("email");*/
+			MailUtility mailUtility =  new MailUtility();
+			mailUtility.sendMailToUser(email, saveAppliedJobsVM.labourCategory, saveAppliedJobsVM.performanceLevel, saveAppliedJobsVM.positionType, saveAppliedJobsVM.clearanceRequired, saveAppliedJobsVM.workLocation);
+			mailUtility.sendMailToAdmin(email,saveAppliedJobsVM.labourCategory,saveAppliedJobsVM.positionType,saveAppliedJobsVM.workLocation);
+	
+			
+			
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -2161,36 +2559,33 @@ public class Application extends Controller {
 		return ok();
 	}
 
-	
-	
 	@JsonIgnoreProperties
 	public static Result saveUserJobToDraft() {
 		JsonNode json = request().body().asJson();
 		System.out.println("json" + json);
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
-		
+
 		UserSaveAppliedJobsVM saveAppliedJobsVM;
 		try {
 
 			saveAppliedJobsVM = objectMapper.readValue(json.get("jobData")
 					.traverse(), UserSaveAppliedJobsVM.class);
-			
-			
-		  
-		    apj.manadatorySkill = json.get("manadatorySkills").toString();
-		    apj.desiredSkil =json.get("desiredSkills").toString();
+
+			apj.manadatorySkill = json.get("manadatorySkills").toString();
+			apj.desiredSkil = json.get("desiredSkills").toString();
+			apj.skills = json.get("skills").toString();
 			apj.jobno = saveAppliedJobsVM.requestNumber;
 			String username = session().get("email");
 			apj.username = username;
-		    apj.jobStatus = "Draft";
+			apj.jobStatus = "Draft";
 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
 			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
 			apj.reqType = saveAppliedJobsVM.requestType;
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
-			apj.workDesc    =saveAppliedJobsVM.workDescription;
-			apj.positiontype  =saveAppliedJobsVM.positionType;
+			apj.workDesc = saveAppliedJobsVM.workDescription;
+			apj.positiontype = saveAppliedJobsVM.positionType;
 			apj.save();
 
 		} catch (JsonParseException e1) {
@@ -2206,41 +2601,57 @@ public class Application extends Controller {
 
 		return ok();
 	}
-	
+
 	@JsonIgnoreProperties
 	public static Result saveUserSavedJob() {
 		JsonNode json = request().body().asJson();
-		System.out.println("json" + json);
+		//System.out.println("json" + json);
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
-		
 		UserSaveAppliedJobsVM saveAppliedJobsVM;
 		try {
 
 			saveAppliedJobsVM = objectMapper.readValue(json.get("jobData")
 					.traverse(), UserSaveAppliedJobsVM.class);
-			
-		  
-		    apj.manadatorySkill = json.get("manadatorySkills").toString();
-		    apj.desiredSkil =json.get("desiredSkills").toString();
+
+			apj.manadatorySkill = json.get("manadatorySkills").toString();
+			apj.desiredSkil = json.get("desiredSkills").toString();
 			apj.jobno = saveAppliedJobsVM.requestNumber;
 			String username = session().get("email");
 			apj.username = username;
-			if( "draft".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+			if ("draft".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)) {
 				apj.jobStatus = "Draft";
-			} 
-			if("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)){
+			}
+			if ("active".equalsIgnoreCase(saveAppliedJobsVM.jobStatus)) {
 				apj.jobStatus = "Applied";
 			}
+			//String  str =  json.get("skills").toString();
+			//String allSkills = null;
+			/*String  skills = json.get("skills").toString().replaceAll("\\[", "").replaceAll("\\]","");
+			
+			String [] Skills = skills.split(",");
+			for(String str:Skills){
+				allSkills = allSkills + ","+str;
+				System.out.println("str"+str);
+			}
+			allSkills = allSkills.replaceAll("\"", "");
+			System.out.println("allSkills"+allSkills);*/
+ 			apj.skills = json.get("skills").toString();
 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
 			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
 			apj.reqType = saveAppliedJobsVM.requestType;
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
-			apj.workDesc    =saveAppliedJobsVM.workDescription;
-			apj.positiontype  =saveAppliedJobsVM.positionType;
+			apj.workDesc = saveAppliedJobsVM.workDescription;
+			apj.positiontype = saveAppliedJobsVM.positionType;
+			
 			apj.save();
-
+			
+			String email = session().get("email");
+			MailUtility mailUtility =  new MailUtility();
+			mailUtility.sendMailToUser(email, saveAppliedJobsVM.labourCategory, saveAppliedJobsVM.performanceLevel, saveAppliedJobsVM.positionType, saveAppliedJobsVM.clearanceRequired, saveAppliedJobsVM.workLocation);
+			mailUtility.sendMailToAdmin(email,saveAppliedJobsVM.labourCategory,saveAppliedJobsVM.positionType,saveAppliedJobsVM.workLocation);
+			
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -2255,9 +2666,6 @@ public class Application extends Controller {
 		return ok();
 	}
 
-	
-	
-	
 	@JsonIgnoreProperties
 	public static class DesiredSkills {
 		public String dskill;
@@ -2272,6 +2680,12 @@ public class Application extends Controller {
 		public String comment;
 	}
 
+	public static  class UserSkillsVM{
+		public String skillName;
+		public String isSelected;
+		
+		
+	}
 	@JsonIgnoreProperties
 	public static class AppliedJobVM {
 		public String username;
@@ -2293,22 +2707,18 @@ public class Application extends Controller {
 		public List<MandatorySkills> msSkils;
 
 	}
+
 	@JsonIgnoreProperties
 	public static class SavedJobVM {
 		public String username;
 		public int id;
-		/*public String requestNumber;
-		public String status;
-		public String location;
-		public String positionName;
-		public String workDesc;
-		public String jobStatus;
-		public String jobno;
-		public String positionname;
-		public String positiontype;
-		public String reqType;
-		public String performancelevel;
-		public String clearancereq;*/
+		/*
+		 * public String requestNumber; public String status; public String
+		 * location; public String positionName; public String workDesc; public
+		 * String jobStatus; public String jobno; public String positionname;
+		 * public String positiontype; public String reqType; public String
+		 * performancelevel; public String clearancereq;
+		 */
 		public String requestNumber;
 		public String requestType;
 		public String labourCategory;
@@ -2317,8 +2727,10 @@ public class Application extends Controller {
 		public String clearanceRequired;
 		public String workLocation;
 		public String workDescription;
-		/*public String manadatorySkills;
-		public String desiredSkill;*/
+		public List<UserSkillsVM> skills;
+		/*
+		 * public String manadatorySkills; public String desiredSkill;
+		 */
 		public String jobStatus;
 
 		public List<MandatorySkills> manadatorySkills;
@@ -2327,10 +2739,11 @@ public class Application extends Controller {
 	}
 
 	public static Result getAllAppliedJobs(int pageNumber) {
-		String jobStatus ="Applied";
-		int count  = 0;
-	    count = AppliedJobs.getAllAppliedJobsCount(pageNumber, jobStatus);
-		List<AppliedJobs> ap = AppliedJobs.getAllAppliedJobs(pageNumber,10,jobStatus);
+		String jobStatus = "Applied";
+		int count = 0;
+		count = AppliedJobs.getAllAppliedJobsCount(pageNumber, jobStatus);
+		List<AppliedJobs> ap = AppliedJobs.getAllAppliedJobs(pageNumber, 10,
+				jobStatus);
 		ArrayList<AppliedJobVM> appliedJobVM = new ArrayList<AppliedJobVM>();
 
 		for (AppliedJobs apj : ap) {
@@ -2346,8 +2759,8 @@ public class Application extends Controller {
 			appliedJobVM.add(apvm);
 
 		}
-		Map<String,Object> map =new HashMap<String, Object> ();
-		map.put("appliedJobs",appliedJobVM );
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("appliedJobs", appliedJobVM);
 		map.put("appliedJobCount", count);
 		return ok(Json.toJson(map));
 	}
@@ -2359,9 +2772,9 @@ public class Application extends Controller {
 
 		int ids = Integer.parseInt(id);
 		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
-		//job id to be shown on resume
-		String JobId =ap.jobno;
-		
+		// job id to be shown on resume
+		String JobId = ap.jobno;
+
 		OutputStream file = null;
 		Document document = null;
 		try {
@@ -2370,10 +2783,17 @@ public class Application extends Controller {
 			PdfWriter.getInstance(document, file);
 			String email = ap.username;
 			UserDetails ud = UserDetails.getUserByEmail(email);
-			//String candidiatename = ud.fullname;
-			String candidiatename = ud.firstname;
+			System.out.println("ud" + ud);
+			// String candidiatename = ud.fullname;
+			String candidiatename = "";
+			if (ud.middlename != "NA") {
+				candidiatename = ud.firstname + " " + ud.middlename + " "
+						+ ud.lastname;
+			} else {
+				candidiatename = ud.firstname + " " + ud.lastname;
+			}
 			List<UserSkill> skills = ud.userSkill;
-			List <UserExperiance> userExperiance = ud.userExperiance;
+			List<UserExperiance> userExperiance = ud.userExperiance;
 			// used for the table name (heading)
 			Font font = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD,
 					BaseColor.BLACK);
@@ -2425,64 +2845,66 @@ public class Application extends Controller {
 			certChunk.setBackground(new BaseColor(230, 230, 250));
 			certChunk.setFont(font);
 
-			Chunk chunkUserExp = new Chunk("Resource Submission Level".toUpperCase());
+			Chunk chunkUserExp = new Chunk(
+					"Resource Submission Level".toUpperCase());
 			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
 			chunkUserExp.setFont(font);
-			
-			// Experiance  table
-						PdfPTable expLevelTable = new PdfPTable(1);
-						// table2.set
-						expLevelTable.setWidthPercentage(100);
-						/*float[] widthexp = { 2f};
-						expLevelTable.setWidths(widthexp);*/
 
-						PdfPCell cellexptble = new PdfPCell(new Paragraph(
-								"Resource Submission Level".toUpperCase()));
-						/*cellexptble.setColspan(3);
-						cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cellexptble.setPadding(10.0f);
-						cellexptble.setBackgroundColor(new BaseColor(140, 221, 8));
-						expLevelTable.addCell(cellexptble);*/
-						
-						
-						/*cellexptble = new PdfPCell(new Phrase("RESOURCE SUBMISSION LEVEL "
-								,font1));
-						cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
-						cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-						expLevelTable.addCell(cellexptble);*/
-						
-						for (UserExperiance ue : userExperiance) {
-							// EmpHistorytable.addCell(cellemp);
-							cellexptble = new PdfPCell(new Phrase(ue.experianceLevel,font1));
-							System.out.println("ue.experianceLevel"+ue.experianceLevel);
-							cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
-							// cell2.setFont(font1);
-							cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-							expLevelTable.addCell(cellexptble);
-						}
-			
-			
-			
-			
-			
+			// Experiance table
+			PdfPTable expLevelTable = new PdfPTable(1);
+			// table2.set
+			expLevelTable.setWidthPercentage(100);
+			/*
+			 * float[] widthexp = { 2f}; expLevelTable.setWidths(widthexp);
+			 */
+
+			PdfPCell cellexptble = new PdfPCell(new Paragraph(
+					"Resource Submission Level".toUpperCase()));
+			/*
+			 * cellexptble.setColspan(3);
+			 * cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+			 * cellexptble.setPadding(10.0f); cellexptble.setBackgroundColor(new
+			 * BaseColor(140, 221, 8)); expLevelTable.addCell(cellexptble);
+			 */
+
+			/*
+			 * cellexptble = new PdfPCell(new
+			 * Phrase("RESOURCE SUBMISSION LEVEL " ,font1));
+			 * cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
+			 * cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+			 * expLevelTable.addCell(cellexptble);
+			 */
+
+			for (UserExperiance ue : userExperiance) {
+				// EmpHistorytable.addCell(cellemp);
+				cellexptble = new PdfPCell(
+						new Phrase(ue.experianceLevel, font1));
+				System.out.println("ue.experianceLevel" + ue.experianceLevel);
+				cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
+				// cell2.setFont(font1);
+				cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+				expLevelTable.addCell(cellexptble);
+			}
+
 			// skill table
-			PdfPTable table2 = new PdfPTable(4);
+			PdfPTable table2 = new PdfPTable(3);
 			// table2.set
 			table2.setWidthPercentage(100);
-			float[] width2 = { 2f, 2f, 2f, 2f };
+			float[] width2 = { 2f, 2f, 2f };
 			table2.setWidths(width2);
 
 			PdfPCell cell2 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
-			cell2.setColspan(3);
-			cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
-			cell2.setPadding(10.0f);
+			// cell2.setColspan(3);
+			// cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+			// cell2.setPadding(10.0f);
 			cell2.setBackgroundColor(new BaseColor(140, 221, 8));
 			for (UserSkill sk : skills) {
 				// EmpHistorytable.addCell(cellemp);
 				cell2 = new PdfPCell(new Phrase(sk.skillName));
 				cell2.setBackgroundColor(new BaseColor(248, 248, 255));
 				// cell2.setFont(font1);
+				System.out.println("sk.skillName" + sk.skillName);
 				cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table2.addCell(cell2);
 			}
@@ -2502,12 +2924,14 @@ public class Application extends Controller {
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
 			table4.addCell(cell4);
 
-			// add email of canidiate at bottom of student full name
-			cell4 = new PdfPCell(new Phrase("Email: " + email, font1));
-			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
-			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
-			table4.addCell(cell4);
-			
+			/*
+			 * // add email of canidiate at bottom of student full name cell4 =
+			 * new PdfPCell(new Phrase("Email: " + email, font1));
+			 * cell4.setBackgroundColor(new BaseColor(230, 230, 250));
+			 * cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
+			 * table4.addCell(cell4);
+			 */
+
 			cell4 = new PdfPCell(new Phrase("JOB ID: " + JobId, font1));
 			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -2641,9 +3065,9 @@ public class Application extends Controller {
 				EmpHistorytable.addCell(cellemp);
 			}
 
-			PdfPTable edutable = new PdfPTable(4);
+			PdfPTable edutable = new PdfPTable(2);
 			edutable.setWidthPercentage(100);
-			float[] colwidth = { 2f, 2f, 2f, 2f };
+			float[] colwidth = { 2f, 2f };
 			edutable.setWidths(colwidth);
 
 			PdfPCell celledu = new PdfPCell(new Paragraph("EDUCATION"));
@@ -2657,15 +3081,19 @@ public class Application extends Controller {
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
 
-			celledu = new PdfPCell(new Phrase("School Name", font2));
-			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
-			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-			edutable.addCell(celledu);
+			/*
+			 * celledu = new PdfPCell(new Phrase("School Name", font2));
+			 * celledu.setBackgroundColor(new BaseColor(230, 230, 250));
+			 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+			 * edutable.addCell(celledu);
+			 */
 
-			celledu = new PdfPCell(new Phrase("Degree Major", font2));
-			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
-			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-			edutable.addCell(celledu);
+			/*
+			 * celledu = new PdfPCell(new Phrase("Degree Major", font2));
+			 * celledu.setBackgroundColor(new BaseColor(230, 230, 250));
+			 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+			 * edutable.addCell(celledu);
+			 */
 
 			celledu = new PdfPCell(new Phrase("Completion Date", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
@@ -2681,16 +3109,19 @@ public class Application extends Controller {
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
 
-				celledu = new PdfPCell(new Phrase(edu.instituteName, font1));
-				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
-				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-				edutable.addCell(celledu);
+				/*
+				 * celledu = new PdfPCell(new Phrase(edu.instituteName, font1));
+				 * celledu.setBackgroundColor(new BaseColor(248, 248, 255));
+				 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+				 * edutable.addCell(celledu);
+				 */
 
-				celledu = new PdfPCell(new Phrase(edu.degree, font1));
-				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
-				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-				edutable.addCell(celledu);
-
+				/*
+				 * celledu = new PdfPCell(new Phrase(edu.degree, font1));
+				 * celledu.setBackgroundColor(new BaseColor(248, 248, 255));
+				 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+				 * edutable.addCell(celledu);
+				 */
 				celledu = new PdfPCell(new Phrase(edu.toDate, font1));
 				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -2784,7 +3215,7 @@ public class Application extends Controller {
 			// Now Insert Every Thing Into PDF Document
 			document.open();// PDF document opened........
 
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 			String date = sdf.format(new Date());
 			System.out.println(date); // 15/10/2013
 			Paragraph date1 = new Paragraph(date);
@@ -2802,17 +3233,16 @@ public class Application extends Controller {
 			document.add(chunkClearance);
 			document.add(table3);// user clearance
 			document.add(Chunk.NEWLINE);
+			document.add(chunk);
+			document.add(table2);// skill table
+			document.add(Chunk.NEWLINE);
 			document.add(chunkSkills);
 			document.add(table1);// mandatory skills
 
 			document.add(Chunk.NEWLINE);
-			document.add(chunk);
-			document.add(table2);// skill table
-			
-			document.add(Chunk.NEWLINE);
 			document.add(chunkDesired);
 			document.add(table);// desired skills
-			
+
 			document.add(Chunk.NEWLINE);
 			document.add(empChunk);
 			document.add(EmpHistorytable);
@@ -2853,83 +3283,189 @@ public class Application extends Controller {
 	 * 
 	 * }
 	 */
-	
+
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class EditJobVM {
-	public Long id;
-	public String requestNumber;
-	public String requestType;
-	public String labourCategory;
-	public String performanceLevel;
-	public String positionType;
-	public String clearanceRequired;
-	public String workLocation;
-	public String workDescription;
-	private List<String> manadatorySkills;
-	private List<String> desiredSkill;
-	public String certificationRequired;
-	public String conusTravel;
-	public String oconusTravel;
-	public String reghrperYear;
-	public String scheduleComments;
-	public String nonpubComments;
-	public String missionCritical;
-	public String nightWork;
-	public String localTravalusingpub;
-	public String pagerDuty;
-	public String pagerdutyComments;
-	public String workonHoliday;
-	public String workonWeekends;
-	public String shiftWork;
-	public String warzone;
-	public String coop;
-	public String duetoPmo;
-	public String updateDate;
-	public String duetoGovt;
+		public Long id;
+		public String requestNumber;
+		public String requestType;
+		public String labourCategory;
+		public String performanceLevel;
+		public String positionType;
+		public String clearanceRequired;
+		public String workLocation;
+		public String workDescription;
+		private List<String> manadatorySkills;
+		private List<String> desiredSkill;
+		public String certificationRequired;
+		public String conusTravel;
+		public String oconusTravel;
+		public String reghrperYear;
+		public String scheduleComments;
+		public String nonpubComments;
+		public String missionCritical;
+		public String nightWork;
+		public String localTravalusingpub;
+		public String pagerDuty;
+		public String pagerdutyComments;
+		public String workonHoliday;
+		public String workonWeekends;
+		public String shiftWork;
+		public String warzone;
+		public String coop;
+		public String duetoPmo;
+		public String updateDate;
+		public String duetoGovt;
 	}
-	public static  Result saveEditJob(){
+
+	public static Result saveEditJob() {
 		JsonNode json = request().body().asJson();
 		System.out.println("json" + json);
-		
+
 		JsonNode editJobJson = json.path("editJob");
 		ObjectMapper editJob = new ObjectMapper();
 
 		try {
 			EditJobVM editJobVM = editJob.readValue(editJobJson.traverse(),
 					EditJobVM.class);
-			StoreExcelFile storeExcel = StoreExcelFile.getregNumber(editJobVM.requestNumber);
-			
-			storeExcel.requestNumber  = editJobVM.requestNumber;
-			storeExcel.requestType  =editJobVM.requestType;
-			storeExcel.labourCategory  =editJobVM.labourCategory;
-			storeExcel.performanceLevel  =editJobVM.performanceLevel;
-			storeExcel.positionType  =editJobVM.positionType;
-			storeExcel.clearanceRequired  = editJobVM.clearanceRequired;
-			storeExcel.workLocation  =editJobVM.workLocation;
-			storeExcel.workDescription  =editJobVM.workDescription;
-			storeExcel.manadatorySkills  =json.path("manadatorySkills").toString();
-			storeExcel.desiredSkill  =json.path("desiredSkill").toString();
-			storeExcel.certificationRequired  =editJobVM.certificationRequired;
-			storeExcel.conusTravel  =editJobVM.conusTravel;
-			storeExcel.oconusTravel  =editJobVM.oconusTravel;
-			storeExcel.reghrperYear  =editJobVM.reghrperYear;
-			storeExcel.scheduleComments  =editJobVM.scheduleComments;
-			storeExcel.nonpubComments  =editJobVM.nonpubComments;
-			storeExcel.missionCritical  = editJobVM.missionCritical;
-			storeExcel.nightWork =editJobVM.nightWork;
-			storeExcel.localTravalusingpub  =editJobVM.localTravalusingpub;
-			storeExcel.pagerDuty  =editJobVM.pagerDuty;
-			storeExcel.pagerdutyComments  =editJobVM.pagerdutyComments;
-			storeExcel.workonHoliday  =editJobVM.workonHoliday;
-			storeExcel.workonWeekends  =editJobVM.workonWeekends;
-			storeExcel.shiftWork  =editJobVM.shiftWork;
-			storeExcel.warzone  =editJobVM.warzone;
-			storeExcel.coop  =editJobVM.coop;
-			storeExcel.duetoPmo  =editJobVM.duetoPmo;
-			storeExcel.updateDate  =editJobVM.updateDate;
-			storeExcel.duetoGovt  =editJobVM.duetoGovt;
-			storeExcel.update(storeExcel);			
-			
+			StoreExcelFile storeExcel = StoreExcelFile
+					.getregNumber(editJobVM.requestNumber);
+
+			storeExcel.requestNumber = editJobVM.requestNumber;
+			storeExcel.requestType = editJobVM.requestType;
+			storeExcel.labourCategory = editJobVM.labourCategory;
+			storeExcel.performanceLevel = editJobVM.performanceLevel;
+			storeExcel.positionType = editJobVM.positionType;
+			storeExcel.clearanceRequired = editJobVM.clearanceRequired;
+			storeExcel.workLocation = editJobVM.workLocation;
+			storeExcel.workDescription = editJobVM.workDescription;
+			if (editJobJson.path("manadatorySkills").size() != 0) {
+				String manSkill = editJobJson.path("manadatorySkills")
+						.toString();
+				storeExcel.manadatorySkills = manSkill.replaceAll("\\[", "")
+						.replaceAll("\\]", "").replace("\"", "");
+			} else {
+				storeExcel.manadatorySkills = editJobVM.manadatorySkills
+						.toString();
+			}
+			System.out.println("json.pat.size()"
+					+ editJobJson.path("desiredSkill").size());
+			if (editJobJson.path("desiredSkill").size() != 0) {
+				String desSkill = editJobJson.path("desiredSkill").toString();
+				storeExcel.desiredSkill = desSkill.replaceAll("\\[", "")
+						.replaceAll("\\]", "").replace("\"", "");
+			} else {
+				storeExcel.desiredSkill = editJobVM.desiredSkill.toString();
+			}
+			// json.path("manadatorySkills").toString();
+			// storeExcel.desiredSkill =json.path("desiredSkill").toString();
+			storeExcel.certificationRequired = editJobVM.certificationRequired;
+			if (editJobVM.conusTravel == "true" || editJobVM.conusTravel == "Y") {
+				storeExcel.conusTravel = "Y";
+			} else {
+				storeExcel.conusTravel = "N";
+			}
+
+			if (editJobVM.oconusTravel == "true"
+					|| editJobVM.oconusTravel == "Y") {
+				storeExcel.oconusTravel = "Y";
+			} else {
+				storeExcel.oconusTravel = "N";
+			}
+
+			// storeExcel.oconusTravel =editJobVM.oconusTravel;
+
+			storeExcel.reghrperYear = editJobVM.reghrperYear;
+
+			// storeExcel.reghrperYear =editJobVM.reghrperYear;
+
+			storeExcel.scheduleComments = editJobVM.scheduleComments;
+
+			// storeExcel.nonpubComments =editJobVM.nonpubComments;
+
+			if (editJobVM.nonpubComments == "true"
+					|| editJobVM.nonpubComments == "Y") {
+				storeExcel.nonpubComments = "Y";
+			} else {
+				storeExcel.nonpubComments = "N";
+			}
+
+			// storeExcel.missionCritical = editJobVM.missionCritical;
+			if (editJobVM.missionCritical == "true"
+					|| editJobVM.missionCritical == "Y") {
+				storeExcel.missionCritical = "Y";
+			} else {
+				storeExcel.missionCritical = "N";
+			}
+
+			// storeExcel.nightWork =editJobVM.nightWork;
+			if (editJobVM.nightWork == "true" || editJobVM.nightWork == "Y") {
+				storeExcel.nightWork = "Y";
+			} else {
+				storeExcel.nightWork = "N";
+			}
+
+			// storeExcel.localTravalusingpub =editJobVM.localTravalusingpub;
+
+			if (editJobVM.localTravalusingpub == "true"
+					|| editJobVM.localTravalusingpub == "Y") {
+				storeExcel.localTravalusingpub = "Y";
+			} else {
+				storeExcel.localTravalusingpub = "N";
+			}
+
+			// storeExcel.pagerDuty =editJobVM.pagerDuty;
+			if (editJobVM.pagerDuty == "true" || editJobVM.pagerDuty == "Y") {
+				storeExcel.pagerDuty = "Y";
+			} else {
+				storeExcel.pagerDuty = "N";
+			}
+
+			storeExcel.pagerdutyComments = editJobVM.pagerdutyComments;
+
+			// storeExcel.workonHoliday =editJobVM.workonHoliday;
+			if (editJobVM.workonHoliday == "true"
+					|| editJobVM.workonHoliday == "Y") {
+				storeExcel.workonHoliday = "Y";
+			} else {
+				storeExcel.workonHoliday = "N";
+			}
+
+			// storeExcel.workonWeekends =editJobVM.workonWeekends;
+
+			if (editJobVM.workonWeekends == "true"
+					|| editJobVM.workonWeekends == "Y") {
+				storeExcel.workonWeekends = "Y";
+			} else {
+				storeExcel.workonWeekends = "N";
+			}
+
+			// storeExcel.shiftWork =editJobVM.shiftWork;
+			if (editJobVM.shiftWork == "true" || editJobVM.shiftWork == "Y") {
+				storeExcel.shiftWork = "Y";
+			} else {
+				storeExcel.shiftWork = "N";
+			}
+
+			// storeExcel.warzone =editJobVM.warzone;
+
+			if (editJobVM.warzone == "true" || editJobVM.warzone == "Y") {
+				storeExcel.warzone = "Y";
+			} else {
+				storeExcel.warzone = "N";
+			}
+
+			// storeExcel.coop =editJobVM.coop;
+			if (editJobVM.coop == "true" || editJobVM.coop == "Y") {
+				storeExcel.coop = "Y";
+			} else {
+				storeExcel.coop = "N";
+			}
+			storeExcel.duetoPmo = editJobVM.duetoPmo;
+			storeExcel.updateDate = editJobVM.updateDate;
+			storeExcel.duetoGovt = editJobVM.duetoGovt;
+			storeExcel.update(storeExcel);
+
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -2941,41 +3477,40 @@ public class Application extends Controller {
 			e1.printStackTrace();
 		}
 
-		//.update();
-		
+		// .update();
+
 		return ok("success");
-	} 
-	
-	public static Result inactiveJob(String requestNumber){
-		
+	}
+
+	public static Result inactiveJob(String requestNumber) {
+
 		StoreExcelFile storeExcel = StoreExcelFile.getregNumber(requestNumber);
-	    storeExcel.jobStatus = "inactive";
-	    storeExcel.update(storeExcel);
+		storeExcel.jobStatus = "inactive";
+		storeExcel.update(storeExcel);
 		return ok("");
 	}
-	
-	public static Result onactiveJob(String requestNumber){
-		
+
+	public static Result onactiveJob(String requestNumber) {
+
 		StoreExcelFile storeExcel = StoreExcelFile.getregNumber(requestNumber);
-	    storeExcel.jobStatus = "active";
-	    storeExcel.update(storeExcel);
+		storeExcel.jobStatus = "active";
+		storeExcel.update(storeExcel);
 		return ok("");
 	}
-	
-	public static Result  getAllUsers(int pageNumber){
-		int count  = 0;
-		List<UserDetails> userDetails  = UserDetails.getAllUsers(pageNumber,10);
-		count  = UserDetails.getAllUsersCount(pageNumber);
+
+	public static Result getAllUsers(int pageNumber) {
+		int count = 0;
+		List<UserDetails> userDetails = UserDetails.getAllUsers(pageNumber, 10);
+		count = UserDetails.getAllUsersCount(pageNumber);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("users", userDetails);
 		map.put("userCount", count);
 		return ok((Json.stringify(Json.toJson(map))));
-		
+
 	}
-	
-	
-	public static Result getUserDetailsForAdmin(String email){
-		
+
+	public static Result getUserDetailsForAdmin(String email) {
+
 		List<EducationDetails> ed = EducationDetails
 				.getEducationDetailsByUserEmail(email);
 		List<CertificationDetails> cd = CertificationDetails
@@ -2984,270 +3519,205 @@ public class Application extends Controller {
 				.getEmploymentDetailsByUserEmail(email);
 		// List<UserSkill> skills = ud.userSkill;
 		Map<String, Object> map = new HashMap<String, Object>();
-		//map.put("userDetails", ud);
+		// map.put("userDetails", ud);
 		map.put("educationDetails", ed);
 		map.put("certificationDetails", cd);
 		map.put("employmentDetails", eds);
 
 		return ok(Json.toJson(map));
-		
+
 	}
-	
-	public static Result onActiveUser(String email){
+
+	public static Result onActiveUser(String email) {
 		UserDetails ud = UserDetails.getUserByEmail(email);
 		ud.userstatus = "active";
 		ud.update();
 		return ok("");
 	}
-	
-	
-	public static Result onInActiveUser(String email){
+
+	public static Result onInActiveUser(String email) {
 		UserDetails ud = UserDetails.getUserByEmail(email);
 		ud.userstatus = "inactive";
 		ud.update();
 		return ok("");
 	}
-	
-	
-	public static class AdminVM{
+
+	public static class AdminVM {
 		public long id;
 		public String username;
 		public String password;
 		public String role;
 	}
-	
-	
-	public static Result getallAdmin(int  pageNumber){
-		int count = 0;
-		List<Admin> ad= Admin.getAllAdmin(pageNumber,10);	
-		count  = Admin.getAllAdminCount(pageNumber);
 
-		ArrayList<AdminVM> al  = new ArrayList<AdminVM>(); 
- 		for(Admin a : ad){
- 			AdminVM avm  = new AdminVM();
- 			avm.id = a.id;
- 			avm.username = a.username;
- 			avm.password =  a.password;
- 			avm.role = a.role;
- 			al.add(avm);
- 		}
-		
-		Map<String  ,Object> map = new HashMap<String,Object>();
-		map.put("adminList",al);
+	public static Result getallAdmin(int pageNumber) {
+		int count = 0;
+		List<Admin> ad = Admin.getAllAdmin(pageNumber, 10);
+		count = Admin.getAllAdminCount(pageNumber);
+
+		ArrayList<AdminVM> al = new ArrayList<AdminVM>();
+		for (Admin a : ad) {
+			AdminVM avm = new AdminVM();
+			avm.id = a.id;
+			avm.username = a.username;
+			avm.password = a.password;
+			avm.role = a.role;
+			al.add(avm);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("adminList", al);
 		map.put("adminCount", count);
-		return ok(Json.toJson(map)); 
-	} 
-	
-	
-	
-	public static Result addnewAdmin(String email,String password){
-		
-		Admin ad =Admin.getAdminByEmail(email);
-		if(ad == null){
+		return ok(Json.toJson(map));
+	}
+
+	public static Result addnewAdmin(String email, String password) {
+
+		Admin ad = Admin.getAdminByEmail(email);
+		if (ad == null) {
 			Admin a = new Admin();
-			
+
 			a.password = password;
 			a.username = email;
-			a.role ="admin";
+			a.role = "admin";
 			a.save();
-			
+
 			return ok(Json.toJson(a));
-		}else{
-			return ok();	
+		} else {
+			return ok();
 		}
-		
+
 	}
-	
-	
-	public static Result deleteAminByEmail(String email){
-		Admin ad= Admin.getAdminByEmail(email);
-		if(ad  != null) {
+
+	public static Result deleteAminByEmail(String email) {
+		Admin ad = Admin.getAdminByEmail(email);
+		if (ad != null) {
 			ad.delete();
 			return ok("");
-		}else{
-	
-			return  ok("");
+		} else {
+
+			return ok("");
 
 		}
-		
-		}
-	
-	public static Result editAdminDetails(String emailnew,String emailold,String passnew,String passold){
+
+	}
+
+	public static Result editAdminDetails(String emailnew, String emailold,
+			String passnew, String passold) {
 
 		Admin ad = Admin.isAdmin(emailold, passold);
-		if(ad != null ){
+		if (ad != null) {
 			ad.username = emailnew;
 			ad.password = passnew;
 			ad.update();
 			return ok("");
-		}else{
-	
+		} else {
+
 			return ok("");
 
 		}
-		 
+
 	}
 
 	
-	public static Result getAllUserAppliedJobs( int pageNumber){
-		
-		List<StoreExcelFile> jobs  = new ArrayList<>();
+	
+	public static Result getAllUserAppliedJobs(int pageNumber) {
+
+		List<AppliedJobs> jobs = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 		// both are selected for search(DSC)
-			String emailId = session().get("email");
-			userJobs = StoreExcelFile.getAllJobs(pageNumber,10);
-			int count = 0;
-			count =  AppliedJobs.getAllJobsCountByEmailAndJobStatus(pageNumber,emailId);
-			for (StoreExcelFile str : userJobs) {
-				AppliedJobs as = AppliedJobs.getUserAppliedJobDetails(emailId,
-						str.requestNumber,pageNumber,10);
-				
-				if (as != null) {
-					
-					jobs.add(str);
-				}
-			}
-
+		String emailId = session().get("email");
+	//	userJobs = StoreExcelFile.getAllJobs(pageNumber, 10);
+		int count = 0;
+		count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(pageNumber,
+				emailId);
 		
-		List<JobVM> jobVMs = new ArrayList<JobVM>();
+			jobs = AppliedJobs.getUserAppliedJobDetails(emailId,
+				 pageNumber, 10);
 
-	
+			List<SavedJobVM> jobVMs = new ArrayList<SavedJobVM>();
 
-		String mskills;
-		String dSkills;
+		for (AppliedJobs s : jobs) {
 
-		for (StoreExcelFile s : jobs) {
+			SavedJobVM jobVM = new SavedJobVM();
 
-			JobVM jobVM = new JobVM();
-
-			jobVM.requestNumber = s.requestNumber;
-			jobVM.requestType = s.requestType;
-			jobVM.labourCategory = s.labourCategory;
-			jobVM.performanceLevel = s.performanceLevel;
-			jobVM.positionType = s.positionType;
-			jobVM.clearanceRequired = s.clearanceRequired;
-			jobVM.workLocation = s.workLocation;
-			jobVM.workDescription = s.workDescription;
-
-			jobVM.certificationRequired = s.certificationRequired;
-			jobVM.conusTravel = s.conusTravel;
-			jobVM.oconusTravel = s.oconusTravel;
-			jobVM.reghrperYear = s.reghrperYear;
-			jobVM.scheduleComments = s.scheduleComments;
-			jobVM.nonpubComments = s.nonpubComments;
-			jobVM.missionCritical = s.missionCritical;
-			jobVM.nightWork = s.nightWork;
-			jobVM.localTravalusingpub = s.localTravalusingpub;
-			jobVM.pagerDuty = s.pagerDuty;
-			jobVM.pagerdutyComments  =s.pagerdutyComments;
-			jobVM.workonHoliday = s.workonHoliday;
-			jobVM.workonWeekends = s.workonWeekends;
-			jobVM.shiftWork  =s.shiftWork;
-			jobVM.warzone = s.warzone;
-			jobVM.coop = s.coop;
-			jobVM.duetoPmo = s.duetoPmo;
-			jobVM.updateDate = s.updateDate;
-			jobVM.duetoGovt = s.duetoGovt;
+			jobVM.requestNumber = s.jobno;
+			jobVM.requestType = s.reqType;
+			jobVM.labourCategory = s.positionname;
+			jobVM.performanceLevel = s.performancelevel;
+			jobVM.positionType = s.positiontype;
+			jobVM.clearanceRequired = s.clearancereq;
+			jobVM.workLocation = s.location;
+			jobVM.workDescription = s.workDesc;
+			
+			/*
+			 * jobVM.certificationRequired = s.certificationRequired;
+			 */
+			/*
+			 * jobVM.conusTravel = s.conusTravel; jobVM.oconusTravel =
+			 * s.oconusTravel; jobVM.reghrperYear = s.reghrperYear;
+			 * jobVM.scheduleComments = s.scheduleComments; jobVM.nonpubComments
+			 * = s.nonpubComments; jobVM.missionCritical = s.missionCritical;
+			 * jobVM.nightWork = s.nightWork; jobVM.localTravalusingpub =
+			 * s.localTravalusingpub; jobVM.pagerDuty = s.pagerDuty;
+			 * jobVM.pagerdutyComments =s.pagerdutyComments; jobVM.workonHoliday
+			 * = s.workonHoliday; jobVM.workonWeekends = s.workonWeekends;
+			 * jobVM.shiftWork =s.shiftWork; jobVM.warzone = s.warzone;
+			 * jobVM.coop = s.coop; jobVM.duetoPmo = s.duetoPmo;
+			 * jobVM.updateDate = s.updateDate; jobVM.duetoGovt = s.duetoGovt;
+			 */
+			/*String  skills = s.skills.replaceAll("\\[", "").replaceAll("\\]","");
+			
+			String [] Skills = skills.split(",");
+			
+			List<String> allSkills =  new ArrayList<String>();
+			for(String str:Skills){
+				
+				System.out.println("str"+str);
+				allSkills.add(str);
+			}
+			*/
 			
 			jobVM.jobStatus = s.jobStatus;
-			// check if the desired skill does not contain null value;
-			if (s.desiredSkill != null) {
-				dSkills = s.desiredSkill;
-			} else {
-				dSkills = " ";
-			}
-
-			// split the string with numbers
-			String[] tokendesiredsVal = dSkills
-					.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-
-			// prints the count of tokens
-			String numd = null;
-			ArrayList<String> desSkill = new ArrayList<String>();
-			for (String token : tokendesiredsVal) {
-				// check for the number
-				boolean b = token.matches("[-+]?\\d*\\.?\\d+");
-				if (b == true) {
-					numd = token;
-				} else {
-					// if number skip do not add to the list
-					// add the string with number
-					if (numd != null) {
-						desSkill.add(numd + "" + token);
-					}
-				}
-				System.out.print(token);
-			}
-
-			// check if the mandatory skill does not contain null value;
-			if (s.manadatorySkills != null) {
-				mskills = s.manadatorySkills;
-			} else {
-				mskills = " ";
-			}
-
-			// split the string with numbers
-			String[] tokensVal = mskills
-					.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-			// prints the count of tokens
-			String num = null;
-			ArrayList<String> manSkill = new ArrayList<String>();
-			for (String token : tokensVal) {
-				// check for the number
-				boolean b = token.matches("[-+]?\\d*\\.?\\d+");
-				if (b == true) {
-					num = token;
-				} else {
-					// if number skip dont add to the list
-					// add the string with number
-					if (num != null) {
-						manSkill.add(num + "" + token);
-					}
-				}
-			}
-
-			jobVM.manadatorySkills = manSkill;
-			jobVM.desiredSkill = desSkill;
-			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
-
+			jobVM.skills = getAllUserSkill(s.skills);
+			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
+			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
 			jobVMs.add(jobVM);
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("jobs", jobVMs);
 		map.put("jobsCount", count);
 		return ok(Json.toJson(map));
-		
-	} 
-	
-	public static  class  SendMailVM{
-	public String 	subject;
-	public String name;
-	public  String email;
-	public  String content;
-		
+
 	}
-	
-	public static Result  sendFeedbackMail(){
+
+	public static class SendMailVM {
+		public String subject;
+		public String name;
+		public String email;
+		public String content;
+
+	}
+
+	public static Result sendFeedbackMail() {
 		JsonNode json = request().body().asJson();
-		System.out.println("josn"+json);
-		
+		System.out.println("josn" + json);
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		SendMailVM sendMailVM;
 		try {
 
 			sendMailVM = objectMapper.readValue(json.get("contactus")
 					.traverse(), SendMailVM.class);
-			
-			
-			
-			
+
 			final String username = Play.application().configuration()
-					.getString("mail.id");;
-			final String password = Play.application().configuration()
-					.getString("mail.password");;
+					.getString("mail.id");
 			
+			final String password = Play.application().configuration()
+					.getString("mail.password");
+			
+
 			Properties props = new Properties();
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.starttls.enable", "true");
@@ -3257,7 +3727,8 @@ public class Application extends Controller {
 			Session session = Session.getInstance(props,
 					new javax.mail.Authenticator() {
 						protected PasswordAuthentication getPasswordAuthentication() {
-							return new PasswordAuthentication(username, password);
+							return new PasswordAuthentication(username,
+									password);
 						}
 					});
 
@@ -3266,14 +3737,15 @@ public class Application extends Controller {
 				Message feedback = new MimeMessage(session);
 				feedback.setFrom(new InternetAddress(username));
 				feedback.setRecipients(Message.RecipientType.TO,
-						InternetAddress.parse(sendMailVM.email
-								));
+						InternetAddress.parse(username));
 				feedback.setSubject(sendMailVM.subject);
 				// message.setText();
 				BodyPart messageBodyPart = new MimeBodyPart();
 				// Now set the actual message
-				messageBodyPart.setText("\n Name of person : " + sendMailVM.name + "\n Person Email:  "+ "\n "+sendMailVM.email +"\n Content: "
-						+ "\n"+sendMailVM.content);
+				messageBodyPart.setText("\nName of person : "
+						+ sendMailVM.name + "\nPerson Email:  " + "\n "
+						+ sendMailVM.email + "\nContent: " + "\n"
+						+ sendMailVM.content);
 				// Create a multipar message
 				Multipart multipart = new MimeMultipart();
 				// Set text message part
@@ -3284,7 +3756,6 @@ public class Application extends Controller {
 			} catch (MessagingException e) {
 				throw new RuntimeException(e);
 			}
-			
 
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
@@ -3296,118 +3767,190 @@ public class Application extends Controller {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		return ok();
 	}
-	
-	public static Result saveUserTemplate(String template, String templatename ){
-	String email = 	session().get("email");
-		UserTemplate ut = UserTemplate.getUserTemplateByName(templatename,email);  
-		if(ut != null){
-		ut.template = template;
-		ut.update();
-		return ok("");
-		}else{
-			UserTemplate userTemplate  = new UserTemplate();
+
+	public static Result saveUserTemplate(String template, String templatename) {
+		String email = session().get("email");
+		UserTemplate ut = UserTemplate.getUserTemplateByName(templatename,
+				email);
+		if (ut != null) {
+			ut.template = template;
+			ut.update();
+			return ok("");
+		} else {
+			UserTemplate userTemplate = new UserTemplate();
 			userTemplate.email = email;
 			userTemplate.templateName = templatename;
 			userTemplate.template = template;
 			userTemplate.save();
 			return ok("");
 		}
-		//return ok("");
+		// return ok("");
 	}
-	
-	
-	public static class UserTemnplateVM{
-		
-		
+
+	public static class UserTemnplateVM {
+
 		public int id;
 		public String email;
 		public String template;
 		public String templateName;
 	}
-	
-	public static Result  getSavedUserTemplate(){
-	String email = 	session().get("email");
- 
-	List	<UserTemplate> usertemplate = UserTemplate.getUserTemplateByName(email); 
-    
-	ArrayList<UserTemnplateVM> userTemnplateVM	 = new ArrayList<UserTemnplateVM>();
-		for(UserTemplate ut: usertemplate){
-			
+
+	public static Result getSavedUserTemplate() {
+		String email = session().get("email");
+
+		List<UserTemplate> usertemplate = UserTemplate
+				.getUserTemplateByName(email);
+
+		ArrayList<UserTemnplateVM> userTemnplateVM = new ArrayList<UserTemnplateVM>();
+		for (UserTemplate ut : usertemplate) {
+
 			UserTemnplateVM utvm = new UserTemnplateVM();
-			utvm.id =  ut.id;
+			utvm.id = ut.id;
 			utvm.email = ut.email;
 			utvm.template = ut.template;
 			utvm.templateName = ut.templateName;
 			userTemnplateVM.add(utvm);
 		}
-		
-    Map<String, Object> map =new HashMap<String, Object>();
-    map.put("template", userTemnplateVM);
-    return ok(Json.toJson(map));
-	} 
-	
-	
-	public static Result getUserSavedJobs(String currentPage){
-	String email = session() .get("email");
-	
-	List	<AppliedJobs>  jobs =AppliedJobs.getUserAppliedJobByStatus(email);
-		
-	List<SavedJobVM> jobVMs = new ArrayList<SavedJobVM>();
 
-	for (AppliedJobs s : jobs) {
-
-		SavedJobVM jobVM = new SavedJobVM();
-
-		jobVM.requestNumber = s.jobno;
-		jobVM. requestType= s.reqType;
-		jobVM.labourCategory = s.positionname;
-		jobVM.performanceLevel = s.performancelevel;
-		jobVM.positionType = s.positiontype;
-		jobVM.clearanceRequired = s.clearancereq;
-		jobVM.workLocation = s.location;
-		jobVM.workDescription = s.workDesc;
-/*
-		jobVM.certificationRequired = s.certificationRequired;*/
-		/*jobVM.conusTravel = s.conusTravel;
-		jobVM.oconusTravel = s.oconusTravel;
-		jobVM.reghrperYear = s.reghrperYear;
-		jobVM.scheduleComments = s.scheduleComments;
-		jobVM.nonpubComments = s.nonpubComments;
-		jobVM.missionCritical = s.missionCritical;
-		jobVM.nightWork = s.nightWork;
-		jobVM.localTravalusingpub = s.localTravalusingpub;
-		jobVM.pagerDuty = s.pagerDuty;
-		jobVM.pagerdutyComments  =s.pagerdutyComments;
-		jobVM.workonHoliday = s.workonHoliday;
-		jobVM.workonWeekends = s.workonWeekends;
-		jobVM.shiftWork  =s.shiftWork;
-		jobVM.warzone = s.warzone;
-		jobVM.coop = s.coop;
-		jobVM.duetoPmo = s.duetoPmo;
-		jobVM.updateDate = s.updateDate;
-		jobVM.duetoGovt = s.duetoGovt;
-		*/
-		jobVM.jobStatus = s.jobStatus;
-		
-
-		jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
-		jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
-		
-		//System.out.println("jobVM.desiredSkill" + jobVM.dsSkills);
-
-		jobVMs.add(jobVM);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("template", userTemnplateVM);
+		return ok(Json.toJson(map));
 	}
 
-	Map<String, Object> map = new HashMap<String, Object>();
+	public static Result getUserSavedJobs(String currentPage) {
+		String email = session().get("email");
 
-	map.put("totalPages", 10);
-	//map.put("currentPage", currentPage);
-	map.put("jobs", jobVMs);
-	return ok(Json.toJson(map));
-	
-	//return ok();
+		List<AppliedJobs> jobs = AppliedJobs.getUserAppliedJobByStatus(email);
+
+		List<SavedJobVM> jobVMs = new ArrayList<SavedJobVM>();
+
+		for (AppliedJobs s : jobs) {
+
+			SavedJobVM jobVM = new SavedJobVM();
+
+			jobVM.requestNumber = s.jobno;
+			jobVM.requestType = s.reqType;
+			jobVM.labourCategory = s.positionname;
+			jobVM.performanceLevel = s.performancelevel;
+			jobVM.positionType = s.positiontype;
+			jobVM.clearanceRequired = s.clearancereq;
+			jobVM.workLocation = s.location;
+			jobVM.workDescription = s.workDesc;
+			/*
+			 * jobVM.certificationRequired = s.certificationRequired;
+			 */
+			/*
+			 * jobVM.conusTravel = s.conusTravel; jobVM.oconusTravel =
+			 * s.oconusTravel; jobVM.reghrperYear = s.reghrperYear;
+			 * jobVM.scheduleComments = s.scheduleComments; jobVM.nonpubComments
+			 * = s.nonpubComments; jobVM.missionCritical = s.missionCritical;
+			 * jobVM.nightWork = s.nightWork; jobVM.localTravalusingpub =
+			 * s.localTravalusingpub; jobVM.pagerDuty = s.pagerDuty;
+			 * jobVM.pagerdutyComments =s.pagerdutyComments; jobVM.workonHoliday
+			 * = s.workonHoliday; jobVM.workonWeekends = s.workonWeekends;
+			 * jobVM.shiftWork =s.shiftWork; jobVM.warzone = s.warzone;
+			 * jobVM.coop = s.coop; jobVM.duetoPmo = s.duetoPmo;
+			 * jobVM.updateDate = s.updateDate; jobVM.duetoGovt = s.duetoGovt;
+			 */
+			jobVM.jobStatus = s.jobStatus;
+			jobVM.skills = getAllUserSkill(s.skills);
+			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
+			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
+
+			// System.out.println("jobVM.desiredSkill" + jobVM.dsSkills);
+
+			jobVMs.add(jobVM);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("totalPages", 10);
+		// map.put("currentPage", currentPage);
+		map.put("jobs", jobVMs);
+		return ok(Json.toJson(map));
+
+		// return ok();
 	}
+
+	public static Result getallSkillsForAdmin(int currentPage) {
+
+		int count = 0;
+		List<UserSkill> us = UserSkill.getAllSkillsForAdmin(currentPage, 10);
+		count = UserSkill.getAllSkillsCountForAdmin(currentPage, 10);
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("skillsCount", count);
+		map.put("allSkills", us);
+		return ok(Json.toJson(map));
+
+	}
+	
+	public static  Result deleteSelectedJob(String reqNumber){
+		StoreExcelFile storeExcelFile  = StoreExcelFile.getregNumber(reqNumber);
+		
+		if(storeExcelFile != null){
+			storeExcelFile.delete(storeExcelFile);
+		}
+		
+		return ok("");
+	}
+	
+	
+	@JsonIgnore
+	public static Result updateUserPassword(String email,String pass ){
+		UserDetails ud =UserDetails.getUserByEmail(email);
+		
+		if(ud!= null){
+				ud.password = pass;	
+				ud.update();	
+		}
+		return ok("success");
+	}
+	
+	@JsonIgnore
+	public static Result deleteUser(String uname){
+		UserDetails ud =UserDetails.getUserByEmail(uname);
+		if(ud != null){
+			ud.delete();
+		}
+		return ok("success");
+	}
+	
+	
+	@JsonIgnore
+	public static Result  editSkillDetails(String newSkill,String oldSkill){
+		UserSkill uk = UserSkill.getSkillByName(oldSkill);
+		if(uk != null){
+			uk.skillName = newSkill;
+			uk.update();
+		}
+		return ok("success");
+	}	
+	
+	@JsonIgnore
+	public static Result  deleteSkill(String skillname){
+		UserSkill uk = UserSkill.getSkillByName(skillname);
+		if(uk != null){
+			uk.delete();
+		}
+		return ok("success");
+	}
+	
+	
+	public static Result getUserSkills() {
+
+		String email = session().get("email");
+		UserDetails ud = UserDetails.getUserByEmail(email);
+		List<UserSkill> us = ud.userSkill;
+		Map<String, Object> map = new HashMap<String, Object>();
+		//map.put("skillsCount", count);
+		map.put("userSkill", us);
+		return ok(Json.toJson(map));
+
+	}
+	
+
 }

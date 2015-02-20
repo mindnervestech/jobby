@@ -38,6 +38,7 @@ public class AppliedJobs extends Model {
 	public String reqType;
 	public String performancelevel;
 	public String clearancereq;
+	public String skills;
 
 	public static Finder<Long, AppliedJobs> find = new Finder<Long, AppliedJobs>(
 			Long.class, AppliedJobs.class);
@@ -51,9 +52,9 @@ public class AppliedJobs extends Model {
 		return find.where().eq("username", email).eq("jobno", reqNo).findUnique();
 	}
 	
-	public static AppliedJobs getUserAppliedJobDetails(String email, String reqNo ,Integer  pageNumber,Integer rowperpage) {
+	public static List<AppliedJobs> getUserAppliedJobDetails(String email,Integer  pageNumber,Integer rowperpage) {
 		String jobStatus = "Applied".trim();
-		return find.where().eq("username", email).eq("jobno", reqNo).eq("jobStatus", jobStatus).findUnique();
+		return find.where().eq("username", email).eq("jobStatus", jobStatus).findList();
 	}
 	
 	@JsonIgnore
