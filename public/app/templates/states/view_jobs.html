@@ -223,7 +223,7 @@
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job2 in job.desiredSkill">{{job2}}</small>
-											<span ng-click="close">close</span>
+											<!-- <span ng-click="close">close</span> -->
 										</div>
 									</div>
 									<!-- user  job content   end-->
@@ -940,7 +940,7 @@
 	
 	
 	
-	<!-- <div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	 <div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -1016,9 +1016,9 @@
 								ng-model="editJob.workDescription" placeholder="Work Description"
 								style="font-size: 12px;" class="form-control"  readonly></textarea>
 						
-							<input type="text" id="workDescription" name="workDescription"
+							<!-- <input type="text" id="workDescription" name="workDescription"
 								ng-model="editJob.workDescription" placeholder="Work Description"
-								style="font-size: 12px;" class="form-control" required>
+								style="font-size: 12px;" class="form-control" required> -->
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
@@ -1028,9 +1028,9 @@
 						<textarea rows="9" cols="9" id="manadatorySkills" name="manadatorySkills"
 								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
 								style="font-size: 12px;" class="form-control"  readonly></textarea>
-							<input type="text" id="manadatorySkills" name="manadatorySkills"
+							<!-- <input type="text" id="manadatorySkills" name="manadatorySkills"
 								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
-								style="font-size: 12px;" class="form-control" required>
+								style="font-size: 12px;" class="form-control" required> -->
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
@@ -1222,11 +1222,11 @@
 				</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
-        <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Save changes</button>
+       <!--  <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Save changes</button> -->
       </div>
     </div>
   </div>
-</div> -->
+</div>
 
 
 <!-- View  Draft Job Modal -->
@@ -1302,8 +1302,8 @@
 </div>
 
 
-<!-- View Job Modal -->
-<div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- <!-- View Job Modal -->
+<!-- <div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -1344,19 +1344,19 @@
 										 <small
 											ng-bind="jobDetails.manadatorySkills"
 											data-placement="bottom"></small> 									</p>
-							   <!--  <small data-ng-repeat="job in jobDetails.manadatorySkills" data-placement="bottom">{{job.mskill}}</small>
-							 -->		<p class="text-danger">
+							    <small data-ng-repeat="job in jobDetails.manadatorySkills" data-placement="bottom">{{job.mskill}}</small>
+									<p class="text-danger">
 										<small>Desired Skills</small>
 									</p>
-									<!-- <p class="desc">
+									<p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
-									</p>-->
+									</p>
 									<p class="desc">
-									 <!-- <small data-ng-repeat="job2 in jobDetails.desiredSkill" data-placement="bottom">{{job2.dskill}}</small>
-								 -->
+									 <small data-ng-repeat="job2 in jobDetails.desiredSkill" data-placement="bottom">{{job2.dskill}}</small>
+								
 									 <small ng-bind="jobDetails.desiredSkill"
 											data-placement="bottom"></small> 
 								</td>
@@ -1368,11 +1368,11 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
-        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
-</div>
+</div> --> 
 
 </div>
 

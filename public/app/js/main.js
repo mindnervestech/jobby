@@ -1534,7 +1534,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		
 		$scope.editJob;
 		$scope.showJobDetails = function(jobs){
-			$scope.jobDetails = jobs;
+			$scope.editJob = jobs;
 			$('#viewJobDetails').modal();
 			
 		}
