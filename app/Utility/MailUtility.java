@@ -45,7 +45,7 @@ try {
 		Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress("Ardent"));
 		    //Add multiple recipients. including Admin
-			message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
+			//message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
 			message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
 
 			//set msg text body
@@ -98,7 +98,7 @@ try {
 			message.setFrom(new InternetAddress("Ardent"));
 			    //Add multiple recipients. including Admin
 				message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
-				message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
+				//message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
 
 				//set msg text body
 				 message.setSubject( " Job Details Applied By User ");
