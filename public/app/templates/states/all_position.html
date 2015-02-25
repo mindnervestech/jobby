@@ -25,7 +25,7 @@
 								</h3>
 								<div class="pull-left">
 									<button type="button" ng-click="addPosition()"
-										data-toggle="modal" class="btn btn-success">Add</button>
+										data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Add new Position">Add</button>
 									</td>
 								</div>
 								<br />
@@ -45,11 +45,11 @@
 
 											<td><button type="button"
 													ng-click="editPosname(pos.position)"
-													data-toggle="modal" class="btn btn-success">Edit</button></td>
+													data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Edit  Position">Edit</button></td>
 
 											<td><button type="button"
 													ng-click="deletePos(pos.position)" data-toggle="modal"
-													class="btn btn-danger">Delete</button></td>
+													class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete Position">Delete</button></td>
 
 										</tr>
 									</tbody>

@@ -223,7 +223,10 @@
             <div data-control-type="pagination" data-control-name="paging" data-control-action="paging" class="jplist-pagination"></div>
     -->     
     
-    <img src="@routes.Assets.at("app/vendors/images/login/job_portal_banner.jpg")"  style="width: 100%;">
+    <img src="@routes.Assets.at("app/vendors/images/login/FA-Signature_Robert.png")"  style="width: 100%;">
+    <div class="col-md-12">
+    <span><small>Welcome to <strong> Ardent Principles’  </strong> i2Simply Done tool. We have implemented time saving solutions that simplify the application process for open positions on the <strong> i2S contract vehicle </strong> . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position andaccess the full functionality of our tool please <strong>register </strong> above.</small></span>
+    </div>
      <div class="col-md-6 control-label" style="margin-top: 2%;">
 							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
 								name="jobType" ng-model="jobType" class="selectpicker"
@@ -235,22 +238,27 @@
 						</div>
 						
 						
-						  <div class="col-md-6 control-label" style="margin-top: 2%;">
+						  <div class="col-md-6 control-label" data-toggle="tooltip"
+							data-placement="bottom"
+							title="Sort Jobs in Ascending or Descending Order" style="margin-top:2%;">
 							<label>Sort By&nbsp;&nbsp;</label> <select id="sortName"
 								name="sortName" ng-model="sortName" class="selectpicker"
 								ng-click="getAllJobBySelectedElement();">
-								<option value="PositionAsc">Position Name(Asc)</option>
-								<option value="LocationDesc" >Location(Desc)</option>
-								<option value="ClearanceAsc" >Clearance Level(Asc)</option>
-								<option value="ExperianceAsc" >Experiance Level(Asc)</option>
-								<option value="PositionDesc">Position Name(Desc)</option>
-								<option value="LocationAsc"  >Location(Asc)</option>
-								<option value="ClearanceDesc" >Clearance Level(Desc)</option>
-								<option value="ExperianceDesc" >Experiance Level(Desc)</option>
-								<option value="AllDesc">All(Desc)</option>
-								<option value="AllAsc">All(Asc)</option>
-								<!--  <option value="All">All</option>  -->
-							</select>
+								<option value="Position">Position Name</option>
+								<option value="Location">Location</option>
+								<option value="Clearance">Clearance Level</option>
+								<option value="Experiance">Experience Level</option>
+							</select> <span class="sort-by-price active" ng-if="sortType == false"
+								ng-model="sortType"><a class="aTagclass"
+								ng-click="onSortTypeClick(sortType)"><span class="spanClass"></span>&nbsp;&nbsp;<span
+									class="glyphicon glyphicon-chevron-down"></span></a>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></span> <span
+								class="sort-by-price active" ng-if="sortType == true"
+								ng-model="sortType"><a class="aTagclass"
+								ng-click="onSortTypeClick(sortType)"><span class="spanClass"></span>&nbsp;&nbsp;<span
+									class="glyphicon glyphicon-chevron-up"></span></a>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></span>
+
 						</div>
 						<div class="col-md-2 control-label">
 							<!-- Sort by Location<br> <input type="checkbox"
@@ -280,9 +288,10 @@
 		</div>
 		<div class="col-md-4">
 			<form action="/SignIn" method = "POST" class="form">
-				<p style = "color:red">@flash.get("error")</p>
-				<p style = "color:red">@flash.get("AccountError")</p>
-				<p   id="success_email"  ng-if="forget_pass == true" style = "color:red">Password is send on your Registered E-mail </p>
+				<p ><code>@flash.get("error")</code></p>
+				<p ><code>@flash.get("AccountError")</code></p>
+				<p ng-if="emailId == true"><code>Please provide Email Id </code></p>
+				<p   id="success_email"  ng-if="forget_pass == true" ><code>Password is sent on your Registered E-mail</code> </p>
 				<p   id="success" style = "color:green">@flash.get("registration_success") </p>
 				
 				<div class="header-content">
@@ -317,9 +326,9 @@
 					</div>
 					<!-- <div class="clearfix"></div> -->
 				 <div class="forget-password">
-						<h4>Forgotten your Password?</h4>
+						<h4>Forgot your Password?</h4>
 						<span>
-							no worries, click <a ng-click='getForgetPassword()' 
+							no worries, click <a ng-click='getForgetPassword(useremail)' 
 								class='btn-forgot-pwd'><strong style="cursor:pointer">here to reset your password.</strong></a>
 						</span>
 					</div>
@@ -343,11 +352,11 @@
 		</div>
 	
 		</div>
-		<div >
+		<div  ><div class="col-md-12"><small style="margin-left: 2%;">Click on the <strong>position title</strong> to view all of the details related to the position</small></div>
 			<div class="box text-shadow" style="margin-left: 3%;margin-right: 3%;">
 					<!-- <span style="color:green;" ng-if="job_application_success == true" class="pull-left">  Your application has been recieved, Thank you for applying</span> 
 					<span style="color:green;" ng-if="job_draft_application_success == true" class="pull-left">  Your application has been saved in draft</span> 
-				 -->		<table class="demo-tbl">
+				 -->		<table class="demo-tbl" style="margin-top: 0%;">
 					
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
 								<td class="td-block"
@@ -355,14 +364,14 @@
 									<p class="date">
 										<button type="button" ng-if="job.jobStatus == 'active'"
 											class="btn btn-green" data-toggle="modal"
-											ng-click="applyforJobCheck()">Apply</button>
+											ng-click="applyforJobCheck()" >Apply</button>
 										<!-- <button type="button" ng-if="job.jobStatus == 'Draft'"
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Resume</button> -->
 									</p>
 									<p ng-click="showJobDetails(job);">
-										<span class="title">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong></span>
+										<span class="title" data-toggle="tooltip" data-placement="bottom" title="View  Job Details" style="cursor:pointer;">{{job.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;">&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -497,7 +506,7 @@
 								<i class="glyphicon glyphicon-arrow-right"></i>
 							</button>
 							&nbsp;
-							<div style="font-size: 12px">{{JobPre}}/{{totalJobs}}</div>
+							<div style="font-size: 12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>
 							&nbsp;
 						</div>
 
@@ -517,7 +526,7 @@
       <div class="modal-body">
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Request Type</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom" title="Request Type indicates whether the position is new, backfilled, reissued, etc.">Request Type&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="requestType" name="requestType"
@@ -529,7 +538,7 @@
 	
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Labour Category</label>
+							<label class="">Labor Category</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="labourCategory" name="labourCategory"
@@ -620,7 +629,7 @@
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Conus Travel</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom" title="Indicates travel within the continental U.S."> Conus Travel&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="conusTravel" name="conusTravel"
@@ -629,7 +638,7 @@
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Oconus Travel</label>
+							<label class=""  data-toggle="tooltip" data-placement="bottom" title="Indicates travel outside of the continental U.S.">Oconus Travel&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="oconusTravel" name="oconusTravel"
@@ -647,7 +656,7 @@
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Schedule Comments</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom" title="Client comments on the anticipated position work schedule">Schedule Comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="scheduleComments" name="scheduleComments"
@@ -656,7 +665,7 @@
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Non pub comments</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom" title="Language to be determined">Non pub comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="nonpubComments" name="nonpubComments"
@@ -687,7 +696,7 @@
 					
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Local traval using pov</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom" title="Indicates local travel using a privately owned vehicle">Local travel using pov&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="localTravalusingpub" name="localTravalusingpub"
@@ -750,7 +759,7 @@
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Coop</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom" title="Language to be determined">Coop&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="coop" name="coop"
@@ -940,8 +949,8 @@
                 <textarea rows="3" placeholder="Content" ng-model="contactus.content" class="form-control"></textarea>
               </div>
               <div class ="pull-right">
-             <button type="button"  ng-if="sent == false" ng-click="onfeedBackClicked();" class="btn btn-primary">Send </button>
-             <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button>
+             <button type="button" ng-click="onfeedBackClicked();" class="btn btn-primary">Send </button>
+           <!--   <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button> -->
             </div>
             </form>
           </div>

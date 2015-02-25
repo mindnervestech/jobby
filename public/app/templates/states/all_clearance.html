@@ -28,7 +28,7 @@
 								
 								<div class="pull-left">
  									<button type="button" ng-click="addClearance()" 
-										data-toggle="modal" class="btn btn-success">Add</button>
+										data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Add New Clearance">Add</button>
 									</td>
 								</div>
 								<br /><br />
@@ -45,10 +45,10 @@
 											style="background-color: #fff !important; left: -900">
 											<td ng-click="">{{clr.clearance}}</td>
 									        <td><button  type="button"
-													ng-click="editCleaname(clr.clearance)" data-toggle="modal"  class="btn btn-success">Edit</button></td>
+													ng-click="editCleaname(clr.clearance)" data-toggle="modal"  class="btn btn-success"data-toggle="tooltip" data-placement="bottom" title="Edit this Clearance">Edit</button></td>
 									
 											<td><button  type="button"
-													ng-click="deleteCls(clr.clearance)" data-toggle="modal"  class="btn btn-danger">Delete</button></td>
+													ng-click="deleteCls(clr.clearance)" data-toggle="modal"  class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete this Clearance">Delete</button></td>
 										</tr>
 									</tbody>	
 								</table>

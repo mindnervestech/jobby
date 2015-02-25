@@ -30,13 +30,33 @@ var App = angular.module('Ardent', [ 'ui.bootstrap' ]).factory(
 	$httpProvider.interceptors.push('MyHttpInterceptor');
 });
 
+
+App.controller('registrationPageController', function($scope, $http) {
+console.log("registrationPageController");
+$scope.registrationDetails = {};
+
+$scope.registerUser = function(){
+	 $http.post('/createNewUser',{registrationDetails:$scope.registrationDetails})
+		.success(function(data){
+			console.log("success");
+			$scope.updateSuccess = true;
+		});
+	
+}
+
+
+});
+
 App.controller('AppController', function($scope, $http) {
 	console.log("in app controler");
+	$scope.sortType = false;
 	$scope.init = function() {
 		$scope.pageno = 0;
 		$scope.jobType = "All";
 		$scope.labourCat = true;
-		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName).success(
+		$scope.sortName = "Position";
+		$scope.sortType = false;
+		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
 				function(data) {
 					$scope.jobsData = data.jobs;
 					console.log("$scope.jobsData"
@@ -72,7 +92,7 @@ App.controller('AppController', function($scope, $http) {
 		$scope.pageno++;
 		$scope.nextCount = parseInt($scope.nextCount) + 10;
 		var count = 0;
-		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName).success(
+		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
 				function(data) {
 					$scope.jobsData = data.jobs;
 					count = parseInt(data.jobsCount);
@@ -108,7 +128,7 @@ App.controller('AppController', function($scope, $http) {
 		var count = 0;
 
 		
-		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName).success(
+		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
 				function(data) {
 					$scope.jobsData = data.jobs;
 
@@ -144,9 +164,9 @@ App.controller('AppController', function($scope, $http) {
 
 	
 	  $scope.sortBy = false;
-	  $scope.sortName = "AllAsc";
+	  $scope.sortName = "Position";
 	  $scope.getAllJobBySelectedElement = function(){
-		 $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName)
+		 $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
 				$scope.totalJobs = data.jobsCount;
@@ -171,7 +191,7 @@ App.controller('AppController', function($scope, $http) {
 	  }
 	
 	  $scope.getAllJobByType = function(){
-		  $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName)
+		  $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
 				$scope.totalJobs = data.jobsCount;
@@ -195,6 +215,32 @@ App.controller('AppController', function($scope, $http) {
 			});
 	  }
 	  
+	  $scope.onSortTypeClick =  function(sortType){
+		  $scope.position = "notSelected";
+		  $scope.sortType = sortType;
+		    console.log($scope.sortType);
+		    if($scope.sortType == false){
+		    	$scope.sortType = true;
+		    } else if($scope.sortType == true){
+		    	$scope.sortType = false;
+		    }
+		    
+		    
+		    $scope.matchedpos = false;
+		    $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
+			
+			});
+	  }
+	  
 	$scope.editJob;
 	$scope.showJobDetails = function(jobs) {
 		$scope.editJob = jobs;
@@ -214,13 +260,15 @@ App.controller('AppController', function($scope, $http) {
 	$scope.contactus = {};
 	$scope.feedbackSuccess = false;
 	$scope.onfeedBackClicked = function() {
-		$('#contactAdmin').modal('hide');
+		$scope.feedbackSuccess = false;
 		$http.post('/sendFeedbackMail', {
 			contactus : $scope.contactus
 		}).success(function(data) {
 			console.log("success");
 			$scope.feedbackSuccess = true;
 			$scope.sent = true;
+			$scope.contactus = {};
+			$('#contactAdmin').modal('hide');
 		});
 	}
 
@@ -249,12 +297,25 @@ App.controller('AppController', function($scope, $http) {
 	}
 
 	$scope.forget_pass = false;
-	$scope.getForgetPassword = function() {
-		$http.get('/forgetPassword/' + $scope.useremail).success(
-				function(data) {
-					$scope.forget_pass = true;
-					console.log("success");
-					// $scope.username = data.uname;
-				});
+	$scope.emailId = false;
+	$scope.getForgetPassword = function(useremail) {
+		$scope.useremail = useremail;
+		console.log($scope.useremail);
+		if(!($scope.useremail == "")){
+			$http.get('/forgetPassword/' + $scope.useremail).success(
+					function(data) {
+						$scope.forget_pass = true;
+						console.log("success");
+						$scope.emailId = false;
+						// $scope.username = data.uname;
+					});
+		}else{
+			$scope.emailId = true;
+		}
+		
 	}
+	
+	
+	
+	
 });

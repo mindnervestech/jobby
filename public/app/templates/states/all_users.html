@@ -23,6 +23,10 @@
 								<h3>
 									All users <i class="icon-chevron-right"></i>
 								</h3>
+								<div class="pull-right">
+								<label>Active Users:</label>&nbsp;&nbsp;
+								<small><strong>{{activeusercount}}</strong></small>
+								</div>
 								<table id="table_id"
 									class="table table-hover table-striped table-bordered table-advanced tablesorter display">
 									<tbody>
@@ -37,7 +41,8 @@
 											<th>Change Password</th>
 											<th>Status</th>
 											<th>Delete</th>
-											
+											<th>Last Logged In</th>
+											<th>Current Status</th>
 										</tr>
 										<tr data-ng-repeat="user in users"
 											style="background-color: #fff !important; left: -900">
@@ -48,21 +53,16 @@
 											<td ng-click="">{{user.gender}}</td>
 											<td ng-click="">{{user.dob}}</td>
 											
-											<td><button id="genpdf" type="button"
-													ng-click="editUserDetails(user);" data-toggle="modal"  class="btn btn-success">Edit</button></td>
-													<td><button id="genpdf" type="button"
-													ng-click="changeUserPassword(user);" data-toggle="modal"  class="btn btn-success">Change </button></td>
-								<td><button type="button" class="btn btn-danger"
-											ng-if="user.userstatus == 'active'" ng-click="onInActiveUser(user)">Deactivate
-										</button>
-										<button type="button" class="btn btn-success"
-											ng-if="user.userstatus == 'inactive'"  ng-click="onActiveUser(user)">Activate
-										</button></td>
+											<td><button class="btn btn-success" ng-click="editUserDetails(user);"><i  data-toggle="modal" class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit"></i></button></td>
+													<td><button class="btn btn-success"><i ng-click="changeUserPassword(user);" data-toggle="modal"  class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="bottom" title="Change Password"></i> </button></td>
+								<td><button class="btn btn-danger" ng-if="user.userstatus == 'active'"  ng-click="onInActiveUser(user)"><i 	  class="glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="bottom" title="Deactivate user" ></i></button>
+										<button class="btn btn-success"  ng-click="onActiveUser(user)"  ng-if="user.userstatus == 'inactive'"><i   class="glyphicon glyphicon-ok-circle" data-toggle="tooltip" data-placement="bottom" title="Activate user"></i></button>
+							   </td>
 										
-										<td><button id="deleteuser" type="button"
-													ng-click="openUserdeletepopup(user);" data-toggle="modal"  class="btn btn-danger">Delete</button></td>
+										<td><button class="btn btn-danger"  ng-click="openUserdeletepopup(user);"><i data-toggle="modal" class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Delete user"> </i></button></td>
 								
-								
+								          <td>{{user.lastlogin | date:'yyyy-MM-dd HH:mm:ss '}}</td>
+								       <td><button class="btn btn-success"  ng-if="user.userLoggedInstatus == 'loggedIn'"><i class="glyphicon glyphicon-log-in"data-toggle="tooltip" data-placement="bottom" title="Logged In" ></i></button><button class="btn btn-danger" ng-if="user.userLoggedInstatus == 'loggedOut'" ><i  class="glyphicon glyphicon-log-out" data-toggle="tooltip" data-placement="bottom" title="Logged Out"></i></button></td>
 								 		</tr>
 									</tbody>
 								</table>
@@ -140,8 +140,8 @@
 															<div class="col-md-4">
 																<input type="text" id="middlrname" name="middlrname"
 																	ng-model="userDetails.middlename"
-																	placeholder="Enter Full Name" style="font-size: 12px;"
-																	class="form-control" required>
+																	placeholder="Enter Mid Name" style="font-size: 12px;"
+																	class="form-control" maxlength="2" required>
 															</div>
 															<div class="col-md-4">
 																<input type="text" id="lastname" name="lastname"
@@ -152,8 +152,177 @@
 														</div>
 														
 														</div>
-													<div class="col-md-6">
+														
+														<div class="col-md-12">
 														<div class="">
+															<label class="">Email Addess  *</label> <label
+																class="col-md-offset-3">Alternate Email Address </label> <label
+																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone Number *
+															</label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<div class="input-group">
+																	<span class="input-group-addon"><i
+																		class="fa fa-envelope"></i></span> <input type="email"
+																		placeholder="Email Address" name="email"
+																		ng-model="userDetails.email" id="email"
+																		class="form-control" style="font-size: 12px;" required>
+																</div>
+															</div>
+															<div class="col-md-4">
+															<div class="input-group">
+															<span class="input-group-addon"><i
+																		class="fa fa-envelope"></i></span>
+																<input type="text" id="altemail" name="altemail"
+																	ng-model="userDetails.altemail"
+																	placeholder="Enter Alternate Email"
+																	style="font-size: 12px;" class="form-control" >
+																	</div>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="phnumber" name="phnumber"
+																	ng-model="userDetails.phnumber"
+																	placeholder="Enter phone Name" style="font-size: 12px;"
+																	class="form-control" min="7" maxlength="10" required>
+															</div>
+														</div>
+
+													</div>
+													
+													<div class="col-md-12">
+														<div class="">
+															<label class="">Alternate  Phone Number </label> <label
+																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job Search Status *</label> <label
+																class="col-md-offset-3" style="margin-left: 22%;">Current Job Title *
+															</label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<input type="text" id="altphnumber" name="altphnumber"
+																	ng-model="userDetails.altphnumber"
+																	placeholder="Enter alternate  phone Number "
+																	style="font-size: 12px;" class="form-control"   min="7" maxlength="10" >
+															</div>
+															<div class="col-md-4">
+																<!-- <input type="text" id="jobsearchstatus" name="jobsearchstatus"
+																	ng-model="userDetails.jobsearchstatus"
+																	placeholder="Job Search Status" style="font-size: 12px;"
+																	class="form-control" required> -->
+
+																<select ng-model="userDetails.jobsearchstatus"
+																	ng-change="onJobSearchStatusChange()"
+																	class="form-control" id="jobsearchstatus">
+																	<option
+																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
+																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="currentjobtitle"
+																	name="currentjobtitle"
+																	ng-model="userDetails.currentjobtitle"
+																	placeholder="Current Job Title"
+																	style="font-size: 12px;" class="form-control" required>
+															</div>
+														</div>
+
+													</div>
+													
+													<div class="col-md-12">
+														<div class="">
+															<label class="">Resident City *</label> <label
+																class="col-md-offset-3">Resident State* </label> <label
+																class="col-md-offset-3">Resident Zip Code*
+															</label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																 <input type="text" id="residentcity" name="residentcity"
+																	ng-model="userDetails.residentcity"
+																	placeholder="Resident City " style="font-size: 12px;"
+																	class="form-control" required>
+
+																<!-- <select ng-model="userDetails.jobsearchstatus"
+																	ng-change="onJobSearchStatusChange()"
+																	class="form-control">
+																	<option
+																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
+																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+																</select> -->
+															</div>
+															<div class="col-md-4">
+																<!-- <input type="text" id="residentState" name="residentState"
+																	ng-model="userDetails.residentState"
+																	placeholder="Resident State" style="font-size: 12px;"
+																	class="form-control" required> -->
+
+
+																<select ng-model="userDetails.residentState"
+																	ng-change="onStatesChange()" class="form-control" id ="residentState"required>
+																	<option
+																		ng-selected="clr.stateName == userDetails.residentState"
+																		ng-repeat="clr in allStates">{{clr.stateName}}</option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="zipcode" name="zipcode"
+																	ng-model="userDetails.zipcode"
+																	placeholder="Enter zipcode " style="font-size: 12px;"
+																	class="form-control" maxlength="6" required>
+															</div>
+														</div>
+
+													</div>
+													
+													<div class="col-md-12">
+														<div class="">
+															 <label class="">Date Of Birth *</label> <label
+																class="col-md-offset-3">Desired Salary * </label> <label
+																class="col-md-offset-3">Willing to Relocate *</label>
+														</div>
+														<div class="form-group">
+															 <div class="col-md-4">
+																<div class="input-group">
+																	<input type="text" ng-model="userDetails.dob"
+																		name="dob" class="form-control " id="dob"
+																		ng-click="initempDatepicker();"
+																		style="font-size: 12px;" required>
+																	<div class="input-group-addon">
+																		<i class="fa fa-calendar"></i>
+																	</div>
+																</div>
+															</div> 
+															<div class="col-md-4">
+																<input type="text" id="desiredsalary"
+																	name="desiredsalary"
+																	ng-model="userDetails.desiredsalary"
+																	placeholder="Desired Salary " style="font-size: 12px;"
+																	class="form-control" required>
+															</div>
+															<div class="col-md-4">
+																<!-- <input type="text" id="willingtorelocate" name="willingtorelocate"
+																	ng-model="userDetails.willingtorelocate"
+																	placeholder="Willing to Relocate" style="font-size: 12px;"
+																	class="form-control" required> -->
+
+																<select ng-model="userDetails.willingtorelocate"
+																	class="form-control" id ="willingtorelocate" required>
+																	<option
+																		ng-selected="'Yes' == userDetails.willingtorelocate">Yes</option>
+																	<option
+																		ng-selected="'No' == userDetails.willingtorelocate">No</option>
+																</select>
+															</div>
+														</div>
+
+													</div>
+														
+													<div class="col-md-6">
+														<!-- <div class="">
 															<label class="">Email Address *</label>
 														</div>
 														<div class="form-group">
@@ -166,7 +335,7 @@
 																		class="form-control" style="font-size: 12px;" required>
 																</div>
 															</div>
-														</div>
+														</div> -->
 														<div class="">
 															<label class="">User Security Clearance Level *</label>
 														</div>
@@ -190,7 +359,7 @@
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label"></label> -->
 															<div class="col-md-9">
-																<select multiple="multiple" name="userExperience"
+																<select  name="userExperience"
 																	ng-model="userExperience" class="form-control">
 																	<option ng-repeat="exp in allExperiance.experiance"
 																		value="{{exp.experianceLevel}}"
@@ -205,13 +374,13 @@
 													</div>
 													<div class="col-md-6">
 														
-														<div class="">
+														<!-- <div class="">
 															<label class="">Date of Birth *</label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-9">
-																<!-- <label class="col-md-3 control-label">Date of
-																	Birth *</label> -->
+																<label class="col-md-3 control-label">Date of
+																	Birth *</label>
 																<div class="input-group">
 																	<input type="text" ng-model="userDetails.dob"
 																		name="dob" class="form-control " id="dob"
@@ -222,9 +391,9 @@
 																	</div>
 																</div>
 															</div>
-														</div>
+														</div> -->
 														<div class="">
-															<label class="">User Position/Title *</label>
+															<label class="">Position(s)/Title(s) of interest *</label>
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label">User

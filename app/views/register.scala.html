@@ -164,7 +164,7 @@
              -->  <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.js")"></script>
             -->   <!--  <script src="@routes.Assets.at("app/vendors/x-editable/demo-mock.js")"></script>
             -->
-   
+     <script src="@routes.Assets.at("app/js/loginmain.js")"></script>
     
      </head>
 <body class="[header.menu_style, header.header_topbar, header.effect]"
@@ -202,19 +202,19 @@
         <hr/>
        <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="First Name" name="firstname" class="form-control"/>
+              <input type="text" placeholder="First Name" name="firstname" class="form-control" required/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>
          <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="Middle Name(if not specify 'NA')" name="middlename" class="form-control"/>
+              <input type="text" placeholder="Middle Name(if not specify 'NA')" name="middlename" maxlength="2" class="form-control" required/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>
          <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="Last Name" name="lastname" class="form-control"/>
+              <input type="text" placeholder="Last Name" name="lastname" class="form-control" required/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>

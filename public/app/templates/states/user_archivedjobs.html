@@ -12,24 +12,19 @@
 	<div class="col-lg-12">
 		<div class="portlet box" style="min-height:500px;">
 			<div class="portlet-header">
-				<div class="caption">Applied Jobs</div>
+				<div class="caption">Archive Jobs</div>
 			</div>
 			<div class="portlet-body" ng-init="init();">
 				<div class="row mbm">
 					<div class="col-lg-12">
 						<!-- {{jobs}} -->
-						<div ng-init="getAllAppliedJobs()" class="table-responsive">
+						<div ng-init="getAllArchivedJobs()" class="table-responsive">
 							<div class="page-header">
 								<h3>
-									Applied Jobs <i class="icon-chevron-right"></i>
+									Archive Jobs <i class="icon-chevron-right"></i>
 								</h3>
-								<div class="pull-right">
-								<button id="genpdf" type="button"
-													ng-click="moveToArchive()"  class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Make archive .">Archive</button>
-													<br />
-								</div>
 								<table id="table_id"
-									class="table table-hover table-striped table-bordered table-advanced tablesorter display" style="margin-top:6%;">
+									class="table table-hover table-striped table-bordered table-advanced tablesorter display">
 									<tbody>
 										<tr>
 											<th>Email</th>
@@ -39,24 +34,24 @@
 											<!-- <th>Download</th> -->
 											<th>View Resume</th>
 											<th>Delete</th>
-											<th>Archive</th>
+											<!-- <th>Archive</th> -->
 										</tr>
-										<tr data-ng-repeat="appliedJobs in jobs"
+										<tr data-ng-repeat="archivedJobs in jobs"
 											style="background-color: #fff !important; left: -900">
-											<td ng-click=""><a href="mailto:{{appliedJobs.username}}">{{appliedJobs.username}}</a></td>
-											<td ng-click="">{{appliedJobs.requestNumber}}</td>
-											<td ng-click="">{{appliedJobs.location}}</td>
-											<td ng-click="">{{appliedJobs.positionName}}</td>
+											<td ng-click=""><a href="mailto:{{archivedJobs.username}}">{{archivedJobs.username}}</a></td>
+											<td ng-click="">{{archivedJobs.requestNumber}}</td>
+											<td ng-click="">{{archivedJobs.location}}</td>
+											<td ng-click="">{{archivedJobs.positionName}}</td>
 											<!-- <td><div id="download">
 	    <a 										class="btn btn-success" href="/generatePDF/{{appliedJobs.id}}" ><button>Download</button></a>
 	</div>								</td>
  -->							          <td><button id="genpdf" type="button"
-													ng-click="generatePdf(appliedJobs.id)" data-toggle="modal"  class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="View Resume .">View </button></td>
+													ng-click="generatePdf(archivedJobs.id)" data-toggle="modal"  class="btn btn-success">View </button></td>
 							
 								          <td><button id="deleteJob" type="button"
-													ng-click="deleteJobById(appliedJobs.id)" data-toggle="modal"  class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete">Delete</button></td>
-								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs.requestNumber);"></td>
-										</tr>
+													ng-click="deleteJobById(archivedJobs.id)" data-toggle="modal"  class="btn btn-danger">Delete</button></td>
+								         <!--  <td><input type="checkbox"   ng-model="archived" ng-click="movetoArchive(appliedJobs.requestNumber);"></td>
+								 -->		</tr>
 									</tbody>	
 								</table>
 								<div class="pull-right">

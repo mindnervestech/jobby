@@ -25,7 +25,7 @@ fieldset.scheduler-border {
 	margin: 0 0 1.5em 0 !important;
 	-webkit-box-shadow: 0px 0px 0px 0px #000;
 	box-shadow: 0px 0px 0px 0px #000;
-	border-color:#darkgrey;
+	border-color: #darkgrey;
 }
 
 legend.scheduler-border {
@@ -42,6 +42,13 @@ legend.scheduler-border {
 		<div class="portlet box">
 			<div class="portlet-header">
 				<div class="caption">My Profile</div>
+				<div class="col-md-12">
+					<small>Please fill out the following information to
+						complete your user profile for the Ardent Principles Jobs Portal.
+						Your information will be used to present potential job
+						opportunities to you that align with your profile selections as
+						well as expedite the resume building process. </small>
+				</div>
 			</div>
 			<div class="portlet-body">
 				<div class="row mbm">
@@ -68,12 +75,13 @@ legend.scheduler-border {
 												<div class="row">
 
 													<div ng-show="userPoserror" style="color: red">
-														Please fill at least one Position/Security/Experience level.</div>
-														<div class="col-md-12">
+														Please fill at least one Position/Security/Experience
+														level.</div>
+													<div class="col-md-12">
 														<div class="">
-																<label class="">First Name *</label>
-																<label class="col-md-offset-3">Middle Name </label>
-																<label class="col-md-offset-3">Last Name *</label>
+															<label class="">First Name *</label> <label
+																class="col-md-offset-3">&nbsp;Middle Name * </label> <label
+																class="col-md-offset-3">&nbsp;Last Name *</label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
@@ -86,7 +94,7 @@ legend.scheduler-border {
 																<input type="text" id="middlename" name="middlename"
 																	ng-model="userDetails.middlename"
 																	placeholder="Enter Mid Name" style="font-size: 12px;"
-																	class="form-control" >
+																	class="form-control" maxlength="2" required>
 															</div>
 															<div class="col-md-4">
 																<input type="text" id="lastname" name="lastname"
@@ -95,10 +103,351 @@ legend.scheduler-border {
 																	class="form-control" required>
 															</div>
 														</div>
-														
-														</div>
-													<div class="col-md-6">
+
+													</div>
+													<!-- <div class="col-md-12">
 														<div class="">
+															<label class="">Phone Number *</label> <label
+																class="col-md-offset-3">Alternate Phone Number </label>
+															<label class="col-md-offset-3">Resident State *</label>
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<input type="text" id="phnumber" name="phnumber"
+																	ng-model="userDetails.phnumber"
+																	placeholder="Enter phone Name" style="font-size: 12px;"
+																	class="form-control" required>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="altphnumber" name="altphnumber"
+																	ng-model="userDetails.altphnumber"
+																	placeholder="Enter altrenate  phone Number "
+																	style="font-size: 12px;" class="form-control">
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="residentState" name="residentState"
+																	ng-model="userDetails.residentState"
+																	placeholder="Resident State" style="font-size: 12px;"
+																	class="form-control" required>
+
+
+																<select ng-model="userDetails.residentState"
+																	ng-change="onStatesChange()" class="form-control">
+																	<option
+																		ng-selected="clr.stateName == userDetails.residentState"
+																		ng-repeat="clr in allStates">{{clr.stateName}}</option>
+																</select>
+															</div>
+														</div>
+
+													</div> -->
+													<!-- <div class="col-md-12">
+														<div class="">
+															<label class="">Resident Zip Code *</label> <label
+																class="col-md-offset-3">Resident Salary </label> <label
+																class="col-md-offset-3">Willing to Relocate *</label>
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<input type="text" id="zipcode" name="zipcode"
+																	ng-model="userDetails.zipcode"
+																	placeholder="Enter zipcode " style="font-size: 12px;"
+																	class="form-control" required>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="desiredsalary"
+																	name="desiredsalary"
+																	ng-model="userDetails.desiredsalary"
+																	placeholder="Desired Salary " style="font-size: 12px;"
+																	class="form-control">
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="willingtorelocate" name="willingtorelocate"
+																	ng-model="userDetails.willingtorelocate"
+																	placeholder="Willing to Relocate" style="font-size: 12px;"
+																	class="form-control" required>
+
+
+																<select ng-model="userDetails.willingtorelocate"
+																	class="form-control">
+																	<option
+																		ng-selected="'Yes' == userDetails.willingtorelocate">Yes</option>
+																	<option
+																		ng-selected="'No' == userDetails.willingtorelocate">No</option>
+																</select>
+															</div>
+														</div>
+
+													</div> -->
+													<!-- <div class="col-md-12">
+														<div class="">
+															<label class="">Job Search Status *</label> <label
+																class="col-md-offset-3">Current Job Title </label> <label
+																class="col-md-offset-3">Alternate Email Address
+															</label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<input type="text" id="jobsearchstatus" name="jobsearchstatus"
+																	ng-model="userDetails.jobsearchstatus"
+																	placeholder="Job Search Status" style="font-size: 12px;"
+																	class="form-control" required>
+
+																<select ng-model="userDetails.jobsearchstatus"
+																	ng-change="onJobSearchStatusChange()"
+																	class="form-control">
+																	<option
+																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
+																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="currentjobtitle"
+																	name="currentjobtitle"
+																	ng-model="userDetails.currentjobtitle"
+																	placeholder="Current Job Title"
+																	style="font-size: 12px;" class="form-control">
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="altemail" name="altemail"
+																	ng-model="userDetails.altemail"
+																	placeholder="Enter Alternate Email"
+																	style="font-size: 12px;" class="form-control" required>
+															</div>
+														</div>
+
+													</div> -->
+
+
+													<!-- <div class="col-md-12">
+														<div class="">
+															<label class="">Resident City  *</label> <label
+																class="col-md-offset-3">Email Address </label> <label
+																class="col-md-offset-3">Date  of Birth
+															</label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																 <input type="text" id="residentcity" name="residentcity"
+																	ng-model="userDetails.residentcity"
+																	placeholder="Resident City " style="font-size: 12px;"
+																	class="form-control" required>
+
+																<select ng-model="userDetails.jobsearchstatus"
+																	ng-change="onJobSearchStatusChange()"
+																	class="form-control">
+																	<option
+																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
+																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<div class="input-group">
+																	<span class="input-group-addon"><i
+																		class="fa fa-envelope"></i></span> <input type="email"
+																		placeholder="Email Address" name="email"
+																		ng-model="userDetails.email" id="email"
+																		class="form-control" style="font-size: 12px;" required>
+																</div>
+															</div>
+															<div class="col-md-4">
+																<div class="">
+															<div class="">
+																<label class="col-md-3 control-label">Date of
+																	Birth *</label>
+																<div class="input-group">
+																	<input type="text" ng-model="userDetails.dob"
+																		name="dob" class="form-control " id="dob"
+																		ng-click="initempDatepicker();"
+																		style="font-size: 12px;" required>
+																	<div class="input-group-addon">
+																		<i class="fa fa-calendar"></i>
+																	</div>
+																</div>
+															</div>
+														</div>
+															</div>
+														</div>
+
+													</div> -->
+
+													<div class="col-md-12">
+														<div class="">
+															<label class="">Email Addess *</label> <label
+																class="col-md-offset-3">Alternate Email Address
+															</label> <label class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone
+																Number * </label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<div class="input-group">
+																	<span class="input-group-addon"><i
+																		class="fa fa-envelope"></i></span> <input type="email"
+																		placeholder="Email Address" name="email"
+																		ng-model="userDetails.email" id="email"
+																		class="form-control" style="font-size: 12px;" required>
+																</div>
+															</div>
+															<div class="col-md-4">
+																<div class="input-group">
+																	<span class="input-group-addon"><i
+																		class="fa fa-envelope"></i></span> <input type="text"
+																		id="altemail" name="altemail"
+																		ng-model="userDetails.altemail"
+																		placeholder="Enter Alternate Email"
+																		style="font-size: 12px;" class="form-control">
+																</div>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="phnumber" name="phnumber"
+																	ng-model="userDetails.phnumber"
+																	placeholder="Enter phone Name" style="font-size: 12px;"
+																	class="form-control" min="7" maxlength="10" required>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="col-md-12">
+														<div class="">
+															<label class="">Alternate Phone Number </label> <label
+																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job
+																Search Status *</label> <label class="col-md-offset-3"
+																style="margin-left: 22%;">Current Job Title * </label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<input type="text" id="altphnumber" name="altphnumber"
+																	ng-model="userDetails.altphnumber"
+																	placeholder="Enter alternate  phone Number "
+																	style="font-size: 12px;" class="form-control" min="7"
+																	maxlength="10">
+															</div>
+															<div class="col-md-4">
+																<!-- <input type="text" id="jobsearchstatus" name="jobsearchstatus"
+																	ng-model="userDetails.jobsearchstatus"
+																	placeholder="Job Search Status" style="font-size: 12px;"
+																	class="form-control" required> -->
+
+																<select ng-model="userDetails.jobsearchstatus"
+																	ng-change="onJobSearchStatusChange()"
+																	class="form-control" id="jobsearchstatus">
+																	<option
+																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
+																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="currentjobtitle"
+																	name="currentjobtitle"
+																	ng-model="userDetails.currentjobtitle"
+																	placeholder="Current Job Title"
+																	style="font-size: 12px;" class="form-control" required>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="col-md-12">
+														<div class="">
+															<label class="">Resident City *</label> <label
+																class="col-md-offset-3">Resident State* </label> <label
+																class="col-md-offset-3">Resident Zip Code* </label>
+
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<input type="text" id="residentcity" name="residentcity"
+																	ng-model="userDetails.residentcity"
+																	placeholder="Resident City " style="font-size: 12px;"
+																	class="form-control" required>
+
+																<!-- <select ng-model="userDetails.jobsearchstatus"
+																	ng-change="onJobSearchStatusChange()"
+																	class="form-control">
+																	<option
+																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
+																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+																</select> -->
+															</div>
+															<div class="col-md-4">
+																<!-- <input type="text" id="residentState" name="residentState"
+																	ng-model="userDetails.residentState"
+																	placeholder="Resident State" style="font-size: 12px;"
+																	class="form-control" required> -->
+
+
+																<select ng-model="userDetails.residentState"
+																	ng-change="onStatesChange()" class="form-control"
+																	id="residentState" required>
+																	<option
+																		ng-selected="clr.stateName == userDetails.residentState"
+																		ng-repeat="clr in allStates">{{clr.stateName}}</option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="zipcode" name="zipcode"
+																	ng-model="userDetails.zipcode"
+																	placeholder="Enter zipcode " style="font-size: 12px;"
+																	class="form-control" maxlength="6" required>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="col-md-12">
+														<div class="">
+															<label class="">Date Of Birth *</label> <label
+																class="col-md-offset-3">Desired Salary * </label> <label
+																class="col-md-offset-3">Willing to Relocate *</label>
+														</div>
+														<div class="form-group">
+															<div class="col-md-4">
+																<div class="">
+																	<div class="">
+																		<div class="input-group">
+																			<input type="text" ng-model="userDetails.dob"
+																				name="dob" class="form-control " id="dob"
+																				ng-click="initempDatepicker();"
+																				style="font-size: 12px;" required>
+																			<div class="input-group-addon">
+																				<i class="fa fa-calendar"></i>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-md-4">
+																<input type="text" id="desiredsalary"
+																	name="desiredsalary"
+																	ng-model="userDetails.desiredsalary"
+																	placeholder="Desired Salary " style="font-size: 12px;"
+																	class="form-control" required>
+															</div>
+															<div class="col-md-4">
+																<!-- <input type="text" id="willingtorelocate" name="willingtorelocate"
+																	ng-model="userDetails.willingtorelocate"
+																	placeholder="Willing to Relocate" style="font-size: 12px;"
+																	class="form-control" required> -->
+
+																<select ng-model="userDetails.willingtorelocate"
+																	class="form-control" id="willingtorelocate" required>
+																	<option
+																		ng-selected="'Yes' == userDetails.willingtorelocate">Yes</option>
+																	<option
+																		ng-selected="'No' == userDetails.willingtorelocate">No</option>
+																</select>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="col-md-6">
+														<!-- <div class="">
 															<label class="">Email Address *</label>
 														</div>
 														<div class="form-group">
@@ -111,11 +460,13 @@ legend.scheduler-border {
 																		class="form-control" style="font-size: 12px;" required>
 																</div>
 															</div>
-														</div>
+														</div> -->
+
 														<div class="">
 															<label class="">User Security Clearance Level *</label><br />
-															<label class=""><small>You can select multiple security Clearance(use Ctrl)</small></label>
-															
+															<label class=""><small>You can select
+																	multiple security Clearance(use Ctrl)</small></label>
+
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label"></label> -->
@@ -124,44 +475,57 @@ legend.scheduler-border {
 																	ng-model="userClearance" class="form-control">
 																	<option ng-repeat="clear in allCleanrance.clearance"
 																		value="{{clear.clearance}}"
-																		ng-selected="clear.isSelect  == true" style="font-size: 12px;"
-																		required>{{clear.clearance}}</option>
+																		ng-selected="clear.isSelect  == true"
+																		style="font-size: 12px;" required>{{clear.clearance}}</option>
 																</select>
 															</div>
-															
-															<label class="" ng-if = "cleranceUError == true" ><small><code>Please select  security Clearance</code></small></label>
-															
+
+															<label class="" ng-if="cleranceUError == true"><small><code>Please
+																		select security Clearance</code></small></label>
+
 														</div>
 														<div class="">
-															<label class="">Select Experience Level *</label><br />
-															<label class=""><small>You can select multiple Experience Level(use Ctrl)</small> </label>
-															
+															<label class="">Select Experience Level *
+																&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"
+																data-toggle="tooltip" data-placement="bottom"
+																														title="Experience Key
+															 1]Management (16+ years of relative experience)
+															 2]Subject Matter Expert (16+ years of relative experience)
+														     3]Expert (11+ years of relative experience)
+															 4]Senior (6+ years of relative experience)
+															 5]Full Performance (3+ years of relative experience)
+															 6]Developmental (0-3 years of relative experience) "></i>
+															</label><br />
+															<!-- <label class=""><small>You can select multiple Experience Level(use Ctrl)</small> </label>
+															 -->
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label"></label> -->
 															<div class="col-md-9">
-																<select multiple="multiple" name="userExperience"
-																	ng-model="userExperience" class="form-control">
+																<select name="userExperience" ng-model="userExperience"
+																	class="form-control">
 																	<option ng-repeat="exp in allExperiance.experiance"
 																		value="{{exp.experianceLevel}}"
-																		ng-selected="exp.isSelect  == true" style="font-size: 12px;"
-																		required>{{exp.experianceLevel}} </option>
+																		ng-selected="exp.isSelect  == true"
+																		style="font-size: 12px;" required>{{exp.experianceLevel}}
+																	</option>
 																</select>
 															</div>
-															
-																<label class="" ng-if = "expUError == true"><small><code>Please  select Experience Level</code></small></label>
-																										</div>
+
+															<label class="" ng-if="expUError == true"><small><code>Please
+																		select Experience Level</code></small></label>
+														</div>
 
 													</div>
 													<div class="col-md-6">
-														
-														<div class="">
+
+														<!-- <div class="">
 															<label class="">Date of Birth *</label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-9">
-																<!-- <label class="col-md-3 control-label">Date of
-																	Birth *</label> -->
+																<label class="col-md-3 control-label">Date of
+																	Birth *</label>
 																<div class="input-group">
 																	<input type="text" ng-model="userDetails.dob"
 																		name="dob" class="form-control " id="dob"
@@ -172,11 +536,12 @@ legend.scheduler-border {
 																	</div>
 																</div>
 															</div>
-														</div>
+														</div> -->
 														<div class="">
-															<label class="">User Position/Title *</label><br />
-																<label class=""><small>You can select multiple Position(use Ctrl) </small></label>
-														
+															<label class="">Position(s)/Title(s) of interest
+																*</label><br /> <label class=""><small>You can
+																	select multiple Position(use Ctrl) </small></label>
+
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label">User
@@ -185,13 +550,15 @@ legend.scheduler-border {
 																<select multiple="multiple" name="userposition"
 																	ng-model="userPosition" class="form-control">
 																	<option ng-repeat="posi in allPosition.position"
-																		value="{{posi.position}}"  ng-selected="posi.isSelected  == true"style="font-size: 12px;"
-																		required>{{posi.position}}</option>
+																		value="{{posi.position}}"
+																		ng-selected="posi.isSelected  == true"
+																		style="font-size: 12px;" required>{{posi.position}}</option>
 																</select>
 															</div>
-															
-															<label class="" ng-if = "positionUError == true"><small><code>Please  select Position </code></small></label>
-																
+
+															<label class="" ng-if="positionUError == true"><small><code>Please
+																		select Position </code></small></label>
+
 														</div>
 													</div>
 
@@ -205,14 +572,22 @@ legend.scheduler-border {
 
 													<div class="col-md-12">
 														<fieldset class="scheduler-border">
-															<legend class="scheduler-border"><i class="glyphicon glyphicon-screenshot"></i> &nbsp;&nbsp;User Key Skill
-																Area</legend>
-																<div class="col-md-10">You can select maximum 12 Skills</div>
+															<legend class="scheduler-border">
+																<i class="glyphicon glyphicon-screenshot"></i>
+																&nbsp;&nbsp;User Key Skill Area
+															</legend>
+															<div class="col-md-10">
+																<small> Please select a maximum of 12 of your
+																	most relevant key skill areas. Use the add function for
+																	key skills that are not listed.</small>
+															</div>
 															<label ng-repeat="skill in allSkills"
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 																style="padding: 0px;"> <input type="checkbox"
 																name="allSkill" ng-click="skillClicked($event,skill)"
-																ng-model="skill.isSelected" ng-disabled="checked == limit && !skill.isSelected"> {{skill.skillName}}
+																ng-model="skill.isSelected"
+																ng-disabled="checked == limit && !skill.isSelected">
+																{{skill.skillName}}
 
 															</label>
 															<div class="form-group">
@@ -244,8 +619,10 @@ legend.scheduler-border {
 													</div> -->
 													<div class="col-md-12">
 														<fieldset class="scheduler-border">
-															<legend class="scheduler-border"><i class="glyphicon glyphicon-user"> </i> &nbsp;&nbsp;Employment
-																History</legend>
+															<legend class="scheduler-border">
+																<i class="glyphicon glyphicon-user"> </i>
+																&nbsp;&nbsp;Employment History
+															</legend>
 
 															<div class="col-md-12"
 																ng-repeat="emp in addNewEmphistory">
@@ -278,18 +655,27 @@ legend.scheduler-border {
 																<label class="col-md-3 ">Date</label>
 																<div class="col-md-4">
 																	<div class="input-group input-daterange">
-																		<span class="input-group-addon">From</span> <!-- <input
+																		<span class="input-group-addon">From</span>
+																		<!-- <input
 																			type="text" name="startdate" id="startdateemp"
 																			ng-click="initCmpDatePicker();" class="form-control"
 																			ng-model="emp.startdate" style="font-size: 12px;"
 																			required /> -->
-																			 <input class="form-control" validator="[required]" ng-click="initCmpDatePicker();" id="datepicker" ng-model="emp.startdate" style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-																			<span class="input-group-addon">to</span>
+																		<input class="form-control" validator="[required]"
+																			ng-click="initCmpDatePicker();" id="datepicker"
+																			ng-model="emp.startdate" style="font-size: 12px;"
+																			data-provide="datepicker" data-date-autoclose="true"
+																			data-date-format="mm/dd/yyyy"> <span
+																			class="input-group-addon">to</span>
 																		<!-- <input type="text" id="enddateemp"
 																			class="form-control" ng-model="emp.enddate"
 																			style="font-size: 12px;"
 																			ng-click="initCmpDatePicker();" required> -->
-																			<input class="form-control" validator="[required]" ng-click="initCmpDatePicker();" id="datepicker" ng-model="emp.enddate" style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																		<input class="form-control" validator="[required]"
+																			ng-click="initCmpDatePicker();" id="datepicker"
+																			ng-model="emp.enddate" style="font-size: 12px;"
+																			data-provide="datepicker" data-date-autoclose="true"
+																			data-date-format="mm/dd/yyyy">
 
 																	</div>
 
@@ -302,20 +688,20 @@ legend.scheduler-border {
 																		<i class="fa fa-trash-o"></i>
 																	</button>
 																</div>
-																
+
 																<div class="col-md-8">
-																 <label class="">Experience Details</label>
+																	<label class="">Experience Details</label>
 																	<textarea rows="3" name="expdesc"
 																		ng-model="emp.expdesc" class="form-control"
 																		placeholder="e.g. Experience Description"
 																		style="font-size: 12px;"></textarea>
-																		
+
 																</div>
-													<div class="col-md-12">
-													<hr class="">
-													</div>
+																<div class="col-md-12">
+																	<hr class="">
+																</div>
 															</div>
-															
+
 															<div class="form-group">
 																<div class="col-md-2">
 																	<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
@@ -326,7 +712,7 @@ legend.scheduler-border {
 
 														</fieldset>
 													</div>
-											
+
 
 												</div>
 												<!-- <div class="form-group">
@@ -347,9 +733,13 @@ legend.scheduler-border {
 												</div> -->
 												<div class="col-md-14">
 													<fieldset class="scheduler-border">
-														<legend class="scheduler-border"> <i class="glyphicon glyphicon-education"> </i> &nbsp;&nbsp;  Education
-															History</legend>
-
+														<legend class="scheduler-border">
+															<i class="glyphicon glyphicon-education"> </i>
+															&nbsp;&nbsp; Education History
+														</legend>
+														<div>
+															<small>Please input all of your Education History</small>
+														</div>
 
 														<div class="col-md-12" ng-repeat="edu in addEducation">
 
@@ -379,18 +769,30 @@ legend.scheduler-border {
 															<label class="col-md-3">Date</label>
 															<div class="col-md-4">
 																<div class="input-group input-daterange">
-																	<span class="input-group-addon">From</span> <!-- <input
+																	<span class="input-group-addon">From</span>
+																	<!-- <input
 																		type="text" name="startdate" ng-model="edu.fromDate"
 																		class="form-control" id="edudateform"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
 																		required /> -->
-																		<input class="form-control" ng-click="initeduDateform();" id="datepicker" ng-model="edu.fromDate" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-																		<span class="input-group-addon">to</span> <!-- <input
+																	<input class="form-control"
+																		ng-click="initeduDateform();" id="datepicker"
+																		ng-model="edu.fromDate" required
+																		style="font-size: 12px;" data-provide="datepicker"
+																		data-date-autoclose="true"
+																		data-date-format="mm/dd/yyyy"> <span
+																		class="input-group-addon">to</span>
+																	<!-- <input
 																		ng-model="edu.toDate" type="text" name="enddate"
 																		class="form-control" id="edudateto"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
 																		required /> -->
-																		<input class="form-control" ng-click="initeduDateform();" id="datepicker" ng-model="edu.toDate" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+																	<input class="form-control"
+																		ng-click="initeduDateform();" id="datepicker"
+																		ng-model="edu.toDate" required
+																		style="font-size: 12px;" data-provide="datepicker"
+																		data-date-autoclose="true"
+																		data-date-format="mm/dd/yyyy">
 																</div>
 
 															</div>
@@ -420,16 +822,23 @@ legend.scheduler-border {
 												</div> -->
 												<div class="col-md-14">
 													<fieldset class="scheduler-border">
-														<legend class="scheduler-border"><i class="glyphicon glyphicon-screenshot"></i> &nbsp;&nbsp;Certification
-															</legend>
+														<legend class="scheduler-border">
+															<i class="glyphicon glyphicon-screenshot"></i>
+															&nbsp;&nbsp;Certification
+														</legend>
 
 														<div class="form-group">
+
+															<div>
+																<small>Please input all of your relevant
+																	Certifications</small>
+															</div>
 															<div class="col-md-12" ng-repeat="cert in addCertificate">
 
 																<div class="col-md-5">
 																	<label for="inputName" class="control-label">Certification
 																		*</label>
-																		<!-- <div ng-show="certHistory" style="color: red">
+																	<!-- <div ng-show="certHistory" style="color: red">
 																		Please fill at least one Certfi Details</div>
  -->
 																	<div class="input-icon right">
@@ -441,7 +850,8 @@ legend.scheduler-border {
 																</div>
 
 																<div class='col-sm-5'>
-																	<label class="col-md-6 control-label">Year Obtained</label>
+																	<label class="col-md-6 control-label">Year
+																		Obtained</label>
 																	<div class="form-group">
 
 																		<div class='input-group date'>
@@ -450,8 +860,12 @@ legend.scheduler-border {
 																				ng-model="cert.certYear" class="form-control"
 																				id="certdate" ng-click="initDatePicker();"
 																				style="font-size: 12px;" required /> -->
-																				<input class="form-control" ng-click="initDatePicker();" id="datepicker" ng-model="cert.certYear" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-																				 <span
+																			<input class="form-control"
+																				ng-click="initDatePicker();" id="datepicker"
+																				ng-model="cert.certYear" required
+																				style="font-size: 12px;" data-provide="datepicker"
+																				data-date-autoclose="true"
+																				data-date-format="mm/dd/yyyy"> <span
 																				class="input-group-addon"><span
 																				class="glyphicon glyphicon-calendar"></span> </span>
 																			<div class="col-md-2">
@@ -472,8 +886,7 @@ legend.scheduler-border {
 															<div class="col-md-2">
 																<br />
 																<!-- <a style="float: right; margin-right: 60px;" ng-click="addNewEmployment()"> </i>Add Extra</a> -->
-																&nbsp;&nbsp;<i
-																	class="fa fa-plus-square"> </i>&nbsp;&nbsp;
+																&nbsp;&nbsp;<i class="fa fa-plus-square"> </i>&nbsp;&nbsp;
 																<button ng-click="addNewCertificate()">Add More</button>
 																<span ng-show="addEducation.length > 0"> </span>
 															</div>
@@ -483,7 +896,8 @@ legend.scheduler-border {
 
 												<div class='col-sm-12'>
 													<label class="col-md-3 control-label"
-														ng-show="updateSuccess" style="font-size: 12px;color:green;">Profile
+														ng-show="updateSuccess"
+														style="font-size: 12px; color: green;">Profile
 														Updated Successfully! </label>
 												</div>
 
@@ -525,17 +939,32 @@ legend.scheduler-border {
 
 																	rules : {
 
-																		fullname : {
+																		firstname : {
 																			lettersonly : true,
 																			required : true
 																		},
-
+																		middlename : {
+																			lettersonly : true,
+																			required : true
+																		},
+																		lastname : {
+																			lettersonly : true,
+																			required : true
+																		},
 																		companyName : {
 																			lettersonly : true,
 																			required : true
 																		},
 
 																		position : {
+																			lettersonly : true,
+																			required : true
+																		},
+																		residentcity : {
+																			lettersonly : true,
+																			required : true
+																		},
+																		currentjobtitle : {
 																			lettersonly : true,
 																			required : true
 																		},
@@ -557,11 +986,41 @@ legend.scheduler-border {
 
 																		certYear : {
 																			required : true
-																		}
+																		},
 
+																		phnumber : {
+																			digits : true,
+																			required : true
+																		},
+																		altphnumber : {
+																			digits : true,
+																		},
+																		zipcode : {
+																			digits : true,
+																			required : true
+																		},
+
+																		desiredsalary : {
+																			digits : true,
+																			required : true
+																		},
+
+																		willingtorelocate : {
+																			required : true
+																		},
+
+																		residentState : {
+																			required : true
+																		},
+
+																		jobsearchstatus : {
+																			required : true
+																		}
 																	},
 																	messages : {
-																		fullname : "Please enter name properly",
+																		firstname : "Please enter name properly",
+																		lastname : "Please enter name properly",
+																		middletname : "Please enter name properly",
 																		companyName : "Please enter Company Name properly",
 																		position : "Please enter Position name properly",
 																		email : "Please enter email  properly",
@@ -569,6 +1028,16 @@ legend.scheduler-border {
 																		degree : "Please enter degree   name properly",
 																		certName : "Please enter certificate name   properly",
 																		certYear : "Please enter certidficate year  properly",
+																		altemail : "Please enter valid Email Id",
+																		phnumber : "Please enter valid Phone  number  ",
+																		altphnumber : "Please enter valid Phone  number",
+																		residentcity : "Please enter  City name properly",
+																		currentjobtitle : "Please Current Job Title properly",
+																		zipcode : "Please enter ZipCode properly",
+																		desiredsalary : "Please enter desired Salary properly",
+																		willingtorelocate : "Please select Willing to relocate ",
+																		residentState : "Please select Resident State",
+																		jobsearchstatus : "Please select Job Search  Status"
 
 																	}
 																});

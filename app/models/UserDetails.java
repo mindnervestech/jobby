@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Date;
 import java.util.List;
 
 import play.db.ebean.Model;
@@ -72,7 +73,105 @@ public class UserDetails extends Model {
 	public String gender;
 	public String dob;
 	public String userstatus;
+    public Date  lastlogin;
+    public String userLoggedInstatus;
 
+    public String altemail;
+    public String residentcity;
+    public String altphnumber;
+    public String residentState;
+    public String zipcode;
+    public String desiredsalary;
+    public String willingtorelocate ;
+    public String jobsearchstatus;
+    public String currentjobtitle;
+    public String phnumber;
+    
+    
+    public String getResidentcity() {
+		return residentcity;
+	}
+
+	public void setResidentcity(String residentcity) {
+		this.residentcity = residentcity;
+	}
+
+	public String getAltemail() {
+		return altemail;
+	}
+
+	public void setAltemail(String altemail) {
+		this.altemail = altemail;
+	}
+
+	
+    public String getPhnumber() {
+		return phnumber;
+	}
+
+	public void setPhnumber(String phnumber) {
+		this.phnumber = phnumber;
+	}
+
+	public String getAltphnumber() {
+		return altphnumber;
+	}
+
+	public void setAltphnumber(String altphnumber) {
+		this.altphnumber = altphnumber;
+	}
+
+	public String getResidentState() {
+		return residentState;
+	}
+
+	public void setResidentState(String residentState) {
+		this.residentState = residentState;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	public String getDesiredsalary() {
+		return desiredsalary;
+	}
+
+	public void setDesiredsalary(String desiredsalary) {
+		this.desiredsalary = desiredsalary;
+	}
+
+	public String getWillingtorelocate() {
+		return willingtorelocate;
+	}
+
+	public void setWillingtorelocate(String willingtorelocate) {
+		this.willingtorelocate = willingtorelocate;
+	}
+
+	public String getJobsearchstatus() {
+		return jobsearchstatus;
+	}
+
+	public void setJobsearchstatus(String jobsearchstatus) {
+		this.jobsearchstatus = jobsearchstatus;
+	}
+
+	public String getCurrentjobtitle() {
+		return currentjobtitle;
+	}
+
+	public void setCurrentjobtitle(String currentjobtitle) {
+		this.currentjobtitle = currentjobtitle;
+	}
+
+	
+    //public String phnumber;
+  
 	@ManyToMany
 	public List<UserSkill> userSkill;
 
@@ -140,6 +239,14 @@ public class UserDetails extends Model {
 				.findList().size();
 	}
 	
+	@JsonIgnore
+	public static int getActiveUserCount(int  pageNumber) {
+		// TODO Auto-generated method stub
+		String userLoggedInstatus = "loggedIn";
+		return find.where().eq("userLoggedInstatus", userLoggedInstatus).
+				setFirstRow(pageNumber * 10).setMaxRows(UserDetails.find.findRowCount())
+				.findList().size();
+	}
 	
 	
 }

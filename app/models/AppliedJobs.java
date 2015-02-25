@@ -39,7 +39,8 @@ public class AppliedJobs extends Model {
 	public String performancelevel;
 	public String clearancereq;
 	public String skills;
-
+    public String archived ="N"; 
+     
 	public static Finder<Long, AppliedJobs> find = new Finder<Long, AppliedJobs>(
 			Long.class, AppliedJobs.class);
 
@@ -59,7 +60,7 @@ public class AppliedJobs extends Model {
 	
 	@JsonIgnore
 	public static int getAllJobsCountByLocationAndJobTypeAsc(int pageNo,String jobType) {
-		return find.where().eq("positionType", jobType).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
+		return find.where().eq("positiontype", jobType).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
 				.findList().size();
 	}
 	
@@ -76,8 +77,8 @@ public class AppliedJobs extends Model {
 	}
 	
 	@JsonIgnore
-	public static int getAllJobsCountByEmailAndJobStatus(int pageNo,String email) {
-		return find.where().eq("username", email).eq("jobStatus", "Applied".trim()).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
+	public static int getAllJobsCountByEmailAndJobStatus(int pageNo,String email,String jobType) {
+		return find.where().eq("username", email).eq("jobStatus", "Applied".trim()).eq("positiontype", jobType).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
 				.findList().size();
 	}
 	
@@ -90,12 +91,169 @@ public class AppliedJobs extends Model {
 	
 	@JsonIgnore
 	public static List<AppliedJobs> getAllAppliedJobs(Integer  pageNumber,Integer rowperpage,String jobStatus) {
-		return find.where().eq("jobStatus", jobStatus).setFirstRow(pageNumber * 10).setMaxRows(rowperpage).findList();
+		String archived = "N";
+		return find.where().eq("jobStatus", jobStatus).eq("archived",archived ).setFirstRow(pageNumber * 10).setMaxRows(rowperpage).findList();
+	
 	}
 	
 	@JsonIgnore
+	public static List<AppliedJobs> getAllArchivedJobs(Integer  pageNumber,Integer rowperpage,String jobStatus) {
+		String archived = "Y";
+		return find.where().eq("jobStatus", jobStatus).eq("archived",archived ).setFirstRow(pageNumber * 10).setMaxRows(rowperpage).findList();
+	
+	}
+	
+	
+	
+	@JsonIgnore
 	public static int getAllAppliedJobsCount(int pageNo,String jobStatus) {
+		String  archived = "N";
+		return find.where().eq("jobStatus", jobStatus).eq("archived", archived).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
+				.findList().size();
+	}
+	
+	@JsonIgnore
+	public static int getAllArchivedJobsCount(int pageNo,String jobStatus) {
+		String  archived = "Y";
+		return find.where().eq("jobStatus", jobStatus).eq("archived", archived).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
+				.findList().size();
+	}
+	
+	
+	@JsonIgnore
+	public static int getAllAppliedJobsCountByEmail(int pageNo,String jobStatus) {
+		jobStatus = "Applied";
 		return find.where().eq("jobStatus", jobStatus).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
 				.findList().size();
 	}
+	
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByPositionAsc(int currentPage, int rowsPerPage,String email){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username",email ).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().asc("positionname").findList();
+
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByPositionDesc(int currentPage, int rowsPerPage,String email){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username",email ).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("positionname").findList();
+
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByPositionJobTypeAsc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().asc("positionname").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByPositionJobTypeDesc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().desc("positionname").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	/*@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByPositionJobTypeAsc(int currentPage,
+			int rowsPerPage,String jobType) {
+		String	jobStatus = "active";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).order().asc("location").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}*/
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByLocationAsc(int currentPage, int rowsPerPage,String email){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", email).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().asc("location").findList();
+
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByLocationDesc(int currentPage, int rowsPerPage,String email){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", email).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("location").findList();
+
+	}
+	
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByLocationJobTypeAsc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().asc("location").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByLocationJobTypeDesc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().desc("location").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByClearanceAsc(int currentPage, int rowsPerPage,String email){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", email).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().asc("clearancereq").findList();
+
+	}
+
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByClearanceDesc(int currentPage, int rowsPerPage,String email){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", email).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("clearancereq").findList();
+
+	}
+	
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByClearanceJobTypeAsc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().asc("clearancereq").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByClearanceJobTypeDesc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().desc("clearancereq").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByExperianceAsc(int currentPage, int rowsPerPage,String email   ){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", email).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().asc("performancelevel").findList();
+
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByExperianceDesc(int currentPage, int rowsPerPage,String email   ){
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", email).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("performancelevel").findList();
+
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByExperienceJobTypeAsc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().asc("performanceLevel").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	@JsonIgnore
+	public static List<AppliedJobs> getAllJobsForUserByExperienceJobTypeDesc(int currentPage,
+			int rowsPerPage,String jobType,String email) {
+		String	jobStatus = "Applied";
+		return find.where().eq("positiontype", jobType).eq("jobStatus", jobStatus).eq("username", email).order().asc("performanceLevel").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+	}
+	
+	@JsonIgnore
+	public static AppliedJobs getUserAppliedJobByReqNumber(String id){
+		//int ids = Integer.parseInt(id);
+		return find.where().eq("jobno",id).findUnique();
+	}
+	
 }

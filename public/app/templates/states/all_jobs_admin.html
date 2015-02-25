@@ -1,7 +1,7 @@
 
 <script
 	src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
-	
+
 <div class="row" ng-init="onJobsForAdminLoad()">
 	<div class="col-lg-12">
 		<div class="panel" style="min-height: 500px;">
@@ -12,7 +12,7 @@
 					</div>
 					<div class="">
 
-						<div class="col-md-5 control-label">
+						<div class="col-md-3 control-label">
 							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
 								name="jobType" ng-model="jobType" class="selectpicker"
 								ng-change="getAllJobByType();">
@@ -21,12 +21,53 @@
 								<option value="All">All</option>
 							</select>
 						</div>
+
+						<div class="col-md-4 control-label" data-toggle="tooltip"
+							data-placement="bottom"
+							title="Sort Jobs in Ascending or Descending Order">
+							<label>Sort By&nbsp;&nbsp;</label> <select id="sortName"
+								name="sortName" ng-model="sortName" class="selectpicker"
+								ng-click="getAllJobBySelectedElement();">
+								<option value="Position">Position Name</option>
+								<option value="Location">Location</option>
+								<option value="Clearance">Clearance Level</option>
+								<option value="Experiance">Experience Level</option>
+							</select> <span class="sort-by-price active" ng-if="sortType == false"
+								ng-model="sortType"><a class="aTagclass"
+								ng-click="onSortTypeClick()"><span class="spanClass"></span>&nbsp;&nbsp;<span
+									class="glyphicon glyphicon-chevron-down"></span></a>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></span> <span
+								class="sort-by-price active" ng-if="sortType == true"
+								ng-model="sortType"><a class="aTagclass"
+								ng-click="onSortTypeClick()"><span class="spanClass"></span>&nbsp;&nbsp;<span
+									class="glyphicon glyphicon-chevron-up"></span></a>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></span>
+
+						</div>
 						<div class="col-md-3 control-label">
-							<!-- Sort by Location<br> <input type="checkbox"
+							<label>Search &nbsp;&nbsp;</label><input type="text"
+								ng-model="searchId" name="search" id="search"
+								style="font-size: 12px;" data-toggle="tooltip"
+								data-placement="bottom"
+								title="Enter Request Number to search Jobs."   required>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-search" data-toggle="tooltip"
+								data-placement="bottom"
+								title="Search Jobs using Request Number."
+								ng-click="searchJobById();"></i>
+						</div>
+						<div class="col-md-2 control-label">
+							<span class="pull-right"><button class="btn btn-danger"
+									ng-click="deleteAllPopUpJobs();" data-toggle="tooltip"
+									data-placement="bottom" title="Delete All Jobs">Delete
+									All</button></span>
+						</div>
+
+						<!-- <div class="col-md-3 control-label">
+							Sort by Location<br> <input type="checkbox"
 								ng-model="location" ng-change="onLocationClick();"
 								name="location">
 								<a class="aTagclass" ng-click="sortData()"><span class="spanClass">price</span><span class="setIcon soap-icon-roundtriangle-bottom"></span></a>
-						 -->		
+								
 						
 					          <ul class="sort-bar clearfix block-sm">
 
@@ -35,9 +76,11 @@
 								</ul> 
 								
 						</div>
+ -->
 
 
-					<!-- 	<div class="col-md-3 control-label">
+
+						<!-- 	<div class="col-md-3 control-label">
 							Search by Position<br /> <select id="allposition"
 								name="position" ng-model="position" class="selectpicker"
 								ng-change="getAllJobByPosition();">
@@ -55,80 +98,108 @@
 								name="matchedpos">
 						</div>
  -->
-						<div class="pull-right">
+						<div class="pull-right" style="margin-top: 1%;">
 							<button id="pre" type="button" ng-click="clickPre()"
-								class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+								class="btn btn-primary" data-toggle="tooltip"
+								data-placement="bottom" title="Previous">
+								<i class="glyphicon glyphicon-arrow-left"></i>
+							</button>
 							&nbsp;
 							<button id="next" type="button" ng-click="clickNext()"
-								class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
-								<div style="font-size:12px">{{JobPre}}/{{totalJobs}}</div>
+								class="btn btn-green" data-toggle="tooltip"
+								data-placement="bottom" title="Next">
+								<i class="glyphicon glyphicon-arrow-right"></i>
+							</button>
+							<div style="font-size: 12px">
+								<strong>{{JobPre}}/{{totalJobs}}</strong>
+							</div>
 						</div>
 					</div>
 					<div class="box text-shadow">
-
+						<div class="pull-right"></div>
 						<table class="demo-tbl">
-
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
-								
-								<td class="td-block" >
+
+								<td class="td-block">
 									<p class="date">
 										<button type="button" class="btn btn-danger"
-											ng-if="job.jobStatus == 'active'" ng-click="onInactiveJobClicked(job)">Deactivate
+											ng-if="job.jobStatus == 'active'"
+											ng-click="onInactiveJobClicked(job)" data-toggle="tooltip"
+											data-placement="bottom" title="Deactivate this Job">Deactivate
 										</button>
 										<button type="button" class="btn btn-success"
-											ng-if="job.jobStatus == 'inactive'"  ng-click="onActiveJobClicked(job)">Activate
+											ng-if="job.jobStatus == 'inactive'"
+											ng-click="onActiveJobClicked(job)" data-toggle="tooltip"
+											data-placement="bottom" title="Activate this Job">Activate
 										</button>
-										
+
 										<button type="button" class="btn btn-danger"
-										 ng-click="openDeleteJobPopup(job)">Delete
-										</button>
-										
+											ng-click="openDeleteJobPopup(job)" data-toggle="tooltip"
+											data-placement="bottom" title="Delete this job">Delete</button>
+
 									</p>
-									<p ng-click="editUserJob(job)" style="cursor:pointer;">
-										<span class="title" >{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-pencil" ></i></strong></span>
+									<p ng-click="editUserJob(job)" style="cursor: pointer;" data-toggle="tooltip"
+													data-placement="bottom" title="Edit Job  Details">
+										<span class="title">{{job.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;</strong><strong><small>&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong>&nbsp;&nbsp;<i
+											class="glyphicon glyphicon-pencil"   ></i></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
-													class="glyphicon glyphicon-map-marker"></i>&nbsp;{{job.workLocation}}</span></small></strong>
-										<span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-user"></i>&nbsp;{{job.requestType}}
+													class="glyphicon glyphicon-map-marker"
+													data-toggle="tooltip" data-placement="bottom"
+													title="Work Location "></i>&nbsp;{{job.workLocation}}</span></small></strong> <span
+											class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-user" data-toggle="tooltip"
+													data-placement="bottom" title="Request Type"></i>&nbsp;{{job.requestType}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-screenshot"></i>&nbsp;{{job.performanceLevel}}
+													class="glyphicon glyphicon-screenshot"
+													data-toggle="tooltip" data-placement="bottom"
+													title="Performance Level"></i>&nbsp;{{job.performanceLevel}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-ok"></i>&nbsp;{{job.clearanceRequired}}
+													class="glyphicon glyphicon-ok" data-toggle="tooltip"
+													data-placement="bottom" title="Clearance  "></i>&nbsp;{{job.clearanceRequired}}
+											</small></strong></span> <span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-calendar" data-toggle="tooltip"
+													data-placement="bottom" title="Due to Pmo"></i>&nbsp;{{job.duetoPmo}}
+											</small></strong></span> <span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-calendar" data-toggle="tooltip"
+													data-placement="bottom" title="Update date "></i>&nbsp;{{job.updateDate}}
+											</small></strong></span> <span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-calendar" data-toggle="tooltip"
+													data-placement="bottom" title="Due to Govt"></i>&nbsp;{{job.duetoGovt}}
 											</small></strong></span>
 									</p>
 									<p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.workDescription}}" popover-placement="bottom"><a
-												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
 									</p>
-								<p class="desc">
+									<p class="desc">
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
-											href="#popupBottom{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
+											href="#popupBottom{{$index}}" data-toggle="modal-popover"
+											data-placement="bottom"><a
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
-									
-								 <div id="popupBottom{{$index}}" class="popover" style="margin-top: -5%;margin-left: -20%;">
-							        <div class="arrow"></div>
-							        <div class="popover-content">
-							            <small  data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
-							            </small>
-							        </div>
-							    </div>
-							    
+
+									<div id="popupBottom{{$index}}" class="popover"
+										style="margin-top: -5%; margin-left: -20%;">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
+											</small>
+										</div>
+									</div>
+
 									<p class="text-danger">
 										<small>Desired Skills</small>
-									</p>
-									<!-- <p class="desc">
+									</p> <!-- <p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
@@ -137,28 +208,35 @@
 									<p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
-											href="#popupBottom1{{$index}}" data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
-									
-												 <div id="popupBottom1{{$index}}" class="popover" style="margin-top: -5%;margin-left: -19%;">
-												        <div class="arrow"></div>
-												        <div class="popover-content">
-												            <small  data-ng-repeat="job2 in job.desiredSkill">{{job2}}
-												            </small>
-                										  </div>
-											    </div>
- 
+											href="#popupBottom1{{$index}}" data-toggle="modal-popover"
+											data-placement="bottom"><a
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
+									<div id="popupBottom1{{$index}}" class="popover"
+										style="margin-top: -5%; margin-left: -19%;">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small data-ng-repeat="job2 in job.desiredSkill">{{job2}}
+											</small>
+										</div>
+									</div>
+
 								</td>
 
 							</tr>
 						</table>
 						<div class="pull-right">
 							<button id="pre1" type="button" ng-click="clickPre()"
-								class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+								class="btn btn-primary">
+								<i class="glyphicon glyphicon-arrow-left"></i>
+							</button>
 							&nbsp;
 							<button id="next1" type="button" ng-click="clickNext()"
-								class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
-								<div style="font-size:12px">{{JobPre}}/{{totalJobs}}</div>
+								class="btn btn-green">
+								<i class="glyphicon glyphicon-arrow-right"></i>
+							</button>
+							<div style="font-size: 12px">
+								<strong>{{JobPre}}/{{totalJobs}}</strong>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -167,45 +245,51 @@
 	</div>
 
 	<!-- Modal -->
-	<div class="modal fade" id="editJob" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Edit Job</h4>
-      </div>
-      <div class="modal-body">
+	<div class="modal fade" id="editJob" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Edit Job</h4>
+				</div>
+				<div class="modal-body">
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Request Type</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Request Type indicates whether the position is new, backfilled, reissued, etc.">Request
+								Type&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="requestType" name="requestType"
-								ng-model="editJob.requestType" placeholder="Enter Full Name"
+								ng-model="editJob.requestType" placeholder="NA"
 								style="font-size: 12px;" class="form-control" required>
 						</div>
 					</div>
-					
-	
+
+
 					<div class="col-md-4">
-						 <div class="">
-							<label class="">Labour Category</label>
+						<div class="">
+							<label class="">Labor Category</label>
 						</div>
 						<!-- <div class="form-group">
 							<input type="text" id="labourCategory" name="labourCategory"
 								ng-model="editJob.labourCategory" placeholder="Enter Full Name"
 								style="font-size: 12px;" class="form-control" required>
 						</div> -->
-						 <div class="form-group">
-						<select 
-								ng-model="editJob.labourCategory"
-								ng-change="onLabourCategoryChange()"
-								class="form-control" >
-								<option   ng-selected="pos.position == editJob.labourCategory" ng-repeat="pos in allPosition.position" >{{pos.position}}</option>
+						<div class="form-group">
+							<select ng-model="editJob.labourCategory"
+								ng-change="onLabourCategoryChange()" class="form-control">
+								<option ng-selected="pos.position == editJob.labourCategory"
+									ng-repeat="pos in allPosition.position">{{pos.position}}</option>
 							</select>
-							</div>
+						</div>
 					</div>
-					
+
 					<div class="col-md-4">
 						<div class="">
 							<label class="">Performance Level</label>
@@ -216,23 +300,25 @@
 								style="font-size: 12px;" class="form-control" required>
 						</div> -->
 						<div class="form-group">
-						<select 
-								ng-model="editJob.performanceLevel"
-								ng-change="onPositionChange()"	
-								class="form-control" >
-								<option   ng-selected="per.experianceLevel == editJob.experianceLevel" ng-repeat="per in allExperiance.experiance" >{{per.experianceLevel}}</option>
+							<select ng-model="editJob.performanceLevel"
+								ng-change="onPositionChange()" class="form-control">
+								<option
+									ng-selected="per.experianceLevel == editJob.experianceLevel"
+									ng-repeat="per in allExperiance.experiance">{{per.experianceLevel}}</option>
 							</select>
-							</div>
-					</div><div class="col-md-4">
+						</div>
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Position Type</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="positionType" name="positionType"
-								ng-model="editJob.positionType" placeholder="Enter Full Name"
+								ng-model="editJob.positionType" placeholder="NA"
 								style="font-size: 12px;" class="form-control" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Clearance Required</label>
 						</div>
@@ -242,65 +328,74 @@
 								style="font-size: 12px;" class="form-control" required>
 						</div> -->
 						<div class="form-group">
-						<select 
-								ng-model="editJob.clearanceRequired"
-								ng-change="onClearanceChange()"	
-								class="form-control" >
-								<option   ng-selected="clr.clearance == editJob.clearanceRequired" ng-repeat="clr in allCleanrance.clearance" >{{clr.clearance}}</option>
+							<select ng-model="editJob.clearanceRequired"
+								ng-change="onClearanceChange()" class="form-control">
+								<option ng-selected="clr.clearance == editJob.clearanceRequired"
+									ng-repeat="clr in allCleanrance.clearance">{{clr.clearance}}</option>
 							</select>
 						</div>
-						
-					</div><div class="col-md-4">
+
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work Location</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="workLocation" name="workLocation"
-								ng-model="editJob.workLocation" placeholder="Enter Full Name"
-								style="font-size: 12px;" class="form-control" required>
+								ng-model="editJob.workLocation" placeholder=NA
+								"
+								style="font-size: 12px;" class="form-control"
+								required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work Description</label>
 						</div>
 						<div class="form-group">
-						<textarea rows="9" cols="9" id="workDescription" name="workDescription"
-								ng-model="editJob.workDescription" placeholder="Work Description"
-								style="font-size: 12px;" class="form-control" required></textarea>
-						
+							<textarea rows="9" cols="9" id="workDescription"
+								name="workDescription" ng-model="editJob.workDescription"
+								placeholder="NA" style="font-size: 12px;" class="form-control"
+								required></textarea>
+
 							<!-- <input type="text" id="workDescription" name="workDescription"
 								ng-model="editJob.workDescription" placeholder="Work Description"
 								style="font-size: 12px;" class="form-control" required> -->
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Manadatory Skills</label>
 						</div>
 						<div class="form-group">
-						<textarea rows="9" cols="9" id="manadatorySkills" name="manadatorySkills"
-								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
-								style="font-size: 12px;" class="form-control" required></textarea>
+							<textarea rows="9" cols="9" id="manadatorySkills"
+								name="manadatorySkills" ng-model="editJob.manadatorySkills"
+								placeholder="NA" style="font-size: 12px;" class="form-control"
+								required></textarea>
 							<!-- <input type="text" id="manadatorySkills" name="manadatorySkills"
 								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
 								style="font-size: 12px;" class="form-control" required> -->
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Desired Skill</label>
 						</div>
-						<div class="form-group" >
-						<textarea rows="9" cols="9" id="desiredSkill" name="desiredSkill"
-								ng-model="editJob.desiredSkill" placeholder="Desired Skill"
+						<div class="form-group">
+							<textarea rows="9" cols="9" id="desiredSkill" name="desiredSkill"
+								ng-model="editJob.desiredSkill" placeholder="NA"
 								style="font-size: 12px;" class="form-control" required></textarea>
-							
+
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Certification Required</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="certificationRequired" name="certificationRequired"
-								ng-model="editJob.certificationRequired" placeholder="Certification Required"
+							<input type="text" id="certificationRequired"
+								name="certificationRequired"
+								ng-model="editJob.certificationRequired" placeholder="NA"
 								style="font-size: 12px;" class="form-control" required>
 						</div>
 					</div>
@@ -312,11 +407,15 @@
 							<!-- <input type="text" id="duetoPmo" name="duetoPmo"
 								ng-model="editJob.duetoPmo" placeholder="Due to Pmo"
 								style="font-size: 12px;" class="form-control" required> -->
-								
-								<input class="form-control" ng-click="initduetoPmoDatePicker();" id="duetoPmo" ng-model="editJob.duetoPmo"  required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-								
+
+							<input class="form-control" ng-click="initduetoPmoDatePicker();"
+								id="duetoPmo" ng-model="editJob.duetoPmo" required
+								style="font-size: 12px;" data-provide="datepicker"
+								data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Update Date</label>
 						</div>
@@ -324,9 +423,12 @@
 							<!-- <input type="text" id="updateDate" name="updateDate"
 								ng-model="editJob.updateDate" placeholder="Enter Full Name"
 								style="font-size: 12px;" class="form-control" required> -->
-								
-								<input class="form-control" ng-click="initDatePicker();" id="datepicker" ng-model="editJob.updateDate"required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-																			
+
+							<input class="form-control" ng-click="initDatePicker();"
+								id="datepicker" ng-model="editJob.updateDate" required
+								style="font-size: 12px;" data-provide="datepicker"
+								data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -337,29 +439,35 @@
 							<!-- <input type="text" id="duetoGovt" name="duetoGovt"
 								ng-model="editJob.duetoGovt" placeholder="Due to Govt"
 								style="font-size: 12px;" class="form-control" required> -->
-								<input class="form-control" ng-click="initduetoGovtDatePicker();" id="duetoGovt" ng-model="editJob.duetoGovt" required style="font-size: 12px;" data-provide="datepicker" data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-								
+							<input class="form-control" ng-click="initduetoGovtDatePicker();"
+								id="duetoGovt" ng-model="editJob.duetoGovt" required
+								style="font-size: 12px;" data-provide="datepicker"
+								data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Schedule Comments</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Client comments on the anticipated position work schedule">Schedule
+								Comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="scheduleComments" name="scheduleComments"
-								ng-model="editJob.scheduleComments" placeholder="Schedule Comments"
+								ng-model="editJob.scheduleComments" placeholder="NA"
 								style="font-size: 12px;" class="form-control" required>
 						</div>
 					</div>
-					
+
 					<div class="col-md-4">
 						<div class="">
 							<label class="">Pager Duty Comments</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="pagerdutyComments" name="pagerdutyComments"
-								ng-model="editJob.pagerdutyComments" 
-								style="font-size: 12px;"  class = "form-control" required>
+							<input type="text" id="pagerdutyComments"
+								name="pagerdutyComments" ng-model="editJob.pagerdutyComments"
+								style="font-size: 12px;" class="form-control" required>
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -368,157 +476,210 @@
 						</div>
 						<div class="form-group">
 							<input type="text" id="reghrperYear" name="reghrperYear"
-								ng-model="editJob.reghrperYear" 
-								style="font-size: 12px;"  class="form-control" required>
+								ng-model="editJob.reghrperYear" style="font-size: 12px;"
+								class="form-control" required>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Conus Travel</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Indicates travel within the continental U.S.">
+								Conus Travel&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
-						
-							<input type="checkbox" id="conusTravel" name="conusTravel"
-								ng-model="editJob.conusTravel"  ng-checked = "editJob.conusTravel == 'Y'" 
-								style="font-size: 12px;"  >
-						
+
+						<input type="checkbox" id="conusTravel" name="conusTravel"
+							ng-model="editJob.conusTravel"
+							ng-checked="editJob.conusTravel == 'Y'" style="font-size: 12px;">
+
 					</div>
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Oconus Travel</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Indicates travel outside of the continental U.S.">Oconus
+								Travel&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="oconusTravel" name="oconusTravel"
-								ng-model="editJob.oconusTravel" 
-								style="font-size: 12px;" ng-checked ="editJob.oconusTravel == 'Y'" >
+								ng-model="editJob.oconusTravel" style="font-size: 12px;"
+								ng-checked="editJob.oconusTravel == 'Y'">
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="">Non pub comments</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Language to be determined">Non pub
+								comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="nonpubComments" name="nonpubComments"
-								ng-model="editJob.nonpubComments" ng-checked = "editJob.nonpubComments == 'Y'"
+								ng-model="editJob.nonpubComments"
+								ng-checked="editJob.nonpubComments == 'Y'"
 								style="font-size: 12px;" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Mission Critical</label>
 						</div>
 						<div class="form-group">
-							<input type="checkbox" id="missionCritical" name="missionCritical"
-								ng-model="editJob.missionCritical" ng-checked = "editJob.missionCritical == 'Y'"
+							<input type="checkbox" id="missionCritical"
+								name="missionCritical" ng-model="editJob.missionCritical"
+								ng-checked="editJob.missionCritical == 'Y'"
 								style="font-size: 12px;" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Night Work</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="nightWork" name="nightWork"
-								ng-model="editJob.nightWork" 
-								style="font-size: 12px;"  ng-checked = "editJob.nightWork == 'Y'" required>
+								ng-model="editJob.nightWork" style="font-size: 12px;"
+								ng-checked="editJob.nightWork == 'Y'" required>
 						</div>
 					</div>
-					
-	
-					
+
+
+
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Local traval using pov</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Indicates local travel using a privately owned vehicle">Local
+								travel using pov&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
-							<input type="checkbox" id="localTravalusingpub" name="localTravalusingpub"
-								ng-model="editJob.localTravalusingpub" 
-								style="font-size: 12px;"  ng-checked = "editJob.localTravalusingpub == 'Y'" required>
+							<input type="checkbox" id="localTravalusingpub"
+								name="localTravalusingpub"
+								ng-model="editJob.localTravalusingpub" style="font-size: 12px;"
+								ng-checked="editJob.localTravalusingpub == 'Y'" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Pager Duty</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="pagerDuty" name="pagerDuty"
-								ng-model="editJob.pagerDuty" 
-								style="font-size: 12px;"   ng-checked = "editJob.pagerDuty == 'Y'" required>
+								ng-model="editJob.pagerDuty" style="font-size: 12px;"
+								ng-checked="editJob.pagerDuty == 'Y'" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work on Holiday</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="workonHoliday" name="workonHoliday"
-								ng-model="editJob.workonHoliday" ng-checked = "editJob.workonHoliday == 'Y'"
-								style="font-size: 12px;"  required>
+								ng-model="editJob.workonHoliday"
+								ng-checked="editJob.workonHoliday == 'Y'"
+								style="font-size: 12px;" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work on Weekends</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="workonWeekends" name="workonWeekends"
-								ng-model="editJob.workonWeekends" ng-checked = "editJob.workonWeekends == 'Y'"
-								style="font-size: 12px;"  required>
+								ng-model="editJob.workonWeekends"
+								ng-checked="editJob.workonWeekends == 'Y'"
+								style="font-size: 12px;" required>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Shift Work</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="shiftWork" name="shiftWork"
-								ng-model="editJob.shiftWork"  ng-checked = "editJob.shiftWork == 'Y'"
-								style="font-size: 12px;"  >
+								ng-model="editJob.shiftWork"
+								ng-checked="editJob.shiftWork == 'Y'" style="font-size: 12px;">
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">War zone</label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="warzone" name="warzone"
-								ng-model="editJob.warzone" 
-								style="font-size: 12px;" ng-checked = "editJob.warzone == 'Y'" >
+								ng-model="editJob.warzone" style="font-size: 12px;"
+								ng-checked="editJob.warzone == 'Y'">
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="">Coop</label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Language to be determined">Coop&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
 							<input type="checkbox" id="coop" name="coop"
-								ng-model="editJob.coop" 
-								style="font-size: 12px;" ng-checked = "editJob.coop == 'Y'">
+								ng-model="editJob.coop" style="font-size: 12px;"
+								ng-checked="editJob.coop == 'Y'">
 						</div>
 					</div>
-					
-					
-				</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Update</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Delete Position Module -->
-<div class="modal fade" id="deleteJobModule" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
-	<div class="modal-dialog">
-		<div class="modal-content" style="width:60%;">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Delete Job</h4>
-			</div>
-			<div class="modal-body" id="deleteArticleBody">
-				Are you sure want to delete this Job?
-				
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
-					data-ng-click="deleteSelectedJob();">Delete</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary"
+						ng-click="saveEditJob();">Update</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
+	<!-- Delete job Module -->
+	<div class="modal fade" id="deleteJobModule" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+		data-backdrop="false">
+		<div class="modal-dialog">
+			<div class="modal-content" style="width: 60%;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Delete Job</h4>
+				</div>
+				<div class="modal-body" id="deleteArticleBody">Are you sure
+					want to delete this Job?</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"
+						data-ng-click="deleteSelectedJob();">Delete</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Delete All jobs Module -->
+	<div class="modal fade" id="deleteAllJobModule" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+		data-backdrop="false">
+		<div class="modal-dialog">
+			<div class="modal-content" style="width: 60%;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Delete Job</h4>
+				</div>
+				<div class="modal-body" id="deleteArticleBody">Are you sure
+					want to delete All Jobs?</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"
+						data-ng-click="deleteAllJobs();">Delete</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <style type="text/css">
 .modal .modal-dialog {
@@ -531,5 +692,7 @@
 }
 </style>
 <style>
-.datepicker{z-index:1151 !important;}
+.datepicker {
+	z-index: 1151 !important;
+}
 </style>

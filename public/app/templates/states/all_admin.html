@@ -25,7 +25,7 @@
 								</h3>
 								<div class="pull-left">
 									<button type="button" ng-click="addAdminpopup()"
-										data-toggle="modal" class="btn btn-success">Add</button>
+										data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Add new Admin">Add</button>
 									</td>
 								</div>
 								<br />
@@ -45,11 +45,11 @@
 
 											<td><button type="button"
 													ng-click="editAdminpopoup(admin.username,admin.password)"
-													data-toggle="modal" class="btn btn-success">Edit</button></td>
+													data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Edit this Admin">Edit</button></td>
 
 											<td><button type="button"
 													ng-click="deleteAdminPopup(admin.username)" data-toggle="modal"
-													class="btn btn-danger">Delete</button></td>
+													class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete this Admin">Delete</button></td>
 
 										</tr>
 									</tbody>
@@ -142,7 +142,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary"
-					data-ng-click="addNewAdmin();">Add</button>
+					data-ng-click="addNewAdmin();" >Add</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 			</div>
 		</div>

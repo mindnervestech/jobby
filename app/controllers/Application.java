@@ -4,6 +4,7 @@ import java.io.File;
 
 
 
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +35,8 @@ import models.AppliedJobs;
 import models.CertificationDetails;
 import models.EducationDetails;
 import models.EmploymentDetails;
+import models.JobSearchStatus;
+import models.States;
 import models.StoreExcelFile;
 import models.UserClearance;
 import models.UserDetails;
@@ -87,6 +90,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+
+
 public class Application extends Controller {
 	public static Result index() {
 		return ok();
@@ -100,6 +105,18 @@ public class Application extends Controller {
 		return ok(register.render());
 	}
 
+	@JsonIgnoreProperties(ignoreUnknown=true)
+	public static class UserRegisterVM{
+		String email;
+		String password;
+		String firstname;
+		String middlename;
+		String lastname ;
+		String gender ;
+		
+	}
+	
+	
 	public static Result createNewUser() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
 		System.out.println("dynamicForm" + dynamicForm);
@@ -187,6 +204,9 @@ public class Application extends Controller {
 				if ("active".equalsIgnoreCase(ud.userstatus)) {
 					session().clear();
 					session().put("email", ud.email);
+					  ud.lastlogin = new Date();
+					  ud.userLoggedInstatus = "loggedIn";
+					  ud.update();
 					// check for the user profile filled or not if filled
 					// redirect to vieew jobd else redirect to user profile page
 					List<EducationDetails> edu = EducationDetails
@@ -1078,6 +1098,15 @@ public class Application extends Controller {
 
 	public static Result logOut() {
 		// saveActivityLog("LogOut");
+		String  email = session().get("email");
+		Admin ad = Admin.getAdminByEmail(email);
+		
+		if(ad == null){
+			UserDetails ud = UserDetails.getUserByEmail(email);
+			ud.userLoggedInstatus = "loggedOut";
+			ud.update();
+		}
+		
 		session().clear();
 		return ok(signin.render());
 	}
@@ -1136,15 +1165,553 @@ public class Application extends Controller {
 	}
 
 	// called when user first view job page loaded
-	public static Result getAllJobs(int currentPage, String jobType,
-			Boolean location, Boolean usermatch, String position,
-			Boolean allJobs ,Boolean explevel) {
+	public static Result getAllJobs(int currentpage, String jobType,
+			Boolean sortType,Boolean allJobs,String sortName) {
 
 		List<StoreExcelFile> jobs = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 		int count = 0;
+		    if("Position".equalsIgnoreCase(sortName) && allJobs == true ){
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByPositionAsc(currentpage, 10);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByPositionDesc(currentpage, 10);
+						
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}else{
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAsc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeDesc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}
+		    	
+			} else if("Position".equalsIgnoreCase(sortName) && allJobs == false){
+				String emailId  = session().get("email");
+				UserDetails u = UserDetails.getUserByEmail(emailId);
+				ArrayList<String> al = new ArrayList<>();
+				List<UserPosition> up = u.userPosition;
+				for (UserPosition upd : up) {
+					String pos = upd.position;
+					al.add(pos);
+				}
+				
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserPositionMatchedAsc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserPositionMatchedDesc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				}else{
+					//count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					//jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserPositionMatchedJobTypeAsc(currentpage, 10,al,jobType);
+						
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserPositionMatchedJobTypeDesc(currentpage, 10,al,jobType);
+						
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				
+				}
+				
+			}
+			
 
-		// both are selected for search(DSC)
+		    if("Location".equalsIgnoreCase(sortName) && allJobs == true ){
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByLocationAsc(currentpage, 10);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByLocationDesc(currentpage, 10);
+						
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}else{
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeAsc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeDesc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}
+		    	
+			} else if("Location".equalsIgnoreCase(sortName) && allJobs == false){
+				String emailId  = session().get("email");
+				UserDetails u = UserDetails.getUserByEmail(emailId);
+				ArrayList<String> al = new ArrayList<>();
+				List<UserPosition> up = u.userPosition;
+				for (UserPosition upd : up) {
+					String pos = upd.position;
+					al.add(pos);
+				}
+				
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserLocationMatchedAsc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserLocationMatchedDesc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				}else{
+					//count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					//jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeAsc(currentpage, 10,al,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeDesc(currentpage, 10,al,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				
+				}
+				
+			}
+		    
+		    
+		    if("Clearance".equalsIgnoreCase(sortName) && allJobs == true ){
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByClearanceAsc(currentpage, 10);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByClearanceDesc(currentpage, 10);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}else{
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeAsc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeDesc(currentpage, 10,jobType);
+						
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}
+		    	
+			} else if("Clearance".equalsIgnoreCase(sortName) && allJobs == false){
+				String emailId  = session().get("email");
+				UserDetails u = UserDetails.getUserByEmail(emailId);
+				ArrayList<String> al = new ArrayList<>();
+				List<UserPosition> up = u.userPosition;
+				for (UserPosition upd : up) {
+					String pos = upd.position;
+					al.add(pos);
+				}
+				
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserClearanceMatchedAsc(currentpage, 10,al);
+						
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserClearanceMatchedDesc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				}else{
+					//count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					//jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeAsc(currentpage, 10,al,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserClearanceMatchedJobTypeDesc(currentpage, 10,al,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				
+				}
+				
+			}
+		    
+		    if("Experiance".equalsIgnoreCase(sortName) && allJobs == true ){
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByExperianceAsc(currentpage, 10);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						userJobs = StoreExcelFile.getAllJobsForUserByExperianceDesc(currentpage, 10);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}else{
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAsc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+						
+					}else{
+						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+						userJobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeDesc(currentpage, 10,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					
+				}
+		    	
+			} else if("Experiance".equalsIgnoreCase(sortName) && allJobs == false){
+				String emailId  = session().get("email");
+				UserDetails u = UserDetails.getUserByEmail(emailId);
+				ArrayList<String> al = new ArrayList<>();
+				List<UserPosition> up = u.userPosition;
+				for (UserPosition upd : up) {
+					String pos = upd.position;
+					al.add(pos);
+				}
+				
+				if("All".equalsIgnoreCase(jobType) ){
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserExperiancedMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserExperiancedMatchedAsc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+						userJobs = StoreExcelFile.getAlluserExperiancedMatchedDesc(currentpage, 10,al);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				}else{
+					//count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					//jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+					if(sortType == true){
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeAsc(currentpage, 10,al,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+					else{
+						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+						userJobs = StoreExcelFile.getAlluserExperiancedMatchedJobTypeDesc(currentpage, 10,al,jobType);
+						for(StoreExcelFile str:userJobs){
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							if(apj == null){
+								jobs.add(str);
+							}else{
+								count  = count-1;
+							}
+						}
+					}
+				
+				}
+				
+			}
+		   /* 
+		    if("ExperianceAsc".equalsIgnoreCase(sortName)){
+		    	if("All".equalsIgnoreCase(jobType)){
+		    		count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserExpAsc(currentpage, 10);
+		    	}else{
+		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserExpTypeAsc(currentpage, 10,jobType);
+		    	}
+				
+			}else if ("ExperianceDesc".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserExpTypeDesc(currentpage, 10,jobType);
+				}else{
+					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserExpTypeDesc(currentpage, 10,jobType);
+				}
+				
+			}*/
+		
+		    
+
+			/*if("All".equalsIgnoreCase(sortName)){
+				
+				if("All".equalsIgnoreCase(jobType)){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserAsc(currentpage, 10);
+				}else{
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserTypeAsc(currentpage, 10,jobType);
+				}
+					
+				}else if ("AllDesc".equalsIgnoreCase(sortName)){
+					if("All".equalsIgnoreCase(jobType)){
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						jobs = StoreExcelFile.getAllJobsForUserDesc(currentpage, 10);
+					}else{
+						
+						count = StoreExcelFile.getAllJobsCount(currentpage);
+						jobs = StoreExcelFile.getAllJobsForUserTypeDesc(currentpage, 10,jobType);
+					}
+				}
+			*/
+		
+	/*	// both are selected for search(DSC)
 		if (!(true == location)
 				&& !("jobType".equalsIgnoreCase(jobType.trim()))
 				&& allJobs == false) {
@@ -1311,7 +1878,7 @@ public class Application extends Controller {
 
 		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)
 				&& allJobs == false) {
-			/* jobs = StoreExcelFile.getAllJobs(currentPage, 10); */
+			 jobs = StoreExcelFile.getAllJobs(currentPage, 10); 
 			ArrayList<String> al = new ArrayList<>();
 			// count = StoreExcelFile.getAllJobsCount(currentPage,al);
 			String email = session().get("email");
@@ -1359,13 +1926,13 @@ public class Application extends Controller {
 				}
 			}
 			
-		}
+		}*/
 
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
 
-		if (currentPage > 10 && 10 != 0) {
+		/*if (currentPage > 10 && 10 != 0) {
 			currentPage--;
-		}
+		}*/
 
 		String mskills;
 		String dSkills;
@@ -1459,119 +2026,130 @@ public class Application extends Controller {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("totalPages", 10);
-		map.put("currentPage", currentPage);
+	/*	map.put("currentPage", currentPage);*/
 		map.put("jobs", jobVMs);
 		map.put("jobsCount", count);
 		return ok(Json.toJson(map));
 	}
 
-	public static Result getAllJobsOnlogin(int currentpage,String jobType,String sortName) {
+	public static Result getAllJobsOnlogin(int currentpage,String jobType,String sortName,Boolean sortType) {
 		List<StoreExcelFile> jobs = new ArrayList<>();
 		int count = 0;
 		System.out.println("jobtype"+jobType+"sortnamea"+sortName);
 		 
-		if("AllAsc".equalsIgnoreCase(sortName)){
-		
-			if("All".equalsIgnoreCase(jobType)){
-				count = StoreExcelFile.getAllJobsCount(currentpage);
-				jobs = StoreExcelFile.getAllJobsForUserAsc(currentpage, 10);
-			}else{
-				count = StoreExcelFile.getAllJobsCount(currentpage);
-				jobs = StoreExcelFile.getAllJobsForUserTypeAsc(currentpage, 10,jobType);
-			}
-				
-			}else if ("AllDesc".equalsIgnoreCase(sortName)){
-				if("All".equalsIgnoreCase(jobType)){
-					count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserDesc(currentpage, 10);
-				}else{
-					
-					count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserTypeDesc(currentpage, 10,jobType);
-				}
-			}
-		
-		    if("PositionAsc".equalsIgnoreCase(sortName)){
-				if("All".equalsIgnoreCase(jobType)){
+		if("Position".equalsIgnoreCase(sortName) ){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
 					count = StoreExcelFile.getAllJobsCount(currentpage);
 					jobs = StoreExcelFile.getAllJobsForUserByPositionAsc(currentpage, 10);
+					
 				}else{
-					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserByPositionTypeAsc(currentpage, 10,jobType);
-				}
-		    	
-			} else if("PositionDesc".equalsIgnoreCase(sortName)){
-				
-				if("All".equalsIgnoreCase(jobType)){
 					count = StoreExcelFile.getAllJobsCount(currentpage);
 					jobs = StoreExcelFile.getAllJobsForUserByPositionDesc(currentpage, 10);
+				}
+				
+			}else{
+				if(sortType == true){
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAsc(currentpage, 10,jobType);
+					
+					
 				}else{
-					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeDesc(currentpage, 10,jobType);
+					
 				}
 				
 			}
-			
-		    if("LocationAsc".equalsIgnoreCase(sortName)){
-		    	if("All".equalsIgnoreCase(jobType)){
-		    		count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserLocationAsc(currentpage, 10);
-		    	}else{
-		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserLocationTypeAsc(currentpage, 10,jobType);
-		    		
-		    	}
-				
-			}else if("LocationDesc".equalsIgnoreCase(sortName)){
-				if("All".equalsIgnoreCase(jobType)){
+	    	
+		} 
+
+	    if("Location".equalsIgnoreCase(sortName) ){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
 					count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserLocationDesc(currentpage, 10);
+					jobs = StoreExcelFile.getAllJobsForUserByLocationAsc(currentpage, 10);
+					
+					
 				}else{
-					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserLocationTypeDesc(currentpage, 10,jobType);
-				}
-				
-			}
-			
-		    if("ClearanceAsc".equalsIgnoreCase(sortName)){
-		    	if("All".equalsIgnoreCase(jobType)){
-		    		count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserClearanceAsc(currentpage, 10);
-		    	}else{
-		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserClearanceTypeAsc(currentpage, 10,jobType);
-		    	}
-				
-			}else if("ClearanceDesc".equalsIgnoreCase(sortName)){
-				if("All".equalsIgnoreCase(jobType)){
 					count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserClearanceDesc(currentpage, 10);
-				}else{
-					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserClearanceTypeDesc(currentpage, 10,jobType);
-		
+					jobs = StoreExcelFile.getAllJobsForUserByLocationDesc(currentpage, 10);
+					
 				}
-			}
-			
-		    if("ExperianceAsc".equalsIgnoreCase(sortName)){
-		    	if("All".equalsIgnoreCase(jobType)){
-		    		count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserExpAsc(currentpage, 10);
-		    	}else{
-		    		count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserExpTypeAsc(currentpage, 10,jobType);
-		    	}
 				
-			}else if ("ExperianceDesc".equalsIgnoreCase(sortName)){
-				if("All".equalsIgnoreCase(jobType)){
+			}else{
+				if(sortType == true){
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeAsc(currentpage, 10,jobType);
+					
+				}else{
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeDesc(currentpage, 10,jobType);
+					
+				}
+				
+			}
+	    	
+		} 
+	    
+	    
+	    if("Clearance".equalsIgnoreCase(sortName) ){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
 					count = StoreExcelFile.getAllJobsCount(currentpage);
-					jobs = StoreExcelFile.getAllJobsForUserExpTypeDesc(currentpage, 10,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByClearanceAsc(currentpage, 10);
+					
+					
 				}else{
-					count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
-					jobs = StoreExcelFile.getAllJobsForUserExpTypeDesc(currentpage, 10,jobType);
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserByClearanceDesc(currentpage, 10);
+					
+				}
+				
+			}else{
+				if(sortType == true){
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeAsc(currentpage, 10,jobType);
+					
+				}else{
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeDesc(currentpage, 10,jobType);
+					
+					
 				}
 				
 			}
+	    	
+		}
+	    
+	    if("Experiance".equalsIgnoreCase(sortName)){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserByExperianceAsc(currentpage, 10);
+					
+					
+				}else{
+					count = StoreExcelFile.getAllJobsCount(currentpage);
+					jobs = StoreExcelFile.getAllJobsForUserByExperianceDesc(currentpage, 10);
+					
+				}
+				
+			}else{
+				if(sortType == true){
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAsc(currentpage, 10,jobType);
+					
+					
+				}else{
+					count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+					jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeDesc(currentpage, 10,jobType);
+					
+				}
+				
+			}
+	    	
+		} 
 			
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
 		String mskills;
@@ -1666,55 +2244,237 @@ public class Application extends Controller {
 
 	}
 
-	public static Result getAllJobsForAdmin(int currentPage, String jobType,
-			Boolean location, Boolean usermatch, String position) {
-
+	public static Result getAllJobsForAdmin(int currentpage, String jobType,
+			Boolean sortType, String sortName,String searchId) {
+		searchId = searchId.trim();
 		List<StoreExcelFile> jobs = new ArrayList<>();
 		// List<StoreExcelFile> userJobs = null;
+		//String emailId = session().get("email");
 		int count = 0;
 		System.out.println("jobType:" + jobType);
 
-		// both are selected for search(DSC)
-		if (!(true == location)
-				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
-			// String emailId = session().get("email");
-			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(
-					currentPage, jobType);
-			jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminAsc(
-					currentPage, 10, jobType);
+		 if("Position".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType) ){
+					
+							if("Search".equalsIgnoreCase(searchId)){
+									if(sortType == true){
+										count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+										jobs = StoreExcelFile.getAllJobsForUserByPositionAdminAsc(currentpage, 10);
+										
+									}else{
+										count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+										jobs = StoreExcelFile.getAllJobsForUserByPositionAdminDesc(currentpage, 10);
+									}
+							}else{
+								
+									if(sortType == true){
+										count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+										jobs = StoreExcelFile.getAllJobsForUserByPositionSearchIdAdminAsc(currentpage, 10,searchId);
+										
+									}else{
+										count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+										jobs = StoreExcelFile.getAllJobsForUserByPositionSearchIdAdminDesc(currentpage, 10,searchId);
+									}
+							}
+					
+					
+					
+					
+				}else{
+					
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAdminAsc(currentpage, 10,jobType);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAdminDesc(currentpage, 10,jobType);
+						}
+						
+					}else{
+						
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeSearchIdAdminAsc(currentpage, 10,jobType,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeSearchIdAdminDesc(currentpage, 10,jobType,searchId);
+						}
+						
+					}
+					
+				}
+		    	
+			} 
+			
 
-		}
-
-		// both are selected for search(DSC)
-		if (!(false == location)
-				&& !("jobType".equalsIgnoreCase(jobType.trim()))) {
-			// String emailId = session().get("email");
-			count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeDsc(
-					currentPage, jobType);
-			jobs = StoreExcelFile.getAllJobsByLocationAndJobTypeAdminDsc(
-					currentPage, 10, jobType);
-
-		}
-
-		// all jobs //selected Default(user profile job mtached job)
-		if (("All".equalsIgnoreCase(jobType.trim())) && (false == location)) {
-			jobs = StoreExcelFile.getAllJobsForAdminDsc(currentPage, 10);
-			count = StoreExcelFile.getAllJobsCount(currentPage);
-
-		}
-
-		if (("All".equalsIgnoreCase(jobType.trim())) && (true == location)) {
-
-			count = StoreExcelFile.getAllJobsCount(currentPage);
-			jobs = StoreExcelFile.getAllJobsForAdminAsc(currentPage, 10);
-
-		}
-
+		    if("Location".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType) ){
+				
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationAdminAsc(currentpage, 10);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationAdminDesc(currentpage, 10);
+						}
+					}else{
+						
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationSearchAdminDesc(currentpage, 10,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationSearchAdminDesc(currentpage, 10,searchId);
+						}
+					}
+					
+					
+				
+				
+				}else{
+					
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeAdminAsc(currentpage, 10,jobType);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeAdminDesc(currentpage, 10,jobType);
+						}
+					}else{
+						
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+						}
+					}
+					
+					
+				}
+		    	
+			} 
+		    
+		    
+		    if("Clearance".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType) ){
+					
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceAdminAsc(currentpage, 10);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceAdminDesc(currentpage, 10);
+						}
+						
+					}else{
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchAdminAsc(currentpage, 10,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchAdminDesc(currentpage, 10,searchId);
+						}
+						
+						
+					}
+					
+				}else{
+					
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeAdminAsc(currentpage, 10,jobType);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeAdminDesc(currentpage, 10,jobType);
+						}
+						
+					}else{
+						
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+						}
+					}
+					
+					
+				}
+		    	
+			} 
+		    
+		    if("Experiance".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType) ){
+					
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByExperianceAdminAsc(currentpage, 10);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByExperianceAdminDesc(currentpage, 10);
+						}
+					}else{
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminAsc(currentpage, 10,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminDesc(currentpage, 10,searchId);
+						}
+						
+					}
+					
+					
+				}else{
+					if("Search".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAdminAsc(currentpage, 10,jobType);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAdminDesc(currentpage, 10,jobType);
+						}
+					}else{
+						
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+						}
+					}
+					
+					
+				}
+		    	
+			} 
+		
+		
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
-
-		if (currentPage > 10 && 10 != 0) {
-			currentPage--;
-		}
 
 		String mskills;
 		String dSkills;
@@ -1749,10 +2509,9 @@ public class Application extends Controller {
 			jobVM.coop = s.coop;
 			jobVM.duetoPmo = s.duetoPmo;
 			jobVM.updateDate = s.updateDate;
-
 			jobVM.duetoGovt = s.duetoGovt;
 			jobVM.jobStatus = s.jobStatus;
-
+			
 			// check if the desired skill does not contain null value;
 			if (s.desiredSkill != null) {
 				dSkills = s.desiredSkill;
@@ -1804,7 +2563,6 @@ public class Application extends Controller {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("totalPages", 10);
-		map.put("currentPage", currentPage);
 		map.put("jobs", jobVMs);
 		map.put("jobsCount", count);
 		return ok(Json.toJson(map));
@@ -1857,6 +2615,16 @@ public class Application extends Controller {
 		// public String userposition;
 		public String email;
 		public String password;
+		public String phnumber;
+	    public String altphnumber;
+	    public String residentState;
+	    public String zipcode;
+	    public String desiredsalary;
+	    public String willingtorelocate ;
+	    public String jobsearchstatus;
+	    public String currentjobtitle;
+	    public String  altemail;
+	    public String residentcity;
 
 	}
 
@@ -1956,17 +2724,15 @@ public class Application extends Controller {
 
 		u.deleteManyToManyAssociations("userExperiance");
 
-		ArrayNode exp = (ArrayNode) userExperience;
+		//ArrayNode exp = (ArrayNode) userExperience;
 	
-		for (int l = 0; l < exp.size(); l++) {
-			String s = exp.get(l).asText();
+		
+			String s = userExperience.asText();
 			System.out.println(s);
 			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
 			u.userExperiance.add(ue);
-		}
-
-		u.saveManyToManyAssociations("userExperiance");
-
+			u.saveManyToManyAssociations("userExperiance");
+		
 		u.deleteManyToManyAssociations("userPosition");
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
@@ -2074,7 +2840,16 @@ public class Application extends Controller {
 			u.setFirstname(ui.firstname);
 			u.setMiddlename(ui.middlename);
 			u.setLastname(ui.lastname);
-
+			u.setPhnumber(ui.phnumber);
+			u.setAltphnumber(ui.altphnumber);
+			u.setResidentState(ui.residentState);
+			u.setZipcode(ui.zipcode);
+			u.setDesiredsalary(ui.desiredsalary);
+			u.setWillingtorelocate(ui.willingtorelocate);
+			u.setJobsearchstatus(ui.jobsearchstatus);
+			u.setCurrentjobtitle(ui.currentjobtitle);
+			u.setAltemail(ui.altemail);
+			u.setResidentcity(ui.residentcity);
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -2124,13 +2899,12 @@ public class Application extends Controller {
 		u.saveManyToManyAssociations("userSkill");
 
 		u.deleteManyToManyAssociations("userExperiance");
-		ArrayNode exp = (ArrayNode) userExperience;
-		for (int l = 0; l < exp.size(); l++) {
-			String s = exp.get(l).asText();
+		
+			String s = userExperience.asText();
 			System.out.println(s);
 			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
 			u.userExperiance.add(ue);
-		}
+		
 
 		u.saveManyToManyAssociations("userExperiance");
 
@@ -2237,10 +3011,20 @@ public class Application extends Controller {
 					UserInfoVM.class);
 			System.out.println("ui.firstname --" + ui.firstname);
 			u.email = ui.email;
-			u.firstname = ui.firstname;
-			u.middlename = ui.middlename;
-			u.lastname = ui.lastname;
-			u.dob = ui.dob;
+			u.setFirstname(ui.firstname);
+			u.setMiddlename(ui.middlename);
+			u.setLastname(ui.lastname);
+			u.setDob(ui.dob);
+			u.setPhnumber(ui.phnumber);
+			u.setAltphnumber(ui.altphnumber);
+			u.setResidentState(ui.residentState);
+			u.setZipcode(ui.zipcode);
+			u.setDesiredsalary(ui.desiredsalary);
+			u.setWillingtorelocate(ui.willingtorelocate);
+			u.setJobsearchstatus(ui.jobsearchstatus);
+			u.setCurrentjobtitle(ui.currentjobtitle);
+			u.setAltemail(ui.altemail);
+			u.setResidentcity(ui.residentcity);
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -2740,6 +3524,34 @@ public class Application extends Controller {
 
 	}
 
+	
+	public static Result getAllArchivedJobs(int pageNumber) {
+		String jobStatus = "Applied";
+		int count = 0;
+		count = AppliedJobs.getAllArchivedJobsCount(pageNumber, jobStatus);
+		List<AppliedJobs> ap = AppliedJobs.getAllArchivedJobs(pageNumber, 10,
+				jobStatus);
+		ArrayList<AppliedJobVM> appliedJobVM = new ArrayList<AppliedJobVM>();
+		for (AppliedJobs apj : ap) {
+			AppliedJobVM apvm = new AppliedJobVM();
+			apvm.id = apj.id;
+			apvm.dsSkills = getDesiredSkills(apj.desiredSkil);
+			apvm.msSkils = getMandtorySkills(apj.manadatorySkill);
+			apvm.username = apj.username;
+			apvm.status = apj.jobStatus;
+			apvm.requestNumber = apj.jobno;
+			apvm.location = apj.location;
+			apvm.positionName = apj.positionname;
+			appliedJobVM.add(apvm);
+
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("appliedJobs", appliedJobVM);
+		map.put("appliedJobCount", count);
+		return ok(Json.toJson(map));
+	}
+
+	
 	public static Result getAllAppliedJobs(int pageNumber) {
 		String jobStatus = "Applied";
 		int count = 0;
@@ -2776,7 +3588,7 @@ public class Application extends Controller {
 		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
 		// job id to be shown on resume
 		String JobId = ap.jobno;
-
+		String csrNumber = ap.performancelevel;
 		OutputStream file = null;
 		Document document = null;
 		try {
@@ -2852,6 +3664,14 @@ public class Application extends Controller {
 			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
 			chunkUserExp.setFont(font);
 
+			Chunk chunkCSRLeval = new Chunk(
+					"CSR Level".toUpperCase() +":  "+csrNumber);
+			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
+			chunkUserExp.setFont(font);
+			
+			Chunk chunkResourceSubmissionLevel = null;
+
+			
 			// Experiance table
 			PdfPTable expLevelTable = new PdfPTable(1);
 			// table2.set
@@ -2860,8 +3680,8 @@ public class Application extends Controller {
 			 * float[] widthexp = { 2f}; expLevelTable.setWidths(widthexp);
 			 */
 
-			PdfPCell cellexptble = new PdfPCell(new Paragraph(
-					"Resource Submission Level".toUpperCase()));
+		/*	PdfPCell cellexptble = new PdfPCell(new Paragraph(
+					"Resource Submission Level".toUpperCase()));*/
 			/*
 			 * cellexptble.setColspan(3);
 			 * cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -2879,13 +3699,17 @@ public class Application extends Controller {
 
 			for (UserExperiance ue : userExperiance) {
 				// EmpHistorytable.addCell(cellemp);
-				cellexptble = new PdfPCell(
+				/*cellexptble = new PdfPCell(
 						new Phrase(ue.experianceLevel, font1));
 				System.out.println("ue.experianceLevel" + ue.experianceLevel);
 				cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
 				// cell2.setFont(font1);
 				cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-				expLevelTable.addCell(cellexptble);
+				expLevelTable.addCell(cellexptble);*/
+				chunkResourceSubmissionLevel = new Chunk(
+						"Resource Submission Level".toUpperCase() +":  "+ue.experianceLevel);
+				chunkUserExp.setBackground(new BaseColor(248, 248, 255));
+				chunkUserExp.setFont(font);
 			}
 
 			// skill table
@@ -3228,8 +4052,11 @@ public class Application extends Controller {
 			// document.add(new Paragraph("Candidate's Name:",font1));
 			document.add(table4);
 			document.add(Chunk.NEWLINE);
-			document.add(chunkUserExp);
 			document.add(expLevelTable);
+			document.add(Chunk.NEWLINE);
+			document.add(chunkCSRLeval);
+			document.add(Chunk.NEWLINE);
+			document.add(chunkResourceSubmissionLevel);
 			// preface.setAlignment(Element.ALIGN_CENTER);
 			document.add(Chunk.NEWLINE);
 			document.add(chunkClearance);
@@ -3500,13 +4327,70 @@ public class Application extends Controller {
 		return ok("");
 	}
 
+	
+	public static class UserDetailsVM {
+		
+		public String email;
+		public String password;
+		public String firstname;
+		public String middlename;
+		public String lastname;
+		public String gender;
+		public String dob;
+		public String userstatus;
+	    public Date  lastlogin;
+	    public String userLoggedInstatus;
+	    public String altemail;
+	    public String residentcity;
+	    public String altphnumber;
+	    public String residentState;
+	    public String zipcode;
+	    public String desiredsalary;
+	    public String willingtorelocate ;
+	    public String jobsearchstatus;
+	    public String currentjobtitle;
+	    public String phnumber;
+	}
+	
 	public static Result getAllUsers(int pageNumber) {
 		int count = 0;
+		int activeusercount = 0;
 		List<UserDetails> userDetails = UserDetails.getAllUsers(pageNumber, 10);
 		count = UserDetails.getAllUsersCount(pageNumber);
+		activeusercount =  UserDetails.getActiveUserCount(pageNumber);
+		
+		ArrayList<UserDetailsVM> userDetailsVM = new ArrayList<UserDetailsVM>();
+		for(UserDetails ud:userDetails){
+			UserDetailsVM userDVM = new UserDetailsVM();
+			userDVM.email = ud.email;
+			userDVM.password = ud.password;
+			userDVM.firstname = ud.firstname;
+			userDVM.middlename = ud.middlename;
+			userDVM.lastname  = ud.lastname;
+			userDVM.gender = ud.gender;
+			userDVM.dob =  ud.dob;
+			userDVM.userstatus = ud.userstatus;
+			userDVM.lastlogin = ud.lastlogin;
+			userDVM.altemail =  ud.altemail;
+			userDVM.residentcity = ud.residentcity;
+			userDVM.altphnumber = ud.altphnumber;
+			userDVM.residentState = ud.residentState;
+			userDVM.zipcode = ud.zipcode;
+			userDVM.desiredsalary = ud.desiredsalary;
+			userDVM.willingtorelocate = ud.willingtorelocate ;
+			userDVM.jobsearchstatus = ud.jobsearchstatus;
+			userDVM.currentjobtitle = ud.currentjobtitle;
+			userDVM.phnumber = ud.phnumber;
+			
+			//Date d = new Date(ud.lastlogin);
+			userDVM.userLoggedInstatus = ud.userLoggedInstatus;
+			userDetailsVM.add(userDVM);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("users", userDetails);
+		map.put("users", userDetailsVM);
 		map.put("userCount", count);
+		map.put("activeusercount", activeusercount);
 		return ok((Json.stringify(Json.toJson(map))));
 
 	}
@@ -3622,7 +4506,7 @@ public class Application extends Controller {
 
 	
 	
-	public static Result getAllUserAppliedJobs(int pageNumber) {
+	public static Result getAllUserAppliedJobs(int currentpage,String jobType,String sortName,Boolean sortType) {
 
 		List<AppliedJobs> jobs = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
@@ -3630,11 +4514,125 @@ public class Application extends Controller {
 		String emailId = session().get("email");
 	//	userJobs = StoreExcelFile.getAllJobs(pageNumber, 10);
 		int count = 0;
-		count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(pageNumber,
-				emailId);
+		/*count = AppliedJobs.getAllJobsCountByEmail(currentpage,
+				emailId);*/
+		//int count = 0;
+	    if("Position".equalsIgnoreCase(sortName)){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);					
+					jobs = AppliedJobs.getAllJobsForUserByPositionAsc(currentpage, 10,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);		
+					
+					jobs = AppliedJobs.getAllJobsForUserByPositionDesc(currentpage, 10,emailId);
+				}
+				
+			}else{
+				if(sortType == true){
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+						emailId,jobType);
+					jobs = AppliedJobs.getAllJobsForUserByPositionJobTypeAsc(currentpage, 10,jobType,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+							emailId,jobType);						
+					jobs = AppliedJobs.getAllJobsForUserByPositionJobTypeDesc(currentpage, 10,jobType,emailId);
+				}
+				
+			}
+	    	
+		} 
 		
-			jobs = AppliedJobs.getUserAppliedJobDetails(emailId,
-				 pageNumber, 10);
+	 
+
+	    if("Location".equalsIgnoreCase(sortName) ){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);
+					jobs = AppliedJobs.getAllJobsForUserByLocationAsc(currentpage, 10,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);		
+					jobs = AppliedJobs.getAllJobsForUserByLocationDesc(currentpage, 10,emailId);
+				}
+				
+			}else{
+				if(sortType == true){
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+							emailId,jobType);
+					jobs = AppliedJobs.getAllJobsForUserByLocationJobTypeAsc(currentpage, 10,jobType,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+							emailId,jobType);		
+					jobs = AppliedJobs.getAllJobsForUserByLocationJobTypeDesc(currentpage, 10,jobType,emailId);
+				}
+				
+			}
+	    	
+		} 
+	    
+	    
+	    if("Clearance".equalsIgnoreCase(sortName)){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);
+					jobs = AppliedJobs.getAllJobsForUserByClearanceAsc(currentpage, 10,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);		
+					jobs = AppliedJobs.getAllJobsForUserByClearanceDesc(currentpage, 10,emailId);
+				}
+				
+			}else{
+				if(sortType == true){
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+							emailId,jobType);
+					jobs = AppliedJobs.getAllJobsForUserByClearanceJobTypeAsc(currentpage, 10,jobType,emailId);
+					
+				}else{count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+						emailId,jobType);		
+					jobs = AppliedJobs.getAllJobsForUserByClearanceJobTypeDesc(currentpage, 10,jobType,emailId);
+				}
+				
+			}
+	    	
+		} 
+	    
+	    if("Experiance".equalsIgnoreCase(sortName) ){
+			if("All".equalsIgnoreCase(jobType) ){
+				if(sortType == true){
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,emailId);
+					jobs = AppliedJobs.getAllJobsForUserByExperianceAsc(currentpage, 10,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
+							emailId);
+					jobs = AppliedJobs.getAllJobsForUserByExperianceDesc(currentpage, 10,emailId);
+				}
+				
+			}else{
+				if(sortType == true){
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,jobType,jobType);
+					jobs = AppliedJobs.getAllJobsForUserByExperienceJobTypeAsc(currentpage, 10,jobType,emailId);
+					
+				}else{
+					count = AppliedJobs.getAllJobsCountByEmailAndJobStatus(currentpage,
+							emailId,jobType);
+					jobs = AppliedJobs.getAllJobsForUserByExperienceJobTypeDesc(currentpage, 10,jobType,emailId);
+				}
+				
+			}
+	    	
+		} 
 
 			List<SavedJobVM> jobVMs = new ArrayList<SavedJobVM>();
 
@@ -3953,6 +4951,59 @@ public class Application extends Controller {
 		return ok(Json.toJson(map));
 
 	}
-	
 
+	public static Result deleteJobById(int id) {
+
+		AppliedJobs apj = AppliedJobs.getUserAppliedJobById(id);
+		if(apj != null){
+			apj.delete();	
+			return ok("success");
+		}else{
+			return ok("success");	
+		}
+		
+
+	}
+	public static Result movetoArchive() {
+		JsonNode json = request().body().asJson();
+		System.out.println("josn" + json);
+		JsonNode jobIds = json.path("archivedJobsId");
+		ArrayNode jobbId = (ArrayNode) jobIds;
+		for (int k = 0; k < jobbId.size(); k++) {
+			String s = jobbId.get(k).asText();
+			System.out.println(s);
+			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(s);
+			if(apj != null){
+				apj.archived = "Y";
+				apj.update();
+				//return ok("success");
+			}
+		}
+		return ok("success");	
+		
+	}
+	
+	public static Result deleteAllJob() {
+
+		List<StoreExcelFile> items = Ebean.find(StoreExcelFile.class).findList();
+		Ebean.delete(items);
+		
+		return ok("success");
+	}
+	
+	public  static Result getAllStates(){
+		List<States> st = States.getAllSates();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("states", st);
+		return ok(Json.toJson(map));
+	}
+	
+	
+	public  static Result getAllJobSearchStatus(){
+		List<JobSearchStatus> st = JobSearchStatus.getAllJobSearchStatus();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("jobsearchstatus", st);
+		return ok(Json.toJson(map));
+	}
+	
 }
