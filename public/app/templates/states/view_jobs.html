@@ -469,7 +469,7 @@
 													name="next" value="Next"
 													class="btn btn-info button-next mlm"
 													ng-click="saveUserJobToDraft();">
-													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox" data-toggle="tooltip" data-placement="top" title="Save youe job to Draft. "></i>
 												</button>
 												<button type="button" ng-if="jStatus == 'draft'" name="next"
 													value="Next" class="btn btn-info button-next mlm"
@@ -491,11 +491,11 @@
 														<div class="col-sm-8">
 															<div class="pull-right">
 																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopup($index);"></i> &nbsp;&nbsp;<i
+																	ng-click="openTemplatepopup($index);" data-toggle="tooltip" data-placement="top" title="Create new template"></i> &nbsp;&nbsp;<i
 																	class="glyphicon glyphicon-eye-open"
-																	ng-click="openPreSavedTemplate($index);"></i>
+																	ng-click="openPreSavedTemplate($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
 																	&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Robert please provide instruction. "></i>
+																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templates or create new.  "></i>
 															</div>
 															<small class="desc"> <textarea rows="3"
 																	name="comment"
@@ -550,11 +550,11 @@
 													<div class="col-sm-8">
 														<div class="pull-right">
 															<i class="glyphicon glyphicon-download"
-																ng-click="openTemplatepopup();"></i> &nbsp;&nbsp;<i
+																ng-click="openTemplatepopup();" data-toggle="tooltip" data-placement="top" title="Create new Template."></i> &nbsp;&nbsp;<i
 																class="glyphicon glyphicon-eye-open"
-																ng-click="openPreSavedTemplate($index);"></i>
+																ng-click="openPreSavedTemplate($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
 																&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Robert please provide instruction. "></i>
+																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templates or create new. "></i>
 														
 														</div>
 														<small class="desc"> <textarea rows="3"
@@ -646,11 +646,11 @@
 																<div class="col-sm-8">
 																<div class="pull-right">
 																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopupDesiredSkills($index);"></i> &nbsp;&nbsp;<i
+																	ng-click="openTemplatepopupDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Create new Template "></i> &nbsp;&nbsp;<i
 																	class="glyphicon glyphicon-eye-open"
-																	ng-click="openPreSavedTemplateDesiredSkills($index);"></i>
+																	ng-click="openPreSavedTemplateDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
 																	&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Robert please provide instruction. "></i>
+																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templates or create new. "></i>
 															</div>
 																	<textarea rows="3" name="skillDesc"
 																		ng-model="desiredSkills[$index].comment"
@@ -701,11 +701,11 @@
 															<div class="col-sm-8">
 															<div class="pull-right">
 																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopupDesiredSkills($index);"></i> &nbsp;&nbsp;<i
+																	ng-click="openTemplatepopupDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Create new Template."></i> &nbsp;&nbsp;<i
 																	class="glyphicon glyphicon-eye-open"
-																	ng-click="openPreSavedTemplateDesiredSkills($index);"></i>
+																	ng-click="openPreSavedTemplateDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
 																	&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Robert please provide instruction. "></i>
+																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templetes or create new. "></i>
 															</div>
 																<textarea rows="3" name="skillDesc"
 																	ng-model="desiredSkills.comment"

@@ -20,9 +20,9 @@
 						<!-- {{jobs}} -->
 						<div ng-init="getAllAppliedJobs()" class="table-responsive">
 							<div class="page-header">
-								<h3>
+								<!-- <h3>
 									Applied Jobs <i class="icon-chevron-right"></i>
-								</h3>
+								</h3> -->
 								<div class="pull-right">
 								<button id="genpdf" type="button"
 													ng-click="moveToArchive()"  class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Make archive .">Archive</button>
@@ -55,7 +55,7 @@
 							
 								          <td><button id="deleteJob" type="button"
 													ng-click="deleteJobById(appliedJobs.id)" data-toggle="modal"  class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete">Delete</button></td>
-								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs.requestNumber);"></td>
+								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs.requestNumber);" data-toggle="tooltip" data-placement="bottom" title="Select (Check) to make archive "></td>
 										</tr>
 									</tbody>	
 								</table>

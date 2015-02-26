@@ -305,7 +305,6 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$scope.pageno = 0;
 		$scope.matchedpos = false;
 		$scope.position = "notSelected";
-		
 		$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 		.success(function(data) {
 			console.log(data);
@@ -381,6 +380,10 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	$scope.headerStatuspageno = 0;
 	$scope.nextCount  = 10;
 	$scope.clickNext = function() {
+		
+		if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+			$scope.searchId = "Search";
+		}
 		console.log("nexdt");
 			  $scope.pageno++;
 			  $scope.nextCount = parseInt( $scope.nextCount) + 10;
@@ -425,6 +428,10 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		      $scope.pageno--;
 		      var count = 0;
 		      
+		      if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+					$scope.searchId = "Search";
+				}
+		      
 			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 				.success(function(data) {
 					$scope.jobsData = data.jobs;
@@ -461,6 +468,10 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  
 	 // called when user clicked on the job position typefor search
 	  $scope.getAllJobByType = function(){
+		  
+		  if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+				$scope.searchId = "Search";
+			}
 		  console.log("$scope.jobType"+$scope.jobType);
 		  $scope.matchedpos = false;
 		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
@@ -492,6 +503,9 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  }
 	  
 	  $scope.getAllJobBySelectedElement = function(){
+		  if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+				$scope.searchId = "Search";
+			}
 		  console.log($scope.sortName);
 		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 			.success(function(data) {
@@ -522,6 +536,11 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  
 	  // called when user clicked for location search
 	  $scope.onSortTypeClick =  function(){
+		  
+		  
+		  if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+				$scope.searchId = "Search";
+			}
 		  $scope.position = "notSelected";
 		    console.log($scope.sortType);
 		    if($scope.sortType == false){
