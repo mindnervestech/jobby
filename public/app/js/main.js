@@ -8880,8 +8880,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		.success(function(data){
 			$scope.requestNumber= "";
 			console.log("data"+data);
-		
-			//$scope.getAllAppliedJobs();
+			$scope.getAllAppliedJobs();
 			
 		});
 	}
@@ -9295,7 +9294,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		}		
 		
 		$scope.updateSuccess = false;
-		
+		$scope.manaFieldError = false;
 		$scope.submitUserProfile = function(){
 			$scope.EducationError  = false;
 			$scope.empHistory  =  false;
@@ -9312,6 +9311,13 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			console.log("userExperience"+JSON.stringify($scope.userExperience));
 			// chk for the education,employee cmp,user posi/clearance selected or
 			// not if not gives gives error
+
+			if($scope.userDetails.phnumber == "" || $scope.userDetails.jobsearchstatus ==""||$scope.userDetails.currentjobtitle ==""||
+					$scope.userDetails.residentcity ==""|| $scope.userDetails.desiredsalary ==""||
+					$scope.userDetails.willingtorelocate ==""||$scope.userDetails.zipcode ==""||$scope.userDetails.residentState==""
+			){
+				$scope.manaFieldError = true;
+			}else{
 			if(!(angular.isUndefined($scope.userClearance)) && !(angular.isUndefined($scope.userPosition)) && !(angular.isUndefined($scope.userExperience))){
 				console.log(JSON.stringify($scope.userPosition));
 					if($scope.addEducation.length == 0){
@@ -9335,12 +9341,15 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 							$scope.positionUError = false;
 							$scope.empHistory = false;
 							$scope.init();
+							$scope.manaFieldError = false;
 						});
 					}
-					}else{
+					}
+			
+			else{
 					$scope.userPoserror = true;
 				}
-			
+			}
 		}
 		
 	$scope.setEditIdImage = function (userdata) {

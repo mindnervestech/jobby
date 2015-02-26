@@ -46,23 +46,23 @@
 										</tr>
 										<tr data-ng-repeat="user in users"
 											style="background-color: #fff !important; left: -900">
-											<td ng-click=""><a   href="mailto:{{user.email}}">{{user.email}}</a></td>
+											<td ng-click="" data-toggle="tooltip" data-placement="bottom" title="Send to mail to user"><a   href="mailto:{{user.email}}">{{user.email}}</a></td>
 											<td ng-click="">{{user.firstname}}</td>
 											<td ng-click="">{{user.middlename}}</td>
 											<td ng-click="">{{user.lastname}}</td>
 											<td ng-click="">{{user.gender}}</td>
 											<td ng-click="">{{user.dob}}</td>
 											
-											<td><button class="btn btn-success" ng-click="editUserDetails(user);"><i  data-toggle="modal" class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit"></i></button></td>
-													<td><button class="btn btn-success"><i ng-click="changeUserPassword(user);" data-toggle="modal"  class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="bottom" title="Change Password"></i> </button></td>
-								<td><button class="btn btn-danger" ng-if="user.userstatus == 'active'"  ng-click="onInActiveUser(user)"><i 	  class="glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="bottom" title="Deactivate user" ></i></button>
-										<button class="btn btn-success"  ng-click="onActiveUser(user)"  ng-if="user.userstatus == 'inactive'"><i   class="glyphicon glyphicon-ok-circle" data-toggle="tooltip" data-placement="bottom" title="Activate user"></i></button>
+											<td><button class="btn btn-success" ng-click="editUserDetails(user);" data-toggle="tooltip" data-placement="bottom" title="Edit user details"><i  data-toggle="modal" class="glyphicon glyphicon-edit" ></i></button></td>
+													<td><button class="btn btn-success"  data-toggle="tooltip" data-placement="bottom" title="Change Password"><i ng-click="changeUserPassword(user);" data-toggle="modal"  class="glyphicon glyphicon-pencil"></i> </button></td>
+								<td><button class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Deactivate user"  ng-if="user.userstatus == 'active'"  ng-click="onInActiveUser(user)"><i 	  class="glyphicon glyphicon-ban-circle" ></i></button>
+										<button class="btn btn-success"  data-toggle="tooltip" data-placement="bottom" title="Activate user" ng-click="onActiveUser(user)"  ng-if="user.userstatus == 'inactive'"><i   class="glyphicon glyphicon-ok-circle" ></i></button>
 							   </td>
 										
-										<td><button class="btn btn-danger"  ng-click="openUserdeletepopup(user);"><i data-toggle="modal" class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Delete user"> </i></button></td>
+										<td><button class="btn btn-danger"  ng-click="openUserdeletepopup(user);" data-toggle="tooltip" data-placement="bottom" title="Delete user"><i data-toggle="modal" class="glyphicon glyphicon-remove" > </i></button></td>
 								
 								          <td>{{user.lastlogin | date:'yyyy-MM-dd HH:mm:ss '}}</td>
-								       <td><button class="btn btn-success"  ng-if="user.userLoggedInstatus == 'loggedIn'"><i class="glyphicon glyphicon-log-in"data-toggle="tooltip" data-placement="bottom" title="Logged In" ></i></button><button class="btn btn-danger" ng-if="user.userLoggedInstatus == 'loggedOut'" ><i  class="glyphicon glyphicon-log-out" data-toggle="tooltip" data-placement="bottom" title="Logged Out"></i></button></td>
+								       <td><button class="btn btn-success"  ng-if="user.userLoggedInstatus == 'loggedIn'" data-toggle="tooltip" data-placement="bottom" title="Logged In" ><i class="glyphicon glyphicon-log-in" ></i></button><button class="btn btn-danger" ng-if="user.userLoggedInstatus == 'loggedOut'" data-toggle="tooltip" data-placement="bottom" title="Logged Out"><i  class="glyphicon glyphicon-log-out" ></i></button></td>
 								 		</tr>
 									</tbody>
 								</table>
@@ -127,8 +127,8 @@
 														<div class="col-md-12">
 														<div class="">
 																<label class="">First Name *</label>
-																<label class="col-md-offset-3">Middle Name *</label>
-																<label class="col-md-offset-3">Last Name *</label>
+																<label class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle Name *</label>
+																<label class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Last Name *</label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
@@ -156,8 +156,8 @@
 														<div class="col-md-12">
 														<div class="">
 															<label class="">Email Addess  *</label> <label
-																class="col-md-offset-3">Alternate Email Address </label> <label
-																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone Number *
+																class="col-md-offset-3">&nbsp;&nbsp;&nbsp;Alternate Email Address </label> <label
+																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone Number *
 															</label>
 
 														</div>
@@ -194,8 +194,8 @@
 													<div class="col-md-12">
 														<div class="">
 															<label class="">Alternate  Phone Number </label> <label
-																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job Search Status *</label> <label
-																class="col-md-offset-3" style="margin-left: 22%;">Current Job Title *
+																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job Search Status *</label> <label
+																class="col-md-offset-3" style="margin-left: 22%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current Job Title *
 															</label>
 
 														</div>
@@ -234,8 +234,8 @@
 													<div class="col-md-12">
 														<div class="">
 															<label class="">Resident City *</label> <label
-																class="col-md-offset-3">Resident State* </label> <label
-																class="col-md-offset-3">Resident Zip Code*
+																class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Resident State * </label> <label
+																class="col-md-offset-3">&nbsp;&nbsp;Resident Zip Code *
 															</label>
 
 														</div>
@@ -281,8 +281,8 @@
 													<div class="col-md-12">
 														<div class="">
 															 <label class="">Date Of Birth *</label> <label
-																class="col-md-offset-3">Desired Salary * </label> <label
-																class="col-md-offset-3">Willing to Relocate *</label>
+																class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Desired Salary * </label> <label
+																class="col-md-offset-3">&nbsp;Willing to Relocate *</label>
 														</div>
 														<div class="form-group">
 															 <div class="col-md-4">
@@ -422,6 +422,7 @@
 														<fieldset class="scheduler-border">
 															<legend class="scheduler-border"><i class="glyphicon glyphicon-screenshot"></i> &nbsp;&nbsp;User Key Skill
 																Area</legend>
+																<div class="form-group"><small>Please select a maximum of 12 of your most relevant key skill areas.  Use the add function for key skills that are not listed.</small></div>
 															<label ng-repeat="skill in allSkills"
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 																style="padding: 0px;"> <input type="checkbox"
@@ -564,7 +565,7 @@
 														<legend class="scheduler-border"> <i class="glyphicon glyphicon-education"> </i> &nbsp;&nbsp;  Education
 															History</legend>
 
-
+<div class="form-group"><small>Please input all of your Education History.</small></div>
 														<div class="col-md-12" ng-repeat="edu in addEducation">
 
 															<div class="col-md-3">
@@ -638,6 +639,7 @@
 															History</legend>
 
 														<div class="form-group">
+													<small>Please input all of your relevant Certifications</small>
 															<div class="col-md-12" ng-repeat="cert in addCertificate">
 
 																<div class="col-md-5">
