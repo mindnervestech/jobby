@@ -53,8 +53,8 @@
                 <textarea rows="3" placeholder="Content" ng-model="contactus.content" class="form-control"></textarea>
               </div>
               <div class ="pull-right">
-              <button type="button"  class="btn btn-success" ng-click="onfeedBackClicked()">Submit</button>
-                <!-- <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button> -->
+              <button type="button"  class="btn btn-success" ng-if="sent == false" ng-click="onfeedBackClicked()">Send</button>
+               <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button> 
             </div>
             </form>
           </div>

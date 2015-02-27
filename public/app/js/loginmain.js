@@ -49,13 +49,14 @@ $scope.registerUser = function(){
 
 App.controller('AppController', function($scope, $http) {
 	console.log("in app controler");
-	$scope.sortType = false;
+	$scope.sortType = true;
+	$scope.sortType1 = false;
 	$scope.init = function() {
 		$scope.pageno = 0;
 		$scope.jobType = "All";
 		$scope.labourCat = true;
 		$scope.sortName = "Position";
-		$scope.sortType = false;
+		
 		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
 				function(data) {
 					$scope.jobsData = data.jobs;
@@ -215,14 +216,20 @@ App.controller('AppController', function($scope, $http) {
 			});
 	  }
 	  
-	  $scope.onSortTypeClick =  function(sortType){
+	  $scope.onSortTypeClick =  function(){
 		  $scope.position = "notSelected";
-		  $scope.sortType = sortType;
+		//  $scope.sortType = sortType;
+		    console.log($scope.sortType1);
 		    console.log($scope.sortType);
+		    if($scope.sortType == true){
+		    	console.log("in if");
+		    	$scope.sortType = true;
+		    	
+		    	console.log($scope.sortType);
+		    } 
+		    
 		    if($scope.sortType == false){
 		    	$scope.sortType = true;
-		    } else if($scope.sortType == true){
-		    	$scope.sortType = false;
 		    }
 		    
 		    
@@ -260,20 +267,20 @@ App.controller('AppController', function($scope, $http) {
 	$scope.contactus = {};
 	$scope.feedbackSuccess = false;
 	$scope.onfeedBackClicked = function() {
+		$scope.sent = true;
 		$scope.feedbackSuccess = false;
 		$http.post('/sendFeedbackMail', {
 			contactus : $scope.contactus
 		}).success(function(data) {
 			console.log("success");
 			$scope.feedbackSuccess = true;
-			$scope.sent = true;
+			$scope.sent = false;
 			$scope.contactus = {};
 			$('#contactAdmin').modal('hide');
 		});
 	}
 
 	$scope.initDatePicker = function() {
-
 		$('#datepicker').datepicker({
 			format : 'mm-dd-yyyy'
 		});
@@ -315,7 +322,46 @@ App.controller('AppController', function($scope, $http) {
 		
 	}
 	
+	$scope.asc = true;
+	$scope.desc = false;
 	
+	$scope.descClicked = function(){
+		$scope.asc = false;
+		$scope.desc = true;
+		$scope.sortType = true;
+		 $scope.matchedpos = false;
+		    $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
+			
+			});
+	}
+	
+	$scope.ascClicked = function(){
+		$scope.asc = true;
+		$scope.desc = false;
+		$scope.sortType = false;
+		 $scope.matchedpos = false;
+		    $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
+			.success(function(data) {
+				$scope.jobsData = data.jobs;
+				if(data.jobsCount <= 10){
+					$('#next').hide();
+					$('#next1').hide();
+				}else{
+					$('#next').show();
+					$('#next1').show();
+				}
+			
+			});
+	}
 	
 	
 });

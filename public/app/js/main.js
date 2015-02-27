@@ -739,10 +739,10 @@ App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootSco
 		$scope.feedbackSuccess;
 		$scope.sent = false;
 		$scope.onfeedBackClicked = function(){
+			$scope.sent = true;
 			$http.post('/sendFeedbackMail',{contactus:$scope.contactus})
 			.success(function(data){
 				console.log("success");
-				$scope.sent = true;
 				$scope.feedbackSuccess = true;
 					$scope.contactus = {};
 					$scope.sent = false;

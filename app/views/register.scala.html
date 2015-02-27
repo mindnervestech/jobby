@@ -68,6 +68,8 @@
 <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <!-- <script src="@routes.Assets.at("app/vendors/ckeditor/ckeditor.js")"></script> -->
 <!-- <script src="@routes.Assets.at("app/js/lib.js")"></script> -->
+
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
             <script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script>
     	    <script src="@routes.Assets.at("app/bower_components/angular/angular.min.js")"></script>
@@ -164,6 +166,8 @@
              -->  <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.js")"></script>
             -->   <!--  <script src="@routes.Assets.at("app/vendors/x-editable/demo-mock.js")"></script>
             -->
+            <script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
      <script src="@routes.Assets.at("app/js/loginmain.js")"></script>
     
      </head>
@@ -185,7 +189,7 @@
         </div> -->
         <div class="form-group">
           <div class="input-icon right"><i class="fa fa-envelope"></i>
-            <input type="email" placeholder="Email address" name="email" class="form-control"/>
+            <input type="email"  id = "email" placeholder="Email address" name="email" class="form-control"/>
           </div>
         </div>
         <div class="form-group">
@@ -202,13 +206,13 @@
         <hr/>
        <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="First Name" name="firstname" class="form-control" required/>
+              <input type="text" placeholder="First Name" name="firstname"  id= "firstname" class="form-control" required/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>
          <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="Middle Name(if not specify 'NA')" name="middlename" maxlength="2" class="form-control" required/>
+              <input type="text" placeholder="Middle Name(if not specify 'NA')"  id= "middlename" name="middlename" maxlength="2" class="form-control" required/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>
@@ -302,6 +306,59 @@ function validatePasswordstrong(password,passwordStrength,errorField){
 
 
  </script>
+ 
+ <script type="text/javascript">
+							$(document)
+									.ready(
+											function() {
+												jQuery.validator
+														.addMethod(
+																"lettersonly",
+																function(value,
+																		element) {
+																	return this
+																			.optional(element)
+																			|| /^[a-z," "]+$/i
+																					.test(value);
+																},
+																"Letters and spaces only please");
+
+												$("#signup-form")
+														.validate(
+																{
+
+																	rules : {
+
+																		firstname : {
+																			lettersonly : true,
+																			required : true
+																		},
+																		middlename : {
+																			lettersonly : true,
+																			required : true
+																		},
+																		lastname : {
+																			lettersonly : true,
+																			required : true
+																		},
+																		
+																		email : {
+																			required : true
+																		}
+																	},
+																	messages : {
+																		firstname : "Please enter name properly",
+																		lastname : "Please enter name properly",
+																		middletname : "Please enter name properly",
+																	     email : "Please enter email  properly"
+																		
+																	}
+																});
+
+											});
+						</script>
+ 
+ 
  <style>
  
  .strength0

@@ -223,7 +223,7 @@
             <div data-control-type="pagination" data-control-name="paging" data-control-action="paging" class="jplist-pagination"></div>
     -->     
     
-    <img src="@routes.Assets.at("app/vendors/images/login/FA-Signature_Robert.png")"  style="width: 100%;">
+    <img src="@routes.Assets.at("app/vendors/images/login/ardent-job-portal-i2s-banner.png")"  style="width: 100%;">
     <div class="col-md-12">
     <span><small>Welcome to <strong> Ardent Principles  </strong> i2Simply Done tool. We have implemented time saving solutions that simplify the application process for open positions on the <strong> i2S contract vehicle </strong> . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position andaccess the full functionality of our tool please <strong>register </strong> above.</small></span>
     </div>
@@ -237,7 +237,6 @@
 							</select>
 						</div>
 						
-						
 						  <div class="col-md-6 control-label" data-toggle="tooltip"
 							data-placement="bottom"
 							title="Sort Jobs in Ascending or Descending Order" style="margin-top:2%;">
@@ -248,17 +247,14 @@
 								<option value="Location">Location</option>
 								<option value="Clearance">Clearance Level</option>
 								<option value="Experiance">Experience Level</option>
-							</select>  <!-- <span class="sort-by-price active"  ng-if="sortType == true" ng-model="sortType" ng-click="onSortTypeClick()" >
-								<span class="spanClass"></span>&nbsp;&nbsp;<span
+							</select>  
+								<div ng-show="asc== true" ng-hide="desc == false" ng-click = "ascClicked();">&nbsp;&nbsp;<span
 									class="glyphicon glyphicon-chevron-up"></span>&nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></span> 
-								<span
-								class="sort-by-price active" ng-model="sortType" ng-click="onSortTypeClick()" ng-if="sortType == false"
-								><a class="aTagclass"
-								><span class="spanClass"></span>&nbsp;&nbsp;<span
-									class="glyphicon glyphicon-chevron-down"></span></a>&nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></span>
- -->
+								class="glyphicon glyphicon-question-sign"></i></div>
+								<div ng-show="desc== true" ng-hide="asc ==  false" ng-click="descClicked();">&nbsp;&nbsp;<span
+									class="glyphicon glyphicon-chevron-down"></span>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></div>
+ 
 						</div>
 						<div class="col-md-2 control-label">
 							<!-- Sort by Location<br> <input type="checkbox"
@@ -388,7 +384,7 @@
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.workDescription}}" popover-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
@@ -401,7 +397,7 @@
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover"
-											data-placement="bottom"><a style="color: blue;">&nbsp;&nbsp;more</a>
+											data-placement="bottom"><a style="color: blue; cursor:pointer">&nbsp;&nbsp;more</a>
 										</span></small>
 									</p>
 
@@ -423,7 +419,7 @@
 											ng-bind="job.manadatorySkills[0].mskill |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover"
-											data-placement="bottom"><a style="color: blue;">&nbsp;&nbsp;more</a>
+											data-placement="bottom"><a style="color: blue; cursor:pointer">&nbsp;&nbsp;more</a>
 										</span></small>
 									</p>
 <!-- 
@@ -949,8 +945,8 @@
                 <textarea rows="3" placeholder="Content" ng-model="contactus.content" class="form-control"></textarea>
               </div>
               <div class ="pull-right">
-             <button type="button" ng-click="onfeedBackClicked();" class="btn btn-primary">Send </button>
-           <!--   <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button> -->
+             <button type="button" ng-if="sent == false" ng-click="onfeedBackClicked();" class="btn btn-primary">Send </button>
+            <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button> 
             </div>
             </form>
           </div>
