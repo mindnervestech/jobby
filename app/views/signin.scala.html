@@ -371,13 +371,13 @@
 									</p>
 									<p class="">
 										<strong><small><span><i
-													class="glyphicon glyphicon-map-marker"></i>&nbsp;{{job.workLocation}}</span></small></strong>
+													class="glyphicon glyphicon-map-marker"data-toggle="tooltip" data-placement="bottom" title="Work Location"></i>&nbsp;{{job.workLocation}}</span></small></strong>
 										<span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-user"></i>&nbsp;{{job.requestType}}
+													class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Request Type"></i>&nbsp;{{job.requestType}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-screenshot"></i>&nbsp;{{job.performanceLevel}}
+													class="glyphicon glyphicon-screenshot" data-toggle="tooltip" data-placement="bottom" title="Performance level"></i>&nbsp;{{job.performanceLevel}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-ok"></i>&nbsp;{{job.clearanceRequired}}
+													class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="bottom" title="Clearance Required"></i>&nbsp;{{job.clearanceRequired}}
 											</small></strong></span>
 									</p>
 									<p class="desc">
@@ -453,7 +453,7 @@
 											data-placement="bottom"></small><small> <span
 											href="#popupDesiredSkill{{$index}}"
 											data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue;cursor:pointer">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<div id="popupDesiredSkill{{$index}}" class="popover"
 										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'active'">
