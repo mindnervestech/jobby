@@ -121,9 +121,9 @@ public class AppliedJobs extends Model {
 	
 	
 	@JsonIgnore
-	public static int getAllAppliedJobsCountByEmail(int pageNo,String jobStatus) {
-		jobStatus = "Applied";
-		return find.where().eq("jobStatus", jobStatus).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
+	public static int getAllAppliedJobsCountByEmail(int pageNo,String emailId) {
+		String jobStatus = "Applied";
+		return find.where().eq("jobStatus", jobStatus).eq("username", emailId).setFirstRow(pageNo * 10).setMaxRows(AppliedJobs.find.findRowCount())
 				.findList().size();
 	}
 	

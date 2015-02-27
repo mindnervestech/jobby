@@ -4520,6 +4520,7 @@ public class Application extends Controller {
 				emailId);*/
 		//int count = 0;
 	    if("Position".equalsIgnoreCase(sortName)){
+	    	
 			if("All".equalsIgnoreCase(jobType) ){
 				if(sortType == true){
 					count = AppliedJobs.getAllAppliedJobsCountByEmail(currentpage,
