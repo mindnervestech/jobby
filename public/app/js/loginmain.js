@@ -305,21 +305,25 @@ App.controller('AppController', function($scope, $http) {
 
 	$scope.forget_pass = false;
 	$scope.emailId = false;
+	$scope.waitMsg =  false;
 	$scope.getForgetPassword = function(useremail) {
 		$scope.useremail = useremail;
 		console.log($scope.useremail);
-		if(!($scope.useremail == "")){
+		
+		if(!($scope.useremail == "") &&  !(angular.isUndefined($scope.useremail))){
+			$scope.waitMsg =  true;
 			$http.get('/forgetPassword/' + $scope.useremail).success(
 					function(data) {
 						$scope.forget_pass = true;
 						console.log("success");
 						$scope.emailId = false;
+						$scope.waitMsg =  false;
 						// $scope.username = data.uname;
 					});
 		}else{
 			$scope.emailId = true;
 		}
-		
+	
 	}
 	
 	$scope.asc = true;

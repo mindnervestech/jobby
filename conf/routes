@@ -75,4 +75,6 @@ GET   /editSkillDetails/:newSkill/:oldSkill                     controllers.Appl
 POST   /deleteJobById/:jobId                               controllers.Application.deleteJobById(jobId:Integer )
 POST   /moveToArchive                        controllers.Application.movetoArchive()
 GET    /deleteAllJob                          controllers.Application.deleteAllJob()
+POST   /sendMailtoAllUser/:mailsubject/:mailcontent             controllers.Application.sendMailtoAllUser(mailsubject:String,mailcontent:String)
+
 GET   /getallSkillsForAdmin/:pageNumber                                        controllers.Application.getallSkillsForAdmin(pageNumber : Integer)

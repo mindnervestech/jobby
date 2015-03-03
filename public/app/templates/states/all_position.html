@@ -6,6 +6,17 @@
 .redColor {
 	color: red
 }
+
+
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
 </style>
 
 <div class="row">
@@ -25,7 +36,7 @@
 								</h3> -->
 								<div class="pull-left">
 									<button type="button" ng-click="addPosition()"
-										data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Add new Position">Add</button>
+										data-toggle="modal" class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Add new Position">Add</button>
 									</td>
 								</div>
 								<br />
@@ -45,11 +56,11 @@
 
 											<td><button type="button"
 													ng-click="editPosname(pos.position)"
-													data-toggle="modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Edit  Position">Edit</button></td>
+													data-toggle="modal" class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Edit  Position">Edit</button></td>
 
 											<td><button type="button"
 													ng-click="deletePos(pos.position)" data-toggle="modal"
-													class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete Position">Delete</button></td>
+													class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Delete Position">Delete</button></td>
 
 										</tr>
 									</tbody>
@@ -129,9 +140,9 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
+				<button type="button" class="btn btn-success-custom"
 					data-ng-click="addNewPosition();">Add</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -165,7 +176,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
+				<button type="button" class="btn btn-success-custom"
 					data-ng-click="editPositionName();">Update</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 			</div>
@@ -189,9 +200,9 @@
 				
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
+				<button type="button" class="btn btn-success-custom"
 					data-ng-click="deletePosition();">Delete</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
 			</div>
 		</div>
 	</div>

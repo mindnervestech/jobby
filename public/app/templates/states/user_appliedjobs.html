@@ -31,29 +31,29 @@
 							</select>
 							<span class="sort-by-price active" ng-if="sortType == false"
 									ng-model="sortType"><a class="aTagclass"
-									ng-click="onSortTypeClick()"><span class="spanClass"></span>&nbsp;&nbsp;<span
-										class="glyphicon glyphicon-chevron-down"></span></a> &nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom" title="Sort Jobs in Ascending or Descending Order"></i></span>
+									ng-click="onSortTypeClick()"><span class="spanClass"></span><span
+										class="glyphicon glyphicon-chevron-down" style="color:#2120F5;"></span></a> &nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom" title="Sort Jobs in Ascending or Descending Order"></i></span>
 								<span class="sort-by-price active" ng-if="sortType == true"
 									ng-model="sortType"><a class="aTagclass"
-									ng-click="onSortTypeClick()"><span class="spanClass"></span>&nbsp;&nbsp;<span
-										class="glyphicon glyphicon-chevron-up"></span></a> &nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom" title="Sort Jobs in Ascending or Descending Order"></i></span>
+									ng-click="onSortTypeClick()"><span class="spanClass"></span><span
+										class="glyphicon glyphicon-chevron-up" style="color:#2120F5;"></span></a> &nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom" title="Sort Jobs in Ascending or Descending Order"></i></span>
 				
 						</div> 
 					
 					
 				<div class="pull-right">
 							<button id="pre" type="button" ng-click="clickPre()"
-								class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Previous"><i class="glyphicon glyphicon-arrow-left"></i></button>
+								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Previous"><i class="glyphicon glyphicon-arrow-left"></i></button>
 							&nbsp;
 							<button id="next1" type="button" ng-click="clickNext()"
-								class="btn btn-green" data-toggle="tooltip" data-placement="bottom" title="Next"><i class="glyphicon glyphicon-arrow-right"></i></button>
+								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Next"><i class="glyphicon glyphicon-arrow-right"></i></button>
 								<div style="font-size:12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>
 						</div> 
 					<div class="box text-shadow">
 					<span style="color:green;" ng-if="job_application_success == true" class="pull-left">  Your application has been recieved, Thank you for applying</span> 
 						
-						<div class="col-md-12"> <span class="text-center"> <small >Click on the position title to view all of the details related to the position. </small> </span></div>
-						<div class="col-md-12"> <span class="text-center"> <small >Click <strong>reapply</strong> to edit any information specific to any previously applied to jobs.  </small> </span></div>
+						<div class="col-md-12"> <span class="" > <small   style="font-size: 13px;">Click on the <span style="color:#F03800;">position title </span>to view all of the details related to the position. </small> </span></div>
+						<div class="col-md-12"> <span class=""> <small  style="font-size: 13px;">Click <strong>reapply</strong> to edit any information specific to any previously applied to jobs.  </small> </span></div>
 						
 						<table class="demo-tbl">
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
@@ -61,7 +61,7 @@
 								<div class = "pull-right">
 								<button type="button" 
 													name="edit" value="edit"
-													class="btn btn-success"
+													class="btn btn-success-customapply "
 													ng-click="reApplyForJob(job);" data-toggle="tooltip" data-placement="bottom" title="Click reapply to edit any information specific to  previously applied  job.">
 													Reapply &nbsp;&nbsp;
 												</button>
@@ -73,7 +73,7 @@
 									</p> -->
 									<p ng-click="showappliedJobDetails(job);" >
 										<span style="cursor:pointer;"><span class="title" data-toggle="tooltip" data-placement="bottom" title="Click to View Details">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong></span></span>
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong data-toggle="tooltip" data-placement="bottom" title="Job Id"><small>&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -185,10 +185,10 @@
 						</table>
 					 <div class="pull-right">
 							<button id="pre1" type="button" ng-click="clickPre()"
-								class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Previous"><i class="glyphicon glyphicon-arrow-left"></i></button>
+								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Previous"><i class="glyphicon glyphicon-arrow-left"></i></button>
 							&nbsp;
 							<button id="next" type="button" ng-click="clickNext()"
-								class="btn btn-green" data-toggle="tooltip" data-placement="bottom" title="Next"><i class="glyphicon glyphicon-arrow-right"></i></button>
+								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Next"><i class="glyphicon glyphicon-arrow-right"></i></button>
 								<div style="font-size:12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>
 						</div> 
 					</div>
@@ -219,7 +219,7 @@
 									
 									<p >
 										<span class="title">{{jobDetails.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{jobDetails.positionType}})</small></strong></span>
+											class="desc"><strong ><small>&nbsp;&nbsp;({{jobDetails.positionType}})</small></strong></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -266,7 +266,7 @@
 					</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+        <button type="button" class="btn btn-success-custom " data-dismiss="modal">Ok</button>
         <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
       </div>
     </div>
@@ -336,12 +336,12 @@
 											<div class="pull-right">
 												<button type="button" ng-if="jStatus == 'active'"
 													name="next" value="Next"
-													class="btn btn-info button-next mlm"
+													class="btn btn-success-custom  button-next mlm"
 													ng-click="saveUserJobToDraft();">
 													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
 												<button type="button" ng-if="jStatus == 'draft'" name="next"
-													value="Next" class="btn btn-info button-next mlm"
+													value="Next" class="btn btn-success-custom  button-next mlm"
 													ng-click="saveUserJob();">
 													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
@@ -351,7 +351,7 @@
 												<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
 												
 												 -->	
-												 <div class ="col-md-10"><small>Please select a maximum of 12 of your most relevant key skill areas specific to this position.  Use the add function for key skills specific to this position that are not listed.</small></div>
+												 <div class ="col-md-10"><small style="color:#21205F;"><strong>Please select a maximum of 12 of your most relevant key skill areas specific to this position.  Use the add function for key skills specific to this position that are not listed.</strong></small></div>
 												 <div class="col-md-5" ng-repeat="skill in allSkills">
 														<label 
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
@@ -375,7 +375,7 @@
 																	<div class="col-md-4">
 																		<button type="submit"
 																			ng-click="saveOtherSkill(otherSkill);"
-																			class="btn btn-primary">Add</button>
+																			class="btn btn-success-custom ">Add</button>
 																	</div>
 																</div>
 															</div>
@@ -396,7 +396,7 @@
 										</div>
 										<div class="pull-right">
 											<button type="button" name="next" value="Next"
-												class="btn btn-info button-next mlm"
+												class="btn btn-success-custom  button-next mlm"
 												ng-click="gotoNext();" style="margin-top: 48%;">
 												Next<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button>
@@ -463,7 +463,7 @@
 																		<button name="save" id="save"
 																			class="button btn-success"
 																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
-																			As</button>
+																			</button>
 																		<i class="glyphicon glyphicon-download"
 																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
@@ -519,9 +519,9 @@
 																	</div>
 																	<br />
 																	<button name="save" id="save"
-																		class="button btn-success"
+																		class="button btn-success-custom "
 																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
-																		As</button>
+																		</button>
 																	<i class="glyphicon glyphicon-download"
 																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
 																	     &nbsp;&nbsp;&nbsp;&nbsp;<i
@@ -538,14 +538,14 @@
 										</div>
 										<div class="pull-right">
 											<button type="button" name="previous" value="Previous"
-												class="btn btn-info button-previous"
+												class="btn btn-success-custom  button-previous"
 												data-target="#tab1-wizard-custom-circle"
 												ng-click="preClickedfirst();"  style="margin-top: 48%;"data-toggle="tab">
 												<i class="fa fa-arrow-circle-o-left mrx"></i>Prev
 											</button>
 											
 											<button type="button" name="next" value="Next"
-												class="btn btn-info button-next mlm"
+												class="btn btn-success-custom  button-next mlm"
 												ng-click="checkAllFields();" style="margin-top: 48%;">
 												Next<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button>
@@ -634,9 +634,9 @@
 																		</div>
 																		<br />
 																		<button name="save" id="save"
-																			class="button btn-success"
+																			class="button btn-success-custom "
 																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);">Save
-																			As</button>
+																			</button>
 																		<i class="glyphicon glyphicon-download"
 																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
@@ -655,7 +655,7 @@
 										</div>
 										<div class="action text-right">
 											<button type="button" name="previous" value="Previous"
-												class="btn btn-info button-previous"
+												class="btn btn-success-custom  button-previous"
 												data-target="#tab2-wizard-custom-circle"
 												ng-click="preClicked();" data-toggle="tab">
 												<i class="fa fa-arrow-circle-o-left mrx"></i>Prev
@@ -666,7 +666,7 @@
 												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button> -->
 											<button type="button" ng-if="jStatus == 'Applied'" name="next"
-												value="Next" class="btn btn-info button-next mlm"
+												value="Next" class="btn btn-success-custom  button-next mlm"
 												ng-click="resaveUserJob();">
 												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button>
@@ -795,4 +795,26 @@
 	max-height: 620px;
 	overflow-y: auto;
 }
+
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
+
+
+.btn-success-customapply {
+color: white;
+background-color: #2120f5;
+}
+
+.btn-success-customapply:hover {
+color: white;
+background-color: #999999;
+}
+
 </style>

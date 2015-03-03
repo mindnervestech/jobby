@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-<title>Ardent Job Portal</title>
+<title>i2Simply Done</title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -195,7 +195,7 @@
 		<div class="col-md-8" style="margin-top: 2%;">
 	
 		<div class="header-content">	
-			<span class="logo-text" style="font-size:30px;">Ardent Job Portal</span>
+			<!-- <span class="logo-text" style="font-size:30px;">Ardent Job Portal</span> -->
 					<!-- <h3>Search</h3> -->
 				</div>
 		<div class="jplist-panel box panel-top">
@@ -225,7 +225,7 @@
     
     <img src="@routes.Assets.at("app/vendors/images/login/ardent-job-portal-i2s-banner.png")"  style="width: 100%;">
     <div class="col-md-12">
-    <span><small>Welcome to <strong> Ardent Principles  </strong> i2Simply Done tool. We have implemented time saving solutions that simplify the application process for open positions on the <strong> i2S contract vehicle </strong> . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position andaccess the full functionality of our tool please <strong>register </strong> above.</small></span>
+    <span><small><strong style="font-size:13px;">Welcome to  Ardent Principles  i2Simply Done tool. </strong>  We have implemented time saving solutions that simplify the application process for open positions on the <strong> i2S contract vehicle </strong> . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position and access the full functionality of our tool please <strong>register </strong> above.</small></span>
     </div>
      <div class="col-md-6 control-label" style="margin-top: 2%;">
 							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
@@ -248,11 +248,11 @@
 								<option value="Clearance">Clearance Level</option>
 								<option value="Experiance">Experience Level</option>
 							</select>  
-								<div ng-show="asc== true" ng-hide="desc == false" ng-click = "ascClicked();">&nbsp;&nbsp;<span
-									class="glyphicon glyphicon-chevron-up"></span>&nbsp;&nbsp;<i
+								<div ng-show="asc== true" ng-hide="desc == false" ng-click = "ascClicked();"><span
+									class="glyphicon glyphicon-chevron-up" style="color:#2120F5;cursor:pointer;"></span>&nbsp;&nbsp;<i
 								class="glyphicon glyphicon-question-sign"></i></div>
-								<div ng-show="desc== true" ng-hide="asc ==  false" ng-click="descClicked();">&nbsp;&nbsp;<span
-									class="glyphicon glyphicon-chevron-down"></span>&nbsp;&nbsp;<i
+								<div ng-show="desc== true" ng-hide="asc ==  false" ng-click="descClicked();"><span
+									class="glyphicon glyphicon-chevron-down" style="color:#2120F5; cursor:pointer;"></span>&nbsp;&nbsp;<i
 								class="glyphicon glyphicon-question-sign"></i></div>
  
 						</div>
@@ -287,9 +287,10 @@
 				<p ><code>@flash.get("error")</code></p>
 				<p ><code>@flash.get("AccountError")</code></p>
 				<p ng-if="emailId == true"><code>Please provide Email Id </code></p>
-				<p   id="success_email"  ng-if="forget_pass == true" ><code>Password is sent on your Registered E-mail</code> </p>
+				<p   id="success_email"  ng-if="forget_pass == true" ><code>Password has been sent to your registered email</code> </p>
 				<p   id="success" style = "color:green">@flash.get("registration_success") </p>
-				
+				<span ng-if="waitMsg == true">Please Wait..... </span>
+				<p  ><code>@flash.get("email_error")</code> </p>
 				<div class="header-content">
 					<h1>Log In</h1>
 				</div>
@@ -316,7 +317,7 @@
 					</div> -->
 					<div class="form-group pull-right">
 						<button type="submit"
-							class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Click to login">
+							class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Click to login">
 							Log In &nbsp;<i class="fa fa-chevron-circle-right"></i>
 						</button>
 					</div>
@@ -324,8 +325,8 @@
 				 <div class="forget-password">
 						<h4>Forgot your Password?</h4>
 						<span>
-							no worries, click <a ng-click='getForgetPassword(useremail)' 
-								class='btn-forgot-pwd'><strong style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click to reset your password ">here to reset your password.</strong></a>
+							 <a ng-click='getForgetPassword(useremail)' 
+								class='btn-forgot-pwd'><strong style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click to reset your password ">no worries, click here to reset your password.</strong></a>
 						</span>
 					</div>
 				<!-- 	<hr /> -->
@@ -348,7 +349,7 @@
 		</div>
 	
 		</div>
-		<div  ><div class="col-md-12"><small style="margin-left: 2%;">Click on the <strong>position title</strong> to view all of the details related to the position</small></div>
+		<div  ><div class="col-md-12"><small style="margin-left: 2%;color: black;">Click on the <span style="color:#F03800;">position title</span> to view all of the details related to the position</small></div>
 			<div class="box text-shadow" style="margin-left: 3%;margin-right: 3%;">
 					<!-- <span style="color:green;" ng-if="job_application_success == true" class="pull-left">  Your application has been recieved, Thank you for applying</span> 
 					<span style="color:green;" ng-if="job_draft_application_success == true" class="pull-left">  Your application has been saved in draft</span> 
@@ -358,16 +359,16 @@
 								<td class="td-block"
 									ng-if="job.jobStatus == 'active'">
 									<p class="date">
-										<button type="button" ng-if="job.jobStatus == 'active'"
-											class="btn btn-green" data-toggle="modal"
-											ng-click="applyforJobCheck()" data-toggle="tooltip" data-placement="bottom" title="Click to apply for job. ">Apply</button>
+										<button type="button" id="applylogin" ng-if="job.jobStatus == 'active'"
+											class="btn btn-success-customapply" data-toggle="modal"
+											ng-click="applyforJobCheck()" data-toggle="tooltip" data-placement="bottom" title="Click to apply for job. " style="backgorund-color:#21205f;">Apply</button>
 										<!-- <button type="button" ng-if="job.jobStatus == 'Draft'"
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Resume</button> -->
 									</p>
 									<p ng-click="showJobDetails(job);">
 										<span class="title" data-toggle="tooltip" data-placement="bottom" title="View  Job Details" style="cursor:pointer;">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;">&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -945,8 +946,8 @@
                 <textarea rows="3" placeholder="Content" ng-model="contactus.content" class="form-control"></textarea>
               </div>
               <div class ="pull-right">
-             <button type="button" ng-if="sent == false" ng-click="onfeedBackClicked();" class="btn btn-primary">Send </button>
-            <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button> 
+             <button type="button" ng-if="sent == false" ng-click="onfeedBackClicked();" class="btn btn-success-custom">Send </button>
+            <button type="button" ng-if="sent == true" class="btn btn-success-custom">Sent </button> 
             </div>
             </form>
           </div>
@@ -996,6 +997,26 @@
 .modal .modal-body {
 	max-height: 620px;
 	overflow-y: auto;
+}
+
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
+
+.btn-success-customapply {
+color: white;
+background-color: #2120f5;
+}
+
+.btn-success-customapply:hover {
+color: white;
+background-color: #999999;
 }
 
 </style>

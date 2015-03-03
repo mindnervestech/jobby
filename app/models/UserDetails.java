@@ -249,5 +249,7 @@ public class UserDetails extends Model {
 	}
 	
 	
-	
+	public static List<UserDetails> getallUserEmail(){
+		return find.all();
+	}  
 }

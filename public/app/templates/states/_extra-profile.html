@@ -36,18 +36,31 @@ legend.scheduler-border {
 	border-bottom: none;
 	color: darkgray;
 }
+
+
+
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
 </style>
+
 <div class="row">
 	<div class="col-lg-12">
 		<div class="portlet box">
 			<div class="portlet-header">
 				<div class="caption">My Profile</div>
 				<div class="col-md-12">
-					<small>Please fill out the following information to
-						complete your user profile for the Ardent Principles Jobs Portal.
-						Your information will be used to present potential job
-						opportunities to you that align with your profile selections as
-						well as expedite the resume building process. </small>
+					<small><strong>Please fill out the following
+							information to complete your user profile for the Ardent
+							Principles Jobs Portal. Your information will be used to present
+							potential job opportunities to you that align with your profile
+							selections as well as expedite the resume building process.</strong> </small>
 				</div>
 			</div>
 			<div class="portlet-body">
@@ -74,9 +87,7 @@ legend.scheduler-border {
 												class="form-horizontal ng-pristine ng-valid">
 												<div class="row">
 
-													<div ng-show="userPoserror" style="color: red">
-														Please fill at least one Position/Security/Experience
-														level.</div>
+													
 													<div class="col-md-12">
 														<div class="">
 															<label class="">First Name *</label> <label
@@ -85,6 +96,7 @@ legend.scheduler-border {
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
+															
 																<input type="text" id="firstname" name="firstname"
 																	ng-model="userDetails.firstname"
 																	placeholder="Enter First Name" style="font-size: 12px;"
@@ -94,7 +106,7 @@ legend.scheduler-border {
 																<input type="text" id="middlename" name="middlename"
 																	ng-model="userDetails.middlename"
 																	placeholder="Enter Mid Name" style="font-size: 12px;"
-																	class="form-control" maxlength="2" required>
+																	class="form-control" maxlength="2">
 															</div>
 															<div class="col-md-4">
 																<input type="text" id="lastname" name="lastname"
@@ -302,6 +314,7 @@ legend.scheduler-border {
 																</div>
 															</div>
 															<div class="col-md-4">
+															<!-- <span ng-if="phnumberError =true"> <code>Please enter phone number</code></span> -->
 																<input type="text" id="phnumber" name="phnumber"
 																	ng-model="userDetails.phnumber"
 																	placeholder="Enter phone Name" style="font-size: 12px;"
@@ -332,16 +345,17 @@ legend.scheduler-border {
 																	ng-model="userDetails.jobsearchstatus"
 																	placeholder="Job Search Status" style="font-size: 12px;"
 																	class="form-control" required> -->
-
+															<span ng-if="jobsearchstatusError == true"> please select job search status</span>
 																<select ng-model="userDetails.jobsearchstatus"
 																	ng-change="onJobSearchStatusChange()"
-																	class="form-control" id="jobsearchstatus">
+																	class="form-control" id="jobsearchstatus" ng-required>
 																	<option
 																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
 																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
 																</select>
 															</div>
 															<div class="col-md-4">
+														<span ng-if="currentjobtitleError == true">	<code>please  enter current job title</code> </span>
 																<input type="text" id="currentjobtitle"
 																	name="currentjobtitle"
 																	ng-model="userDetails.currentjobtitle"
@@ -361,6 +375,7 @@ legend.scheduler-border {
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
+															<span ng-if="residentcityError == true"><code>Please  enter  resident city</code></span>
 																<input type="text" id="residentcity" name="residentcity"
 																	ng-model="userDetails.residentcity"
 																	placeholder="Resident City " style="font-size: 12px;"
@@ -379,17 +394,19 @@ legend.scheduler-border {
 																	ng-model="userDetails.residentState"
 																	placeholder="Resident State" style="font-size: 12px;"
 																	class="form-control" required> -->
+																<span ng-if="residentStateError == true"><code>Please enter Resident State</code></span>
 
-
-																<select ng-model="userDetails.residentState"
+																<select id="residentState"
+																	ng-model="userDetails.residentState"
 																	ng-change="onStatesChange()" class="form-control"
-																	id="residentState" required>
+																	ng-required>
 																	<option
 																		ng-selected="clr.stateName == userDetails.residentState"
 																		ng-repeat="clr in allStates">{{clr.stateName}}</option>
 																</select>
 															</div>
 															<div class="col-md-4">
+															<span ng-if="zipcodeError == true"><code>Please  Enter zipcode</code> </span>
 																<input type="text" id="zipcode" name="zipcode"
 																	ng-model="userDetails.zipcode"
 																	placeholder="Enter zipcode " style="font-size: 12px;"
@@ -433,6 +450,7 @@ legend.scheduler-border {
 																	ng-model="userDetails.willingtorelocate"
 																	placeholder="Willing to Relocate" style="font-size: 12px;"
 																	class="form-control" required> -->
+																	<span ng-if="willingtorelocateError == true"> <code>please select willing to relocate</code></span>
 																<select ng-model="userDetails.willingtorelocate"
 																	class="form-control" id="willingtorelocate" required>
 																	<option
@@ -463,14 +481,14 @@ legend.scheduler-border {
 
 														<div class="">
 															<label class="">User Security Clearance Level *</label><br />
-															<label class=""><small>You can select
-																	multiple security Clearance(use Ctrl)</small></label>
-
+															<!-- <label class=""><small><strong>You
+																		can select multiple security Clearance(use Ctrl)</strong></small></label>
+ -->
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label"></label> -->
 															<div class="col-md-9">
-																<select multiple="multiple" name="userClearance"
+																<select  name="userClearance"
 																	ng-model="userClearance" class="form-control">
 																	<option ng-repeat="clear in allCleanrance.clearance"
 																		value="{{clear.clearance}}"
@@ -487,16 +505,16 @@ legend.scheduler-border {
 															<label class="">Select Experience Level *
 																&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"
 																data-toggle="tooltip" data-placement="bottom"
-																														title="Experience Key
-															 1]Management (16+ years of relative experience)
-															 2]Subject Matter Expert (16+ years of relative experience)
-														     3]Expert (11+ years of relative experience)
-															 4]Senior (6+ years of relative experience)
-															 5]Full Performance (3+ years of relative experience)
-															 6]Developmental (0-3 years of relative experience) "></i>
-															</label><br />
-															<!-- <label class=""><small>You can select multiple Experience Level(use Ctrl)</small> </label>
-															 -->
+																title="Experience Key
+		   1] Management (16+ years of relative experience)
+		    2] Subject Matter Expert(16+ years of relative experience
+		    3] Expert (11+ years of relative experience)
+		    4] Senior (6+ years of relative experience)
+		    5] Full Performance (3+ years of relative experience)
+		   6] Developmental (0-3 years of relative experience) "></i>
+															</label><br /> <label class=""><small><strong>Click
+																		on the tool tip to see the experience level key</strong></small> </label>
+
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label"></label> -->
@@ -538,14 +556,15 @@ legend.scheduler-border {
 														</div> -->
 														<div class="">
 															<label class="">Position(s)/Title(s) of interest
-																*</label><br /> <label class=""><small>You can
-																	select multiple Position(use Ctrl) </small></label>
+																*</label><br /> <label class=""><small><strong>You
+																		can select multiple Position(use Ctrl) </strong></small></label>
 
 														</div>
 														<div class="form-group">
 															<!-- <label class="col-md-3 control-label">User
 																Position/Title *</label> -->
 															<div class="col-md-9">
+															
 																<select multiple="multiple" name="userposition"
 																	ng-model="userPosition" class="form-control">
 																	<option ng-repeat="posi in allPosition.position"
@@ -576,9 +595,9 @@ legend.scheduler-border {
 																&nbsp;&nbsp;User Key Skill Area
 															</legend>
 															<div class="col-md-10">
-																<small> Please select a maximum of 12 of your
-																	most relevant key skill areas. Use the add function for
-																	key skills that are not listed.</small>
+																<small><strong> Please select a maximum
+																		of 12 of your most relevant key skill areas. Use the
+																		add function for key skills that are not listed.</strong></small>
 															</div>
 															<label ng-repeat="skill in allSkills"
 																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
@@ -602,7 +621,7 @@ legend.scheduler-border {
 																	<div class="col-md-4">
 																		<button type="submit"
 																			ng-click="saveOtherSkill(otherSkill);"
-																			class="btn btn-primary">Add</button>
+																			class="btn btn-success-custom">Add</button>
 																	</div>
 																</div>
 															</div>
@@ -622,7 +641,11 @@ legend.scheduler-border {
 																<i class="glyphicon glyphicon-user"> </i>
 																&nbsp;&nbsp;Employment History
 															</legend>
-
+															<label class=""><small><strong>Please
+																		input all of your relevant employment history</strong></small> </label> <label
+																class=""><small><strong>Not
+																		entering a from date in the employment history section
+																		defualts it to present</strong></small> </label>
 															<div class="col-md-12"
 																ng-repeat="emp in addNewEmphistory">
 																<br />
@@ -737,7 +760,8 @@ legend.scheduler-border {
 															&nbsp;&nbsp; Education History
 														</legend>
 														<div>
-															<small>Please input all of your Education History</small>
+															<small><strong>Please input all of your
+																	Education History</strong></small>
 														</div>
 
 														<div class="col-md-12" ng-repeat="edu in addEducation">
@@ -829,8 +853,8 @@ legend.scheduler-border {
 														<div class="form-group">
 
 															<div>
-																<small>Please input all of your relevant
-																	Certifications</small>
+																<small><strong>Please input all of your
+																		relevant Certifications</strong></small>
 															</div>
 															<div class="col-md-12" ng-repeat="cert in addCertificate">
 
@@ -894,13 +918,13 @@ legend.scheduler-border {
 												</div>
 
 												<div class='col-sm-12'>
-												
-												<label class="col-md-3 control-label"
-														ng-show="manaFieldError"
-														><code>Please field all Mandatory Details(*)</code>
-														 </label>
-													<label class="col-md-3 control-label"
-														ng-show="updateSuccess"
+													<div ng-show="userPoserror" ><code>
+														Please fill at least one Position/Security/Experience
+														level.</code></div>
+													<label class="col-md-6 control-label"
+														ng-show="manaFieldError"><code>Please field
+															all Mandatory Details(*)</code> </label> <label
+														class="col-md-6 control-label" ng-show="updateSuccess"
 														style="font-size: 12px; color: green;">Profile
 														Updated Successfully! </label>
 												</div>
@@ -908,7 +932,7 @@ legend.scheduler-border {
 												<div class="form-actions">
 													<div class="pull-right">
 														<button type="submit" ng-click="submitUserProfile();"
-															class="btn btn-success">Save</button>
+															class="btn btn-success-custom">Save</button>
 														&nbsp;
 														<!-- <button type="button" class="btn btn-default">Cancel</button> -->
 													</div>

@@ -5,6 +5,7 @@ import java.io.File;
 
 
 
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -134,7 +135,7 @@ public class Application extends Controller {
 			u.password = pass;
 			// u.fullname = firstname;
 			u.firstname = firstname;
-			if (middlename == null || "NA".equalsIgnoreCase(middlename)) {
+			if (middlename == null || "NA".equalsIgnoreCase(middlename) || middlename == "") {
 				u.middlename = "NA";
 			} else {
 				u.middlename = middlename;
@@ -221,7 +222,7 @@ public class Application extends Controller {
 
 				} else {
 					flash().put("AccountError",
-							"Account is not activated.Please wait!!! ");
+							"Your account has been deactivated, please contact and admin for assistance ");
 					return ok(signin.render());
 				}
 
@@ -242,50 +243,18 @@ public class Application extends Controller {
 		 * = dynamicForm.get("email");
 		 */
 		UserDetails ud = UserDetails.getPassword(uname);
-
-		final String username = Play.application().configuration()
-				.getString("mail.id");
-		final String password = Play.application().configuration()
-				.getString("mail.password");
-
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-
-		Session session = Session.getInstance(props,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(username, password);
-					}
-				});
-
-		try {
-
-			Message feedback = new MimeMessage(session);
-			feedback.setFrom(new InternetAddress(username));
-			feedback.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(ud.email));
-			feedback.setSubject("Your Password Details ");
-			// message.setText();
-			BodyPart messageBodyPart = new MimeBodyPart();
-			// Now set the actual message
-			messageBodyPart.setText("\n Mail : " + ud.email + "\n Password: "
-					+ ud.password);
-			// Create a multipar message
-			Multipart multipart = new MimeMultipart();
-			// Set text message part
-			multipart.addBodyPart(messageBodyPart);
-			// Send the complete message parts
-			feedback.setContent(multipart);
-			Transport.send(feedback);
-		} catch (MessagingException e) {
-			throw new RuntimeException(e);
-		}
-		flash().put("email_success", "Password is send on your EmailId.");
+		if(ud != null){
+	
+			MailUtility mailUtil = new MailUtility();
+			mailUtil.sendMailForgetpassword(ud.email,ud.password);
+			
+		flash().put("email_success", "Password has been sent to your registered email");
 		return ok(signin.render());
-
+		}else{
+			
+			flash().put("email_error", "You are not Registered ,Please register and then  try!  ");
+			return ok(signin.render());
+		}
 	}
 
 	
@@ -312,6 +281,7 @@ public class Application extends Controller {
 			
 			 if (fileExtn.equalsIgnoreCase("xlsx")){
 			       wb_xssf = new XSSFWorkbook(file);
+			       
 			       sheet = wb_xssf.getSheetAt(0);
 		      }
 
@@ -2249,6 +2219,7 @@ public class Application extends Controller {
 	public static Result getAllJobsForAdmin(int currentpage, String jobType,
 			Boolean sortType, String sortName,String searchId) {
 		searchId = searchId.trim();
+	
 		List<StoreExcelFile> jobs = new ArrayList<>();
 		// List<StoreExcelFile> userJobs = null;
 		//String emailId = session().get("email");
@@ -2258,7 +2229,7 @@ public class Application extends Controller {
 		 if("Position".equalsIgnoreCase(sortName)){
 				if("All".equalsIgnoreCase(jobType) ){
 					
-							if("Search".equalsIgnoreCase(searchId)){
+							if("undefined".equalsIgnoreCase(searchId)){
 									if(sortType == true){
 										count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
 										jobs = StoreExcelFile.getAllJobsForUserByPositionAdminAsc(currentpage, 10);
@@ -2284,7 +2255,7 @@ public class Application extends Controller {
 					
 				}else{
 					
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
 							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAdminAsc(currentpage, 10,jobType);
@@ -2315,7 +2286,7 @@ public class Application extends Controller {
 		    if("Location".equalsIgnoreCase(sortName)){
 				if("All".equalsIgnoreCase(jobType) ){
 				
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
 							jobs = StoreExcelFile.getAllJobsForUserByLocationAdminAsc(currentpage, 10);
@@ -2341,7 +2312,7 @@ public class Application extends Controller {
 				
 				}else{
 					
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
 							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeAdminAsc(currentpage, 10,jobType);
@@ -2371,7 +2342,7 @@ public class Application extends Controller {
 		    if("Clearance".equalsIgnoreCase(sortName)){
 				if("All".equalsIgnoreCase(jobType) ){
 					
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
 							jobs = StoreExcelFile.getAllJobsForUserByClearanceAdminAsc(currentpage, 10);
@@ -2396,7 +2367,7 @@ public class Application extends Controller {
 					
 				}else{
 					
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
 							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeAdminAsc(currentpage, 10,jobType);
@@ -2426,7 +2397,7 @@ public class Application extends Controller {
 		    if("Experiance".equalsIgnoreCase(sortName)){
 				if("All".equalsIgnoreCase(jobType) ){
 					
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
 							jobs = StoreExcelFile.getAllJobsForUserByExperianceAdminAsc(currentpage, 10);
@@ -2449,7 +2420,7 @@ public class Application extends Controller {
 					
 					
 				}else{
-					if("Search".equalsIgnoreCase(searchId)){
+					if("undefined".equalsIgnoreCase(searchId)){
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
 							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAdminAsc(currentpage, 10,jobType);
@@ -2770,7 +2741,7 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			if (!("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) ) {
+			if (("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) || addNewEmphistory.get(i).enddate == null) {
 				eds.enddate = "Present";
 			} else {
 				eds.enddate = addNewEmphistory.get(i).enddate;
@@ -2921,12 +2892,11 @@ public class Application extends Controller {
 		u.saveManyToManyAssociations("userPosition");
 
 		u.deleteManyToManyAssociations("userClearance");
-		ArrayNode clearance = (ArrayNode) userClearance;
-		for (int i = 0; i < clearance.size(); i++) {
-			String clea = clearance.get(i).asText();
+		//ArrayNode clearance = (ArrayNode) userClearance;
+		
+			String clea = userClearance.asText();
 			UserClearance uc = UserClearance.getClearanceByName(clea);
 			u.userClearance.add(uc);
-		}
 
 		u.saveManyToManyAssociations("userClearance");
 
@@ -2945,7 +2915,8 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			if (!("".equalsIgnoreCase(addNewEmphistory.get(i).enddate))) {
+			System.out.println("addNewEmphistory.get(i).enddate"+addNewEmphistory.get(i).enddate);
+			if (("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) || addNewEmphistory.get(i).enddate == null) {
 				eds.enddate = "Present";
 			} else {
 				eds.enddate = addNewEmphistory.get(i).enddate;
@@ -3664,12 +3635,12 @@ public class Application extends Controller {
 			Chunk chunkUserExp = new Chunk(
 					"Resource Submission Level".toUpperCase());
 			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
-			chunkUserExp.setFont(font);
+			chunkUserExp.setFont(font1);
 
 			Chunk chunkCSRLeval = new Chunk(
 					"CSR Level".toUpperCase() +":  "+csrNumber);
 			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
-			chunkUserExp.setFont(font);
+			chunkUserExp.setFont(font1);
 			
 			Chunk chunkResourceSubmissionLevel = null;
 
@@ -3711,7 +3682,7 @@ public class Application extends Controller {
 				chunkResourceSubmissionLevel = new Chunk(
 						"Resource Submission Level".toUpperCase() +":  "+ue.experianceLevel);
 				chunkUserExp.setBackground(new BaseColor(248, 248, 255));
-				chunkUserExp.setFont(font);
+				chunkUserExp.setFont(font1);
 			}
 
 			// skill table
@@ -4057,8 +4028,11 @@ public class Application extends Controller {
 			document.add(expLevelTable);
 			document.add(Chunk.NEWLINE);
 			document.add(chunkCSRLeval);
-			document.add(Chunk.NEWLINE);
-			document.add(chunkResourceSubmissionLevel);
+			if(chunkResourceSubmissionLevel != null){
+				document.add(Chunk.NEWLINE);
+				document.add(chunkResourceSubmissionLevel);
+			}
+			
 			// preface.setAlignment(Element.ALIGN_CENTER);
 			document.add(Chunk.NEWLINE);
 			document.add(chunkClearance);
@@ -4083,10 +4057,16 @@ public class Application extends Controller {
 			document.add(edutable);
 
 			document.add(Chunk.NEWLINE);
-			document.add(certChunk);
-			document.add(Chunk.NEWLINE);
-			document.add(Chunk.NEWLINE);
-			document.add(certtable);
+			
+		
+			//cert table added if it is present not selected
+			if(cd.size() != 0){
+				document.add(certChunk);
+				document.add(Chunk.NEWLINE);
+				document.add(certtable);
+				document.add(Chunk.NEWLINE);
+			}
+			
 			// document.add(Chunk.NEWLINE);
 			document.add(chunkExpDetails);
 			document.add(expDesctable);
@@ -5009,4 +4989,19 @@ public class Application extends Controller {
 		return ok(Json.toJson(map));
 	}
 	
+	public static Result sendMailtoAllUser(String mailSubject,String mailContent){
+		List <UserDetails> ud =  UserDetails.getallUserEmail();
+		
+		ArrayList<String> email = new ArrayList<String>();
+		for(UserDetails u:ud){
+			String emailid = u.email;
+			email.add(emailid);
+		}
+		
+		MailUtility mailu = new MailUtility();
+		mailu.sendMailToAlluser(mailSubject,mailContent,email);
+		
+		return ok("success"); 
+	}
+ 	
 }

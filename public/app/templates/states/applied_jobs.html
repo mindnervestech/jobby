@@ -7,7 +7,17 @@
 	color: red
 }
 </style>
+<style type="text/css">
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
 
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
+</style>
 <div class="row">
 	<div class="col-lg-12">
 		<div class="portlet box" style="min-height:500px;">
@@ -16,20 +26,22 @@
 			</div>
 			<div class="portlet-body" ng-init="init();">
 				<div class="row mbm">
+				
 					<div class="col-lg-12">
+					<div class="pull-right">
+								<button id="genpdf" type="button"
+													ng-click="moveToArchive()"  class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Make archive .">Archive</button>
+													<br />
+								</div>
 						<!-- {{jobs}} -->
 						<div ng-init="getAllAppliedJobs()" class="table-responsive">
 							<div class="page-header">
 								<!-- <h3>
 									Applied Jobs <i class="icon-chevron-right"></i>
 								</h3> -->
-								<div class="pull-right">
-								<button id="genpdf" type="button"
-													ng-click="moveToArchive()"  class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Make archive .">Archive</button>
-													<br />
-								</div>
+								
 								<table id="table_id"
-									class="table table-hover table-striped table-bordered table-advanced tablesorter display" style="margin-top:6%;">
+									class="table table-hover table-striped table-bordered table-advanced tablesorter display" >
 									<tbody>
 										<tr>
 											<th>Email</th>
@@ -51,20 +63,20 @@
 	    <a 										class="btn btn-success" href="/generatePDF/{{appliedJobs.id}}" ><button>Download</button></a>
 	</div>								</td>
  -->							          <td><button id="genpdf" type="button"
-													ng-click="generatePdf(appliedJobs.id)" data-toggle="modal"  class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="View Resume .">View </button></td>
+													ng-click="generatePdf(appliedJobs.id)" data-toggle="modal"  class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="View Resume .">View </button></td>
 							
 								          <td><button id="deleteJob" type="button"
-													ng-click="deleteJobById(appliedJobs.id)" data-toggle="modal"  class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete">Delete</button></td>
+													ng-click="deleteJobById(appliedJobs.id)" data-toggle="modal"  class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Delete">Delete</button></td>
 								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs.requestNumber);" data-toggle="tooltip" data-placement="bottom" title="Select (Check) to make archive "></td>
 										</tr>
 									</tbody>	
 								</table>
 								<div class="pull-right">
 								<button id="pre" type="button" ng-click="clickPre()"
-									class="btn btn-primary"><i class="glyphicon glyphicon-arrow-left"></i></button>
+									class="btn btn-success-custom"><i class="glyphicon glyphicon-arrow-left"></i></button>
 								&nbsp;
 								<button id="next" type="button" ng-click="clickNext()"
-									class="btn btn-green"><i class="glyphicon glyphicon-arrow-right"></i></button>
+									class="btn btn-success-custom"><i class="glyphicon glyphicon-arrow-right"></i></button>
 									</div>
 									<div style="font-size:12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>
 							</div>
@@ -114,9 +126,9 @@
 				
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
+				<button type="button" class="btn btn-success-custom"
 					data-ng-click="deleteSelectedJob();">Delete</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
 			</div>
 		</div>
 	</div>

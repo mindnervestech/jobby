@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Ardent Job Portal</title>
+<title>i2Simply Done</title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -180,7 +180,7 @@
       <div class="header-content">
         <h1>Register</h1>
       </div>
-      @flash.get("error")
+     <code> @flash.get("error")</code>
       <div class="body-content">
        <!--  <div class="form-group">
           <div class="input-icon right"><i class="fa fa-user"></i>
@@ -212,7 +212,7 @@
         </div>
          <div class="form-group">
           <div class="input-icon right">
-              <input type="text" placeholder="Middle Name(if not specify 'NA')"  id= "middlename" name="middlename" maxlength="2" class="form-control" required/>
+              <input type="text" placeholder="Middle Name(if not specify 'NA')"  id= "middlename" name="middlename" maxlength="1" class="form-control"/>
                <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
           </div>
         </div>
@@ -231,7 +231,7 @@
        
         <div class="form-group">
           <label style="display: block" class="select">
-            <select name="gender" class="form-control">
+            <select name="gender" id= "gender" class="form-control" required>
               <option value="0" selected="selected" disabled="disabled">Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -241,9 +241,9 @@
         </div>
          </div>
         <hr/>
-        <div class="form-group mbn"><a href="/login" class="btn btn-warning"><i class="fa fa-chevron-circle-left"></i>&nbsp;
+        <div class="form-group mbn"><a href="/login" class="btn btn-success-custom "><i class="fa fa-chevron-circle-left"></i>&nbsp;
             Back</a>
-          <button type="submit" class="btn btn-info pull-right">
+          <button type="submit" class="btn btn-success-custom  pull-right">
             Submit
             &nbsp;<i class="fa fa-chevron-circle-right"></i>
           </button>
@@ -344,14 +344,17 @@ function validatePasswordstrong(password,passwordStrength,errorField){
 																		
 																		email : {
 																			required : true
+																		},
+																		gender : {
+																			required : true
 																		}
 																	},
 																	messages : {
 																		firstname : "Please enter name properly",
 																		lastname : "Please enter name properly",
 																		middletname : "Please enter name properly",
-																	     email : "Please enter email  properly"
-																		
+																	    email : "Please enter email  properly",
+																	    gender:"Please select gender"
 																	}
 																});
 
@@ -395,6 +398,16 @@ width:200px;
 {
 background:#399800;
 width:250px;
+}
+
+ .btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
 }
  
  

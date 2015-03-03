@@ -295,7 +295,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  $scope.sortType = false;
 	  $scope.allPosition;
 	  $scope.sortName = "Position"
-	   $scope.searchId = "Search";
+	   $scope.searchId;
  		  
 		  // called when page in loaded for getting all jobns form db
 	  // get all jobs  for the Admin
@@ -382,7 +382,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	$scope.clickNext = function() {
 		
 		if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
-			$scope.searchId = "Search";
+			$scope.searchId;
 		}
 		console.log("nexdt");
 			  $scope.pageno++;
@@ -429,7 +429,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		      var count = 0;
 		      
 		      if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
-					$scope.searchId = "Search";
+					$scope.searchId;
 				}
 		      
 			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
@@ -470,7 +470,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  $scope.getAllJobByType = function(){
 		  
 		  if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
-				$scope.searchId = "Search";
+				$scope.searchId;
 			}
 		  console.log("$scope.jobType"+$scope.jobType);
 		  $scope.matchedpos = false;
@@ -504,7 +504,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  
 	  $scope.getAllJobBySelectedElement = function(){
 		  if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
-				$scope.searchId = "Search";
+				$scope.searchId;
 			}
 		  console.log($scope.sortName);
 		  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
@@ -539,7 +539,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		  
 		  
 		  if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
-				$scope.searchId = "Search";
+				$scope.searchId;
 			}
 		  $scope.position = "notSelected";
 		    console.log($scope.sortType);
@@ -681,7 +681,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$scope.searchJobById = function(){
 			console.log($scope.searchId);
 			if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
-				$scope.searchId = "Search";
+				$scope.searchId;
 			}
 			  $http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 				.success(function(data) {
@@ -7825,10 +7825,25 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		$scope.positionUError = false;
 		$scope.cleranceUError =false;
 		$scope.expUError = false;
-		
-		$('#editUserDetails').modal('hide');
+		$scope.updateSuccess = false;
+		$scope.manaFieldError = false;
+		//$('#editUserDetails').modal('hide');
 		// chk for the education,employee cmp,user posi/clearance/exp selected or
 		// not if not gives gives error
+	
+		if($scope.userDetails.phnumber == "" ||  (angular.isUndefined($scope.userDetails.phnumber)) || 
+				$scope.userDetails.jobsearchstatus =="" ||  (angular.isUndefined($scope.userDetails.jobsearchstatus)) 
+			   ||$scope.userDetails.currentjobtitle =="" ||  (angular.isUndefined($scope.userDetails.currentjobtitle))
+			   || $scope.userDetails.residentcity =="" ||  (angular.isUndefined($scope.userDetails.residentcity)) 
+			   || $scope.userDetails.desiredsalary ==""  ||  (angular.isUndefined($scope.userDetails.desiredsalary))
+			   || $scope.userDetails.zipcode =="" ||  (angular.isUndefined($scope.userDetails.zipcode)) 
+			   ||$scope.userDetails.residentState=="" ||  (angular.isUndefined($scope.userDetails.residentState))
+			   ||$scope.userDetails.willingtorelocate=="" ||  (angular.isUndefined($scope.userDetails.willingtorelocate))
+			    
+		){
+			$scope.manaFieldError = true;
+		}else{
+		
 		if(!(angular.isUndefined($scope.userClearance)) && !(angular.isUndefined($scope.userPosition)) && !(angular.isUndefined($scope.userExperience))){
 		console.log($scope.userPosition.length);
 			
@@ -7848,13 +7863,15 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 				console.log("success");
 				$scope.updateSuccess = true;
 				$scope.userPoserror =false;
+				$scope.manaFieldError = false;
 			});
 			}
 	
 			}else{
 			$scope.userPoserror = true;
+			$scope.manaFieldError = false;
 		}
-		
+		}
 	}
 	
 	$scope.skillClicked = function(e, skill) {
@@ -7946,6 +7963,22 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 			});
 			
 		}
+		
+		$scope.openSendMailPopup = function(){
+			$('#sendmailtoall').modal('show');
+			
+		} 
+		
+		$scope.sendMailtoAllUser = function(){
+			$('#sendmailtoall').modal('hide');
+
+			$http.post('/sendMailtoAllUser/'+$scope.mailsubject+'/'+$scope.mailcontent).success(function(data){
+				console.log("deleted");
+				
+			});
+			
+		}
+		
 });
 
 
@@ -8125,6 +8158,7 @@ App.controller('ViewAllSkillsController', function ($scope, $rootScope, $routePa
 		$scope.oldSkill = "";
 	});
 	}
+	
 	
 	
 });
@@ -9257,6 +9291,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     					// $scope.skills.push(obj.skillName);
     					obj.isSelected = true;
     					$scope.userPosition.push(obj.position);
+    					
     					};
     				});
     			});
@@ -9267,6 +9302,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     				if ((obj.experianceLevel == obj1.experianceLevel)) {
     					obj.isSelect = true;
     					$scope.userExperience.push(obj.experianceLevel);
+    					
     					};
     				});
     			});
@@ -9330,10 +9366,17 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			console.log("userExperience"+JSON.stringify($scope.userExperience));
 			// chk for the education,employee cmp,user posi/clearance selected or
 			// not if not gives gives error
+				console.log($scope.userDetails.phnumber);
 
-			if($scope.userDetails.phnumber == "" || $scope.userDetails.jobsearchstatus ==""||$scope.userDetails.currentjobtitle ==""||
-					$scope.userDetails.residentcity ==""|| $scope.userDetails.desiredsalary ==""||
-					$scope.userDetails.willingtorelocate ==""||$scope.userDetails.zipcode ==""||$scope.userDetails.residentState==""
+			if($scope.userDetails.phnumber == "" ||  (angular.isUndefined($scope.userDetails.phnumber)) || 
+					$scope.userDetails.jobsearchstatus =="" ||  (angular.isUndefined($scope.userDetails.jobsearchstatus)) 
+				   ||$scope.userDetails.currentjobtitle =="" ||  (angular.isUndefined($scope.userDetails.currentjobtitle))
+				   || $scope.userDetails.residentcity =="" ||  (angular.isUndefined($scope.userDetails.residentcity)) 
+				   || $scope.userDetails.desiredsalary ==""  ||  (angular.isUndefined($scope.userDetails.desiredsalary))
+				   || $scope.userDetails.zipcode =="" ||  (angular.isUndefined($scope.userDetails.zipcode)) 
+				   ||$scope.userDetails.residentState=="" ||  (angular.isUndefined($scope.userDetails.residentState))
+				   ||$scope.userDetails.willingtorelocate=="" ||  (angular.isUndefined($scope.userDetails.willingtorelocate))
+				    
 			){
 				$scope.manaFieldError = true;
 			}else{
