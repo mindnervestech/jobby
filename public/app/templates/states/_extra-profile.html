@@ -917,6 +917,11 @@ background-color: #999999;
 													</fieldset>
 												</div>
 
+													<div class="col-sm-12">
+													
+													<input type="checkbox" name="emailalert" ng-model="emailalert"
+							ng-checked="userDetails.emailalert == 'Yes'"    ng-click="ubSubribeFormEmailAlert(userDetails.emailalert);"> Subscribe for the Job  Alert.
+													</div>
 												<div class='col-sm-12'>
 													<div ng-show="userPoserror" ><code>
 														Please fill at least one Position/Security/Experience

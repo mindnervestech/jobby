@@ -550,7 +550,7 @@
 													<div class="col-sm-8">
 														<div class="pull-right">
 															<i class="glyphicon glyphicon-download"
-																ng-click="openTemplatepopup();" data-toggle="tooltip" data-placement="top" title="Create new Template."></i> &nbsp;&nbsp;<i
+																ng-click="openTemplatepopup($index);" data-toggle="tooltip" data-placement="top" title="Create new Template."></i> &nbsp;&nbsp;<i
 																class="glyphicon glyphicon-eye-open"
 																ng-click="openPreSavedTemplate($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
 																&nbsp;&nbsp;
@@ -564,7 +564,7 @@
 																placeholder="e.g. Skill Desc" required></textarea>
 														</small>
 														
-														<div id="saveTemplate" class="popover"
+														<div id="saveTemplate{{$index}}" class="popover"
 															style="z-index: 100;">
 															<div class="popover-content">
 																<div class="form-group">
@@ -585,7 +585,7 @@
 																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
 																	&nbsp;&nbsp;&nbsp;&nbsp;<i
 																		class="glyphicon glyphicon-remove"
-																		ng-click="closeTemplatePopup();"></i>
+																		ng-click="closeTemplatePopup($index);"></i>
 
 																</div>
 															</div>
@@ -671,10 +671,10 @@
 																		<br />
 																		<button name="save" id="save"
 																			class="button btn-success-custom "
-																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);">Save
+																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
 																			</button>
 																		<i class="glyphicon glyphicon-download"
-																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);"></i>
+																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
 																			class="glyphicon glyphicon-remove"
 																			ng-click="closeTemplatePopupDesiredSkills($index);"></i>
@@ -726,10 +726,10 @@
 																		<br />
 																		<button name="save" id="save"
 																			class="button btn-success-custom "
-																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);">Save
+																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
 																			</button>
 																		<i class="glyphicon glyphicon-download"
-																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);"></i>
+																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
 																			class="glyphicon glyphicon-remove"
 																			ng-click="closeTemplatePopupDesiredSkills($index);"></i>
@@ -846,7 +846,7 @@
 													<div class="col-sm-8">
 														<div class="pull-right">
 															<i class="glyphicon glyphicon-download"
-																ng-click="openTemplatepopup();"></i> &nbsp;&nbsp;<i
+																ng-click="openTemplatepopup($index);"></i> &nbsp;&nbsp;<i
 																class="glyphicon glyphicon-eye-open"
 																ng-click="openPreSavedTemplate($index);"></i>
 														</div>

@@ -1192,6 +1192,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 							$http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
 							.success(function(data) {
 								console.log("data"+data);
+								$scope.templateName = "";
 							});
 					}
 					
@@ -1207,6 +1208,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 							$http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
 							.success(function(data) {
 								console.log("data"+data);
+								$scope.templateName= "";
 							});
 					}
 					
@@ -7831,14 +7833,14 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		// chk for the education,employee cmp,user posi/clearance/exp selected or
 		// not if not gives gives error
 	
-		if($scope.userDetails.phnumber == "" ||  (angular.isUndefined($scope.userDetails.phnumber)) || 
-				$scope.userDetails.jobsearchstatus =="" ||  (angular.isUndefined($scope.userDetails.jobsearchstatus)) 
-			   ||$scope.userDetails.currentjobtitle =="" ||  (angular.isUndefined($scope.userDetails.currentjobtitle))
-			   || $scope.userDetails.residentcity =="" ||  (angular.isUndefined($scope.userDetails.residentcity)) 
-			   || $scope.userDetails.desiredsalary ==""  ||  (angular.isUndefined($scope.userDetails.desiredsalary))
-			   || $scope.userDetails.zipcode =="" ||  (angular.isUndefined($scope.userDetails.zipcode)) 
-			   ||$scope.userDetails.residentState=="" ||  (angular.isUndefined($scope.userDetails.residentState))
-			   ||$scope.userDetails.willingtorelocate=="" ||  (angular.isUndefined($scope.userDetails.willingtorelocate))
+		if($scope.userDetails.phnumber == "" || $scope.userDetails.phnumber== null ||  (angular.isUndefined($scope.userDetails.phnumber)) || 
+				$scope.userDetails.jobsearchstatus =="" || $scope.userDetails.jobsearchstatus== null ||  (angular.isUndefined($scope.userDetails.jobsearchstatus)) 
+			   ||$scope.userDetails.currentjobtitle =="" || $scope.userDetails.currentjobtitle == null  ||  (angular.isUndefined($scope.userDetails.currentjobtitle))
+			   || $scope.userDetails.residentcity =="" ||  $scope.userDetails.residentcity == null || (angular.isUndefined($scope.userDetails.residentcity)) 
+			   || $scope.userDetails.desiredsalary =="" || $scope.userDetails.desiredsalary == null  ||  (angular.isUndefined($scope.userDetails.desiredsalary))
+			   || $scope.userDetails.zipcode =="" || $scope.userDetails.zipcode == null ||  (angular.isUndefined($scope.userDetails.zipcode)) 
+			   ||$scope.userDetails.residentState=="" || $scope.userDetails.residentState== null ||   (angular.isUndefined($scope.userDetails.residentState))
+			   ||$scope.userDetails.willingtorelocate=="" ||$scope.userDetails.willingtorelocate == null  ||  (angular.isUndefined($scope.userDetails.willingtorelocate))
 			    
 		){
 			$scope.manaFieldError = true;
@@ -8976,10 +8978,15 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	
 	$scope.succUpload = false;
 	$scope.errorUpload = false;
-	
+	$scope.pleasWait = false; 
 	$scope.fileUpload = function (sub) {
 		console.log(file);
-	
+		$http.post('deleteSendEmailAlertData')
+		.success(function(data){
+			
+		});
+		
+		$scope.pleasWait = true;		
 		if(file){
 		$scope.upload = $upload.upload({
 				url: 'uploadExcel', 
@@ -8996,11 +9003,18 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 					$scope.updateRow = true;
 					$scope.newrowscount = data.newrowscount;
 					$scope.updatedRowsCount = data.updatedRowsCount;
-				
+					$scope.pleasWait = false;
+					$http.post('sendmailAlertToUserAboutJobMatched')
+					.success(function(data){
+						
+					});
+					
+					
 				}else{
 					$scope.errorUpload = true;
 					$scope.newRow = false;
 					$scope.updateRow = false;
+					$scope.pleasWait = false;
 				}
 				
 			});
@@ -9366,16 +9380,16 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			console.log("userExperience"+JSON.stringify($scope.userExperience));
 			// chk for the education,employee cmp,user posi/clearance selected or
 			// not if not gives gives error
-				console.log($scope.userDetails.phnumber);
+				console.log($scope.userDetails.willingtorelocate);
 
-			if($scope.userDetails.phnumber == "" ||  (angular.isUndefined($scope.userDetails.phnumber)) || 
-					$scope.userDetails.jobsearchstatus =="" ||  (angular.isUndefined($scope.userDetails.jobsearchstatus)) 
-				   ||$scope.userDetails.currentjobtitle =="" ||  (angular.isUndefined($scope.userDetails.currentjobtitle))
-				   || $scope.userDetails.residentcity =="" ||  (angular.isUndefined($scope.userDetails.residentcity)) 
-				   || $scope.userDetails.desiredsalary ==""  ||  (angular.isUndefined($scope.userDetails.desiredsalary))
-				   || $scope.userDetails.zipcode =="" ||  (angular.isUndefined($scope.userDetails.zipcode)) 
-				   ||$scope.userDetails.residentState=="" ||  (angular.isUndefined($scope.userDetails.residentState))
-				   ||$scope.userDetails.willingtorelocate=="" ||  (angular.isUndefined($scope.userDetails.willingtorelocate))
+			if($scope.userDetails.phnumber == "" || $scope.userDetails.phnumber== null ||  (angular.isUndefined($scope.userDetails.phnumber)) || 
+					$scope.userDetails.jobsearchstatus =="" || $scope.userDetails.jobsearchstatus== null ||  (angular.isUndefined($scope.userDetails.jobsearchstatus)) 
+				   ||$scope.userDetails.currentjobtitle =="" || $scope.userDetails.currentjobtitle == null  ||  (angular.isUndefined($scope.userDetails.currentjobtitle))
+				   || $scope.userDetails.residentcity =="" ||  $scope.userDetails.residentcity == null || (angular.isUndefined($scope.userDetails.residentcity)) 
+				   || $scope.userDetails.desiredsalary =="" || $scope.userDetails.desiredsalary == null  ||  (angular.isUndefined($scope.userDetails.desiredsalary))
+				   || $scope.userDetails.zipcode =="" || $scope.userDetails.zipcode == null ||  (angular.isUndefined($scope.userDetails.zipcode)) 
+				   ||$scope.userDetails.residentState=="" || $scope.userDetails.residentState== null ||   (angular.isUndefined($scope.userDetails.residentState))
+				   ||$scope.userDetails.willingtorelocate=="" ||$scope.userDetails.willingtorelocate == null  ||  (angular.isUndefined($scope.userDetails.willingtorelocate))
 				    
 			){
 				$scope.manaFieldError = true;
@@ -9515,6 +9529,25 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		$scope.userData = data;
     	});
 	};
+	
+	
+	$scope.ubSubribeFormEmailAlert = function(alert){
+		console.log(alert);
+		$scope.userDetails.emailalert
+		if(alert  == "Yes" || alert == true){
+			alert = false;
+			$scope.userDetails.emailalert = "No"
+		}else if (alert  == "No" || alert == false){
+			$scope.userDetails.emailalert = "Yes"
+			alert = true;
+		}
+		
+		$http.get('/unSubribeFormEmailAlert/'+alert)
+    	.success(function(data) {
+
+    	});
+		
+	}
 });
 
 App.controller('ExtraSigninController', function ($scope, $routeParams){

@@ -993,5 +993,7 @@ public class StoreExcelFile {
 			return find.where().eq("positionType", jobType).eq("jobStatus", jobStatus).order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 		
-		
+		public static List <StoreExcelFile> getAllJobstoSchedular(){
+			return find.all(); 
+		}
 }

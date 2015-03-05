@@ -37,6 +37,7 @@ import models.CertificationDetails;
 import models.EducationDetails;
 import models.EmploymentDetails;
 import models.JobSearchStatus;
+import models.SendEmailAlert;
 import models.States;
 import models.StoreExcelFile;
 import models.UserClearance;
@@ -143,6 +144,7 @@ public class Application extends Controller {
 			u.lastname = lastname;
 			u.gender = gender;
 			u.userstatus = "active";
+			u.emailalert = "Yes";
 			Ebean.save(u);
 			
 			MailUtility mail = new MailUtility();
@@ -155,10 +157,6 @@ public class Application extends Controller {
 			return redirect("/signup");
 		}
 		
-		
-		
-		
-
 	}
 
 	// called when user login to get there details
@@ -274,6 +272,7 @@ public class Application extends Controller {
 		int newRows = 0;
 		int updatedRows = 0;
 		Sheet sheet = null;
+		String  jobNum = ""; 
 		try {
 			
 			 FileInputStream file = new FileInputStream(excelfile);
@@ -313,7 +312,8 @@ public class Application extends Controller {
 						System.out.println("nukmberString");
 						storeExcelFile = StoreExcelFile.getregNumber(c
 								.getStringCellValue());
-
+						jobNum =  c
+								.getStringCellValue();
 						if (storeExcelFile != null) {
 							storeExcelFile.requestNumber = c
 									.getStringCellValue();
@@ -367,6 +367,29 @@ public class Application extends Controller {
 									.getStringCellValue();
 						} else {
 							sd.labourCategory = c.getStringCellValue();
+						
+						List <UserDetails> ud = UserDetails.getallUserEmail();
+						for(UserDetails u: ud){
+							List<UserPosition> position = u.userPosition;
+							
+							//check if user only reg not saved there profile
+							if(position.size() != 0){
+								for(UserPosition userPos : position){
+									String userPositonName =  userPos.position;
+									//System.out.println("userPositonName"+userPositonName);
+									//user position matched with the job positio name then add for the email alert 
+									if(userPositonName.equalsIgnoreCase(sd.labourCategory)){
+									SendEmailAlert emailAlert = new  SendEmailAlert();
+									emailAlert.position = userPositonName;
+									emailAlert.userEmail = u.email;
+									emailAlert.jobNumber = jobNum;
+									emailAlert.save();
+									}
+									}
+									
+							}
+							
+						}
 						}
 
 						break;
@@ -2717,12 +2740,12 @@ public class Application extends Controller {
 
 		u.saveManyToManyAssociations("userPosition");
 		u.deleteManyToManyAssociations("userClearance");
-		ArrayNode clearance = (ArrayNode) userClearance;
-		for (int i = 0; i < clearance.size(); i++) {
-			String clea = clearance.get(i).asText();
+		//ArrayNode clearance = (ArrayNode) userClearance;
+		
+			String clea = userClearance.asText();
 			UserClearance uc = UserClearance.getClearanceByName(clea);
 			u.userClearance.add(uc);
-		}
+		
 
 		u.saveManyToManyAssociations("userClearance");
 
@@ -5003,5 +5026,87 @@ public class Application extends Controller {
 		
 		return ok("success"); 
 	}
+	
+	
+	public static Result deactivateTheJobByPMODate(){
+		 
+		String DATE_FORMAT_NOW = "MM/dd/yyyy";
+	    Date date = new Date();
+	    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+	    String stringDate = sdf.format(date);
+	    
+	    List <StoreExcelFile> stexcel = StoreExcelFile.getAllJobstoSchedular();
+	    for(StoreExcelFile s: stexcel){
+	    	 try{
+	    		Date todaysDate = sdf.parse(stringDate);
+	 	        Date jobPMODate = sdf.parse(s.duetoPmo);
+	 	       if(jobPMODate.before(todaysDate)){
+	                s.jobStatus = "inactive";
+	                s.update(s);
+	            }else{
+	            	s.jobStatus = "active";
+	                s.update(s);
+	            }
+	 	        
+	 	    }catch(Exception e){
+	 	     //handle exception
+	 	    } 
+	    }
+		return ok();
+	}
+	
+	public static Result sendmailAlertToUserAboutJobMatched(){
+	   List <UserDetails> ud = UserDetails.getallUserEmail();
+		for(UserDetails u:ud){
+		  
+			List <SendEmailAlert> sendEmail = SendEmailAlert.getAllPositionMatchedJobCount(u.email);
+			if(sendEmail.size() !=0){
+				
+				MailUtility mailUtility = new  MailUtility();
+				mailUtility.sendmailAlertToUserAboutJobMatched( u.email,sendEmail.size());
+				
+			}
+			
+		}
+		
+		return ok("");
+	} 
  	
+	
+	public static Result  deleteSendEmailAlertData(){
+		List<SendEmailAlert> items = Ebean.find(SendEmailAlert.class).findList();
+		if(items.size()!= 0){
+			Ebean.delete(items);
+			return ok("success");
+		}else{
+			return ok("table empty");
+		}
+	}
+	
+	public static Result unSubribeFormEmailAlert(boolean alert){
+		
+		String email =  session().get("email");
+		
+		System.out.println("email"+email);		
+		System.out.println("alert"+alert);
+		if(alert == false){
+			UserDetails ud = UserDetails.getUserByEmail(email);
+			if(ud != null){
+				ud.emailalert = "No";
+				ud.update();
+				
+			}
+			return ok("success");
+		}else{
+			UserDetails ud = UserDetails.getUserByEmail(email);
+			if(ud != null){
+				ud.emailalert = "Yes";
+				ud.update();
+				
+			}
+			return ok("success");
+		}
+		
+		
+	}
 }

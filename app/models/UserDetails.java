@@ -86,6 +86,7 @@ public class UserDetails extends Model {
     public String jobsearchstatus;
     public String currentjobtitle;
     public String phnumber;
+    public String emailalert;
     
     
     public String getResidentcity() {
@@ -250,6 +251,6 @@ public class UserDetails extends Model {
 	
 	
 	public static List<UserDetails> getallUserEmail(){
-		return find.all();
+		return find.where().eq("emailalert", "Yes").findList();
 	}  
 }

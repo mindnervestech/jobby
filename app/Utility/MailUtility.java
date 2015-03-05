@@ -219,14 +219,10 @@ public void sendMailForgetpassword(String  email,String pass){
 			         multipart.addBodyPart(messageBodyPart);
 			         message.setContent(multipart);
 				     Transport.send(message);
-		     
-		     
 		
 	} catch (MessagingException e) {
 		throw new RuntimeException(e);
 	}
-	
-	
 
 }
 
@@ -293,6 +289,65 @@ public void sendMailToAlluser(String  mailsubject,String mailcontent,ArrayList<S
 	
 
 }
+
+public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize){
+	
+	final String username = Play.application().configuration()
+			.getString("mail.id");
+	final String password = Play.application().configuration()
+			.getString("mail.password");
+
+	Properties props = new Properties();
+	props.put("mail.smtp.auth", "true");
+	props.put("mail.smtp.starttls.enable", "true");
+	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.port", "587");
+
+	Session session = Session.getInstance(props,
+			new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+			});
+
+	try {
+
+     		     Message message = new MimeMessage(session);
+				message.setFrom(new InternetAddress("Ardent"));
+				    //Add multiple recipients. including Admin
+				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
+				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(userEmailList));
+				 message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
+
+					//set msg text body
+					 message.setSubject("New Jobs Posted at i2Simply-Done");
+					 BodyPart messageBodyPart = new MimeBodyPart();
+					 // Now set the actual message
+					/* Date todaysDate = new Date();
+					 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+					 String dateToSend = formatter.format(todaysDate);*/
+		             //set the msg body text.
+					 String webaddress = "portal";
+					 messageBodyPart.setText("You have "+matchjobJobSize+" new  Positions matching your profile,Please login to"+webaddress +"to view the profile \n\n\n\n\n Regards,\ni2Simply-Done team \nrobert.mccauley@ardentprinciples.com");
+			         // Create a multipart message
+			         Multipart multipart = new MimeMultipart();
+			         // Set text message part
+			         multipart.addBodyPart(messageBodyPart);
+			         message.setContent(multipart);
+				     Transport.send(message);
+		     
+		     
+		
+	} catch (MessagingException e) {
+		throw new RuntimeException(e);
+	}
+	
+	
+
+}
+
+
+
 
 
 }

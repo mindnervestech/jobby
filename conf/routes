@@ -40,6 +40,8 @@ POST  /getAllJobsOnlogin/:currentpage/:jobType/:sortName/:sortType              
 GET   /getUserSkills                               controllers.Application.getUserSkills()
 GET   /getAllStates                              controllers.Application.getAllStates()
 GET    /getAllJobSearchStatus                     controllers.Application.getAllJobSearchStatus()
+GET    /unSubribeFormEmailAlert/:alert                        controllers.Application.unSubribeFormEmailAlert(alert:Boolean)
+
 #Admin		
 GET      /getAllAppliedJobs/:pageNumber                            controllers.Application.getAllAppliedJobs(pageNumber:Integer)
 GET     /getAllArchivedJobs/:pageNumber                                      controllers.Application.getAllArchivedJobs(pageNumber:Integer)
@@ -76,5 +78,7 @@ POST   /deleteJobById/:jobId                               controllers.Applicati
 POST   /moveToArchive                        controllers.Application.movetoArchive()
 GET    /deleteAllJob                          controllers.Application.deleteAllJob()
 POST   /sendMailtoAllUser/:mailsubject/:mailcontent             controllers.Application.sendMailtoAllUser(mailsubject:String,mailcontent:String)
+POST   /sendmailAlertToUserAboutJobMatched                      controllers.Application.sendmailAlertToUserAboutJobMatched()
+POST  /deleteSendEmailAlertData                                 controllers.Application.deleteSendEmailAlertData()
 
 GET   /getallSkillsForAdmin/:pageNumber                                        controllers.Application.getallSkillsForAdmin(pageNumber : Integer)
