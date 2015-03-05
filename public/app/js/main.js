@@ -7981,6 +7981,25 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 			
 		}
 		
+		
+		$scope.ubSubribeFormEmailAlert = function(alert){
+			console.log(alert);
+			$scope.userDetails.emailalert
+			if(alert  == "Yes" || alert == true){
+				alert = false;
+				$scope.userDetails.emailalert = "No"
+			}else if (alert  == "No" || alert == false){
+				$scope.userDetails.emailalert = "Yes"
+				alert = true;
+			}
+			
+			$http.get('/unSubribeFormEmailAlertByAdmin/'+alert+'/'+$scope.email)
+	    	.success(function(data) {
+
+	    	});
+			
+		}
+		
 });
 
 

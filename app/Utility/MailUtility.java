@@ -327,8 +327,8 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 					 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 					 String dateToSend = formatter.format(todaysDate);*/
 		             //set the msg body text.
-					 String webaddress = "portal";
-					 messageBodyPart.setText("You have "+matchjobJobSize+" new  Positions matching your profile,Please login to"+webaddress +"to view the profile \n\n\n\n\n Regards,\ni2Simply-Done team \nrobert.mccauley@ardentprinciples.com");
+					 String webaddress = "http://www.i2Simply-Done.com/login ";
+					 messageBodyPart.setText("You have "+matchjobJobSize+" new  Positions matching your profile,Please login to"+" "+  webaddress +" "+"to view the profile \n\n\n\n\n Regards,\ni2Simply-Done team \nrobert.mccauley@ardentprinciples.com");
 			         // Create a multipart message
 			         Multipart multipart = new MimeMultipart();
 			         // Set text message part

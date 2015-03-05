@@ -4355,6 +4355,7 @@ public class Application extends Controller {
 	    public String jobsearchstatus;
 	    public String currentjobtitle;
 	    public String phnumber;
+	    public String emailalert;
 	}
 	
 	public static Result getAllUsers(int pageNumber) {
@@ -4386,7 +4387,7 @@ public class Application extends Controller {
 			userDVM.jobsearchstatus = ud.jobsearchstatus;
 			userDVM.currentjobtitle = ud.currentjobtitle;
 			userDVM.phnumber = ud.phnumber;
-			
+			userDVM.emailalert = ud.emailalert;
 			//Date d = new Date(ud.lastlogin);
 			userDVM.userLoggedInstatus = ud.userLoggedInstatus;
 			userDetailsVM.add(userDVM);
@@ -5109,4 +5110,28 @@ public class Application extends Controller {
 		
 		
 	}
+	
+ public static Result 	unSubribeFormEmailAlertByAdmin(boolean alert,String email){
+		System.out.println("email"+email);		
+		System.out.println("alert"+alert);
+		if(alert == false){
+			UserDetails ud = UserDetails.getUserByEmail(email);
+			if(ud != null){
+				ud.emailalert = "No";
+				ud.update();
+				
+			}
+			return ok("success");
+		}else{
+			UserDetails ud = UserDetails.getUserByEmail(email);
+			if(ud != null){
+				ud.emailalert = "Yes";
+				ud.update();
+				
+			}
+			return ok("success");
+		}
+ }
+
+
 }
