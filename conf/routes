@@ -80,5 +80,6 @@ GET    /deleteAllJob                          controllers.Application.deleteAllJ
 POST   /sendMailtoAllUser/:mailsubject/:mailcontent             controllers.Application.sendMailtoAllUser(mailsubject:String,mailcontent:String)
 POST   /sendmailAlertToUserAboutJobMatched                      controllers.Application.sendmailAlertToUserAboutJobMatched()
 POST  /deleteSendEmailAlertData                                 controllers.Application.deleteSendEmailAlertData()
-
+GET   /unSubribeFormEmailAlertByAdmin/:alert/:emailId                            controllers.Application.unSubribeFormEmailAlertByAdmin(alert:Boolean, emailId:String)
+GET   /deleteUserAppliedJob/:jobNum                         controllers.Application.deleteUserAppliedJob(jobNum:String)
 GET   /getallSkillsForAdmin/:pageNumber                                        controllers.Application.getallSkillsForAdmin(pageNumber : Integer)

@@ -40,7 +40,6 @@
 				
 						</div> 
 					
-					
 				<div class="pull-right">
 							<button id="pre" type="button" ng-click="clickPre()"
 								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Previous"><i class="glyphicon glyphicon-arrow-left"></i></button>
@@ -62,7 +61,13 @@
 								<button type="button" 
 													name="edit" value="edit"
 													class="btn btn-success-customapply "
-													ng-click="reApplyForJob(job);" data-toggle="tooltip" data-placement="bottom" title="Click reapply to edit any information specific to  previously applied  job.">
+													ng-click="openDeleteUserAppliedJobPopUP(job.requestNumber);" data-toggle="tooltip" data-placement="bottom" title="Click reapply to edit any information specific to  previously applied  job." style="backgorund-color:#1484ff;"> 
+													Delete &nbsp;&nbsp;
+												</button>
+								<button type="button" 
+													name="edit" value="edit"
+													class="btn btn-success-customapply "
+													ng-click="reApplyForJob(job);" data-toggle="tooltip" data-placement="bottom" title="Click reapply to edit any information specific to  previously applied  job." style="backgorund-color:#1484ff;"> 
 													Reapply &nbsp;&nbsp;
 												</button>
 												</div>
@@ -73,7 +78,7 @@
 									</p> -->
 									<p ng-click="showappliedJobDetails(job);" >
 										<span style="cursor:pointer;"><span class="title" data-toggle="tooltip" data-placement="bottom" title="Click to View Details">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong data-toggle="tooltip" data-placement="bottom" title="Job Id"><small>&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong data-toggle="tooltip" data-placement="bottom" title="Job Id"><small>&nbsp;&nbsp; Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -482,17 +487,17 @@
 
 									 <div ng-if="jStatus == 'Applied'">
 											
-											<div class="form-group" ng-repeat="manadatorySkills in mdSkill">
+											<div class="form-group" ng-repeat="mskill in mdSkill">
 												<div class="form-group">
 													<label class="col-sm-10 control-label"
 														ng-model="manadatorySkills.skillName"> <small
-														class="desc">{{manadatorySkills.mskill}} </small></label>
+														class="desc">{{mskill.mskill}} </small></label>
 												</div>
 												<div class="form-group">
 													<div class="col-sm-8">
 														<div class="pull-right">
 															<i class="glyphicon glyphicon-download"
-																ng-click="openTemplatepopup();"></i> &nbsp;&nbsp;<i
+																ng-click="openTemplatepopup($index);"></i> &nbsp;&nbsp;<i
 																class="glyphicon glyphicon-eye-open"
 																ng-click="openPreSavedTemplate($index);"></i>
 																&nbsp;&nbsp;
@@ -501,7 +506,7 @@
 														</div>
 														<small class="desc"> <textarea rows="3"
 																name="comment"
-																ng-model="manadatorySkills.comment"
+																ng-model="manadatorySkills[$index].comment"
 																class="form-control" style="font-size: 12px;"
 																placeholder="e.g. Skill Desc" required></textarea>
 														</small>
@@ -597,12 +602,12 @@
 												</div> -->
 
 												<div ng-if="jStatus == 'Applied'">
-												<div class="form-group" ng-repeat="desiredSkills in dSkills">
+												<div class="form-group" ng-repeat="dskill in dSkills">
 													<div class="form-group">
 														<div class="form-group"
-															ng-model="desiredSkills[$index].dskill">
+															ng-model="desiredSkills.dskill">
 															<label class="col-sm-12 control-label" value="">
-																<small class="desc">{{desiredSkills.dskill}} </small>
+																<small class="desc">{{dskill.dskill}} </small>
 															</label>
 														</div>
 														<div class="form-group">
@@ -617,7 +622,7 @@
 																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templetes or create new. "></i>
 															</div>
 																<textarea rows="3" name="skillDesc"
-																	ng-model="desiredSkills.comment"
+																	ng-model="desiredSkills[$index].comment"
 																	class="form-control" style="font-size: 12px;"
 																	placeholder="e.g. Skill Desc"></textarea>
 																	<div id="saveTemplateDesiredSkills{{$index}}" class="popover"
@@ -635,10 +640,10 @@
 																		<br />
 																		<button name="save" id="save"
 																			class="button btn-success-custom "
-																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);">Save
+																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
 																			</button>
 																		<i class="glyphicon glyphicon-download"
-																			ng-click="saveToTemplate(desiredSkills[$index].comment,userTemplate,$index);"></i>
+																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
 																			class="glyphicon glyphicon-remove"
 																			ng-click="closeTemplatePopupDesiredSkills($index);"></i>
@@ -770,6 +775,28 @@
 					</div></td>
 			</tr>
 		</table>
+	</div>
+</div>
+
+<!-- Delete Position Module -->
+<div class="modal fade" id="deleteAppliedJobModule" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+	data-backdrop="false">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width: 60%;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Delete Job</h4>
+			</div>
+			<div class="modal-body" id="deleteArticleBody">Are you sure
+				want to delete this Job?</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success-custom"
+					data-ng-click="deleteUserAppliedJob();">Delete</button>
+				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
 	</div>
 </div>
 

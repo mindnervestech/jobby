@@ -114,7 +114,7 @@ public class Application extends Controller {
 		String firstname;
 		String middlename;
 		String lastname ;
-		String gender ;
+		String gender ; 
 		
 	}
 	
@@ -240,9 +240,9 @@ public class Application extends Controller {
 		 * DynamicForm dynamicForm = Form.form().bindFromRequest(); String uname
 		 * = dynamicForm.get("email");
 		 */
+		
 		UserDetails ud = UserDetails.getPassword(uname);
 		if(ud != null){
-	
 			MailUtility mailUtil = new MailUtility();
 			mailUtil.sendMailForgetpassword(ud.email,ud.password);
 			
@@ -1962,6 +1962,7 @@ public class Application extends Controller {
 			jobVM.warzone = s.warzone;
 			jobVM.coop = s.coop;
 			jobVM.duetoPmo = s.duetoPmo;
+		
 			jobVM.updateDate = s.updateDate;
 			jobVM.duetoGovt = s.duetoGovt;
 
@@ -2793,7 +2794,13 @@ public class Application extends Controller {
 			ed.instituteName = (addEducation.get(i).instituteName);
 			ed.degree = (addEducation.get(i).degree);
 			ed.fromDate = (addEducation.get(i).fromDate);
-			ed.toDate = (addEducation.get(i).toDate);
+			//ed.toDate = (addEducation.get(i).toDate);
+			if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
+				ed.toDate = "Present";
+			} else {
+				ed.toDate = addEducation.get(i).toDate;
+			}
+			
 			ed.user_details = UserDetails.getUserByEmail(email);
 			ed.save();
 
@@ -2968,7 +2975,13 @@ public class Application extends Controller {
 			ed.instituteName = (addEducation.get(i).instituteName);
 			ed.degree = (addEducation.get(i).degree);
 			ed.fromDate = (addEducation.get(i).fromDate);
-			ed.toDate = (addEducation.get(i).toDate);
+//			ed.toDate = (addEducation.get(i).toDate);
+			if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
+				ed.toDate = "Present";
+			} else {
+				ed.toDate = addEducation.get(i).toDate;
+			}
+			
 			ed.user_details = UserDetails.getUserByEmail(email);
 			ed.save();
 
@@ -3223,6 +3236,7 @@ public class Application extends Controller {
 		public List<DesiredSkillsVM> desiredSkill;
 		public String username;
 		public String jobStatus;
+		public String duetoPmo;
 
 		public long id;
 
@@ -3243,6 +3257,7 @@ public class Application extends Controller {
 		public String [] skills;
 		public String username;
 		public String jobStatus;
+		public String duetoPmo;
 		public long id;
 
 	}
@@ -3295,8 +3310,8 @@ public class Application extends Controller {
 			desiredSkills = desiredSkills.replaceAll(",$", "");
 			manadatorySkills = manadatorySkills.replaceAll(",$", "");
 
-			apj.manadatorySkill = "[" + manadatorySkills + "]";
-			apj.desiredSkil = "[" + desiredSkills + "]";
+			apj.manadatorySkill = json.get("manadatorySkills").toString();
+			apj.desiredSkil = json.get("desiredSkills").toString();
 			// apj.manadatorySkill = mskills.toString();
 			// apj.manadatorySkill = json.get("manadatorySkills").toString();
 			apj.jobno = saveAppliedJobsVM.requestNumber;
@@ -3318,6 +3333,7 @@ public class Application extends Controller {
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
+			apj.duetoPmo = saveAppliedJobsVM.duetoPmo;
 			apj.save();
 
 			//String email = session().get("email");*/
@@ -3368,6 +3384,7 @@ public class Application extends Controller {
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
+			apj.duetoPmo = saveAppliedJobsVM.duetoPmo;
 			apj.save();
 
 		} catch (JsonParseException e1) {
@@ -3426,7 +3443,7 @@ public class Application extends Controller {
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
-			
+			apj.duetoPmo = saveAppliedJobsVM.duetoPmo;
 			apj.save();
 			
 			String email = session().get("email");
@@ -3517,6 +3534,7 @@ public class Application extends Controller {
 
 		public List<MandatorySkills> manadatorySkills;
 		public List<DesiredSkills> desiredSkill;
+		public String duetoPmo;
 
 	}
 
@@ -3741,7 +3759,7 @@ public class Application extends Controller {
 			PdfPCell cell4 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
 			cell4 = new PdfPCell(new Phrase("Candidate's Full Legal Name: "
-					+ "" + candidiatename, font1));
+					+ "" + candidiatename + "_"+ JobId, font1));
 			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
 			table4.addCell(cell4);
@@ -3754,10 +3772,10 @@ public class Application extends Controller {
 			 * table4.addCell(cell4);
 			 */
 
-			cell4 = new PdfPCell(new Phrase("JOB ID: " + JobId, font1));
+			/*cell4 = new PdfPCell(new Phrase("JOB ID: " + JobId, font1));
 			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
-			table4.addCell(cell4);
+			table4.addCell(cell4);*/
 
 			List<UserClearance> clearance = ud.userClearance;
 			PdfPTable table3 = new PdfPTable(1);
@@ -4688,7 +4706,27 @@ public class Application extends Controller {
 			jobVM.skills = getAllUserSkill(s.skills);
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
-			jobVMs.add(jobVM);
+		    jobVM.duetoPmo = s.duetoPmo;
+			String DATE_FORMAT_NOW = "MM/dd/yyyy";
+		    Date date = new Date();
+		    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+		    String stringDate = sdf.format(date);
+			
+			//check for the due to pmo date if  before the todays date then does not add to list else add  
+			try{
+	    		Date todaysDate = sdf.parse(stringDate);
+	 	        Date jobPMODate = sdf.parse(s.duetoPmo);
+	 	       if(jobPMODate.before(todaysDate)){
+	 	    	  count = count - 1;
+	            }else{
+	            	jobVMs.add(jobVM);
+	            }
+	 	        
+	 	    }catch(Exception e){
+	 	     //handle exception
+	 	    } 
+			
+			
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4866,10 +4904,28 @@ public class Application extends Controller {
 			jobVM.skills = getAllUserSkill(s.skills);
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
+			jobVM.duetoPmo = s.duetoPmo;
 
 			// System.out.println("jobVM.desiredSkill" + jobVM.dsSkills);
 
-			jobVMs.add(jobVM);
+			String DATE_FORMAT_NOW = "MM/dd/yyyy";
+		    Date date = new Date();
+		    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+		    String stringDate = sdf.format(date);
+			
+			//check for the due to pmo date if  before the todays date then does not add to list else add  
+			try{
+	    		Date todaysDate = sdf.parse(stringDate);
+	 	        Date jobPMODate = sdf.parse(s.duetoPmo);
+	 	       if(jobPMODate.before(todaysDate)){
+	 	    	  
+	            }else{
+	            	jobVMs.add(jobVM);
+	            }
+	 	        
+	 	    }catch(Exception e){
+	 	     //handle exception
+	 	    } 
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5133,5 +5189,13 @@ public class Application extends Controller {
 		}
  }
 
+ public static  Result  deleteUserAppliedJob(String jobNum){
+	 AppliedJobs appliedJobs = AppliedJobs.getUserAppliedJobByReqNumber(jobNum);
+	 if(appliedJobs != null ){
+		 appliedJobs.delete();
+	 }
+	 return ok("success");
+ }
+ 
 
 }

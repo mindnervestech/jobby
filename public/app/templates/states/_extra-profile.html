@@ -91,7 +91,7 @@ background-color: #999999;
 													<div class="col-md-12">
 														<div class="">
 															<label class="">First Name *</label> <label
-																class="col-md-offset-3">&nbsp;Middle Name * </label> <label
+																class="col-md-offset-3">&nbsp;Middle Initial * </label> <label
 																class="col-md-offset-3">&nbsp;Last Name *</label>
 														</div>
 														<div class="form-group">
@@ -642,9 +642,9 @@ background-color: #999999;
 																&nbsp;&nbsp;Employment History
 															</legend>
 															<label class=""><small><strong>Please
-																		input all of your relevant employment history</strong></small> </label> <label
+																		input all of your relevant employment history.</strong></small> </label> <label
 																class=""><small><strong>Not
-																		entering a from date in the employment history section
+																		entering a <strong> to date </strong> in the employment history section
 																		defualts it to present</strong></small> </label>
 															<div class="col-md-12"
 																ng-repeat="emp in addNewEmphistory">
@@ -800,7 +800,7 @@ background-color: #999999;
 																		required /> -->
 																	<input class="form-control"
 																		ng-click="initeduDateform();" id="datepicker"
-																		ng-model="edu.fromDate" required
+																		ng-model="edu.fromDate" 
 																		style="font-size: 12px;" data-provide="datepicker"
 																		data-date-autoclose="true"
 																		data-date-format="mm/dd/yyyy"> <span
@@ -812,7 +812,7 @@ background-color: #999999;
 																		required /> -->
 																	<input class="form-control"
 																		ng-click="initeduDateform();" id="datepicker"
-																		ng-model="edu.toDate" required
+																		ng-model="edu.toDate" 
 																		style="font-size: 12px;" data-provide="datepicker"
 																		data-date-autoclose="true"
 																		data-date-format="mm/dd/yyyy">
@@ -868,7 +868,7 @@ background-color: #999999;
 																		<small><input id="certName" name="certName"
 																			type="text" placeholder="Certificate"
 																			class="form-control" ng-model="cert.certName"
-																			style="font-size: 12px;" required></small>
+																			style="font-size: 12px;" ></small>
 																	</div>
 																</div>
 
@@ -885,7 +885,7 @@ background-color: #999999;
 																				style="font-size: 12px;" required /> -->
 																			<input class="form-control"
 																				ng-click="initDatePicker();" id="datepicker"
-																				ng-model="cert.certYear" required
+																				ng-model="cert.certYear" 
 																				style="font-size: 12px;" data-provide="datepicker"
 																				data-date-autoclose="true"
 																				data-date-format="mm/dd/yyyy"> <span
@@ -1012,15 +1012,6 @@ background-color: #999999;
 																			required : true
 																		},
 
-																		certName : {
-																			lettersonly : true,
-																			required : true
-																		},
-
-																		certYear : {
-																			required : true
-																		},
-
 																		phnumber : {
 																			digits : true,
 																			required : true
@@ -1059,8 +1050,6 @@ background-color: #999999;
 																		email : "Please enter email  properly",
 																		instituteName : "Please enter institute name   properly",
 																		degree : "Please enter degree   name properly",
-																		certName : "Please enter certificate name   properly",
-																		certYear : "Please enter certidficate year  properly",
 																		altemail : "Please enter valid Email Id",
 																		phnumber : "Please enter valid Phone  number  ",
 																		altphnumber : "Please enter valid Phone  number",

@@ -138,19 +138,19 @@
 									<p class="date">
 										<button type="button" ng-if="job.jobStatus == 'active'"
 											class="btn btn-success-customapply " data-toggle="modal"
-											ng-click="applyForJob(job)" data-toggle="tooltip" data-placement="bottom" title="Apply this job">Apply</button>
+											ng-click="applyForJob(job)" data-toggle="tooltip" data-placement="bottom" title="Apply this job" style="backgorund-color:#1484ff;">Apply</button>
 										<button type="button" ng-if="job.jobStatus == 'Draft'"
 											class="btn btn-success-customapply " data-toggle="modal"
-											ng-click="applyForJob(job)" data-toggle="tooltip" data-placement="bottom" title="continue applying for a saved job">Resume</button>
+											ng-click="applyForJob(job)" data-toggle="tooltip" data-placement="bottom" title="continue applying for a saved job" style="backgorund-color:#1484ff;">Resume</button>
 									</p>
 									<p ng-click="showJobDetails(job);" ng-if= "job.jobStatus == 'active'"  >
 										<span style="cursor:pointer;"><span class="title" data-toggle="tooltip" data-placement="bottom" title=" Click to View Details">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
 									</p>
 									
 									<p ng-click="showDraftJobDetails(job);" ng-if= "job.jobStatus == 'Draft'" >
 										<span style="cursor:pointer;" ><span class="title" data-toggle="tooltip" data-placement="bottom" title="Click to View Details">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp; Job Id&nbsp; <ins>{{job.requestNumber}}</ins></small></strong></span></span>
 									</p>
 									
 									<p class="">
@@ -540,11 +540,11 @@
 
 									 <div ng-if="jStatus == 'Draft'">
 											
-											<div class="form-group" ng-repeat="manadatorySkills in mdSkill">
+											<div class="form-group" ng-repeat="mskill in mdSkill">
 												<div class="form-group">
 													<label class="col-sm-10 control-label"
 														ng-model="manadatorySkills.skillName"> <small
-														class="desc">{{manadatorySkills.mskill}} </small></label>
+														class="desc">{{mskill.mskill}} </small></label>
 												</div>
 												<div class="form-group">
 													<div class="col-sm-8">
@@ -559,7 +559,7 @@
 														</div>
 														<small class="desc"> <textarea rows="3"
 																name="comment"
-																ng-model="manadatorySkills.comment"
+																ng-model="manadatorySkills[$index].comment"
 																class="form-control" style="font-size: 12px;"
 																placeholder="e.g. Skill Desc" required></textarea>
 														</small>
@@ -689,12 +689,12 @@
 												</div>
 
 												<div ng-if="jStatus == 'Draft'">
-												<div class="form-group" ng-repeat="desiredSkills in dSkills">
+												<div class="form-group" ng-repeat="dskill in dSkills">
 													<div class="form-group">
 														<div class="form-group"
 															ng-model="desiredSkills[$index].dskill">
 															<label class="col-sm-12 control-label" value="">
-																<small class="desc">{{desiredSkills.dskill}} </small>
+																<small class="desc">{{dskill.dskill}} </small>
 															</label>
 														</div>
 														<div class="form-group">
@@ -708,7 +708,7 @@
 																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templetes or create new. "></i>
 															</div>
 																<textarea rows="3" name="skillDesc"
-																	ng-model="desiredSkills.comment"
+																	ng-model="desiredSkills[$index].comment"
 																	class="form-control" style="font-size: 12px;"
 																	placeholder="e.g. Skill Desc"></textarea>
 																				<div id="saveTemplateDesiredSkills{{$index}}" class="popover"

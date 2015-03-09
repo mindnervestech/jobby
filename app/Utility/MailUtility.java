@@ -198,21 +198,16 @@ public void sendMailForgetpassword(String  email,String pass){
 
 	try {
 
+		
+		       System.out.println("send mail");
      		     Message message = new MimeMessage(session);
 				  message.setFrom(new InternetAddress("Ardent"));
-				    //Add multiple recipients. including Admin
-				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
-					message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
-
+					message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 					//set msg text body
 					 message.setSubject( " Your  password  Details  ");
 					 BodyPart messageBodyPart = new MimeBodyPart();
-					 // Now set the actual message
-					/* Date todaysDate = new Date();
-					 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-					 String dateToSend = formatter.format(todaysDate);*/
-		             //set the msg body text.	 
-					 messageBodyPart.setText("Your UserId/Email is: "+email+"\nPassword is: "+pass);
+					             //set the msg body text.	 
+					 messageBodyPart.setText("Your Email is: "+email+"\nPassword is: "+pass);
 			         // Create a multipart message
 			         Multipart multipart = new MimeMultipart();
 			         // Set text message part

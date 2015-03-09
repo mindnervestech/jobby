@@ -25,8 +25,6 @@ public class UserExperiance extends Model {
 
 	public String experianceLevel;
 	
-	
-	
 	public UserExperiance() {
 
 	}
@@ -36,7 +34,7 @@ public class UserExperiance extends Model {
 
 	@JsonIgnore
 	public static List<UserExperiance> getAllExperiance() {
-		return find.all();
+		return find.where().order().asc("experianceLevel").findList();
 	}
 
 	@JsonIgnore

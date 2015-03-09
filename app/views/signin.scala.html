@@ -361,14 +361,14 @@
 									<p class="date">
 										<button type="button" id="applylogin" ng-if="job.jobStatus == 'active'"
 											class="btn btn-success-customapply" data-toggle="modal"
-											ng-click="applyforJobCheck()" data-toggle="tooltip" data-placement="bottom" title="Click to apply for job. " style="backgorund-color:#21205f;">Apply</button>
+											ng-click="applyforJobCheck()" data-toggle="tooltip" data-placement="bottom" title="Click to apply for job. " style="backgorund-color:#1484ff;">Apply</button>
 										<!-- <button type="button" ng-if="job.jobStatus == 'Draft'"
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Resume</button> -->
 									</p>
 									<p ng-click="showJobDetails(job);">
 										<span class="title" data-toggle="tooltip" data-placement="bottom" title="View  Job Details" style="cursor:pointer;">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -499,7 +499,8 @@
 							</button>	
 
 							<button id="next1" type="button" ng-click="clickNext()"
-								class="btn-success-customglyphicon-arrow-right"></i>
+								class="btn-success-custom"  data-toggle=" tooltip" data-placement="bottom" title="Next">
+								<i class="glyphicon glyphicon-arrow-right"></i>
 							</button>
 							&nbsp;
 							<div style="font-size: 12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>

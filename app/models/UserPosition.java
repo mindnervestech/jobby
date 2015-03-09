@@ -34,7 +34,7 @@ public class UserPosition extends Model {
 
 	@JsonIgnore
 	public static List<UserPosition> getAllPosition() {
-		return find.all();
+		return find.where().order().asc("position").findList();
 	}
 
 	@JsonIgnore

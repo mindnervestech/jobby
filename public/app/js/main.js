@@ -1008,19 +1008,29 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 				  
 				  $scope.job_application_success = false;
 				  $scope.mdSkill = $scope.jobData.manadatorySkills;
+				  console.log( $scope.mdSkill);
 				  $scope.dSkills = $scope.jobData.desiredSkill;
 				  $scope.jStatus = $scope.jobData.jobStatus;
 				  $scope.userSkill = $scope.jobData.skills;
 				  //$scope.allSkills = $scope.jobData.skills;
 				  $scope.jStatus = $scope.jobData.jobStatus;
-					  angular.forEach($scope.dSkills,function(value,key) {
+					/*  angular.forEach($scope.dSkills,function(value,key) {
 						  $scope.desiredSkills.push({dskill:value,comment:" "});
 					  });
 					  
 					  angular.forEach($scope.mdSkill,function(value,key) {
 						  $scope.manadatorySkills.push({mskill:value,comment:" "});
 					  });
-					  
+					  */
+				  angular.forEach($scope.mdSkill, function(obj, index){
+					  console.log(obj.mskill);
+					  $scope.manadatorySkills.push({mskill:obj.mskill,comment:obj.comment});
+		    			});
+				  
+	     			 angular.forEach($scope.dSkills, function(obj, index){
+	   				  $scope.desiredSkills.push({dskill:obj.dskill,comment:obj.comment});
+	   	    			});
+				  
 					  
 					  $http.get('/getAllSkills')
 						.success(function(data) {
@@ -1281,6 +1291,22 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						$scope.desiredSkills[$scope.index].comment = template;
 						$('#openTemplateDesiredSkill').popover('hide');
 						$("#openTemplateDesiredSkill").hide();
+						
+					}
+					
+					$scope.requestNumber;
+					$scope.openDeleteUserAppliedJobPopUP = function(requestNumber){
+						$scope.requestNumber = requestNumber;
+						 $('#deleteAppliedJobModule').modal('show');
+						
+					}
+					
+					$scope.deleteUserAppliedJob = function(){
+						$http.get('/deleteUserAppliedJob/'+$scope.requestNumber)
+						.success(function(data) {
+							 $scope.getAllAppliedJobs();
+							 $('#deleteAppliedJobModule').modal('hide');
+						});
 						
 					}
 					
@@ -1578,6 +1604,8 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $scope.jStatus = $scope.jobData.jobStatus;
 		  console.log("JStaus"+$scope.jStatus);
 			  
+			  
+		  if($scope.jStatus == 'active'){
 			  angular.forEach($scope.dSkills,function(value,key) {
 				  $scope.desiredSkills.push({dskill:value,comment:" "});
 			  });
@@ -1585,6 +1613,19 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			  angular.forEach($scope.mdSkill,function(value,key) {
 				  $scope.manadatorySkills.push({mskill:value,comment:" "});
 			  });
+		  }else{
+     			  angular.forEach($scope.mdSkill, function(obj, index){
+				  console.log(obj.mskill);
+				  $scope.manadatorySkills.push({mskill:obj.mskill,comment:obj.comment});
+	    			});
+			  
+     			 angular.forEach($scope.dSkills, function(obj, index){
+   				  $scope.desiredSkills.push({dskill:obj.dskill,comment:obj.comment});
+   	    			});
+			  
+			  
+		  }
+		 
 		    console.log("job"+$scope.jobData.desiredSkill);
 		    
 		    $scope.userSkill = [];
@@ -7718,11 +7759,11 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
     			angular.forEach($scope.userClearance, function(obj1, index){
     				console.log(JSON.stringify($scope.userClearance));
     				if ((obj.clearance == obj1.clearance)) {
-    					console.log(obj1.clearance);
     					console.log(obj.clearance);
-    					$scope.userClearance.push(obj.clearance);
+    					// $scope.userClearance.push(obj.clearance);
+    					$scope.userClearance = obj.clearance;
     					obj.isSelect = true;
-    					$scope.userClearance.push(obj.clearance);
+    					
     					};
     				});
     			});
@@ -7731,7 +7772,8 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
     			angular.forEach($scope.userExperience, function(obj1, index){
     				if ((obj.experianceLevel == obj1.experianceLevel)) {
     					obj.isSelect = true;
-    					$scope.userExperience.push(obj.experianceLevel);
+    					//$scope.userExperience.push(obj.experianceLevel);
+    					$scope.userExperience = obj.experianceLevel;
     					};
     				});
     			});
@@ -8755,13 +8797,12 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 	}
 	
 	$scope.deleteSelectedJob = function(){
-		  
-		  $http.get('/deleteJobById/'+ $scope.requestNumber)
+		  $http.post('/deleteJobById/'+$scope.requestNumber)
 			.success(function(data) {
 				$scope.requestNumber= "";
 				console.log("data"+data);
 				$('#deleteJobModule').modal('hide');
-				$scope.getAllAppliedJobs();
+				$scope.getAllArchivedJobs();
 				
 			});
 	  }
@@ -8927,7 +8968,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	
 	$scope.deleteSelectedJob = function(){
 		  
-		  $http.get('/deleteJobById/'+ $scope.requestNumber)
+		  $http.post('/deleteJobById/'+ $scope.requestNumber)
 			.success(function(data) {
 				$scope.requestNumber= "";
 				console.log("data"+data);
@@ -9310,7 +9351,8 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     					console.log(obj.clearance);
     					// $scope.skills.push(obj.skillName);
     					obj.isSelect = true;
-    					$scope.userClearance.push(obj.clearance);
+    					$scope.userClearance = obj.clearance;
+    					//$scope.userClearance.push(obj.clearance);
     					
     					};
     				});
@@ -9334,7 +9376,8 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     			angular.forEach($scope.userExperience, function(obj1, index){
     				if ((obj.experianceLevel == obj1.experianceLevel)) {
     					obj.isSelect = true;
-    					$scope.userExperience.push(obj.experianceLevel);
+    					$scope.userExperience = obj.experianceLevel;
+    					//$scope.userExperience.push(obj.experianceLevel);
     					
     					};
     				});
