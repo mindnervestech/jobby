@@ -3921,20 +3921,7 @@ public class Application extends Controller {
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
 
-			/*
-			 * celledu = new PdfPCell(new Phrase("School Name", font2));
-			 * celledu.setBackgroundColor(new BaseColor(230, 230, 250));
-			 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-			 * edutable.addCell(celledu);
-			 */
-
-			/*
-			 * celledu = new PdfPCell(new Phrase("Degree Major", font2));
-			 * celledu.setBackgroundColor(new BaseColor(230, 230, 250));
-			 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-			 * edutable.addCell(celledu);
-			 */
-
+			
 			celledu = new PdfPCell(new Phrase("Completion Date", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
