@@ -49,11 +49,17 @@
 								ng-model="searchId" name="search" id="search"
 								style="font-size: 12px;" data-toggle="tooltip"
 								data-placement="bottom"
-								title="Enter Request Number to search Jobs."  placeholder="search by job ID"><i
+								title="Enter Request Number to search Jobs."  placeholder="search by job ID"> 
+								<i
+								class="glyphicon glyphicon-remove" data-toggle="tooltip"
+								data-placement="bottom"
+								title="Reset search field"
+								ng-click="resetSearchField();"></i>&nbsp;&nbsp;<i
 								class="glyphicon glyphicon-search" data-toggle="tooltip"
 								data-placement="bottom"
 								title="Search Jobs using Request Number."
-								ng-click="searchJobById();"></i>
+								ng-click="searchJobById();"></i> 
+								
 						</div>
 						<div class="col-md-1 control-label">
 							<span class="pull-right"><button class="btn btn-success-custom"

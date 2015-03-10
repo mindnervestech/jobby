@@ -295,7 +295,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  $scope.sortType = false;
 	  $scope.allPosition;
 	  $scope.sortName = "Position"
-	   $scope.searchId;
+	  $scope.searchId;
  		  
 		  // called when page in loaded for getting all jobns form db
 	  // get all jobs  for the Admin
@@ -304,7 +304,14 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$scope.sortType = false;
 		$scope.pageno = 0;
 		$scope.matchedpos = false;
+		
 		$scope.position = "notSelected";
+		if($scope.searchId == '' || angular.isUndefined($scope.searchId)){
+			//alert(angular.equals($scope.searchId ,""));
+			$scope.searchId = undefined;
+		}
+		
+		
 		$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 		.success(function(data) {
 			console.log(data);
@@ -338,6 +345,11 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$scope.location = false;
 		$scope.pageno = 0;
 		$scope.position = "notSelected";
+		
+		if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+			$scope.searchId;
+		}
+		
 		if($scope.matchedpos == true){
 			$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 	    	.success(function(data) {
@@ -361,7 +373,9 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$scope.location = false;
 		$scope.pageno = 0;
 		$scope.matchedpos = false;
-		
+		if($scope.searchId == "" || angular.isUndefined($scope.searchId)){
+			$scope.searchId;
+		}
 			$http.post('/getAllJobsForAdmin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortType+'/'+$scope.sortName+'/'+$scope.searchId)
 	    	.success(function(data) {
 	    		$scope.jobsData = data.jobs;
@@ -709,6 +723,11 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 					
 				});
 			
+		}
+		
+		$scope.resetSearchField = function(){
+			$scope.searchId = undefined;
+			$scope.onJobsForAdminLoad();
 		}
 });
 
