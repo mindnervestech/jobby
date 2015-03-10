@@ -3694,8 +3694,8 @@ public class Application extends Controller {
 			 * float[] widthexp = { 2f}; expLevelTable.setWidths(widthexp);
 			 */
 
-		/*	PdfPCell cellexptble = new PdfPCell(new Paragraph(
-					"Resource Submission Level".toUpperCase()));*/
+			PdfPCell cellexptble = new PdfPCell(new Paragraph(
+					"Resource Submission Level".toUpperCase()));
 			/*
 			 * cellexptble.setColspan(3);
 			 * cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -3713,17 +3713,23 @@ public class Application extends Controller {
 
 			for (UserExperiance ue : userExperiance) {
 				// EmpHistorytable.addCell(cellemp);
-				/*cellexptble = new PdfPCell(
-						new Phrase(ue.experianceLevel, font1));
+				cellexptble = new PdfPCell(
+				new Phrase("Resource Submission Level: ".toUpperCase()+" "+ue.experianceLevel, font1));
 				System.out.println("ue.experianceLevel" + ue.experianceLevel);
 				cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
 				// cell2.setFont(font1);
 				cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-				expLevelTable.addCell(cellexptble);*/
-				chunkResourceSubmissionLevel = new Chunk(
-						"Resource Submission Level".toUpperCase() +":  "+ue.experianceLevel);
-				chunkUserExp.setBackground(new BaseColor(248, 248, 255));
-				chunkUserExp.setFont(font1);
+				expLevelTable.addCell(cellexptble);
+				
+				cellexptble = new PdfPCell(
+						new Phrase("CSR Level".toUpperCase() +":  "+csrNumber, font1));
+						System.out.println("ue.experianceLevel" + ue.experianceLevel);
+						cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
+						// cell2.setFont(font1);
+						cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
+						expLevelTable.addCell(cellexptble);
+				
+				
 			}
 
 			// skill table
@@ -4052,15 +4058,9 @@ public class Application extends Controller {
 			document.add(Chunk.NEWLINE); // Something like in HTML :-)
 			// document.add(new Paragraph("Candidate's Name:",font1));
 			document.add(table4);
+			
 			document.add(Chunk.NEWLINE);
 			document.add(expLevelTable);
-			document.add(Chunk.NEWLINE);
-			document.add(chunkCSRLeval);
-			if(chunkResourceSubmissionLevel != null){
-				document.add(Chunk.NEWLINE);
-				document.add(chunkResourceSubmissionLevel);
-			}
-			
 			// preface.setAlignment(Element.ALIGN_CENTER);
 			document.add(Chunk.NEWLINE);
 			document.add(chunkClearance);
