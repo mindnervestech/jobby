@@ -2031,7 +2031,7 @@ public class Application extends Controller {
 				// add the string with number
 				if (token.trim().length() != 0) {
 					
-					if(tokenCount>=10 ){
+					if(tokenCount> 10 ){
 						desSkill.add("1"+token.substring(0,token.length()-1));
 					}else{
 						desSkill.add(token);
