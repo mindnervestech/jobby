@@ -5,19 +5,26 @@
 <div class="row" ng-init="onAllJobsLoad()">
 	<div class="col-lg-12">
 		<div class="panel" style="min-height: 500px;">
-			
+
 			<div class="panel-body">
-			
+
 				<div id="grid-layout-first-table" class="box jplist">
-				<div class="" id="wrapper12" style="font-size:15px;"><span><small><strong>Welcome to Ardent Principles  i2Simply Done tool.</strong> Below you will find a list of all current i2S opportunities that match the positions you selected in your profile. Select the <strong>All Jobs</strong> check box to view ALL available <strong> i2S positions </strong>  in our portal.</small></span></div>
-			
+					<div class="" id="wrapper12" style="font-size: 15px;">
+						<span><small><strong>Welcome to Ardent
+									Principles i2Simply Done tool.</strong> Below you will find a list of
+								all current i2S opportunities that match the positions you
+								selected in your profile. Select the <strong>All Jobs</strong>
+								check box to view ALL available <strong> i2S positions
+							</strong> in our portal.</small></span>
+					</div>
+
 					<div class="jplist-ios-button">
 						<i class="fa fa-sort"></i>jPList Actions
 					</div>
 					<div class="">
 
 						<div class="col-md-3 control-label">
-							<label >Job Type&nbsp;&nbsp;</label> <select id="jobType"
+							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
 								name="jobType" ng-model="jobType" class="selectpicker"
 								ng-change="getAllJobByType();">
 								<option name="jobType" value="Full-Time">Full Time</option>
@@ -25,27 +32,31 @@
 								<option value="All">All</option>
 							</select>
 						</div>
-						
-						 <div class="col-md-4 control-label"  data-toggle="tooltip" data-placement="bottom" title="Sort Jobs in Ascending or Descending Order">
-							<label >Sort By&nbsp;&nbsp;</label> <select id="sortName"
+
+						<div class="col-md-4 control-label" data-toggle="tooltip"
+							data-placement="bottom"
+							title="Sort Jobs in Ascending or Descending Order">
+							<label>Sort By&nbsp;&nbsp;</label> <select id="sortName"
 								name="sortName" ng-model="sortName" class="selectpicker"
 								ng-click="getAllJobBySelectedElement();">
 								<option value="Position">Position Name</option>
-								<option value="Location" >Location</option>
-								<option value="Clearance" >Clearance Level</option>
-								<option value="Experiance" >Experience  Level</option>
-							</select>
-							<span class="sort-by-price active" ng-if="location == false"
-									ng-model="location"><a class="aTagclass"
-									ng-click="onSortTypeClick()"><span class="spanClass"></span><span
-										class="glyphicon glyphicon-chevron-down" style="color:#2120F5;"></span></a>&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></span>
-								<span class="sort-by-price active" ng-if="location == true"
-									ng-model="location"><a class="aTagclass"
-									ng-click="onSortTypeClick()"><span class="spanClass"></span><span
-										class="glyphicon glyphicon-chevron-up" style="color:#2120F5;"></span></a> &nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></span>
-				
-						</div> 
-						 <!-- <div class="col-md-1 control-label">
+								<option value="Location">Location</option>
+								<option value="Clearance">Clearance Level</option>
+								<option value="Experiance">Experience Level</option>
+							</select> <span class="sort-by-price active" ng-if="location == false"
+								ng-model="location"><a class="aTagclass"
+								ng-click="onSortTypeClick()"><span class="spanClass"></span><span
+									class="glyphicon glyphicon-chevron-up" style="color: #2120F5;"></span></a>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></span> <span
+								class="sort-by-price active" ng-if="location == true"
+								ng-model="location"><a class="aTagclass"
+								ng-click="onSortTypeClick()"><span class="spanClass"></span><span
+									class="glyphicon glyphicon-chevron-down"
+									style="color: #2120F5;"></span></a> &nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></span>
+
+						</div>
+						<!-- <div class="col-md-1 control-label">
 							 <input type="checkbox"
 								ng-model="location" ng-change="onLocationClick();"
 								name="location">
@@ -56,9 +67,9 @@
 
 						</div> 
 						 -->
-						
-						
-						
+
+
+
 						<!-- <div class="col-md-2 control-label">
 							Sort by Location<br> <input type="checkbox"
 								ng-model="location" ng-change="onLocationClick();"
@@ -80,15 +91,21 @@
 
 						</div>
  -->
-						 <div class="col-md-2 control-label" data-toggle="tooltip" data-placement="bottom" title="Check box to view saved jobs">
+						<div class="col-md-2 control-label" data-toggle="tooltip"
+							data-placement="bottom" title="Check box to view saved jobs">
 							<input type="checkbox" ng-model="savedJobs"
-								ng-change="getUserSavedJobs();" name="savedJobs">&nbsp;&nbsp;&nbsp;My Saved Jobs&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
-						</div> 
-						
-						 <div class="col-md-2 control-label" data-toggle="tooltip" data-placement="bottom" title="Check box to view the full listing of available jobs in the portal">
+								ng-change="getUserSavedJobs();" name="savedJobs">&nbsp;&nbsp;&nbsp;My
+							Saved Jobs&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i>
+						</div>
+
+						<div class="col-md-2 control-label" data-toggle="tooltip"
+							data-placement="bottom"
+							title="Check box to view the full listing of available jobs in the portal">
 							<input type="checkbox" ng-model="allJobs"
-								ng-change="getAllJobsToUser();" name="allJobs">&nbsp;&nbsp;&nbsp;All Jobs&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
-						</div> 
+								ng-change="getAllJobsToUser();" name="allJobs">&nbsp;&nbsp;&nbsp;All
+							Jobs&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+						</div>
 						<!-- 	<div class="col-md-3 control-label">
 							Search by Position<br /> <select id="allposition"
 								name="position" ng-model="position" class="selectpicker"
@@ -109,117 +126,161 @@
  -->
 						<div class="pull-right" ng-if="hidepagNo == false">
 							<button id="pre1" type="button" ng-click="clickPre()"
-								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Previous">
+								class="btn btn-success-custom " data-toggle="tooltip"
+								data-placement="bottom" title="Previous">
 								<i class="glyphicon glyphicon-arrow-left"></i>
 							</button>
 							&nbsp;
 							<button id="next" type="button" ng-click="clickNext()"
-								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Next">
+								class="btn btn-success-custom " data-toggle="tooltip"
+								data-placement="bottom" title="Next">
 								<i class="glyphicon glyphicon-arrow-right"></i>
 							</button>
-							<div style="font-size: 12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>
+							<div style="font-size: 12px">
+								<strong>{{JobPre}}/{{totalJobs}}</strong>
+							</div>
 							&nbsp;
 						</div>
 
 					</div>
 					<div class="box text-shadow">
-					<span style="color:green;" ng-if="job_application_success == true" class="pull-left">  Your application has been recieved, Thank you for applying</span> 
-					<span style="color:green;" ng-if="job_draft_application_success == true" class="pull-left">  Your application has been saved in draft</span> 
-						
-						<div class="col-md-12"><small class="" style="font-size: 13px;">Click on the <span style="color:#F03800;">position title</span> to view all of the details related to the position</small></div>
-						
-					<div class="col-md-12" ng-if="savedJobs == true"><small class="" style="font-size: 13px;">Please select <strong>Resume</strong> to continue applying for a saved job.</small></div>
-						
-						<table class="demo-tbl" style="margin-top:0%;">
-					
+						<span style="color: green;"
+							ng-if="job_application_success == true" class="pull-left">
+							Your application has been recieved, Thank you for applying</span> <span
+							style="color: green;"
+							ng-if="job_draft_application_success == true" class="pull-left">
+							Your application has been saved in draft</span>
+
+						<div class="col-md-12">
+							<small class="" style="font-size: 13px;">Click on the <span
+								style="color: #F03800;">position title</span> to view all of the
+								details related to the position
+							</small>
+						</div>
+
+						<div class="col-md-12" ng-if="savedJobs == true">
+							<small class="" style="font-size: 13px;">Please select <strong>Resume</strong>
+								to continue applying for a saved job.
+							</small>
+						</div>
+
+						<table class="demo-tbl" style="margin-top: 0%;">
+
 							<tr class="tbl-item" data-ng-repeat="job in jobsData">
 								<td class="td-block"
 									ng-if="job.jobStatus == 'active' || job.jobStatus == 'Draft'">
 									<p class="date">
 										<button type="button" ng-if="job.jobStatus == 'active'"
 											class="btn btn-success-customapply " data-toggle="modal"
-											ng-click="applyForJob(job)" data-toggle="tooltip" data-placement="bottom" title="Apply this job" style="backgorund-color:#1484ff;">Apply</button>
+											ng-click="applyForJob(job)" data-toggle="tooltip"
+											data-placement="bottom" title="Apply this job"
+											style="backgorund-color: #1484ff;">Apply</button>
 										<button type="button" ng-if="job.jobStatus == 'Draft'"
 											class="btn btn-success-customapply " data-toggle="modal"
-											ng-click="applyForJob(job)" data-toggle="tooltip" data-placement="bottom" title="continue applying for a saved job" style="backgorund-color:#1484ff;">Resume</button>
+											ng-click="applyForJob(job)" data-toggle="tooltip"
+											data-placement="bottom"
+											title="continue applying for a saved job"
+											style="backgorund-color: #1484ff;">Resume</button>
 									</p>
-									<p ng-click="showJobDetails(job);" ng-if= "job.jobStatus == 'active'"  >
-										<span style="cursor:pointer;"><span class="title" data-toggle="tooltip" data-placement="bottom" title=" Click to View Details">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
+									<p ng-click="showJobDetails(job);"
+										ng-if="job.jobStatus == 'active'">
+										<span style="cursor: pointer;"><span class="title"
+											data-toggle="tooltip" data-placement="bottom"
+											title=" Click to View Details">{{job.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small
+													data-toggle="tooltip" data-placement="bottom"
+													title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
 									</p>
-									
-									<p ng-click="showDraftJobDetails(job);" ng-if= "job.jobStatus == 'Draft'" >
-										<span style="cursor:pointer;" ><span class="title" data-toggle="tooltip" data-placement="bottom" title="Click to View Details">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp; Job Id&nbsp; <ins>{{job.requestNumber}}</ins></small></strong></span></span>
+
+									<p ng-click="showDraftJobDetails(job);"
+										ng-if="job.jobStatus == 'Draft'">
+										<span style="cursor: pointer;"><span class="title"
+											data-toggle="tooltip" data-placement="bottom"
+											title="Click to View Details">{{job.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small
+													data-toggle="tooltip" data-placement="bottom"
+													title="Job Id">&nbsp;&nbsp; Job Id&nbsp; <ins>{{job.requestNumber}}</ins></small></strong></span></span>
 									</p>
-									
+
 									<p class="">
 										<strong><small><span><i
-													class="glyphicon glyphicon-map-marker" data-toggle="tooltip" data-placement="bottom" title="Work Location "></i>&nbsp;{{job.workLocation}}</span></small></strong>
-										<span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Request Type"></i>&nbsp;{{job.requestType}}
+													class="glyphicon glyphicon-map-marker"
+													data-toggle="tooltip" data-placement="bottom"
+													title="Work Location "></i>&nbsp;{{job.workLocation}}</span></small></strong> <span
+											class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-user" data-toggle="tooltip"
+													data-placement="bottom" title="Request Type"></i>&nbsp;{{job.requestType}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-screenshot" data-toggle="tooltip" data-placement="bottom" title="Performance Level"></i>&nbsp;{{job.performanceLevel}}
+													class="glyphicon glyphicon-screenshot"
+													data-toggle="tooltip" data-placement="bottom"
+													title="Performance Level"></i>&nbsp;{{job.performanceLevel}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-													class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="bottom" title="Clearance Type"></i>&nbsp;{{job.clearanceRequired}}
+													class="glyphicon glyphicon-ok" data-toggle="tooltip"
+													data-placement="bottom" title="Clearance Type"></i>&nbsp;{{job.clearanceRequired}}
 											</small></strong></span>
 									</p>
 									<p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
-											data-placement="bottom"></small><small><span
-											popover="{{job.workDescription}}" popover-placement="bottom"><a
-												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
+											data-placement="bottom"></small> <small><span
+											href="#popupBottom2{{$index}}" data-toggle="modal-popover"
+											data-placement="bottom"><a
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
+
+									<div id="popupBottom2{{$index}}" class="popover"
+										data-toggle="modal-popover"
+										style="margin-top: -5%; margin-left: -20%;">
+										<div class="arrow"></div>
+										<div class="popover-content">
+											<small>{{job.workDescription}} </small>
+										</div>
+									</div>
+
+
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
-									</p>
-									
-									
-									<!--  manadatory Skills job content  -->
+									</p> <!--  manadatory Skills job content  -->
 									<p class="desc" ng-if="job.jobStatus == 'active'">
 										<small
 											ng-bind="job.manadatorySkills[0] |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover"
-											data-placement="bottom"><a style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a>
-										</span></small>
+											data-placement="bottom"><a
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 
 									<div id="popupBottom{{$index}}" class="popover"
 										data-toggle="modal-popover"
-										style="margin-top: -5%; margin-left: -20%;" ng-if="job.jobStatus == 'active'">
+										style="margin-top: -5%; margin-left: -20%;"
+										ng-if="job.jobStatus == 'active'">
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job1 in job.manadatorySkills">{{job1}}
 											</small>
 										</div>
-									</div>
-									
-									<!--  manadatory Skills job content end  -->
-									
-									<!-- user saved job content manadatory Skills  -->
+									</div> <!--  manadatory Skills job content end  --> <!-- user saved job content manadatory Skills  -->
 									<p class="desc" ng-if="job.jobStatus == 'Draft'">
 										<small
 											ng-bind="job.manadatorySkills[0].mskill |cut:true:200:'   ...'"
 											data-placement="bottom"></small> <small><span
 											href="#popupBottom{{$index}}" data-toggle="modal-popover"
-											data-placement="bottom"><a style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a>
-										</span></small>
+											data-placement="bottom"><a
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 
 									<div id="popupBottom{{$index}}" class="popover"
 										data-toggle="modal-popover"
-										style="margin-top: -5%; margin-left: -20%;" ng-if="job.jobStatus == 'Draft'">
+										style="margin-top: -5%; margin-left: -20%;"
+										ng-if="job.jobStatus == 'Draft'">
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job1 in job.manadatorySkills">{{job1.mskill}}
 											</small>
 										</div>
-									</div>
-									<!-- user saved job content manadatory Skills  end -->
-									
-									
-									
+									</div> <!-- user saved job content manadatory Skills  end -->
+
+
+
 
 									<p class="text-danger">
 										<small>Desired Skills</small>
@@ -228,46 +289,40 @@
 											data-placement="bottom"></small><small><span
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
-									</p>-->
-									
-									
-									<!-- user  job content  -->
+									</p>--> <!-- user  job content  -->
 									<p class="desc" ng-if="job.jobStatus == 'active'">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small> <span
 											href="#popupDesiredSkill{{$index}}"
 											data-toggle="modal-popover" data-placement="bottom"><a
-												style="color: blue;cursor:pointer;">&nbsp;&nbsp;more</a> </span></small>
+												style="color: blue; cursor: pointer;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<div id="popupDesiredSkill{{$index}}" class="popover"
-										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'active'">
+										style="margin-top: -5%; margin-left: -19%;"
+										ng-if="job.jobStatus == 'active'">
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job2 in job.desiredSkill">{{job2}}</small>
 											<!-- <span ng-click="close">close</span> -->
 										</div>
-									</div>
-									<!-- user  job content   end-->
-									
-									
-									<!-- user saved job content Desired Skills start  -->
+									</div> <!-- user  job content   end--> <!-- user saved job content Desired Skills start  -->
 									<p class="desc" ng-if="job.jobStatus == 'Draft'">
-										<small ng-bind="job.desiredSkill[0].dskill  | cut:true:200:'    ...'"
+										<small
+											ng-bind="job.desiredSkill[0].dskill  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small> <span
 											href="#popupDesiredSkill{{$index}}"
 											data-toggle="modal-popover" data-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>
 									<div id="popupDesiredSkill{{$index}}" class="popover"
-										style="margin-top: -5%; margin-left: -19%;" ng-if="job.jobStatus == 'Draft'">
+										style="margin-top: -5%; margin-left: -19%;"
+										ng-if="job.jobStatus == 'Draft'">
 										<div class="arrow"></div>
 										<div class="popover-content">
 											<small data-ng-repeat="job2 in job.desiredSkill">{{job2.dskill}}</small>
 											<span ng-click="close">close</span>
 										</div>
-									</div>
-									
-									<!-- user saved job content Desired Skills end -->
+									</div> <!-- user saved job content Desired Skills end -->
 
 								</td>
 
@@ -275,18 +330,22 @@
 
 						</table>
 
-						<div class="pull-right"  ng-if="hidepagNo == false">
+						<div class="pull-right" ng-if="hidepagNo == false">
 							<button id="pre" type="button" ng-click="clickPre()"
-								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Next">
+								class="btn btn-success-custom " data-toggle="tooltip"
+								data-placement="bottom" title="Next">
 								<i class="glyphicon glyphicon-arrow-left"></i>
 							</button>
 
 							<button id="next1" type="button" ng-click="clickNext()"
-								class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Previous">
+								class="btn btn-success-custom " data-toggle="tooltip"
+								data-placement="bottom" title="Previous">
 								<i class="glyphicon glyphicon-arrow-right"></i>
 							</button>
 							&nbsp;
-							<div style="font-size: 12px"><strong>{{JobPre}}/{{totalJobs}}</strong></div>
+							<div style="font-size: 12px">
+								<strong>{{JobPre}}/{{totalJobs}}</strong>
+							</div>
 							&nbsp;
 						</div>
 
@@ -328,21 +387,20 @@
 
 					<div class="portlet box portlet-green">
 						<div class="">
-						<span ng-show="errorManaSkillComment" style="color: red;">
-											Please give comment to all Mandatory Skills</span>
+							<span ng-show="errorManaSkillComment" style="color: red;">
+								Please give comment to all Mandatory Skills</span>
 							<div id="rootwizard-custom-circle">
 								<div class="">
 
 									<ul>
-									
-									<li class="active"><a id="tab1"
+
+										<li class="active"><a id="tab1"
 											data-target="#tab1-wizard-custom-circle" data-toggle="tab">
 												<!-- <i class="glyphicon glyphicon-user"></i> -->
 												<p class="anchor">1.Select Skills</p>
 										</a></li>
-										<li><a id="tab2"
-											data-target="#tab2-wizard-custom-circle" data-toggle="tab">
-												<!-- <i class="glyphicon glyphicon-user"></i> -->
+										<li><a id="tab2" data-target="#tab2-wizard-custom-circle"
+											data-toggle="tab"> <!-- <i class="glyphicon glyphicon-user"></i> -->
 												<p class="anchor">2.Manadatory Skills</p>
 										</a></li>
 										<!--  <p class="description"></p></a></li> -->
@@ -354,12 +412,12 @@
 								</div>
 
 								<div class="tab-content">
-								
-								<div id="tab1-wizard-custom-circle" class="tab-pane active">
+
+									<div id="tab1-wizard-custom-circle" class="tab-pane active">
 										<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
-										 -->		
+										 -->
 										<div class="form-group" class="active">
-										
+
 											<div class="pull-right">
 												<button type="button" ng-if="jStatus == 'active'"
 													name="next" value="Next"
@@ -368,77 +426,91 @@
 													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
 												<button type="button" ng-if="jStatus == 'draft'" name="next"
-													value="Next" class="btn btn-success-custom  button-next mlm"
+													value="Next"
+													class="btn btn-success-custom  button-next mlm"
 													ng-click="saveUserJob();">
 													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
 											</div>
 											<div ng-if="jStatus == 'active'">
-												<div class="form-group" >
-												 <div class ="col-md-10"><small><strong style="color:#21205F;">Please select a maximum of 12 of your most relevant key skill areas specific to this position.  Use the add function for key skills specific to this position that are not listed.</strong></small></div>
+												<div class="form-group">
+													<div class="col-md-10">
+														<small><strong style="color: #21205F;">Please
+																select a maximum of 12 of your most relevant key skill
+																areas specific to this position. Use the add function
+																for key skills specific to this position that are not
+																listed.</strong></small>
+													</div>
 													<div class="col-md-5" ng-repeat="skill in allSkills">
-														<label 
-																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
-																style="padding: 0px;"> <input type="checkbox"
-																name="allSkill" ng-click="skillClicked($event,skill)"
-																ng-model="skill.isSelected" ng-disabled="checked == limit && !skill.isSelected"> {{skill.skillName}}
-															</label>
+														<label class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+															style="padding: 0px;"> <input type="checkbox"
+															name="allSkill" ng-click="skillClicked($event,skill)"
+															ng-model="skill.isSelected"
+															ng-disabled="checked == limit && !skill.isSelected">
+															{{skill.skillName}}
+														</label>
 													</div>
+												</div>
+
+												<br /> <br />
+												<div class="form-group">
+													<div class="col-md-9">
+														<div class="col-md-5">
+															<span ng-show="error">Please enter Skill Name</span> <input
+																id="inputName" type="text" id="otherSkill"
+																ng-model="otherSkill" name="otherSkill"
+																placeholder="Other Skill" style="font-size: 12px;"
+																class="form-control">
+														</div>
+														<div class="col-md-4">
+															<button type="submit"
+																ng-click="saveOtherSkill(otherSkill);"
+																class="btn btn-success-custom ">Add</button>
+														</div>
 													</div>
-													
-													<br /><br />
-													<div class="form-group">
-																<div class="col-md-9">
-																	<div class="col-md-5">
-																		<span ng-show="error">Please enter Skill Name</span> <input
-																			id="inputName" type="text" id="otherSkill"
-																			ng-model="otherSkill" name="otherSkill"
-																			placeholder="Other Skill" style="font-size: 12px;"
-																			class="form-control">
-																	</div>
-																	<div class="col-md-4">
-																		<button type="submit"
-																			ng-click="saveOtherSkill(otherSkill);"
-																			class="btn btn-success-custom ">Add</button>
-																	</div>
-																</div>
-															</div>
-													
-												
+												</div>
+
+
 											</div>
 											<div ng-if="jStatus == 'Draft'">
 												<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span> -->
-												 <div class ="col-md-10"><small><strong style="color:#21205F;">Please select a maximum of 12 of your most relevant key skill areas specific to this position.  Use the add function for key skills specific to this position that are not listed.</strong></small></div>
-												<div class="form-group" >
+												<div class="col-md-10">
+													<small><strong style="color: #21205F;">Please
+															select a maximum of 12 of your most relevant key skill
+															areas specific to this position. Use the add function for
+															key skills specific to this position that are not listed.</strong></small>
+												</div>
+												<div class="form-group">
 													<div class="col-md-5" ng-repeat="skill in allSkills">
-														<label 
-																class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
-																style="padding: 0px;"> <input type="checkbox"
-																name="allSkill" ng-click="skillClicked($event,skill)"
-																ng-model="skill.isSelected" ng-disabled="checked == limit && !skill.isSelected"> {{skill.skillName}}
-															</label>
+														<label class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+															style="padding: 0px;"> <input type="checkbox"
+															name="allSkill" ng-click="skillClicked($event,skill)"
+															ng-model="skill.isSelected"
+															ng-disabled="checked == limit && !skill.isSelected">
+															{{skill.skillName}}
+														</label>
 													</div>
+												</div>
+
+												<br /> <br />
+												<div class="form-group">
+													<div class="col-md-9">
+														<div class="col-md-5">
+															<span ng-show="error">Please enter Skill Name</span> <input
+																id="inputName" type="text" id="otherSkill"
+																ng-model="otherSkill" name="otherSkill"
+																placeholder="Other Skill" style="font-size: 12px;"
+																class="form-control">
+														</div>
+														<div class="col-md-4">
+															<button type="submit"
+																ng-click="saveOtherSkill(otherSkill);"
+																class="btn btn-success-custom ">Add</button>
+														</div>
 													</div>
-													
-													<br /><br />
-													<div class="form-group">
-																<div class="col-md-9">
-																	<div class="col-md-5">
-																		<span ng-show="error">Please enter Skill Name</span> <input
-																			id="inputName" type="text" id="otherSkill"
-																			ng-model="otherSkill" name="otherSkill"
-																			placeholder="Other Skill" style="font-size: 12px;"
-																			class="form-control">
-																	</div>
-																	<div class="col-md-4">
-																		<button type="submit"
-																			ng-click="saveOtherSkill(otherSkill);"
-																			class="btn btn-success-custom ">Add</button>
-																	</div>
-																</div>
-															</div>
-													
-												
+												</div>
+
+
 											</div>
 											<!-- <div ng-if="jStatus == 'Draft'">
 												<div class="form-group" ng-repeat="mskill in mdSkill">
@@ -449,7 +521,7 @@
 													</div>
 												</div>
 											</div> -->
-									
+
 										</div>
 										<div class="pull-right">
 											<button type="button" name="next" value="Next"
@@ -461,25 +533,28 @@
 
 									</div>
 									<div id="tab2-wizard-custom-circle" class="tab-pane">
-										
+
 										<div class="form-group">
-										
+
 											<div class="pull-right">
 												<button type="button" ng-if="jStatus == 'active'"
 													name="next" value="Next"
 													class="btn btn-success-custom  button-next mlm"
 													ng-click="saveUserJobToDraft();">
-													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox" data-toggle="tooltip" data-placement="top" title="Save youe job to Draft. "></i>
+													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"
+														data-toggle="tooltip" data-placement="top"
+														title="Save youe job to Draft. "></i>
 												</button>
 												<button type="button" ng-if="jStatus == 'draft'" name="next"
-													value="Next" class="btn btn-success-custom  button-next mlm"
+													value="Next"
+													class="btn btn-success-custom  button-next mlm"
 													ng-click="saveUserJob();">
 													Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button>
 											</div>
-											
+
 											<div ng-if="jStatus == 'active'">
-											
+
 												<div class="form-group" ng-repeat="mskill in mdSkill">
 													<div class="form-group">
 														<label class="col-sm-10 control-label"
@@ -491,11 +566,17 @@
 														<div class="col-sm-8">
 															<div class="pull-right">
 																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopup($index);" data-toggle="tooltip" data-placement="top" title="Create new template"></i> &nbsp;&nbsp;<i
+																	ng-click="openTemplatepopup($index);"
+																	data-toggle="tooltip" data-placement="top"
+																	title="Create new template"></i> &nbsp;&nbsp;<i
 																	class="glyphicon glyphicon-eye-open"
-																	ng-click="openPreSavedTemplate($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
-																	&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templates or create new.  "></i>
+																	ng-click="openPreSavedTemplate($index);"
+																	data-toggle="tooltip" data-placement="top"
+																	title="Open previously saved templates "></i>
+																&nbsp;&nbsp; <i
+																	class="glyphicon glyphicon-question-sign"
+																	data-toggle="tooltip" data-placement="top"
+																	title="Please use icons to copy your previously saved templates or create new.  "></i>
 															</div>
 															<small class="desc"> <textarea rows="3"
 																	name="comment"
@@ -521,7 +602,7 @@
 																		<button name="save" id="save"
 																			class="button btn-success-custom "
 																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
-																			</button>
+																		</button>
 																		<i class="glyphicon glyphicon-download"
 																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
 																		&nbsp;&nbsp;&nbsp;&nbsp;<i
@@ -531,6 +612,75 @@
 																	</div>
 																</div>
 															</div>
+
+															<div id="openTemplate{{$index}}" class="popover"
+																style="z-index: 100; height: auto; width: 80%;">
+																<div class="arrow"></div>
+																<h3 class="popover-title">My Previous Saved
+																	Template</h3>
+																<div class="popover-content"
+																	style="overflow-y: scroll; overflow-x: hidden;">
+																	<div class="pull-right">
+																		<i class="glyphicon glyphicon-remove"
+																			ng-click="closegetAllTemplatePopup($index);"></i>
+																	</div>
+																	<table data-ng-repeat="userT in userTemplateData" inline-edit="userT.templateName"
+																				on-save="updateTodo(userT.templateName)"
+																				on-cancel="cancelEdit(userT.templateName)">
+
+																		<tr class="pull-right">
+																			<td><i class="glyphicon glyphicon-export"
+																				ng-click="copyToTemplate(userT.template,$index);"
+																				data-toggle="tooltip" data-placement="bottom"
+																				title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+																				<!-- <i class="glyphicon glyphicon-remove"
+																				ng-click="closegetAllTemplatePopup($index);"></i> -->
+																			<!-- 	&nbsp;&nbsp;<i class="glyphicon glyphicon-pencil"
+																				ng-click="editTemplate(userT.id,userT.templateName,userT.template);"></i> -->&nbsp;&nbsp;<i
+																				class="glyphicon glyphicon-trash"
+																				ng-click="removeTemplate(userT.id);"></i></td>
+																		</tr>
+																		<tr>
+																			<td><label class=""
+																				ng-model="userT.templateName"> <small> <br />Template
+																						Name: &nbsp;&nbsp;</small><small contentEditable="true">{{userT.templateName}}</small>
+																			</label> <label class="" ng-model="userT.template"><small>Template:
+																						&nbsp;&nbsp;</small><small></small> </label>
+
+
+																					<div>
+																							<textarea  row="3" ng-model="usetTemplate" on-enter="save()"
+																								on-esc="cancel()" style="font-size:12px;width: 100%;" 
+																								ng-show="editMode"></textarea>
+																							<button ng-click="cancel()" ng-show="editMode">cancel</button>
+																							<button ng-click="save(userT.id,userT.templateName,usetTemplate)" ng-show="editMode">save</button>
+																							<span ng-mouseenter="showEdit = true"
+																								ng-mouseleave="showEdit = false"> <span
+																								ng-hide="editMode" ng-click="edit(userT.template)"  style="font-size:12px;" ng-bind="userT.template| cut:true:50:'   ...'"></span>
+																								<a ng-show="showEdit" ng-click="edit(userT.template)">edit</a>
+																							</span>
+																						</div>
+																				<div class="expandcollapse-item">
+																					<div ng-click="active = !active"
+																						ng-class="{'expandcollapse-heading-collapsed': active, 'expandcollapse-heading-expanded': !active}">
+																						<p>
+																							<small style="color: blue;" data-toggle="tooltip"
+																								data-placement="bottom"
+																								title="select expand to view your templates saved language">Expand</small>
+																						</p>
+																					</div>
+
+																					<div class="slideDown" ng-hide="active">
+																						<div class="expand-collapse-content">
+																							<small> {{userT.template}}</small>
+																						</div>
+																					</div>
+																				</div></td>
+																		</tr>
+																	</table>
+																</div>
+															</div>
+
 														</div>
 													</div>
 
@@ -538,68 +688,143 @@
 											</div>
 
 
-									 <div ng-if="jStatus == 'Draft'">
-											
-											<div class="form-group" ng-repeat="mskill in mdSkill">
-												<div class="form-group">
-													<label class="col-sm-10 control-label"
-														ng-model="manadatorySkills.skillName"> <small
-														class="desc">{{mskill.mskill}} </small></label>
-												</div>
-												<div class="form-group">
-													<div class="col-sm-8">
-														<div class="pull-right">
-															<i class="glyphicon glyphicon-download"
-																ng-click="openTemplatepopup($index);" data-toggle="tooltip" data-placement="top" title="Create new Template."></i> &nbsp;&nbsp;<i
-																class="glyphicon glyphicon-eye-open"
-																ng-click="openPreSavedTemplate($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
-																&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templates or create new. "></i>
-														
-														</div>
-														<small class="desc"> <textarea rows="3"
-																name="comment"
-																ng-model="manadatorySkills[$index].comment"
-																class="form-control" style="font-size: 12px;"
-																placeholder="e.g. Skill Desc" required></textarea>
-														</small>
-														
-														<div id="saveTemplate{{$index}}" class="popover"
-															style="z-index: 100;">
-															<div class="popover-content">
-																<div class="form-group">
-																	<label class="">Save </label>
-																	<div>
+											<div ng-if="jStatus == 'Draft'">
 
-																		<input type="text" id="userTemplate"
-																			name="userTemplate" ng-model="userTemplate"
-																			placeholder="Template Name" style="font-size: 12px;"
-																			class="form-control" required>
+												<div class="form-group" ng-repeat="mskill in mdSkill">
+													<div class="form-group">
+														<label class="col-sm-10 control-label"
+															ng-model="manadatorySkills.skillName"> <small
+															class="desc">{{mskill.mskill}} </small></label>
+													</div>
+													<div class="form-group">
+														<div class="col-sm-8">
+															<div class="pull-right">
+																<i class="glyphicon glyphicon-download"
+																	ng-click="openTemplatepopup($index);"
+																	data-toggle="tooltip" data-placement="top"
+																	title="Create new Template."></i> &nbsp;&nbsp;<i
+																	class="glyphicon glyphicon-eye-open"
+																	ng-click="openPreSavedTemplate($index);"
+																	data-toggle="tooltip" data-placement="top"
+																	title="Open previously saved templates "></i>
+																&nbsp;&nbsp; <i
+																	class="glyphicon glyphicon-question-sign"
+																	data-toggle="tooltip" data-placement="top"
+																	title="Please use icons to copy your previously saved templates or create new. "></i>
+
+															</div>
+															<small class="desc"> <textarea rows="3"
+																	name="comment"
+																	ng-model="manadatorySkills[$index].comment"
+																	class="form-control" style="font-size: 12px;"
+																	placeholder="e.g. Skill Desc" required></textarea>
+															</small>
+
+															<div id="saveTemplate{{$index}}" class="popover"
+																style="z-index: 100;">
+																<div class="popover-content">
+																	<div class="form-group">
+																		<label class="">Save </label>
+																		<div>
+
+																			<input type="text" id="userTemplate"
+																				name="userTemplate" ng-model="userTemplate"
+																				placeholder="Template Name" style="font-size: 12px;"
+																				class="form-control" required>
+																		</div>
+																		<br />
+																		<button name="save" id="save"
+																			class="button btn-success-custom "
+																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
+																		</button>
+																		<i class="glyphicon glyphicon-download"
+																			ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
+																		&nbsp;&nbsp;&nbsp;&nbsp;<i
+																			class="glyphicon glyphicon-remove"
+																			ng-click="closeTemplatePopup($index);"></i>
+
 																	</div>
-																	<br />
-																	<button name="save" id="save"
-																		class="button btn-success-custom "
-																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);">Save
-																	</button>
-																	<i class="glyphicon glyphicon-download"
-																		ng-click="saveToTemplate(manadatorySkills[$index].comment,userTemplate,$index);"></i>
-																	&nbsp;&nbsp;&nbsp;&nbsp;<i
-																		class="glyphicon glyphicon-remove"
-																		ng-click="closeTemplatePopup($index);"></i>
+																</div>
+															</div>
 
+															<div id="openTemplate{{$index}}" class="popover"
+																style="z-index: 100; height: auto; width: 80%;">
+																<div class="arrow"></div>
+																<h3 class="popover-title">My Previous Saved
+																	Template</h3>
+																<div class="popover-content"
+																	style="overflow-y: scroll; overflow-x: hidden;">
+																	<div class="pull-right">
+																		<i class="glyphicon glyphicon-remove"
+																			ng-click="closegetAllTemplatePopup($index);"></i>
+																	</div>
+																	<table data-ng-repeat="userT in userTemplateData" inline-edit="userT.templateName"
+																				on-save="updateTodo(userT.templateName)"
+																				on-cancel="cancelEdit(userT.templateName)">
+
+																		<tr class="pull-right">
+																			<td><i class="glyphicon glyphicon-export"
+																				ng-click="copyToTemplate(userT.template,$index);"
+																				data-toggle="tooltip" data-placement="bottom"
+																				title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+																				<!-- <i class="glyphicon glyphicon-remove"
+																				ng-click="closegetAllTemplatePopup($index);"></i>
+																				&nbsp;&nbsp;<i class="glyphicon glyphicon-pencil"
+																				ng-click="editTemplate(userT.id,userT.templateName,userT.template);"></i> -->&nbsp;&nbsp;<i
+																				class="glyphicon glyphicon-trash"
+																				ng-click="removeTemplate(userT.id);"></i></td>
+																		</tr>
+																		<tr>
+																			<td><label class=""
+																				ng-model="userT.templateName"> <small>Template
+																						Name: &nbsp;&nbsp;</small><small contentEditable="true">{{userT.templateName}}</small>
+																			</label> <label class="" ng-model="userT.template"><small> <br />Template :
+																						&nbsp;&nbsp;</small><small></small> </label>
+
+
+																					<div>
+																							<textarea row="3" ng-model="usetTemplate" on-enter="save()"
+																								on-esc="cancel()" style="font-size:12px;width: 100%;" 
+																								ng-show="editMode"></textarea>
+																							<button ng-click="cancel()" ng-show="editMode">cancel</button>
+																							<button ng-click="save(userT.id,userT.templateName,usetTemplate)" ng-show="editMode">save</button>
+																							<span ng-mouseenter="showEdit = true"
+																								ng-mouseleave="showEdit = false"> <span
+																								ng-hide="editMode" ng-click="edit(userT.template)" style="font-size:12px;" style="font-size:12px;"  ng-bind="userT.template| cut:true:50:'   ...'"></span>
+																								<a ng-show="showEdit" ng-click="edit(userT.template)">edit</a>
+																							</span>
+																						</div>
+																				<div class="expandcollapse-item">
+																					<div ng-click="active = !active"
+																						ng-class="{'expandcollapse-heading-collapsed': active, 'expandcollapse-heading-expanded': !active}">
+																						<p>
+																							<small style="color: blue;" data-toggle="tooltip"
+																								data-placement="bottom"
+																								title="select expand to view your templates saved language">Expand</small>
+																						</p>
+																					</div>
+
+																					<div class="slideDown" ng-hide="active">
+																						<div class="expand-collapse-content">
+																							<small> {{userT.template}}</small>
+																						</div>
+																					</div>
+																				</div></td>
+																		</tr>
+																	</table>
 																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-											</div> 
 										</div>
 										<div class="pull-right">
-										<button type="button" name="previous" value="Previous"
+											<button type="button" name="previous" value="Previous"
 												class="btn btn-success-custom  button-previous"
 												data-target="#tab1-wizard-custom-circle"
-												ng-click="preClickedfirst();"  style="margin-top: 48%;" data-toggle="tab">
+												ng-click="preClickedfirst();" style="margin-top: 48%;"
+												data-toggle="tab">
 												<i class="fa fa-arrow-circle-o-left mrx"></i>Prev
 											</button>
 											<button type="button" name="next" value="Next"
@@ -607,8 +832,8 @@
 												ng-click="checkAllFields();" style="margin-top: 48%;">
 												Next<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button>
-											
-											
+
+
 										</div>
 
 									</div>
@@ -617,22 +842,22 @@
 									<div id="tab3-wizard-custom-circle" class="tab-pane">
 										<!-- <h3 class="mbxl">Desired Skills</h3> -->
 										<div class="row">
-										
+
 											<div class="col-md-12">
-											<div class="pull-right">
-												<button type="button" ng-if="jStatus == 'active'"
-													name="next" value="Next"
-													class="btn btn-success-custom button-next mlm"
-													ng-click="saveUserJobToDraft();">
-													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
-												</button>
-												<!-- <button type="button" ng-if="jStatus == 'Draft'" name="next"
+												<div class="pull-right">
+													<button type="button" ng-if="jStatus == 'active'"
+														name="next" value="Next"
+														class="btn btn-success-custom button-next mlm"
+														ng-click="saveUserJobToDraft();">
+														Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+													</button>
+													<!-- <button type="button" ng-if="jStatus == 'Draft'" name="next"
 													value="Next" class="btn btn-info button-next mlm"
 													ng-click="saveUserJob();">
 													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
 												</button> -->
 
-											</div>
+												</div>
 												<div ng-if="jStatus == 'active'">
 													<div class="form-group" ng-repeat="dskill in dSkills">
 														<div class="form-group">
@@ -644,44 +869,125 @@
 															</div>
 															<div class="form-group">
 																<div class="col-sm-8">
-																<div class="pull-right">
-																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopupDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Create new Template "></i> &nbsp;&nbsp;<i
-																	class="glyphicon glyphicon-eye-open"
-																	ng-click="openPreSavedTemplateDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
-																	&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templates or create new. "></i>
-															</div>
+																	<div class="pull-right">
+																		<i class="glyphicon glyphicon-download"
+																			ng-click="openTemplatepopupDesiredSkills($index);"
+																			data-toggle="tooltip" data-placement="top"
+																			title="Create new Template "></i> &nbsp;&nbsp;<i
+																			class="glyphicon glyphicon-eye-open"
+																			ng-click="openPreSavedTemplateDesiredSkills($index);"
+																			data-toggle="tooltip" data-placement="top"
+																			title="Open previously saved templates "></i>
+																		&nbsp;&nbsp; <i
+																			class="glyphicon glyphicon-question-sign"
+																			data-toggle="tooltip" data-placement="top"
+																			title="Please use icons to copy your previously saved templates or create new. "></i>
+																	</div>
 																	<textarea rows="3" name="skillDesc"
 																		ng-model="desiredSkills[$index].comment"
 																		class="form-control" style="font-size: 12px;"
 																		placeholder="e.g. Skill Desc"></textarea>
-																		<div id="saveTemplateDesiredSkills{{$index}}" class="popover"
-																style="z-index: 100;">
-																<div class="popover-content">
-																	<div class="form-group">
-																		<label class="">Save</label>
-																		<div>
+																	<div id="saveTemplateDesiredSkills{{$index}}"
+																		class="popover" style="z-index: 100;">
+																		<div class="popover-content">
+																			<div class="form-group">
+																				<label class="">Save</label>
+																				<div>
 
-																			<input type="text" id="userTemplate"
-																				name="userTemplate" ng-model="userTemplate"
-																				placeholder="Template Name" style="font-size: 12px;"
-																				class="form-control" required>
+																					<input type="text" id="userTemplate"
+																						name="userTemplate" ng-model="userTemplate"
+																						placeholder="Template Name"
+																						style="font-size: 12px;" class="form-control"
+																						required>
+																				</div>
+																				<br />
+																				<button name="save" id="save"
+																					class="button btn-success-custom "
+																					ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
+																				</button>
+																				<i class="glyphicon glyphicon-download"
+																					ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
+																				&nbsp;&nbsp;&nbsp;&nbsp;<i
+																					class="glyphicon glyphicon-remove"
+																					ng-click="closeTemplatePopupDesiredSkills($index);"></i>
+
+																			</div>
 																		</div>
-																		<br />
-																		<button name="save" id="save"
-																			class="button btn-success-custom "
-																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
-																			</button>
-																		<i class="glyphicon glyphicon-download"
-																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
-																		&nbsp;&nbsp;&nbsp;&nbsp;<i
-																			class="glyphicon glyphicon-remove"
-																			ng-click="closeTemplatePopupDesiredSkills($index);"></i>
-
 																	</div>
-																</div>
-															</div>
+
+																	<div id="openTemplateDesiredSkill{{$index}}"
+																		class="popover"
+																		style="z-index: 100; height: auto; width: 80%;">
+																		<div class="arrow"></div>
+																		<h3 class="popover-title">My Previous Saved
+																			Template</h3>
+																		<div class="popover-content"
+																			style="overflow-y: scroll; overflow-x: hidden;">
+																			<div class="pull-right">
+																				<i class="glyphicon glyphicon-remove"
+																					ng-click="closegetAllTemplatePopupDesiredSkills($index);"></i>
+																			</div>
+																			<table data-ng-repeat="userT in userTemplateData"
+																				inline-edit="userT.templateName"
+																				on-save="updateTodo(userT.templateName)"
+																				on-cancel="cancelEdit(userT.templateName)">
+
+																				<tr class="pull-right">
+																					<td><i class="glyphicon glyphicon-export"
+																						ng-click="copyToTemplateDesiredSkills(userT.template,$index);"
+																						data-toggle="tooltip" data-placement="bottom"
+																						title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+																						<!-- <i class="glyphicon glyphicon-remove"
+																						ng-click="closegetAllTemplatePopupDesiredSkills($index);"></i><i
+																						class="glyphicon glyphicon-pencil"
+																						ng-click="editTemplate(userT.id,userT.templateName,userT.template);"></i> --><i
+																						class="glyphicon glyphicon-trash"
+																						ng-click="removeTemplate();"></i></td>
+																				</tr>
+																				<tr>
+																					<td><label class=""
+																						ng-model="userT.templateName"> <small>Template
+																								Name: &nbsp;&nbsp;</small><small>{{userT.templateName}}</small>
+																					</label> <label class="" ng-model="userT.template"><small> <br />Template:
+																								&nbsp;&nbsp;</small><small></small> </label>
+
+
+																						<div>
+																							<textarea row="3" ng-model="usetTemplate" on-enter="save()"
+																								on-esc="cancel()" style="font-size:12px;width: 100%;" 
+																								ng-show="editMode"></textarea>
+																							<button ng-click="cancel()" ng-show="editMode">cancel</button>
+																							<button ng-click="save(userT.id,userT.templateName,usetTemplate)" ng-show="editMode">save</button>
+																							<span ng-mouseenter="showEdit = true"
+																								ng-mouseleave="showEdit = false"> <span
+																								ng-hide="editMode" ng-click="edit(userT.template)" style="font-size:12px;" ng-bind="userT.template| cut:true:50:'   ...'"></span>
+																								<a ng-show="showEdit" ng-click="edit(userT.template)">edit</a>
+																							</span>
+																						</div>
+
+																						<div class="expandcollapse-item">
+																							<div ng-click="active = !active"
+																								ng-class="{'expandcollapse-heading-collapsed': active, 'expandcollapse-heading-expanded': !active}">
+																								<p>
+																									<small style="color: blue;"
+																										data-toggle="tooltip" data-placement="bottom"
+																										title="select expand to view your templates saved language">Expand</small>
+																								</p>
+																							</div>
+
+																							<div class="slideDown" ng-hide="active">
+																								<div class="expand-collapse-content">
+																									<small> {{userT.template}}</small>
+																								</div>
+																							</div>
+																						</div></td>
+																				</tr>
+																			</table>
+																			
+
+																		</div>
+																	</div>
+
 																</div>
 															</div>
 														</div>
@@ -689,61 +995,141 @@
 												</div>
 
 												<div ng-if="jStatus == 'Draft'">
-												<div class="form-group" ng-repeat="dskill in dSkills">
-													<div class="form-group">
-														<div class="form-group"
-															ng-model="desiredSkills[$index].dskill">
-															<label class="col-sm-12 control-label" value="">
-																<small class="desc">{{dskill.dskill}} </small>
-															</label>
-														</div>
+													<div class="form-group" ng-repeat="dskill in dSkills">
 														<div class="form-group">
-															<div class="col-sm-8">
-															<div class="pull-right">
-																<i class="glyphicon glyphicon-download"
-																	ng-click="openTemplatepopupDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Create new Template."></i> &nbsp;&nbsp;<i
-																	class="glyphicon glyphicon-eye-open"
-																	ng-click="openPreSavedTemplateDesiredSkills($index);" data-toggle="tooltip" data-placement="top" title="Open previously saved templates "></i>
-																	&nbsp;&nbsp;
-																	<i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Please use icons to copy your previously saved templetes or create new. "></i>
+															<div class="form-group"
+																ng-model="desiredSkills[$index].dskill">
+																<label class="col-sm-12 control-label" value="">
+																	<small class="desc">{{dskill.dskill}} </small>
+																</label>
 															</div>
-																<textarea rows="3" name="skillDesc"
-																	ng-model="desiredSkills[$index].comment"
-																	class="form-control" style="font-size: 12px;"
-																	placeholder="e.g. Skill Desc"></textarea>
-																				<div id="saveTemplateDesiredSkills{{$index}}" class="popover"
-																style="z-index: 100;">
-																<div class="popover-content">
-																	<div class="form-group">
-																		<label class="">Save</label>
-																		<div>
-
-																			<input type="text" id="userTemplate"
-																				name="userTemplate" ng-model="userTemplate"
-																				placeholder="Template Name" style="font-size: 12px;"
-																				class="form-control" required>
-																		</div>
-																		<br />
-																		<button name="save" id="save"
-																			class="button btn-success-custom "
-																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
-																			</button>
+															<div class="form-group">
+																<div class="col-sm-8">
+																	<div class="pull-right">
 																		<i class="glyphicon glyphicon-download"
-																			ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
-																		&nbsp;&nbsp;&nbsp;&nbsp;<i
-																			class="glyphicon glyphicon-remove"
-																			ng-click="closeTemplatePopupDesiredSkills($index);"></i>
+																			ng-click="openTemplatepopupDesiredSkills($index);"
+																			data-toggle="tooltip" data-placement="top"
+																			title="Create new Template."></i> &nbsp;&nbsp;<i
+																			class="glyphicon glyphicon-eye-open"
+																			ng-click="openPreSavedTemplateDesiredSkills($index);"
+																			data-toggle="tooltip" data-placement="top"
+																			title="Open previously saved templates "></i>
+																		&nbsp;&nbsp; <i
+																			class="glyphicon glyphicon-question-sign"
+																			data-toggle="tooltip" data-placement="top"
+																			title="Please use icons to copy your previously saved templetes or create new. "></i>
+																	</div>
+																	<textarea rows="3" name="skillDesc"
+																		ng-model="desiredSkills[$index].comment"
+																		class="form-control" style="font-size: 12px;"
+																		placeholder="e.g. Skill Desc"></textarea>
+																	<div id="saveTemplateDesiredSkills{{$index}}"
+																		class="popover" style="z-index: 100;">
+																		<div class="popover-content">
+																			<div class="form-group">
+																				<label class="">Save</label>
+																				<div>
 
+																					<input type="text" id="userTemplate"
+																						name="userTemplate" ng-model="userTemplate"
+																						placeholder="Template Name"
+																						style="font-size: 12px;" class="form-control"
+																						required>
+																				</div>
+																				<br />
+																				<button name="save" id="save"
+																					class="button btn-success-custom "
+																					ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);">Save
+																				</button>
+																				<i class="glyphicon glyphicon-download"
+																					ng-click="saveToTemplateDesiredSkills(desiredSkills[$index].comment,userTemplate,$index);"></i>
+																				&nbsp;&nbsp;&nbsp;&nbsp;<i
+																					class="glyphicon glyphicon-remove"
+																					ng-click="closeTemplatePopupDesiredSkills($index);"></i>
+
+																			</div>
+																		</div>
+																	</div>
+
+																	<div id="openTemplateDesiredSkill{{$index}}"
+																		class="popover"
+																		style="z-index: 100; height: auto; width: 80%;">
+																		<div class="arrow"></div>
+																		<h3 class="popover-title">My Previous Saved
+																			Template</h3>
+																		<div class="popover-content"
+																			style="overflow-y: scroll; overflow-x: hidden;">
+																			<div class="pull-right">
+																				<i class="glyphicon glyphicon-remove"
+																					ng-click="closegetAllTemplatePopupDesiredSkills($index);"></i>
+																			</div>
+																			<table data-ng-repeat="userT in userTemplateData"
+																				inline-edit="userT.templateName"
+																				on-save="updateTodo(userT.template)"
+																				on-cancel="cancelEdit(userT.template)">
+
+																				<tr class="pull-right">
+																					<td><i class="glyphicon glyphicon-export"
+																						ng-click="copyToTemplateDesiredSkills(userT.template,$index);"
+																						data-toggle="tooltip" data-placement="bottom"
+																						title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+																						<!-- <i class="glyphicon glyphicon-remove"
+																						ng-click="closegetAllTemplatePopupDesiredSkills($index);"></i><i
+																						class="glyphicon glyphicon-pencil"
+																						ng-click="editTemplate(userT.id,userT.templateName,userT.template);"></i> --><i
+																						class="glyphicon glyphicon-trash"
+																						ng-click="removeTemplate();"></i></td>
+																				</tr>
+																				<tr>
+																					<td><label class=""
+																						ng-model="userT.templateName"> <small>Template
+																								Name: &nbsp;&nbsp;</small><small>{{userT.templateName}}</small>
+																					</label> <label class="" ng-model="userT.template"><small><br />Template:
+																								&nbsp;&nbsp;</small><small></small> </label>
+
+
+																						<div>
+																							<textarea row="3" ng-model="usetTemplate" on-enter="save()"
+																								on-esc="cancel()" style="font-size:12px;width: 100%;" 
+																								ng-show="editMode"></textarea>
+																							<button ng-click="cancel()" ng-show="editMode">cancel</button>
+																							<button ng-click="save(userT.id,userT.templateName,usetTemplate)" ng-show="editMode">save</button>
+																							<span ng-mouseenter="showEdit = true"
+																								ng-mouseleave="showEdit = false"> <span
+																								ng-hide="editMode" ng-click="edit(userT.template)" ng-bind="userT.template| cut:true:50:'   ...'"></span>
+																								<a ng-show="showEdit" ng-click="edit(userT.template)">edit</a>
+																							</span>
+																						</div>
+
+																						<div class="expandcollapse-item">
+																							<div ng-click="active = !active"
+																								ng-class="{'expandcollapse-heading-collapsed': active, 'expandcollapse-heading-expanded': !active}">
+																								<p>
+																									<small style="color: blue;"
+																										data-toggle="tooltip" data-placement="bottom"
+																										title="select expand to view your templates saved language">Expand</small>
+																								</p>
+																							</div>
+
+																							<div class="slideDown" ng-hide="active">
+																								<div class="expand-collapse-content">
+																									<small> {{userT.template}}</small>
+																								</div>
+																							</div>
+																						</div></td>
+																				</tr>
+																			</table>
+																			
+
+																		</div>
 																	</div>
 																</div>
-															</div>
 															</div>
 														</div>
 													</div>
 												</div>
-												</div> 
 											</div>
-											
+
 										</div>
 										<div class="action text-right">
 											<button type="button" name="previous" value="Previous"
@@ -763,7 +1149,7 @@
 												Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
 											</button>
 
-											
+
 
 										</div>
 									</div>
@@ -1020,145 +1406,173 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-success-custom " data-dismiss="modal">Ok</button>
+					<button type="button" class="btn btn-success-custom "
+						data-dismiss="modal">Ok</button>
 					<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	
-	
-	 <div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"> Job Details</h4>
-      </div>
-      <div class="modal-body">
+
+
+
+	<div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Job Details</h4>
+				</div>
+				<div class="modal-body">
 					<div class="col-md-4">
 						<div class="">
-							<label class="" data-toggle="tooltip" data-placement="bottom" title="Request Type indicates whether the position is new, backfilled, reissued, etc.">Request Type&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Request Type indicates whether the position is new, backfilled, reissued, etc.">Request
+								Type&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="requestType" name="requestType"
-								ng-model="editJob.requestType" 
-								style="font-size: 12px;" class="form-control" readonly >
+								ng-model="editJob.requestType" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
 					</div>
-					
-	
+
+
 					<div class="col-md-4">
 						<div class="">
 							<label class="">Labor Category</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="labourCategory" name="labourCategory"
-								ng-model="editJob.labourCategory" 
-								style="font-size: 12px;" class="form-control"  readonly>
+								ng-model="editJob.labourCategory" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
 					</div>
-					
+
 					<div class="col-md-4">
 						<div class="">
 							<label class="">Performance Level</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="performanceLevel" name="performanceLevel"
-								ng-model="editJob.performanceLevel" 
-								style="font-size: 12px;" class="form-control"  readonly>
+								ng-model="editJob.performanceLevel" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Position Type</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="positionType" name="positionType"
-								ng-model="editJob.positionType" 
-								style="font-size: 12px;" class="form-control"  readonly>
+								ng-model="editJob.positionType" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Clearance Required</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="clearanceRequired" name="clearanceRequired"
-								ng-model="editJob.clearanceRequired" 
-								style="font-size: 12px;" class="form-control"  readonly>
+							<input type="text" id="clearanceRequired"
+								name="clearanceRequired" ng-model="editJob.clearanceRequired"
+								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work Location</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="workLocation" name="workLocation"
-								ng-model="editJob.workLocation" 
-								style="font-size: 12px;" class="form-control"  readonly>
+								ng-model="editJob.workLocation" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work Description</label>
 						</div>
 						<div class="form-group">
-						<textarea rows="9" cols="9" id="workDescription" name="workDescription"
-								ng-model="editJob.workDescription" placeholder="NA"
-								style="font-size: 12px;" class="form-control"  readonly></textarea>
-						
+							<textarea rows="9" cols="9" id="workDescription"
+								name="workDescription" ng-model="editJob.workDescription"
+								placeholder="NA" style="font-size: 12px;" class="form-control"
+								readonly></textarea>
+
 							<!-- <input type="text" id="workDescription" name="workDescription"
 								ng-model="editJob.workDescription" placeholder="Work Description"
 								style="font-size: 12px;" class="form-control" required> -->
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Manadatory Skills</label>
 						</div>
 						<div class="form-group">
-						<textarea rows="9" cols="9" id="manadatorySkills" name="manadatorySkills"
-								ng-model="editJob.manadatorySkills" placeholder="NA"
-								style="font-size: 12px;" class="form-control"  readonly></textarea>
+							<textarea rows="9" cols="9" id="manadatorySkills"
+								name="manadatorySkills" ng-model="editJob.manadatorySkills"
+								placeholder="NA" style="font-size: 12px;" class="form-control"
+								readonly></textarea>
 							<!-- <input type="text" id="manadatorySkills" name="manadatorySkills"
 								ng-model="editJob.manadatorySkills" placeholder="Manadatory Skills"
 								style="font-size: 12px;" class="form-control" required> -->
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Desired Skill</label>
 						</div>
-						<div class="form-group" >
-						<textarea rows="9" cols="9" id="desiredSkill" name="desiredSkill"
+						<div class="form-group">
+							<textarea rows="9" cols="9" id="desiredSkill" name="desiredSkill"
 								ng-model="editJob.desiredSkill" placeholder="NA"
-								style="font-size: 12px;" class="form-control"  readonly></textarea>
-							
+								style="font-size: 12px;" class="form-control" readonly></textarea>
+
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Certification Required</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="certificationRequired" name="certificationRequired"
+							<input type="text" id="certificationRequired"
+								name="certificationRequired"
 								ng-model="editJob.certificationRequired" placeholder="NA"
-								style="font-size: 12px;" class="form-control"  readonly>
+								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="" data-toggle="tooltip" data-placement="bottom" title="Indicates travel within the continental U.S."> Conus Travel&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Indicates travel within the continental U.S.">
+								Conus Travel&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="conusTravel" name="conusTravel"
 								ng-model="editJob.conusTravel" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class=""  data-toggle="tooltip" data-placement="bottom" title="Indicates travel outside of the continental U.S.">Oconus Travel&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Indicates travel outside of the continental U.S.">Oconus
+								Travel&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="oconusTravel" name="oconusTravel"
 								ng-model="editJob.oconusTravel" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Regular hours per year</label>
 						</div>
@@ -1167,25 +1581,34 @@
 								ng-model="editJob.reghrperYear" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="" data-toggle="tooltip" data-placement="bottom" title="Client comments on the anticipated position work schedule">Schedule Comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Client comments on the anticipated position work schedule">Schedule
+								Comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="scheduleComments" name="scheduleComments"
 								ng-model="editJob.scheduleComments" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="" data-toggle="tooltip" data-placement="bottom" title="Language to be determined">Non pub comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Language to be determined">Non pub
+								comments&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="nonpubComments" name="nonpubComments"
-								ng-model="editJob.nonpubComments" 
-								style="font-size: 12px;" class="form-control" readonly>
+								ng-model="editJob.nonpubComments" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Mission Critical</label>
 						</div>
@@ -1194,7 +1617,8 @@
 								ng-model="editJob.missionCritical" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Night Work</label>
 						</div>
@@ -1204,19 +1628,25 @@
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
 					</div>
-					
-	
-					
+
+
+
 					<div class="col-md-4">
 						<div class="">
-							<label class="" data-toggle="tooltip" data-placement="bottom" title="Indicates local travel using a privately owned vehicle">Local travel using pov&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Indicates local travel using a privately owned vehicle">Local
+								travel using pov&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i>
+							</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="localTravalusingpub" name="localTravalusingpub"
+							<input type="text" id="localTravalusingpub"
+								name="localTravalusingpub"
 								ng-model="editJob.localTravalusingpub" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Pager Duty</label>
 						</div>
@@ -1225,16 +1655,19 @@
 								ng-model="editJob.pagerDuty" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Pager Duty Comments</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="pagerdutyComments" name="pagerdutyComments"
-								ng-model="editJob.pagerdutyComments" placeholder="NA"
-								style="font-size: 12px;" class="form-control" readonly>
+							<input type="text" id="pagerdutyComments"
+								name="pagerdutyComments" ng-model="editJob.pagerdutyComments"
+								placeholder="NA" style="font-size: 12px;" class="form-control"
+								readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work on Holiday</label>
 						</div>
@@ -1243,7 +1676,8 @@
 								ng-model="editJob.workonHoliday" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Work on Weekends</label>
 						</div>
@@ -1252,7 +1686,8 @@
 								ng-model="editJob.workonWeekends" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Shift Work</label>
 						</div>
@@ -1261,7 +1696,8 @@
 								ng-model="editJob.shiftWork" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">War zone</label>
 						</div>
@@ -1270,16 +1706,20 @@
 								ng-model="editJob.warzone" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
-							<label class="" data-toggle="tooltip" data-placement="bottom" title="Language to be determined">Coop&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"></i></label>
+							<label class="" data-toggle="tooltip" data-placement="bottom"
+								title="Language to be determined">Coop&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="coop" name="coop"
-								ng-model="editJob.coop" placeholder="NA"
-								style="font-size: 12px;" class="form-control" readonly>
+							<input type="text" id="coop" name="coop" ng-model="editJob.coop"
+								placeholder="NA" style="font-size: 12px;" class="form-control"
+								readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Due to Pmo</label>
 						</div>
@@ -1288,14 +1728,15 @@
 								ng-model="editJob.duetoPmo" placeholder="NA"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div>
+					<div class="col-md-4">
 						<div class="">
 							<label class="">Update Date</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="updateDate" name="updateDate"
-								ng-model="editJob.updateDate" 
-								style="font-size: 12px;" class="form-control" readonly>
+								ng-model="editJob.updateDate" style="font-size: 12px;"
+								class="form-control" readonly>
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -1309,32 +1750,37 @@
 						</div>
 					</div>
 				</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success-custom " data-dismiss="modal">Ok</button>
-       <!--  <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Save changes</button> -->
-      </div>
-    </div>
-  </div>
-</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success-custom "
+						data-dismiss="modal">Ok</button>
+					<!--  <button type="button" class="btn btn-primary" ng-click="saveEditJob();">Save changes</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-<!-- View  Draft Job Modal -->
-<div class="modal fade" id="viewDraftJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Job Details</h4>
-      </div>
-      <div class="modal-body">
-       <div class="box text-shadow">
+	<!-- View  Draft Job Modal -->
+	<div class="modal fade" id="viewDraftJobDetails" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Job Details</h4>
+				</div>
+				<div class="modal-body">
+					<div class="box text-shadow">
 
 						<table class="demo-tbl">
 
-							<tr class="tbl-item" >
-								<td class="td-block" >
-									
-									<p >
+							<tr class="tbl-item">
+								<td class="td-block">
+
+									<p>
 										<span class="title">{{jobDetails.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{jobDetails.positionType}})</small></strong></span>
 									</p>
@@ -1356,43 +1802,45 @@
 									<p class="text-danger">
 										<small>Mandatory Skills</small>
 									</p>
-								<p class="desc">
+									<p class="desc">
 										<!-- <small
 											ng-bind="jobDetails.manadatorySkills"
-											data-placement="bottom"></small> -->									</p>
-							    <small data-ng-repeat="job in jobDetails.manadatorySkills" data-placement="bottom">{{job.mskill}}</small>
+											data-placement="bottom"></small> -->
+									</p> <small data-ng-repeat="job in jobDetails.manadatorySkills"
+									data-placement="bottom">{{job.mskill}}</small>
 									<p class="text-danger">
 										<small>Desired Skills</small>
-									</p>
-									<!-- <p class="desc">
+									</p> <!-- <p class="desc">
 										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
 											data-placement="bottom"></small><small><span
 											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
 												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
 									</p>-->
 									<p class="desc">
-									 <small data-ng-repeat="job2 in jobDetails.desiredSkill" data-placement="bottom">{{job2.dskill}}</small>
-								
+										<small data-ng-repeat="job2 in jobDetails.desiredSkill"
+											data-placement="bottom">{{job2.dskill}}</small>
+
 										<!-- <small ng-bind="jobDetails.desiredSkill"
 											data-placement="bottom"></small> -->
 								</td>
 
 							</tr>
 						</table>
-						
+
 					</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success-custom " data-dismiss="modal">Ok</button>
-        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-      </div>
-    </div>
-  </div>
-</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success-custom "
+						data-dismiss="modal">Ok</button>
+					<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-<!-- <!-- View Job Modal -->
-<!-- <div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<!-- <!-- View Job Modal -->
+	<!-- <div class="modal fade" id="viewJobDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -1461,7 +1909,7 @@
       </div>
     </div>
   </div>
-</div> --> 
+</div> -->
 
 </div>
 
@@ -1470,28 +1918,33 @@
 
 <!-- View Job Modal -->
 
-
-
-<div id="openTemplate" class="popover"
+<!-- <div id="openTemplate{{$index}}" class="popover"
 	style="z-index: 100; height: auto; width: 80%;">
 	<div class="arrow"></div>
 	<h3 class="popover-title">My Previous Saved Template</h3>
-	<div class="popover-content">
-	<div class ="pull-right">
-	<i class="glyphicon glyphicon-remove"
-	ng-click="closegetAllTemplatePopup();"></i>
-	</div>
+	<div class="popover-content"
+		style="overflow-y: scroll; overflow-x: hidden;">
+		<div class="pull-right">
+			<i class="glyphicon glyphicon-remove"
+				ng-click="closegetAllTemplatePopup();"></i>
+		</div>
 		<table data-ng-repeat="userT in userTemplateData">
-			
+
 			<tr class="pull-right">
 				<td><i class="glyphicon glyphicon-export"
-					ng-click="copyToTemplate(userT.template);"  data-toggle="tooltip" data-placement="bottom" title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+					ng-click="copyToTemplate(userT.template);" data-toggle="tooltip"
+					data-placement="bottom"
+					title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
 					<i class="glyphicon glyphicon-remove"
-					ng-click="closegetAllTemplatePopup();"></i></td>
+					ng-click="closegetAllTemplatePopup();"></i> &nbsp;&nbsp;<i
+					class="glyphicon glyphicon-pencil"
+					ng-click="editTemplate(userT.id,userT.templateName,userT.template);"></i>&nbsp;&nbsp;<i
+					class="glyphicon glyphicon-trash"
+					ng-click="removeTemplate(userT.id);"></i></td>
 			</tr>
 			<tr>
 				<td><label class="" ng-model="userT.templateName"> <small>Template
-							Name: &nbsp;&nbsp;</small><small>{{userT.templateName}}</small>
+							Name: &nbsp;&nbsp;</small><small contentEditable="true">{{userT.templateName}}</small>
 				</label> <label class="" ng-model="userT.template"><small>Template:
 							&nbsp;&nbsp;</small><small></small> </label>
 
@@ -1499,7 +1952,9 @@
 						<div ng-click="active = !active"
 							ng-class="{'expandcollapse-heading-collapsed': active, 'expandcollapse-heading-expanded': !active}">
 							<p>
-								<small style="color: blue;" data-toggle="tooltip" data-placement="bottom" title="select expand to view your templates saved language">Expand</small>
+								<small style="color: blue;" data-toggle="tooltip"
+									data-placement="bottom"
+									title="select expand to view your templates saved language">Expand</small>
 							</p>
 						</div>
 
@@ -1512,23 +1967,34 @@
 			</tr>
 		</table>
 	</div>
-</div>
-<div id="openTemplateDesiredSkill" class="popover"
+</div> -->
+<!-- <div id="openTemplateDesiredSkill{{$index}}" class="popover"
 	style="z-index: 100; height: auto; width: 80%;">
 	<div class="arrow"></div>
 	<h3 class="popover-title">My Previous Saved Template</h3>
-	<div class="popover-content">
-	<div class ="pull-right">
-	<i class="glyphicon glyphicon-remove"
-	ng-click="closegetAllTemplatePopupDesiredSkills();"></i>
-	</div>
-		<table data-ng-repeat="userT in userTemplateData">
-			
+	<div class="popover-content"
+		style="overflow-y: scroll; overflow-x: hidden;">
+		<div class="pull-right">
+			<i class="glyphicon glyphicon-remove"
+				ng-click="closegetAllTemplatePopupDesiredSkills();"></i>
+		</div>
+		<table data-ng-repeat="userT in userTemplateData"
+			inline-edit="userT.templateName"
+			on-save="updateTodo(userT.templateName)"
+			on-cancel="cancelEdit(userT.templateName)">
+
 			<tr class="pull-right">
 				<td><i class="glyphicon glyphicon-export"
-					ng-click="copyToTemplateDesiredSkills(userT.template);" data-toggle="tooltip" data-placement="bottom" title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+					ng-click="copyToTemplateDesiredSkills(userT.template);"
+					data-toggle="tooltip" data-placement="bottom"
+					title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
 					<i class="glyphicon glyphicon-remove"
-					ng-click="closegetAllTemplatePopupDesiredSkills();"></i></td>
+					ng-click="closegetAllTemplatePopupDesiredSkills();"></i><i
+					class="glyphicon glyphicon-pencil"
+					ng-click="editTemplate(userT.id,userT.templateName,userT.template);"></i><i
+					class="glyphicon glyphicon-trash" ng-click="removeTemplate();"></i>
+
+				</td>
 			</tr>
 			<tr>
 				<td><label class="" ng-model="userT.templateName"> <small>Template
@@ -1536,11 +2002,26 @@
 				</label> <label class="" ng-model="userT.template"><small>Template:
 							&nbsp;&nbsp;</small><small></small> </label>
 
+
+					<div>
+						<input type="text" on-enter="save()" on-esc="cancel()"
+							ng-model="model" ng-show="editMode">
+						<button ng-click="cancel()" ng-show="editMode">cancel</button>
+						<button ng-click="save()" ng-show="editMode">save</button>
+						<span ng-mouseenter="showEdit = true"
+							ng-mouseleave="showEdit = false"> <span ng-hide="editMode"
+							ng-click="edit()">{{userT.templateName}}</span> <a
+							ng-show="showEdit" ng-click="edit()">edit</a>
+						</span>
+					</div>
+
 					<div class="expandcollapse-item">
 						<div ng-click="active = !active"
 							ng-class="{'expandcollapse-heading-collapsed': active, 'expandcollapse-heading-expanded': !active}">
 							<p>
-								<small style="color: blue;" data-toggle="tooltip" data-placement="bottom" title="select expand to view your templates saved language">Expand</small>
+								<small style="color: blue;" data-toggle="tooltip"
+									data-placement="bottom"
+									title="select expand to view your templates saved language">Expand</small>
 							</p>
 						</div>
 
@@ -1552,10 +2033,39 @@
 					</div></td>
 			</tr>
 		</table>
+		Name: <input type="text" name="usrname">
+		
+	</div>
+</div> -->
+
+
+<div id="editTemplate" class="popover"
+	style="z-index: 100; height: auto; width: 20%;">
+	<div class="arrow"></div>
+	<!-- <h3 class="popover-title">Edit Template</h3> -->
+	<div class="popover-content"
+		style="overflow-y: scroll; overflow-x: hidden;">
+
+		<table>
+			<tr>
+				<td>
+					<div class="form-group">
+						<label for="usr">Name:{{tempName}}</label>
+						<textarea class="form-control" rows="3" ng-model="tempContent"
+							id="comment"></textarea>
+
+					</div>
+					<div>
+						<button class="btn btn-primary"
+							ng-click="updateTemplate(tempId,tempName,tempContent);">Update</button>
+					</div>
+				</td>
+
+			</tr>
+		</table>
+
 	</div>
 </div>
-
-
 
 <!-- Modal -->
 
@@ -1587,28 +2097,26 @@
 }
 
 .wrapper12 {
-  border: 1px #e4e4e4 solid;
+	border: 1px #e4e4e4 solid;
 }
 
 .btn-success-custom {
-color: white;
-background-color: #21205f;
+	color: white;
+	background-color: #21205f;
 }
 
 .btn-success-custom:hover {
-color: white;
-background-color: #999999;
+	color: white;
+	background-color: #999999;
 }
 
 .btn-success-customapply {
-color: white;
-background-color: #2120f5;
+	color: white;
+	background-color: #2120f5;
 }
 
 .btn-success-customapply:hover {
-color: white;
-background-color: #999999;
+	color: white;
+	background-color: #999999;
 }
-
-
 </style>

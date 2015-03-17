@@ -345,7 +345,7 @@ background-color: #999999;
 																	ng-model="userDetails.jobsearchstatus"
 																	placeholder="Job Search Status" style="font-size: 12px;"
 																	class="form-control" required> -->
-															<span ng-if="jobsearchstatusError == true"> please select job search status</span>
+															<!-- <span ng-if="jobsearchstatusError == true"> please select job search status</span> -->
 																<select ng-model="userDetails.jobsearchstatus"
 																	ng-change="onJobSearchStatusChange()"
 																	class="form-control" id="jobsearchstatus" ng-required>
@@ -355,7 +355,7 @@ background-color: #999999;
 																</select>
 															</div>
 															<div class="col-md-4">
-														<span ng-if="currentjobtitleError == true">	<code>please  enter current job title</code> </span>
+														<!-- <span ng-if="currentjobtitleError == true">	<code>please  enter current job title</code> </span> -->
 																<input type="text" id="currentjobtitle"
 																	name="currentjobtitle"
 																	ng-model="userDetails.currentjobtitle"
@@ -375,7 +375,7 @@ background-color: #999999;
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
-															<span ng-if="residentcityError == true"><code>Please  enter  resident city</code></span>
+														<!-- 	<span ng-if="residentcityError == true"><code>Please  enter  resident city</code></span> -->
 																<input type="text" id="residentcity" name="residentcity"
 																	ng-model="userDetails.residentcity"
 																	placeholder="Resident City " style="font-size: 12px;"
@@ -406,7 +406,7 @@ background-color: #999999;
 																</select>
 															</div>
 															<div class="col-md-4">
-															<span ng-if="zipcodeError == true"><code>Please  Enter zipcode</code> </span>
+															<!-- <span ng-if="zipcodeError == true"><code>Please  Enter zipcode</code> </span> -->
 																<input type="text" id="zipcode" name="zipcode"
 																	ng-model="userDetails.zipcode"
 																	placeholder="Enter zipcode " style="font-size: 12px;"
@@ -529,8 +529,8 @@ background-color: #999999;
 																</select>
 															</div>
 
-															<label class="" ng-if="expUError == true"><small><code>Please
-																		select Experience Level</code></small></label>
+															<!-- <label class="" ng-if="expUError == true"><small><code>Please
+																		select Experience Level</code></small></label> -->
 														</div>
 
 													</div>
@@ -574,8 +574,8 @@ background-color: #999999;
 																</select>
 															</div>
 
-															<label class="" ng-if="positionUError == true"><small><code>Please
-																		select Position </code></small></label>
+															<!-- <label class="" ng-if="positionUError == true"><small><code>Please
+																		select Position </code></small></label> -->
 
 														</div>
 													</div>

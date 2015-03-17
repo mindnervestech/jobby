@@ -1257,12 +1257,12 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						$('#saveTemplateDesiredSkills'+index).modalPopover('show');
 					}
 			 		
-					$scope.closegetAllTemplatePopup = function(){
-						 $('#openTemplate').hide();
+					$scope.closegetAllTemplatePopup = function(index){
+						 $('#openTemplate'+index).hide();
 					}
 					
-					$scope.closegetAllTemplatePopupDesiredSkills = function(){
-						 $('#openTemplateDesiredSkill').hide();
+					$scope.closegetAllTemplatePopupDesiredSkills = function(index){
+						 $('#openTemplateDesiredSkill'+index).hide();
 					}
 					
 					
@@ -1276,7 +1276,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						});
 					    $scope.index= index;
 					    console.log("index"+index);
-						$('#openTemplate').modalPopover('show');
+						$('#openTemplate'+index).modalPopover('show');
 						
 					}
 					
@@ -1291,25 +1291,25 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						});
 					    $scope.index= index;
 					    console.log("index"+index);
-						$('#openTemplateDesiredSkill').modalPopover('show');
+						$('#openTemplateDesiredSkill'+index).modalPopover('show');
 						
 					}
 					
 					//copy trmplate to selected comment box
-					$scope.copyToTemplate = function(template){
+					$scope.copyToTemplate = function(template,index){
 						console.log("copy"+template);
 						$scope.manadatorySkills[$scope.index].comment = template;
-						$('#openTemplate').popover('hide');
-						$("#openTemplate").hide();
+						$('#openTemplate'+index).popover('hide');
+						$("#openTemplate"+index).hide();
 						
 					}
 					
 					//copy trmplate to selected comment box
-					$scope.copyToTemplateDesiredSkills = function(template){
+					$scope.copyToTemplateDesiredSkills = function(template,index){
 						console.log("copy"+template);
 						$scope.desiredSkills[$scope.index].comment = template;
-						$('#openTemplateDesiredSkill').popover('hide');
-						$("#openTemplateDesiredSkill").hide();
+						$('#openTemplateDesiredSkill'+index).popover('hide');
+						$("#openTemplateDesiredSkill"+index).hide();
 						
 					}
 					
@@ -1329,6 +1329,16 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						
 					}
 					
+					$scope.removeTemplate = function(id){
+						$http.get('/deleteUserTemplateById/'+id)
+						.success(function(data) {
+							$http.get('getSavedUserTemplate')
+							.success(function(data) {
+								$scope.userTemplateData = data.template;
+								console.log("data"+data);
+							});
+						});
+					}
 				
 });
 
@@ -1854,18 +1864,19 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	    //check for all fields Coments if nor raise error if not eroor
     	// goto the next  tab desirted skills
 		$scope.errorManaSkillComment = false;
+		var count=0;
 		$scope.checkAllFields  = function(){
+			count = 0;
 			angular.forEach($scope.manadatorySkills, function(obj1, index){
-				console.log("obj1.comment"+$scope.manadatorySkills);
-				//console.log) 
-					//console.log")
-				for(var i =0 ;i<$scope.manadatorySkills.length; i++ ){
+				count ++;
+				//for(var i =0 ;i<$scope.manadatorySkills.length; i++ ){
 					if ((obj1.comment == " " )) {
-						console.log("comment i  if"+($scope.manadatorySkills));
 						$scope.errorManaSkillComment = true;
-						
 					}else{
-						console.log("in else")
+						$scope.errorManaSkillComment = false;
+					}
+					
+					if(count ==  $scope.manadatorySkills.length && $scope.errorManaSkillComment == false){
 						$("#tab3").click();
 						$scope.errorManaSkillComment = false;
 					}
@@ -1874,7 +1885,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 						$scope.errorManaSkillComment = false;
 						$("#tab3").click();
 					}
-				}
+				//}
 				
 				});
 		}
@@ -1951,12 +1962,12 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$('#saveTemplateDesiredSkills'+index).modalPopover('show');
 		}
  		
-		$scope.closegetAllTemplatePopup = function(){
-			 $('#openTemplate').hide();
+		$scope.closegetAllTemplatePopup = function(index){
+			 $('#openTemplate'+index).hide();
 		}
 		
-		$scope.closegetAllTemplatePopupDesiredSkills = function(){
-			 $('#openTemplateDesiredSkill').hide();
+		$scope.closegetAllTemplatePopupDesiredSkills = function(index){
+			 $('#openTemplateDesiredSkill'+index).hide();
 		}
 		
 		
@@ -1970,7 +1981,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			});
 		    $scope.index= index;
 		    console.log("index"+index);
-			$('#openTemplate').modalPopover('show');
+			$('#openTemplate'+index).modalPopover('show');
 			
 		}
 		
@@ -1985,25 +1996,25 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			});
 		    $scope.index= index;
 		    console.log("index"+index);
-			$('#openTemplateDesiredSkill').modalPopover('show');
+			$('#openTemplateDesiredSkill'+index).modalPopover('show');
 			
 		}
 		
 		//copy trmplate to selected comment box
-		$scope.copyToTemplate = function(template){
+		$scope.copyToTemplate = function(template,index){
 			console.log("copy"+template);
 			$scope.manadatorySkills[$scope.index].comment = template;
-			$('#openTemplate').popover('hide');
-			$("#openTemplate").hide();
+			$('#openTemplate'+index).popover('hide');
+			$("#openTemplate"+index).hide();
 			
 		}
 		
 		//copy trmplate to selected comment box
-		$scope.copyToTemplateDesiredSkills = function(template){
+		$scope.copyToTemplateDesiredSkills = function(template,index){
 			console.log("copy"+template);
 			$scope.desiredSkills[$scope.index].comment = template;
-			$('#openTemplateDesiredSkill').popover('hide');
-			$("#openTemplateDesiredSkill").hide();
+			$('#openTemplateDesiredSkill'+index).popover('hide');
+			$("#openTemplateDesiredSkill"+index).hide();
 			
 		}
 		
@@ -2176,8 +2187,55 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 				
 			}	
 			
+			$scope.removeTemplate = function(id){
+				$http.get('/deleteUserTemplateById/'+id)
+				.success(function(data) {
+					$http.get('getSavedUserTemplate')
+					.success(function(data) {
+						$scope.userTemplateData = data.template;
+						console.log("data"+data);
+					});
+				});
+			}
 		
-		
+			$scope.tempId;
+			$scope.tempName;
+			$scope.tempContent;
+			$scope.editTemplate = function(id,name,content,index){
+				$scope.tempId = id;
+				$scope.tempName = name;
+				$scope.tempContent = content;
+				$scope.index = index
+				console.log($scope.tempId);
+				$('#editTemplate').modalPopover('show');
+			}
+			
+			
+			$scope.updateTemplate = function(id,name,content){
+				//$('#editTemplate').modalPopover('hide');
+				 // $('#editTemplate').modalPopover('hide');
+				  $("#editTemplate").hide();
+				$http.get('/updateTemplateById/'+id+"/"+name +"/"+content)
+				.success(function(data) {
+					$http.get('getSavedUserTemplate')
+					.success(function(data) {
+						$scope.userTemplateData = data.template;
+						console.log("data"+data);
+					});
+				});
+			}
+			
+			
+			$scope.updateTodo = function(value) {
+			    console.log('Saving title ' + value);
+			    alert('Saving title ' + value);
+			  };
+			  
+			  $scope.cancelEdit = function(value) {
+			    console.log('Canceled editing', value);
+			    alert('Canceled editing of ' + value);
+			  };
+			
 });
 
 
@@ -12892,4 +12950,74 @@ angular.module('ng').filter('cut', function () {
 
         return value + (tail || ' �');
     };
+});
+
+
+//On esc event
+App.directive('onEsc', function() {
+  return function($scope, elm, attr) {
+    elm.bind('keydown', function(e) {
+      if (e.keyCode === 27) {
+        $scope.$apply(attr.onEsc);
+      }
+    });
+  };
+});
+
+// On enter event
+App.directive('onEnter', function() {
+  return function($scope, elm, attr) {
+    elm.bind('keypress', function(e) {
+      if (e.keyCode === 13) {
+        $scope.$apply(attr.onEnter);
+      }
+    });
+  };
+});
+
+// Inline edit directive
+App.directive('inlineEdit', function($timeout,$http) {
+  return {
+    $scope: {
+      model: '=inlineEdit',
+      handleSave: '&onSave',
+      handleCancel: '&onCancel'
+    },
+    link: function($scope, elm, attr) {
+      var previousValue;
+      
+      $scope.edit = function(data) {
+        $scope.editMode = true;
+        previousValue = data;
+       $scope.usetTemplate = data;
+        console.log(data);
+        $timeout(function() {
+          elm.find('input')[0].focus();
+        }, 0, false);
+      };
+      
+      
+      $scope.save = function(id,name,content) {
+        $scope.editMode = false;
+       console.log(id,name,content);
+        $http.get('/updateTemplateById/'+id+"/"+name +"/"+content)
+		.success(function(data) {
+			$http.get('getSavedUserTemplate')
+			.success(function(data) {
+				$scope.userTemplateData = data.template;
+				console.log("data"+data);
+				$scope.usetTemplate = "";
+			});
+		});
+        //$scope.handleSave({value: $scope.model});
+      };
+      
+      
+      $scope.cancel = function() {
+        $scope.editMode = false;
+        $scope.model = previousValue;
+        $scope.handleCancel({value: $scope.model});
+      };
+    }
+  };
 });

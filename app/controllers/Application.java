@@ -273,6 +273,7 @@ public class Application extends Controller {
 		int updatedRows = 0;
 		Sheet sheet = null;
 		String  jobNum = ""; 
+		String userPosition = "";
 		try {
 			
 			 FileInputStream file = new FileInputStream(excelfile);
@@ -359,6 +360,7 @@ public class Application extends Controller {
 						if (up == null) {
 							UserPosition u = new UserPosition();
 							u.position = c.getStringCellValue();
+							
 							u.save();
 						}
 
@@ -367,8 +369,8 @@ public class Application extends Controller {
 									.getStringCellValue();
 						} else {
 							sd.labourCategory = c.getStringCellValue();
-						
-						List <UserDetails> ud = UserDetails.getallUserEmail();
+							userPosition = sd.labourCategory;
+						/*List <UserDetails> ud = UserDetails.getallUserEmail();
 						for(UserDetails u: ud){
 							List<UserPosition> position = u.userPosition;
 							
@@ -388,8 +390,8 @@ public class Application extends Controller {
 									}
 									
 							}
-							
-						}
+					
+						}*/
 						}
 
 						break;
@@ -856,6 +858,49 @@ public class Application extends Controller {
 										SimpleDateFormat sdf = new SimpleDateFormat(
 												DATE_FORMAT_NOW);
 										sd.duetoPmo = sdf.format(date);
+										
+										List <UserDetails> ud = UserDetails.getallUserEmail();
+										for(UserDetails u: ud){
+											List<UserPosition> position = u.userPosition;
+											
+											//check if user only reg not saved there profile
+											if(position.size() != 0){
+												for(UserPosition userPos : position){
+													String userPositonName =  userPos.position;
+													//System.out.println("userPositonName"+userPositonName);
+													//user position matched with the job positio name then add for the email alert 
+													if(userPositonName.equalsIgnoreCase(userPosition)){
+														String DATE_FORMAT_NOW1 = "MM/dd/yyyy";
+													    Date date1 = new Date();
+													    SimpleDateFormat sdf1 = new SimpleDateFormat(DATE_FORMAT_NOW1);
+													    String stringDate = sdf.format(date1);
+													    String dueToPmo = sdf.format(date);
+													 
+													    	 try{
+													    		Date todaysDate = sdf1.parse(stringDate);
+													 	        Date jobPMODate = sdf1.parse(dueToPmo);
+													 	       if(jobPMODate.before(todaysDate)){
+													               //does nothing if date(date) is before the todays date
+													            }else{
+													            	 //save for email alert  if date is after(date1) the todays date
+													            	SendEmailAlert emailAlert = new  SendEmailAlert();
+																	emailAlert.position = userPositonName;
+																	emailAlert.userEmail = u.email;
+																	emailAlert.jobNumber = jobNum;
+																	emailAlert.save();
+													            }
+													 	        
+													 	    }catch(Exception e){
+													 	     //handle exception
+													 	    } 
+													   
+													
+													}
+													}
+													
+											}
+									
+										}
 
 									}
 
@@ -1008,6 +1053,7 @@ public class Application extends Controller {
 		map.put("newrowscount", newrowscount);
 		map.put("updatedRowsCount", updatedRowsCount);
 
+		Application.deactivateTheJobByPMODate();
 		return ok(Json.stringify(Json.toJson(map)));
 	}
 
@@ -1979,11 +2025,17 @@ public class Application extends Controller {
 
 			// prints the count of tokens
 			ArrayList<String> desSkill = new ArrayList<String>();
+			int tokenCount = 0;
 			for (String token : tokendesiredsVal) {
-
+				tokenCount++;
 				// add the string with number
 				if (token.trim().length() != 0) {
-					desSkill.add(token);
+					
+					if(tokenCount>=10 ){
+						desSkill.add("1"+token.substring(0,token.length()-1));
+					}else{
+						desSkill.add(token);
+					}
 				}
 
 				System.out.print(token);
@@ -2000,11 +2052,17 @@ public class Application extends Controller {
 			String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
 			// prints the count of tokens  
 			ArrayList<String> manSkill = new ArrayList<String>();
+			int tokenManCount = 0;
 			for (String token : tokensVal) {
 				// check for the number
-
+				tokenManCount++;
 				if (token.trim().length() != 0) {
-					manSkill.add(token);
+					
+					if(tokenManCount > 10){
+						manSkill.add("1" + token.substring(0,token.length()-1));
+					}else{
+						manSkill.add(token);
+					}
 				}
 				System.out.print(token);
 
@@ -2019,11 +2077,16 @@ public class Application extends Controller {
 			jobVMs.add(jobVM);
 		}
 
+				if(count < 0){
+			       count = 0;
+		     }
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("totalPages", 10);
 	/*	map.put("currentPage", currentPage);*/
 		map.put("jobs", jobVMs);
+		
 		map.put("jobsCount", count);
 		return ok(Json.toJson(map));
 	}
@@ -2197,10 +2260,18 @@ public class Application extends Controller {
 			// prints the count of tokens
 			String numd = null;
 			ArrayList<String> desSkill = new ArrayList<String>();
+			int tokenCount = 0;
 			for (String token : tokendesiredsVal) {
 				// check for the number
+				tokenCount++;
 				if (token.trim().length() != 0) {
-					desSkill.add(token);
+					//desSkill.add(token);
+					if(tokenCount> 10 ){
+						desSkill.add("1"+token.substring(0,token.length()-1));
+					}else{
+						desSkill.add(token);
+					}
+					
 				}
 				System.out.print(token);
 			}
@@ -2216,10 +2287,17 @@ public class Application extends Controller {
 			String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
 			// prints the count of tokens
 			ArrayList<String> manSkill = new ArrayList<String>();
+			int tokenManCount = 0;
 			for (String token : tokensVal) {
-
+				tokenManCount++;
 				if (token.trim().length() != 0) {
-					manSkill.add(token);
+					//manSkill.add(token);
+					
+					if(tokenManCount > 10 ){
+						manSkill.add("1"+token.substring(0,token.length()-1));
+					}else{
+						manSkill.add(token);
+					}
 				}
 
 			}
@@ -2521,10 +2599,18 @@ public class Application extends Controller {
 
 			// prints the count of tokens
 			ArrayList<String> desSkill = new ArrayList<String>();
+			int tokenCount = 0;
 			for (String token : tokendesiredsVal) {
+				tokenCount++;
 				// check for the number
 				if (token.trim().length() != 0) {
-					desSkill.add(token);
+					//desSkill.add(token);
+					
+					if(tokenCount > 10 ){
+						desSkill.add("1"+token.substring(0,token.length()-1));
+					}else{
+						desSkill.add(token);
+					}
 				}
 				System.out.print(token);
 			}
@@ -2540,13 +2626,19 @@ public class Application extends Controller {
 			String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
 			// prints the count of tokens
 			ArrayList<String> manSkill = new ArrayList<String>();
+		   int	tokenManCount = 0;
 			for (String token : tokensVal) {
 				// check for the number
-
+				tokenManCount++;
 				// if number skip dont add to the list
 				// add the string with number
 				if (token.trim().length() != 0) {
-					manSkill.add(token);
+					//manSkill.add(token);
+					if(tokenManCount > 10 ){
+						manSkill.add("1"+token.substring(0,token.length()-1));
+					}else{
+						manSkill.add(token);
+					}
 				}
 
 			}
@@ -3597,29 +3689,36 @@ public class Application extends Controller {
 		final String rootDir = Play.application().configuration()
 				.getString("resume.path");
 		System.out.println("rootdir" + rootDir);
-
+		String candidiatename = "";
+		String ResumeName = ""; 
 		int ids = Integer.parseInt(id);
 		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
 		// job id to be shown on resume
 		String JobId = ap.jobno;
 		String csrNumber = ap.performancelevel;
-		OutputStream file = null;
-		Document document = null;
+		Document document = new Document();
 		try {
-			file = new FileOutputStream(new File(rootDir));
-			document = new Document();
-			PdfWriter.getInstance(document, file);
+			
 			String email = ap.username;
 			UserDetails ud = UserDetails.getUserByEmail(email);
 			System.out.println("ud" + ud);
 			// String candidiatename = ud.fullname;
-			String candidiatename = "";
+			
 			if (!("NA".equalsIgnoreCase(ud.middlename))) {
 				candidiatename = ud.firstname + " " + ud.middlename + " "
 						+ ud.lastname;
+				ResumeName =  
+						   ud.lastname+"_"+ud.firstname;
 			} else {
 				candidiatename = ud.firstname + " " + ud.lastname;
+				ResumeName = "";
+				ResumeName  = ud.lastname + "_" + ud.firstname;
 			}
+			
+			ResumeName = ResumeName + "_"+JobId;
+			String fileName = rootDir+candidiatename + ".pdf";
+			PdfWriter.getInstance(document, new FileOutputStream(fileName));
+			
 			List<UserSkill> skills = ud.userSkill;
 			List<UserExperiance> userExperiance = ud.userExperiance;
 			// used for the table name (heading)
@@ -4101,17 +4200,16 @@ public class Application extends Controller {
 			// document.newPage(); // Opened new page.
 			response().setContentType("application/pdf");
 			response().setHeader("Content-Disposition",
-					"inline; filename=" + "Resume.pdf");
+					"inline; filename=" + ResumeName);
 			document.close();
-			file.close();
 			System.out.println("Pdf created successfully..");
-
+			File file = new File(fileName);
+			return ok(file);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ok();
 		}
-
-		return ok(new File(rootDir));
-
+		
 	}
 
 	/*
@@ -5184,5 +5282,24 @@ public class Application extends Controller {
 	 return ok("success");
  }
  
-
+ public static Result deleteUserTemplateById(int id){
+	 session().get("email");
+	 UserTemplate  ut = UserTemplate.deleteUserTemplateByid(session().get("email"),id);
+	if(ut != null){
+		ut.delete();
+	}
+	 return ok("success");
+ }
+ 
+ public static Result updateTemplateById(int id,String name,String content){
+	 
+	 UserTemplate  ut = UserTemplate.deleteUserTemplateByid(session().get("email"),id);
+	if(ut != null){
+		ut.templateName = name;
+		ut.template = content;
+		ut.update();
+	}
+	 return ok("success");
+ }
+ 
 }

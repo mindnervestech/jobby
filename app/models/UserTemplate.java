@@ -44,4 +44,10 @@ public class UserTemplate extends Model {
 		
 		return find.where().eq("email", email).findList();
 	} 
+	
+	public static UserTemplate deleteUserTemplateByid(String email,int id){
+		System.out.println("id"+id);
+			return 	find.where().eq("id", id).eq("email", email).findUnique();
+	}
+	
 }
