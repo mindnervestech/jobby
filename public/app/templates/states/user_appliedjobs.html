@@ -615,13 +615,13 @@
 
 																	<tr class="pull-right">
 																		<td><i class="glyphicon glyphicon-export"
-																			ng-click="copyToTemplate(userT.template);"
+																			ng-click="copyToTemplate(userT.template,$index);"
 																			data-toggle="tooltip" data-placement="bottom"
 																			title="Select this icon to add this saved skillset to the desired text field"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-																			<i class="glyphicon glyphicon-remove"
+																			<!-- <i class="glyphicon glyphicon-remove"
 																			ng-click="closegetAllTemplatePopup();"></i>
 																			&nbsp;&nbsp;<i class="glyphicon glyphicon-pencil"
-																			ng-click="editTemolateDetails();"></i>&nbsp;&nbsp;<i
+																			ng-click="editTemolateDetails();"></i> -->&nbsp;&nbsp;<i
 																			class="glyphicon glyphicon-trash"
 																			ng-click="removeTemplate(userT.id);"></i></td>
 																	</tr>

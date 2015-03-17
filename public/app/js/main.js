@@ -1269,6 +1269,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					$scope.active = true;
 					$scope.userTemplateData;
 					$scope.openPreSavedTemplate = function(index){
+						$scope.indexPreSaved = index;
 						$http.get('getSavedUserTemplate')
 						.success(function(data) {
 							$scope.userTemplateData = data.template;
@@ -1284,6 +1285,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					$scope.active = true;
 					$scope.userTemplateData;
 					$scope.openPreSavedTemplateDesiredSkills = function(index){
+						$scope.indexPreDesSaved = index;
 						$http.get('getSavedUserTemplate')
 						.success(function(data) {
 							$scope.userTemplateData = data.template;
@@ -1299,8 +1301,8 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					$scope.copyToTemplate = function(template,index){
 						console.log("copy"+template);
 						$scope.manadatorySkills[$scope.index].comment = template;
-						$('#openTemplate'+index).popover('hide');
-						$("#openTemplate"+index).hide();
+						$('#openTemplate'+$scope.indexPreSaved).popover('hide');
+						$("#openTemplate"+$scope.indexPreSaved).hide();
 						
 					}
 					
@@ -1308,8 +1310,8 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					$scope.copyToTemplateDesiredSkills = function(template,index){
 						console.log("copy"+template);
 						$scope.desiredSkills[$scope.index].comment = template;
-						$('#openTemplateDesiredSkill'+index).popover('hide');
-						$("#openTemplateDesiredSkill"+index).hide();
+						$('#openTemplateDesiredSkill'+$scope.indexPreDesSaved).popover('hide');
+						$("#openTemplateDesiredSkill"+$scope.indexPreDesSaved).hide();
 						
 					}
 					
@@ -1974,6 +1976,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		$scope.active = true;
 		$scope.userTemplateData;
 		$scope.openPreSavedTemplate = function(index){
+			$scope.indexPreSaved = index;
 			$http.get('getSavedUserTemplate')
 			.success(function(data) {
 				$scope.userTemplateData = data.template;
@@ -1989,6 +1992,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		$scope.active = true;
 		$scope.userTemplateData;
 		$scope.openPreSavedTemplateDesiredSkills = function(index){
+			$scope.indexPreDesSaved = index;
 			$http.get('getSavedUserTemplate')
 			.success(function(data) {
 				$scope.userTemplateData = data.template;
@@ -2002,19 +2006,19 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		
 		//copy trmplate to selected comment box
 		$scope.copyToTemplate = function(template,index){
-			console.log("copy"+template);
+			console.log("indexPreSaved"+$scope.indexPreSaved);
 			$scope.manadatorySkills[$scope.index].comment = template;
-			$('#openTemplate'+index).popover('hide');
-			$("#openTemplate"+index).hide();
+			$('#openTemplate'+$scope.indexPreSaved).popover('hide');
+			$("#openTemplate"+$scope.indexPreSaved).hide();
 			
 		}
 		
 		//copy trmplate to selected comment box
 		$scope.copyToTemplateDesiredSkills = function(template,index){
-			console.log("copy"+template);
+			console.log("copy"+$scope.indexPreDesSaved);
 			$scope.desiredSkills[$scope.index].comment = template;
-			$('#openTemplateDesiredSkill'+index).popover('hide');
-			$("#openTemplateDesiredSkill"+index).hide();
+			$('#openTemplateDesiredSkill'+$scope.indexPreDesSaved).popover('hide');
+			$("#openTemplateDesiredSkill"+$scope.indexPreDesSaved).hide();
 			
 		}
 		
