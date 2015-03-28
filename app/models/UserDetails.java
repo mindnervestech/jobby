@@ -75,7 +75,7 @@ public class UserDetails extends Model {
 	public String userstatus;
     public Date  lastlogin;
     public String userLoggedInstatus;
-
+    
     public String altemail;
     public String residentcity;
     public String altphnumber;

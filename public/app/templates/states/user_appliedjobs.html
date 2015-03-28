@@ -385,6 +385,10 @@
 									<li><a data-target="#tab3-wizard-custom-circle"
 										data-toggle="tab" id="tab3"> <!-- <i class="glyphicon glyphicon-send mln"></i> -->
 											<p class="anchor">3.Desired Skills</p></a></li>
+											
+								     <li><a data-target="#tab4-wizard-custom-circle"
+										data-toggle="tab" id="tab4"> <!-- <i class="glyphicon glyphicon-send mln"></i> -->
+									 <p class="anchor">4.Preview</p></a></li>
 								</ul>
 
 							</div>
@@ -884,14 +888,180 @@
 											</button> -->
 										<button type="button" ng-if="jStatus == 'Applied'" name="next"
 											value="Next" class="btn btn-success-custom  button-next mlm"
-											ng-click="resaveUserJob();">
-											Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
+											ng-click="gotoNextTab();">
+											Next<i class="fa fa-arrow-circle-o-right mlx"></i>
 										</button>
 
 
 
 									</div>
 								</div>
+								
+								<div id="tab4-wizard-custom-circle" class="tab-pane">
+										<!-- <h3 class="mbxl">Desired Skills</h3> -->
+										<div class="row">
+
+											<div class="col-md-12">
+												<!-- <div class="pull-right">
+													<button type="button" ng-if="jStatus == 'active'"
+														name="next" value="Next"
+														class="btn btn-success-custom button-next mlm"
+														ng-click="saveUserJobToDraft();">
+														Save &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+													</button>
+													<button type="button" ng-if="jStatus == 'Draft'" name="next"
+													value="Next" class="btn btn-info button-next mlm"
+													ng-click="saveUserJob();">
+													Save  &nbsp;&nbsp;<i class="glyphicon glyphicon-inbox"></i>
+												</button>
+
+												</div> -->
+					<div style="width: 72%;
+				margin-left: 10%;">
+					<table class="table table-striped">
+				    <tbody>
+				      <tr>
+				        <td><strong>Candidate's Full Legal Name: </strong>{{userDetails.firstname}} {{userDetails.lastname}}_{{requestNumber}}</td>
+				      </tr>
+				    </tbody>
+				    
+				  </table>
+					<table class="table table-striped">
+				    <tbody>
+				      <tr>
+				        <td ng-repeat = " e in userExperiance"><strong>RESOURCE SUBMISSION LEVEL:</strong> {{e.experianceLevel}}</td>
+				      </tr>
+				      <tr>
+				        <td><strong>CSR LEVEL:</strong> {{performanceLevel}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+				  
+				  <table class="table table-striped">
+				    <thead>
+				      <tr>
+				        <th>SECURITY CLEARANCE</th>
+				      </tr>
+				    </thead>
+				       <tr>
+				        <td class="col-md-4"  ng-repeat = " c in userClearance" > {{c.clearance}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+					
+					
+					<table class="table table-striped">
+				    <thead>
+				      <tr>
+				        <th>KEY SKILL AREA</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr>
+				        <td class="col-md-4"  ng-repeat = "s  in userAppSkills">{{s.skillName}}</td>
+				      </tr>
+				    </tbody>
+				  </table>		
+				  <div class="form-control"><strong>MANDATORY SKILL</strong></div>										
+					<table class="table table-striped">
+				    
+				    <tbody>
+				      <tr ng-repeat = "ms  in manadatorySkills">
+				        <td class="col-md-6">{{ms.mskill}}</td>
+				        <td class="col-md-6">{{ms.comment}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+						<div class="form-control"><strong>DESIRED SKILLS</strong></div>											
+				   <table class="table table-striped">
+				    
+				    <tbody>
+				      <tr ng-repeat = "ds  in desiredSkills">
+				        <td class="col-md-6">{{ds.dskill}}</td>
+				        <td class="col-md-6">{{ds.comment}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+				  
+				 <div class="form-control"><strong>EMPLOYMENT HISTORY</strong></div>		
+				 <table class="table table-striped">
+				    <thead>
+				      <tr>
+				        <th>Employee Name</th>
+				         <th>Start Date</th>
+				         <th> End Date</th> 
+				         <th>Position Name/Title</th>
+				      </tr>
+				    </thead>
+				    
+				    <tbody>
+				       <tr ng-repeat = "e  in employmentDetails" >
+				     
+				        <td class="col-md-4"  >{{e.companyName}}</td>
+				        <td class="col-md-4"  >{{e.startdate}}</td>
+				        <td class="col-md-4"  >{{e.enddate}}</td>
+				        <td class="col-md-4"  >{{e.position}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+					 
+				 <div class="form-control"><strong>EDUCATION</strong> </div>		
+				  <table class="table table-striped">
+				    <thead>
+				      <tr>
+				        <th>Degree</th>
+				        <th>Completion Date</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr ng-repeat = "e  in educationDetails" >
+				        <td class="col-md-4"  >{{e.degree}}</td>
+				        <td class="col-md-4"  >{{e.toDate}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+				
+				<div class="form-control"> <strong>CERTIFICATION HISTORY</strong></div>
+					<table class="table table-striped">
+				     <thead>
+				      <tr>
+				        <th>List of Certification</th>
+				        <th>Award Date</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr ng-repeat = "e  in certificationDetails" >
+				        <td class="col-md-4"  >{{e.certName}}</td>
+				        <td class="col-md-4"  >{{e.certYear}}</td>
+				      </tr>
+				    </tbody>
+				  </table>
+				</div>
+
+												
+											</div>
+
+										</div>
+										<div class="action text-right">
+											<button type="button" name="previous" value="Previous"
+												class="btn btn-success-custom  button-previous"
+												data-target="#tab3-wizard-custom-circle"
+												ng-click="gotoPreTab();" data-toggle="tab">
+												<i class="fa fa-arrow-circle-o-left mrx"></i>Prev
+											</button>
+											
+											<button type="button" ng-if="jStatus == 'Applied'" name="next"
+											value="Next" class="btn btn-success-custom  button-next mlm"
+											ng-click="resaveUserJob();">
+											Submit<i class="fa fa-arrow-circle-o-right mlx"></i>
+										</button>
+
+
+										</div>
+									</div>
+								
+								
+								
 							</div>
 						</div>
 
@@ -1067,4 +1237,11 @@
 	color: white;
 	background-color: #999999;
 }
+
+.table { border: 1px solid black; }
+.table thead > tr > th { border-bottom: none; }
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td { border: 1px solid black; }
+
+
+
 </style>

@@ -90,9 +90,9 @@ background-color: #999999;
 													
 													<div class="col-md-12">
 														<div class="">
-															<label class="">First Name *</label> <label
-																class="col-md-offset-3">&nbsp;Middle Initial * </label> <label
-																class="col-md-offset-3">&nbsp;Last Name *</label>
+															<label class="">First Name <code>*</code></label> <label
+																class="col-md-offset-3">&nbsp;Middle Initial <code>*</code> </label> <label
+																class="col-md-offset-3">&nbsp;Last Name <code>*</code></label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
@@ -287,10 +287,10 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Email Addess *</label> <label
+															<label class="">Email Addess <code>*</code></label> <label
 																class="col-md-offset-3">Alternate Email Address
 															</label> <label class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone
-																Number * </label>
+																Number <code>*</code> </label>
 
 														</div>
 														<div class="form-group">
@@ -328,8 +328,8 @@ background-color: #999999;
 														<div class="">
 															<label class="">Alternate Phone Number </label> <label
 																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job
-																Search Status *</label> <label class="col-md-offset-3"
-																style="margin-left: 22%;">Current Job Title * </label>
+																Search Status <code>*</code> &nbsp;&nbsp; <span ng-if="jobsearchstatusError == true"><code>(please fill)</code></span></label> <label class="col-md-offset-3"
+																style="margin-left: 22%;">Current Job Title <code>*</code> </label>
 
 														</div>
 														<div class="form-group">
@@ -345,7 +345,7 @@ background-color: #999999;
 																	ng-model="userDetails.jobsearchstatus"
 																	placeholder="Job Search Status" style="font-size: 12px;"
 																	class="form-control" required> -->
-															<!-- <span ng-if="jobsearchstatusError == true"> please select job search status</span> -->
+														 
 																<select ng-model="userDetails.jobsearchstatus"
 																	ng-change="onJobSearchStatusChange()"
 																	class="form-control" id="jobsearchstatus" ng-required>
@@ -368,9 +368,9 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Resident City *</label> <label
-																class="col-md-offset-3">Resident State* </label> <label
-																class="col-md-offset-3">Resident Zip Code* </label>
+															<label class="">Resident City <code>*</code></label> <label
+																class="col-md-offset-3">Resident State <code>*</code>  &nbsp;&nbsp;<span ng-if="residentStateError == true"><code>(Please fill)</code></span></label> <label
+																class="col-md-offset-3">Resident Zip Code <code>*</code> </label>
 
 														</div>
 														<div class="form-group">
@@ -394,7 +394,7 @@ background-color: #999999;
 																	ng-model="userDetails.residentState"
 																	placeholder="Resident State" style="font-size: 12px;"
 																	class="form-control" required> -->
-																<span ng-if="residentStateError == true"><code>Please enter Resident State</code></span>
+																
 
 																<select id="residentState"
 																	ng-model="userDetails.residentState"
@@ -418,9 +418,9 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Date Of Birth *</label> <label
-																class="col-md-offset-3">Desired Salary * </label> <label
-																class="col-md-offset-3">Willing to Relocate *</label>
+															<label class="">Date Of Birth <code>*</code></label> <label
+																class="col-md-offset-3">Desired Salary <code>* </code></label> <label
+																class="col-md-offset-3">Willing to Relocate <code>*</code>&nbsp;&nbsp;<span ng-if="willingtorelocateError == true"> <code>(Please fill)</code></span></label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
@@ -450,7 +450,7 @@ background-color: #999999;
 																	ng-model="userDetails.willingtorelocate"
 																	placeholder="Willing to Relocate" style="font-size: 12px;"
 																	class="form-control" required> -->
-																	<span ng-if="willingtorelocateError == true"> <code>please select willing to relocate</code></span>
+																	
 																<select ng-model="userDetails.willingtorelocate"
 																	class="form-control" id="willingtorelocate" required>
 																	<option
@@ -480,7 +480,7 @@ background-color: #999999;
 														</div> -->
 
 														<div class="">
-															<label class="">User Security Clearance Level *</label><br />
+															<label class="">User Security Clearance Level <code>*</code> &nbsp;&nbsp;<span class="" ng-if="cleranceUError == true"><small><code>(Please fill)</code></small></span></label><br />
 															<!-- <label class=""><small><strong>You
 																		can select multiple security Clearance(use Ctrl)</strong></small></label>
  -->
@@ -497,12 +497,13 @@ background-color: #999999;
 																</select>
 															</div>
 
-															<label class="" ng-if="cleranceUError == true"><small><code>Please
-																		select security Clearance</code></small></label>
+															
 
 														</div>
 														<div class="">
-															<label class="">Select Experience Level *
+															<label class="">Select Experience Level  <code>*</code> &nbsp;&nbsp;
+															<span class="" ng-if="expUError == true"><small><code>(Please
+																		fill)</code></small></span>
 																&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"
 																data-toggle="tooltip" data-placement="bottom"
 																title="Experience Key
@@ -529,8 +530,7 @@ background-color: #999999;
 																</select>
 															</div>
 
-															<!-- <label class="" ng-if="expUError == true"><small><code>Please
-																		select Experience Level</code></small></label> -->
+															
 														</div>
 
 													</div>
@@ -556,7 +556,8 @@ background-color: #999999;
 														</div> -->
 														<div class="">
 															<label class="">Position(s)/Title(s) of interest
-																*</label><br /> <label class=""><small><strong>You
+																<code>*</code>  &nbsp;&nbsp; <span class="" ng-if="positionUError == true"><small><code>(Please
+																		fill) </code></small></span> </label><br /> <label class=""><small><strong>You
 																		can select multiple Position(use Ctrl) </strong></small></label>
 
 														</div>
@@ -574,8 +575,7 @@ background-color: #999999;
 																</select>
 															</div>
 
-															<!-- <label class="" ng-if="positionUError == true"><small><code>Please
-																		select Position </code></small></label> -->
+														
 
 														</div>
 													</div>
@@ -651,7 +651,7 @@ background-color: #999999;
 																<br />
 																<div class="col-md-3">
 																	<label for="inputName" class="control-label">Company
-																		Name *</label>
+																		Name  <code>* </code></label>
 																	<div ng-show="empHistory" style="color: red">
 																		Please fill at least one Company Details</div>
 
@@ -666,7 +666,7 @@ background-color: #999999;
 
 																<div class="col-md-3">
 																	<label for="inputName" class="control-label">Position
-																		*</label>
+																		<code>*</code></label>
 																	<div class="input-icon right">
 																		<input id="position" type="text" name="position"
 																			ng-model="emp.position" placeholder="Position"
@@ -677,7 +677,7 @@ background-color: #999999;
 																<label class="col-md-3 ">Date</label>
 																<div class="col-md-4">
 																	<div class="input-group input-daterange">
-																		<span class="input-group-addon">From</span>
+																		<span class="input-group-addon">From <code> * </code></span>
 																		<!-- <input
 																			type="text" name="startdate" id="startdateemp"
 																			ng-click="initCmpDatePicker();" class="form-control"
@@ -687,7 +687,7 @@ background-color: #999999;
 																			ng-click="initCmpDatePicker();" id="datepicker"
 																			ng-model="emp.startdate" style="font-size: 12px;"
 																			data-provide="datepicker" data-date-autoclose="true"
-																			data-date-format="mm/dd/yyyy"> <span
+																			data-date-format="mm/dd/yyyy" required> <span
 																			class="input-group-addon">to</span>
 																		<!-- <input type="text" id="enddateemp"
 																			class="form-control" ng-model="emp.enddate"
@@ -768,7 +768,7 @@ background-color: #999999;
 
 															<div class="col-md-3">
 																<label for="inputName" class="control-label">Institute
-																	Name *</label>
+																	Name  <code>*</code></label>
 																<div class="input-icon right">
 																	<input id="instituteName" name="instituteName"
 																		type="text" ng-model="edu.instituteName"
@@ -780,7 +780,7 @@ background-color: #999999;
 
 															<div class="col-md-3">
 																<label for="inputName" class="control-label">Degree
-																	*</label>
+																	<code>* </code></label>
 																<div class="input-icon right">
 																	<input id="degree" name="degree" type="text"
 																		ng-model="edu.degree" placeholder="Degree"
@@ -792,7 +792,7 @@ background-color: #999999;
 															<label class="col-md-3">Date</label>
 															<div class="col-md-4">
 																<div class="input-group input-daterange">
-																	<span class="input-group-addon">From</span>
+																	<span class="input-group-addon">From <code>*</code></span>
 																	<!-- <input
 																		type="text" name="startdate" ng-model="edu.fromDate"
 																		class="form-control" id="edudateform"
@@ -804,7 +804,7 @@ background-color: #999999;
 																		style="font-size: 12px;" data-provide="datepicker"
 																		data-date-autoclose="true"
 																		data-date-format="mm/dd/yyyy"> <span
-																		class="input-group-addon">to</span>
+																		class="input-group-addon" required>to</span>
 																	<!-- <input
 																		ng-model="edu.toDate" type="text" name="enddate"
 																		class="form-control" id="edudateto"
@@ -860,7 +860,7 @@ background-color: #999999;
 
 																<div class="col-md-5">
 																	<label for="inputName" class="control-label">Certification
-																		*</label>
+																		</label>
 																	<!-- <div ng-show="certHistory" style="color: red">
 																		Please fill at least one Certfi Details</div>
  -->
@@ -920,14 +920,14 @@ background-color: #999999;
 													<div class="col-sm-12">
 													
 													<input type="checkbox" name="emailalert" ng-model="emailalert"
-							ng-checked="userDetails.emailalert == 'Yes'"    ng-click="ubSubribeFormEmailAlert(userDetails.emailalert);"> Subscribe for the Job  Alert.
+							                         ng-checked="userDetails.emailalert == 'Yes'"    ng-click="ubSubribeFormEmailAlert(userDetails.emailalert);"> Subscribe for the Job  Alert.
 													</div>
 												<div class='col-sm-12'>
-													<div ng-show="userPoserror" ><code>
+												<!-- 	<div ng-show="userPoserror" ><code>
 														Please fill at least one Position/Security/Experience
-														level.</code></div>
+														level.</code></div> -->
 													<label class="col-md-6 control-label"
-														ng-show="manaFieldError"><code>Please field
+														ng-show="manaFieldError == true"><code>Please field
 															all Mandatory Details(*)</code> </label> <label
 														class="col-md-6 control-label" ng-show="updateSuccess"
 														style="font-size: 12px; color: green;">Profile

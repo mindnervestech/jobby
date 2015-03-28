@@ -69,8 +69,9 @@ try {
 		
 		
 		} catch (Exception e) {
-			e.printStackTrace();
-		  throw new RuntimeException(e);
+			//e.printStackTrace();
+		  //throw new RuntimeException(e);
+			return ;
 	}
 	}
 	
@@ -121,8 +122,9 @@ try {
 			
 			
 			} catch (Exception e) {
-				e.printStackTrace();
-			  throw new RuntimeException(e);
+			//	e.printStackTrace();
+			  //throw new RuntimeException(e);
+				return ;
 		}
 		}
 	
@@ -171,8 +173,9 @@ public void sendRegistrationMail(String  email,String pass){
 			
 			
 			} catch (Exception e) {
-				e.printStackTrace();
-			  throw new RuntimeException(e);
+				//e.printStackTrace();
+			  //throw new RuntimeException(e);
+				return ;
 		}
 		}
 	
@@ -216,7 +219,8 @@ public void sendMailForgetpassword(String  email,String pass){
 				     Transport.send(message);
 		
 	} catch (MessagingException e) {
-		throw new RuntimeException(e);
+		//throw new RuntimeException(e);
+		return ;
 	}
 
 }
@@ -241,14 +245,19 @@ public void sendMailToAlluser(String  mailsubject,String mailcontent,ArrayList<S
 	Session session = Session.getInstance(props,
 			new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
+					return new PasswordAuthentication(username,password);
 				}
 			});
+	
+	
+	
 
 	try {
+		
+		 System.out.println("username"+username+"\n password"+password);
 
      		     Message message = new MimeMessage(session);
-				message.setFrom(new InternetAddress("Ardent"));
+				 message.setFrom(new InternetAddress(username));
 				    //Add multiple recipients. including Admin
 				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
 				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(userEmailList));
@@ -278,7 +287,7 @@ public void sendMailToAlluser(String  mailsubject,String mailcontent,ArrayList<S
 		     
 		
 	} catch (MessagingException e) {
-		throw new RuntimeException(e);
+		return ;
 	}
 	
 	
@@ -334,7 +343,7 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 		     
 		
 	} catch (MessagingException e) {
-		throw new RuntimeException(e);
+		return ;
 	}
 	
 	

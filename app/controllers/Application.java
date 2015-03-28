@@ -1077,6 +1077,23 @@ public class Application extends Controller {
 	}
 
 	
+	public static List<Skills> getSkills(String jsonString) {
+		ObjectMapper mapper = new ObjectMapper();
+		List<Skills> list = new ArrayList<Skills>();
+		try {
+			list = mapper
+					.readValue(
+							jsonString,
+							TypeFactory.defaultInstance()
+									.constructCollectionType(List.class,
+											Skills.class));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	
 	// method takes the input as json and split it add into list to show all the
 	// skills to user
 	public static List<MandatorySkills> getMandtorySkills(String jsonString) {
@@ -2758,7 +2775,7 @@ public class Application extends Controller {
 		map.put("educationDetails", ed);
 		map.put("certificationDetails", cd);
 		map.put("employmentDetails", eds);
-
+		
 		return ok(Json.toJson(map));
 
 	}
@@ -3570,13 +3587,22 @@ public class Application extends Controller {
 		public String mskill;
 		public String comment;
 	}
+	
+	@JsonIgnoreProperties
+	public static class Skills {
 
+		public String skillName;
+		public String isSelected;
+	}
+	
+	@JsonIgnoreProperties
 	public static  class UserSkillsVM{
 		public String skillName;
 		public String isSelected;
 		
 		
 	}
+	
 	@JsonIgnoreProperties
 	public static class AppliedJobVM {
 		public String username;
@@ -3694,6 +3720,9 @@ public class Application extends Controller {
 		int ids = Integer.parseInt(id);
 		AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
 		// job id to be shown on resume
+		
+	    List<Skills> userJobskills  = getSkills(ap.skills);; 
+		//userJobskills
 		String JobId = ap.jobno;
 		String csrNumber = ap.performancelevel;
 		Document document = new Document();
@@ -3844,7 +3873,7 @@ public class Application extends Controller {
 			// cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 			// cell2.setPadding(10.0f);
 			cell2.setBackgroundColor(new BaseColor(140, 221, 8));
-			for (UserSkill sk : skills) {
+			for (Skills sk : userJobskills) {
 				// EmpHistorytable.addCell(cellemp);
 				cell2 = new PdfPCell(new Phrase(sk.skillName));
 				cell2.setBackgroundColor(new BaseColor(248, 248, 255));
@@ -4084,6 +4113,23 @@ public class Application extends Controller {
 			cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 			certtable.addCell(cellcert);
 
+			if(cd.size() == 0){
+				cell.setBorder(Rectangle.NO_BORDER);
+				cellcert = new PdfPCell(new Phrase("None ", font1));
+				
+				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
+				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
+				certtable.addCell(cellcert);
+				
+				cell.setBorder(Rectangle.NO_BORDER);
+				cellcert = new PdfPCell(new Phrase("None ", font1));
+				
+				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
+				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
+				certtable.addCell(cellcert);
+				
+			}
+			
 			for (CertificationDetails c : cd) {
 				// certtable.addCell(cellcert);
 				cell.setBorder(Rectangle.NO_BORDER);
@@ -4100,6 +4146,7 @@ public class Application extends Controller {
 				// certtable.addCell(c.certName);
 				// certtable.addCell(c.certYear);
 			}
+			
 
 			PdfPTable expDesctable = new PdfPTable(1);
 			expDesctable.getDefaultCell().setBorder(0);
@@ -4187,12 +4234,12 @@ public class Application extends Controller {
 			
 		
 			//cert table added if it is present not selected
-			if(cd.size() != 0){
+			
 				document.add(certChunk);
 				document.add(Chunk.NEWLINE);
 				document.add(certtable);
 				document.add(Chunk.NEWLINE);
-			}
+			
 			
 			// document.add(Chunk.NEWLINE);
 			document.add(chunkExpDetails);
@@ -4789,6 +4836,7 @@ public class Application extends Controller {
 			
 			jobVM.jobStatus = s.jobStatus;
 			jobVM.skills = getAllUserSkill(s.skills);
+			
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
 		    jobVM.duetoPmo = s.duetoPmo;

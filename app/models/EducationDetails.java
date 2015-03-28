@@ -35,6 +35,9 @@ public class EducationDetails extends Model {
 	@Column(name = "enddate")
 	public String toDate;
 
+	
+	
+	
 	@ManyToOne
 	public UserDetails user_details;
 

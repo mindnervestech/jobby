@@ -30,7 +30,7 @@ public class CertificationDetails extends Model {
 
 	public String certName;
 	public String certYear;
-
+	
 	@ManyToOne
 	public UserDetails user_details;
 
