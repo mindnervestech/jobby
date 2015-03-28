@@ -1214,7 +1214,7 @@
 				  </table>
 					
 					
-					<table class="table table-striped">
+				 <table class="table table-striped">
 				    <thead>
 				      <tr>
 				        <th><strong>KEY SKILL AREA</strong></th>
@@ -1222,10 +1222,17 @@
 				    </thead>
 				    <tbody>
 				      <tr   >
-				      <td  class="col-md-3" ng-repeat = "s  in userAppSkills"> {{s.skillName}}</td> 
+				      <td  class="col-md-3"  ng-repeat = "s  in userAppSkills"> {{s.skillName}}</td> 
 				      </tr>
 				    </tbody>
-				  </table>		
+				  </table> 
+				  
+				<!--   <div class="form-control"><>KEY SKILL AREA</div>
+				  <div  class="col-md-12"  >
+				  <div class="col-md-4"  style="background-color:#f9f9f9">{{s.skillName}}</div>
+				  </div>	 -->	
+				  
+				  
 				  <div class="form-control"><strong>MANDATORY SKILL</strong></div>											
 					<table class="table table-striped">
 				   
@@ -1300,6 +1307,11 @@
 				      </tr>
 				    </tbody>
 				  </table>
+				  <div class="form-control"><strong>EXPERIENCE</strong></div>
+				<div  ng-repeat = "e  in employmentDetails">
+				 	 	<div class="col-md-12" style="background-color:#f9f9f9" ><strong>{{e.companyName}} , {{e.position}}  ({{e.startdate}} - {{e.enddate}})</strong></div>
+				  		<div class="col-md-12" >{{e.expdesc}}</div>
+				  </div>
 				</div>
 
 												
