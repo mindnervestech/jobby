@@ -1899,7 +1899,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 					}else{
 						$scope.errorDesSkillComment = false;
 					}
-					
+				
 					if(count == $scope.desiredSkills.length && $scope.errorDesSkillComment == false){
 						$("#tab4").click();
 						$scope.errorDesSkillComment = false;

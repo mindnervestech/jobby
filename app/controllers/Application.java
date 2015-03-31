@@ -3435,6 +3435,19 @@ public class Application extends Controller {
 			 */
 			
 			apj.skills = json.get("skills").toString();
+		
+			List<Skills> userJobskills  = getSkills(apj.skills);
+ 			
+ 			for(Skills skills : userJobskills){
+ 				
+ 				UserSkill us = UserSkill.getSkillByName(skills.skillName);
+ 				if(us == null){
+ 					UserSkill u = new UserSkill();
+ 					u.skillName = skills.skillName;
+ 					u.save();
+ 					
+ 				}
+ 			}
 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
 			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
@@ -3545,7 +3558,22 @@ public class Application extends Controller {
 			allSkills = allSkills.replaceAll("\"", "");
 			System.out.println("allSkills"+allSkills);*/
  			apj.skills = json.get("skills").toString();
-			apj.positionname = saveAppliedJobsVM.labourCategory;
+		    
+ 			List<Skills> userJobskills  = getSkills(apj.skills);
+ 			
+ 			for(Skills skills : userJobskills){
+ 				
+ 				UserSkill us = UserSkill.getSkillByName(skills.skillName);
+ 				if(us == null){
+ 					UserSkill u = new UserSkill();
+ 					u.skillName = skills.skillName;
+ 					u.save();
+ 					
+ 				}
+ 			}
+ 				
+ 			
+ 			apj.positionname = saveAppliedJobsVM.labourCategory;
 			apj.location = saveAppliedJobsVM.workLocation;
 			apj.clearancereq = saveAppliedJobsVM.clearanceRequired;
 			apj.reqType = saveAppliedJobsVM.requestType;
@@ -3893,10 +3921,16 @@ public class Application extends Controller {
 			PdfPCell cell4 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
 			cell4 = new PdfPCell(new Phrase("Candidate's Full Legal Name: "
-					+ "" + candidiatename + "_"+ JobId, font1));
+					+ "" + candidiatename , font1));
 			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
 			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
 			table4.addCell(cell4);
+			PdfPCell cell5 = new PdfPCell(new Paragraph(
+					"Key Skill Area".toUpperCase()));
+			cell5 = new PdfPCell(new Phrase("Job ID: "+ JobId, font1));
+			cell5.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell5.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table4.addCell(cell5);
 
 			/*
 			 * // add email of canidiate at bottom of student full name cell4 =

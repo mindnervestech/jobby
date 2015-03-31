@@ -1185,7 +1185,12 @@
 					<table class="table table-striped">
 				    <tbody>
 				      <tr>
-				        <td><strong>Candidate's Full Legal Name: </strong>{{userDetails.firstname}} {{userDetails.lastname}}_{{requestNumber}}</td>
+				        <td><strong>Candidate's Full Legal Name: </strong>{{userDetails.firstname}} {{userDetails.lastname}}</td>
+				        
+				      </tr>
+				      <tr>
+				        <td><strong>Job ID: </strong> {{requestNumber}}</td>
+				        
 				      </tr>
 				    </tbody>
 				    
@@ -1193,7 +1198,7 @@
 					<table class="table table-striped">
 				    <tbody>
 				      <tr>
-				        <td ng-repeat = " e in userExperiance"><strong>RESOURCE SUBMISSION LEVEL:</strong> {{e.experianceLevel}}</td>
+				        <td ng-repeat = "e in userExperiance"><strong>RESOURCE SUBMISSION LEVEL:</strong> {{e.experianceLevel}}</td>
 				      </tr>
 				      <tr>
 				        <td><strong>CSR LEVEL:</strong> {{performanceLevel}}</td>
@@ -1300,10 +1305,16 @@
 				        <th>Award Date</th>
 				      </tr>
 				    </thead>
-				    <tbody>
+				    <tbody ng-if = "certificationDetails  != '' ">
 				      <tr ng-repeat = "e  in certificationDetails" >
 				        <td class="col-md-4"  >{{e.certName}}</td>
 				        <td class="col-md-4"  >{{e.certYear}}</td>
+				      </tr>
+				    </tbody>
+				     <tbody ng-if = "certificationDetails==  '' ">
+				      <tr>
+				        <td class="col-md-4" >NONE</td>
+				       <td class="col-md-4" >NONE</td>
 				      </tr>
 				    </tbody>
 				  </table>
