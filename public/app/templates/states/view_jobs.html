@@ -1219,7 +1219,7 @@
 				  </table>
 					
 					
-				 <table class="table table-striped">
+				<!--  <table class="table table-striped">
 				    <thead>
 				      <tr>
 				        <th><strong>KEY SKILL AREA</strong></th>
@@ -1231,14 +1231,20 @@
 				      </tr>
 				    </tbody>
 				  </table> 
-				  
+				   -->
+				   
+				   <div class="col-md-10"> <strong>KEY SKILL AREA</strong> </div> 
+				   <div  class="col-md-4" style="border:1px solid black" ng-repeat = "s  in userAppSkills"> 
+				 			 <div  class="col-md-12">{{s.skillName}}</div>
+				   </div>
+				   
 				<!--   <div class="form-control"><>KEY SKILL AREA</div>
 				  <div  class="col-md-12"  >
 				  <div class="col-md-4"  style="background-color:#f9f9f9">{{s.skillName}}</div>
 				  </div>	 -->	
 				  
 				  
-				  <div class="form-control"><strong>MANDATORY SKILL</strong></div>											
+				  <div class="col-md-10" style="margin-top:2%;"><strong>MANDATORY SKILL</strong></div>											
 					<table class="table table-striped">
 				   
 				    <tbody>
