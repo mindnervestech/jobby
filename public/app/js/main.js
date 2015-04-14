@@ -9114,7 +9114,7 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 			});
 	  }
 	  
-	$scope.archived = false;
+	/*$scope.archived = false;
 	$scope.movetoArchive = function(id){
 		$scope.requestNumber = id;
 		console.log($scope.archived);
@@ -9123,7 +9123,7 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 			$scope.requestNumber= "";
 			$scope.getAllAppliedJobs();
 		});
-	}
+	}*/
 	
 });
 

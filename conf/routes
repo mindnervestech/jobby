@@ -10,11 +10,9 @@ POST	/SignIn                     					controllers.Application.SignIn()
 GET     /dashboard										controllers.Application.dashBoard()
 
 
-
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               					controllers.Assets.at(path="/public", file)
 GET		/Logout   										controllers.Application.logOut()
-
 
 #User
 POST   /updateUserProfile                               controllers.Application.updateUserProfile()
@@ -45,7 +43,6 @@ GET    /unSubribeFormEmailAlert/:alert                        controllers.Applic
 #Admin		
 GET      /getAllAppliedJobs/:pageNumber                            controllers.Application.getAllAppliedJobs(pageNumber:Integer)
 GET     /getAllArchivedJobs/:pageNumber                                      controllers.Application.getAllArchivedJobs(pageNumber:Integer)
-
 GET      /generatePDF/:id                                  controllers.Application.generatePDF(id : String)
 GET      /checkForadmin                                 controllers.Application.checkForadmin()
 GET     /getUserName                                      controllers.Application.getUserName()

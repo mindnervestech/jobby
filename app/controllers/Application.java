@@ -3897,9 +3897,6 @@ public class Application extends Controller {
 
 			PdfPCell cell2 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
-			// cell2.setColspan(3);
-			// cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
-			// cell2.setPadding(10.0f);
 			cell2.setBackgroundColor(new BaseColor(140, 221, 8));
 			for (Skills sk : userJobskills) {
 				// EmpHistorytable.addCell(cellemp);
@@ -3909,6 +3906,17 @@ public class Application extends Controller {
 				System.out.println("sk.skillName" + sk.skillName);
 				cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table2.addCell(cell2);
+			}
+			
+			if(userJobskills.size()%3!=0) {
+				for(int i=userJobskills.size()%3; i<3;i++) {
+					cell2 = new PdfPCell(new Phrase(""));
+					cell2.setBackgroundColor(new BaseColor(248, 248, 255));
+					// cell2.setFont(font1);
+					
+					cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+					table2.addCell(cell2);
+				}
 			}
 
 			// for username and email
