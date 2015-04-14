@@ -5203,7 +5203,9 @@ public class Application extends Controller {
 			String s = jobbId.get(k).asText();
 			System.out.println(s);
 			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(s);
+		     System.out.println("apj"+apj);
 			if(apj != null){
+				System.out.println("in update");
 				apj.archived = "Y";
 				apj.update();
 				//return ok("success");
