@@ -4155,7 +4155,9 @@ public class Application extends Controller {
 			cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 			certtable.addCell(cellcert);
 
-			if(cd.size() == 0){
+		
+			
+			if( cd.size() == 0  ||  cd.isEmpty() || cd.get(0).certName == null ){
 				cell.setBorder(Rectangle.NO_BORDER);
 				cellcert = new PdfPCell(new Phrase("None ", font1));
 				
