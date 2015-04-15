@@ -252,9 +252,15 @@ public class AppliedJobs extends Model {
 	}
 	
 	@JsonIgnore
-	public static AppliedJobs getUserAppliedJobByReqNumber(String id){
+	public static AppliedJobs getUserAppliedJobByReqNumberAdmin(String id){
 		//int ids = Integer.parseInt(id);
 		return find.where().eq("jobno",id).findUnique();
+	}
+
+	@JsonIgnore
+	public static AppliedJobs getUserAppliedJobByReqNumber(String id,String email){
+		//int ids = Integer.parseInt(id);
+		return find.where().eq("jobno",id).eq("username", email).findUnique();
 	}
 	
 }

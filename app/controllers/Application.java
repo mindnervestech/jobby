@@ -1235,7 +1235,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCount(currentpage);
 						userJobs = StoreExcelFile.getAllJobsForUserByPositionAsc(currentpage, 10);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1248,7 +1248,7 @@ public class Application extends Controller {
 						userJobs = StoreExcelFile.getAllJobsForUserByPositionDesc(currentpage, 10);
 						
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1262,7 +1262,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAsc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1274,7 +1274,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeDesc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1300,7 +1300,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserPositionMatchedAsc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1312,7 +1312,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserPositionMatchedDesc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1328,7 +1328,7 @@ public class Application extends Controller {
 						userJobs = StoreExcelFile.getAlluserPositionMatchedJobTypeAsc(currentpage, 10,al,jobType);
 						
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1341,7 +1341,7 @@ public class Application extends Controller {
 						userJobs = StoreExcelFile.getAlluserPositionMatchedJobTypeDesc(currentpage, 10,al,jobType);
 						
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1361,7 +1361,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCount(currentpage);
 						userJobs = StoreExcelFile.getAllJobsForUserByLocationAsc(currentpage, 10);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1374,7 +1374,7 @@ public class Application extends Controller {
 						userJobs = StoreExcelFile.getAllJobsForUserByLocationDesc(currentpage, 10);
 						
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1388,7 +1388,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeAsc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1400,7 +1400,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeDesc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1426,7 +1426,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserLocationMatchedAsc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1438,7 +1438,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserLocationMatchedDesc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1453,7 +1453,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
 						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeAsc(currentpage, 10,al,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1465,7 +1465,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
 						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeDesc(currentpage, 10,al,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1485,7 +1485,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCount(currentpage);
 						userJobs = StoreExcelFile.getAllJobsForUserByClearanceAsc(currentpage, 10);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1497,7 +1497,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCount(currentpage);
 						userJobs = StoreExcelFile.getAllJobsForUserByClearanceDesc(currentpage, 10);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1511,7 +1511,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeAsc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1524,7 +1524,7 @@ public class Application extends Controller {
 						userJobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeDesc(currentpage, 10,jobType);
 						
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1551,7 +1551,7 @@ public class Application extends Controller {
 						userJobs = StoreExcelFile.getAlluserClearanceMatchedAsc(currentpage, 10,al);
 						
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1563,7 +1563,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserClearanceMatchedDesc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1578,7 +1578,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
 						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeAsc(currentpage, 10,al,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1590,7 +1590,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
 						userJobs = StoreExcelFile.getAlluserClearanceMatchedJobTypeDesc(currentpage, 10,al,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1609,7 +1609,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCount(currentpage);
 						userJobs = StoreExcelFile.getAllJobsForUserByExperianceAsc(currentpage, 10);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1621,7 +1621,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCount(currentpage);
 						userJobs = StoreExcelFile.getAllJobsForUserByExperianceDesc(currentpage, 10);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1635,7 +1635,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAsc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1647,7 +1647,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
 						userJobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeDesc(currentpage, 10,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1673,7 +1673,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserExperiancedMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserExperiancedMatchedAsc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1685,7 +1685,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserExperiancedMatchedDesc(currentpage, 10,al);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1700,7 +1700,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
 						userJobs = StoreExcelFile.getAlluserLocationMatchedJobTypeAsc(currentpage, 10,al,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -1712,7 +1712,7 @@ public class Application extends Controller {
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
 						userJobs = StoreExcelFile.getAlluserExperiancedMatchedJobTypeDesc(currentpage, 10,al,jobType);
 						for(StoreExcelFile str:userJobs){
-							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber);
+							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
 								jobs.add(str);
 							}else{
@@ -5210,7 +5210,7 @@ public class Application extends Controller {
 		for (int k = 0; k < jobbId.size(); k++) {
 			String s = jobbId.get(k).asText();
 			System.out.println(s);
-			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(s);
+			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumberAdmin(s);
 		     System.out.println("apj"+apj);
 			if(apj != null){
 				System.out.println("in update");
@@ -5367,7 +5367,7 @@ public class Application extends Controller {
  }
 
  public static  Result  deleteUserAppliedJob(String jobNum){
-	 AppliedJobs appliedJobs = AppliedJobs.getUserAppliedJobByReqNumber(jobNum);
+	 AppliedJobs appliedJobs = AppliedJobs.getUserAppliedJobByReqNumberAdmin(jobNum);
 	 if(appliedJobs != null ){
 		 appliedJobs.delete();
 	 }
