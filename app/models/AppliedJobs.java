@@ -263,4 +263,12 @@ public class AppliedJobs extends Model {
 		return find.where().eq("jobno",id).eq("username", email).findUnique();
 	}
 	
+	@JsonIgnore
+	public static AppliedJobs getUserAppliedJobByReqNumberAdminforArchive(String id,String email){
+		//int ids = Integer.parseInt(id);
+		return find.where().eq("jobno",id).eq("username", email).findUnique();
+	}
+	
+	
+	
 }

@@ -1410,7 +1410,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 								$http.get('getSavedUserTemplate')
 								.success(function(data) {
 									$scope.userTemplateData = data.template;
-									console.log("data"+data);
+									console.log("data"+JSON.stringify(data));
 									$scope.usetTemplate = "";
 								});
 							});
@@ -1478,7 +1478,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 				$http.get('getSavedUserTemplate')
 				.success(function(data) {
 					$scope.userTemplateData = data.template;
-					console.log("data"+data);
+					console.log("data"+JSON.stringify(data));
 					$scope.usetTemplate = "";
 				});
 			});
@@ -2237,10 +2237,11 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$scope.hidepagNo = false;
 			 $scope.job_draft_application_success = false;
 			  $scope.job_application_success = false;
-			console.log($scope.allJobs);
+			console.log("$scope.jobsData"+$scope.allJobs);
 			$http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
+				console.log(JSON.stringify($scope.jobsData));
 				$scope.totalJobs = data.jobsCount;
 				
 				if(data.jobsCount <= 10){
@@ -9288,11 +9289,11 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	
 	$scope.archivedJobsId=[];
 	$scope.archived = false;
-	$scope.makeArchive = function(id){
-		$scope.requestNumber = id;
-		console.log($scope.archived);
+	$scope.makeArchive = function(jobs){
+		$scope.requestNumber = jobs;
+		console.log(JSON.stringify($scope.requestNumber));
 		//$scope.skills.push(obj.skillName);
-		$scope.archivedJobsId.push($scope.requestNumber);
+		$scope.archivedJobsId.push(jobs);
 		
 	}
 	
@@ -9493,12 +9494,9 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 				});
 		}
 		
-		
-		
-		
 	$scope.addNewEmphistory = [{}];
 	$scope.addEducation = [{}];
-	$scope.addCertificate = [{}];
+	$scope.addCertificate = [];
 	$scope.skills = [];
 	$scope.userDetails = {};
 	$scope.userPosition;
@@ -9609,22 +9607,22 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
          		$scope.addCertificate = data.certificationDetails;
          	}
          	
-         	if(data.certificationDetails[0].user_details.userSkill == ""){
+         	if(data.educationDetails[0].user_details.userSkill == ""){
          		
          	}else{
-         		$scope.userSkill = data.certificationDetails[0].user_details.userSkill;
+         		$scope.userSkill = data.educationDetails[0].user_details.userSkill;
          	}
     		
-         	if(data.certificationDetails[0].user_details.userClearance == ""){
+         	if(data.educationDetails[0].user_details.userClearance == ""){
          		
          	}else{
-         		$scope.userClearance = data.certificationDetails[0].user_details.userClearance;
+         		$scope.userClearance = data.educationDetails[0].user_details.userClearance;
          	}
          	
-         	if(data.certificationDetails[0].user_details.userPosition == ""){
+         	if(data.educationDetails[0].user_details.userPosition == ""){
 		
          	}else{
-         		$scope.userPosition = data.certificationDetails[0].user_details.userPosition;
+         		$scope.userPosition = data.educationDetails[0].user_details.userPosition;
          	}
          	
          	if(data.userDetails.userExperiance == ""){

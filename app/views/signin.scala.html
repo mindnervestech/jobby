@@ -284,13 +284,13 @@
 		</div>
 		<div class="col-md-4">
 			<form action="/SignIn" method = "POST" class="form">
-				<p ><code>@flash.get("error")</code></p>
-				<p ><code>@flash.get("AccountError")</code></p>
-				<p ng-if="emailId == true"><code>Please provide Email Id </code></p>
-				<p   id="success_email"  ng-if="forget_pass == true" ><code>Password has been sent to your registered email</code> </p>
-				<p   id="success" style = "color:green">@flash.get("registration_success") </p>
+				<span ><code>@flash.get("error")</code></span>
+				<span ><code>@flash.get("AccountError")</code></span>
+				<span ng-if="emailId == true"><code>Please provide Email Id </code></span>
+				<span   id="success_email"  ng-if="forget_pass == true" ><code>Password has been sent to your registered email</code> </span>
+				<span   id="success" style = "color:green">@flash.get("registration_success") </span>
 				<span ng-if="waitMsg == true">Please Wait..... </span>
-				<p  ><code>@flash.get("email_error")</code> </p>
+				<span  ><code>@flash.get("email_error")</code> </span>
 				<div class="header-content">
 					<h1>Log In</h1>
 				</div>

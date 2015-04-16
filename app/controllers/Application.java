@@ -5204,23 +5204,68 @@ public class Application extends Controller {
 		
 
 	}
+	
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class ArchivedJobsVM {
+		public String username;
+		public long id;
+		public String requestNumber;
+		public String status;
+		public String location;
+		public String positionName;
+		public String workDesc;
+		public String jobStatus;
+		public String jobno;
+		public String positionname;
+		public String positiontype;
+		public String performancelevel;
+		public String clearancereq;
+		
+		List<mskill> msSkils;
+		List<dskill> dsSkills;
+
+	}
+	
+	
 	public static Result movetoArchive() {
 		JsonNode json = request().body().asJson();
 		System.out.println("josn" + json);
-		JsonNode jobIds = json.path("archivedJobsId");
+		
+		
+		
+		/*JsonNode jobIds = json.path("archivedJobsId");
 		ArrayNode jobbId = (ArrayNode) jobIds;
 		for (int k = 0; k < jobbId.size(); k++) {
 			String s = jobbId.get(k).asText();
-			System.out.println(s);
 			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumberAdmin(s);
 		     System.out.println("apj"+apj);
 			if(apj != null){
 				System.out.println("in update");
 				apj.archived = "Y";
 				apj.update();
-				//return ok("success");
 			}
+		}*/
+		
+	    List<ArchivedJobsVM> addEducation;
+		JsonNode eduJson = json.get("archivedJobsId");
+		ObjectMapper addEducationmapper = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
+		addEducation = mapper.convertValue(
+				eduJson,
+				addEducationmapper.getTypeFactory().constructCollectionType(
+						List.class, ArchivedJobsVM.class));
+		for (int i = 0; i < addEducation.size(); i++) {
+			
+			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumberAdminforArchive(addEducation.get(i).requestNumber,addEducation.get(i).username);
+			if(apj != null){
+				System.out.println("in update");
+				apj.archived = "Y";
+				apj.update();
+			}
+
 		}
+		
 		return ok("success");	
 		
 	}

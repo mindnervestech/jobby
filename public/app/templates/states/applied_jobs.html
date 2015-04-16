@@ -67,7 +67,7 @@ background-color: #999999;
 							
 								          <td><button id="deleteJob" type="button"
 													ng-click="deleteJobById(appliedJobs.id)" data-toggle="modal"  class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Delete">Delete</button></td>
-								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs.requestNumber);" data-toggle="tooltip" data-placement="bottom" title="Select (Check) to make archive "></td>
+								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs);" data-toggle="tooltip" data-placement="bottom" title="Select (Check) to make archive "></td>
 										</tr>
 									</tbody>	
 								</table>
