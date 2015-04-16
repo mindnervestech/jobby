@@ -9601,11 +9601,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
          		$scope.addNewEmphistory = data.employmentDetails;
          	}
          	
-         	if(data.certificationDetails == ""){
-         		
-         	}else{
-         		$scope.addCertificate = data.certificationDetails;
-         	}
          	
          	if(data.educationDetails[0].user_details.userSkill == ""){
          		
@@ -9630,7 +9625,13 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
          	}else{
          		$scope.userExperience = data.userDetails.userExperiance;
          	}
-    			
+    		
+         	if(data.certificationDetails == ""){
+         		
+         	}else{
+         		$scope.addCertificate = data.certificationDetails;
+         	}
+         	
     		angular.forEach($scope.allSkills, function(obj, index){
     			angular.forEach($scope.userSkill, function(obj1, index){
     				if ((obj.skillName == obj1.skillName)) {

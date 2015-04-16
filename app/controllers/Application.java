@@ -2808,6 +2808,7 @@ public class Application extends Controller {
 		String email = session().get("email");
 		UserDetails u = UserDetails.getUserByEmail(email);
 
+		
 		JsonNode eduJson = json.get("addEducation");
 		JsonNode empJson = json.get("addNewEmphistory");
 		JsonNode certJson = json.get("addCertificate");
@@ -3760,7 +3761,6 @@ public class Application extends Controller {
 			UserDetails ud = UserDetails.getUserByEmail(email);
 			System.out.println("ud" + ud);
 			// String candidiatename = ud.fullname;
-			
 			if (!("NA".equalsIgnoreCase(ud.middlename))) {
 				candidiatename = ud.firstname + " " + ud.middlename + " "
 						+ ud.lastname;
@@ -3913,7 +3913,6 @@ public class Application extends Controller {
 					cell2 = new PdfPCell(new Phrase(""));
 					cell2.setBackgroundColor(new BaseColor(248, 248, 255));
 					// cell2.setFont(font1);
-					
 					cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 					table2.addCell(cell2);
 				}
