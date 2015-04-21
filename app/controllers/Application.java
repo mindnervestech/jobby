@@ -3744,6 +3744,10 @@ public class Application extends Controller {
 		final String rootDir = Play.application().configuration()
 				.getString("resume.path");
 		System.out.println("rootdir" + rootDir);
+		File f = new File(rootDir);
+		if(!f.exists()){
+			f.mkdir();
+		}
 		String candidiatename = "";
 		String ResumeName = ""; 
 		int ids = Integer.parseInt(id);
