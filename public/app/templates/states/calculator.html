@@ -1,0 +1,488 @@
+<!-- <style>
+.Color {
+	color: green
+}
+
+.redColor {
+	color: red
+}
+
+.btn-success-custom {
+	color: white;
+	background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+	color: white;
+	background-color: #999999;
+}
+</style>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="portlet box" style="min-height: 500px;">
+			<div class="portlet-header">
+				<div class="caption">Calculator</div>
+			</div>
+			<div class="portlet-body" ng-init="init();">
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<label class="col-lg-3">Hours</label>
+						<div class="col-lg-6">
+							<input type="number"  ng-model="hours" ng-click="calculateFirst();"  ng-blur="calculateFirst();"  style="  font-size: 10px;"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Fringe</label>
+						<div class="col-lg-6">
+							<input type="number"  ng-model="fringe" ng-click="calculateFirst();"ng-blur="calculateFirst();"  style="  font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Overhead</label>
+						<div class="col-lg-6">
+							<input type="number"  ng-model="overhead" ng-click="calculateFirst();" ng-blur="calculateFirst();" style="  font-size: 10px;"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">G&A</label>
+						<div class="col-lg-6">
+							<input type="number"   ng-model="ganda" ng-click="calculateFirst();" ng-blur="calculateFirst();"  style="  font-size: 10px;"/>
+						</div> 
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">G&A Wrap</label>
+						<div class="col-lg-6">
+							<input type="number"  ng-model="gandaWrap" ng-click="calculateFirst();" ng-blur="calculateFirst();" style="  font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Overhead Wrap</label>
+						<div class="col-lg-6">
+							<input type="number" ng-model="overheadWrap"  ng-click="calculateFirst();" ng-blur="calculateFirst();" style=" font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Fringe Wrap</label>
+						<div class="col-lg-6">
+							<input type="number" ng-model="fringeWrap" ng-click="calculateFirst();" ng-blur="calculateFirst();" style=" font-size: 10px;" />
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<label class="col-lg-3">Salary </label>
+						<div class="col-lg-6">
+							<input type="number" ng-model="salary" ng-click="calculateFirst();"   ng-blur="calculateFirst();"   style="  font-size: 10px;"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Hourly Cost</th>
+									<th>Fringe Cost</th>
+									<th>Overhead Cost</th>
+									<th>Employee Cost</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="number" ng-model="hourlyCost"  style="  font-size: 10px;"/></td>
+									<td><input type="number"  ng-model="fringeCost" style="  font-size: 10px;"/></td>
+									<td><input type="number" ng-model="overheadCost" style="  font-size: 10px;" /></td>
+									<td><input type="number"  ng-model="employeeCost" style="  font-size: 10px;"/></td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+
+
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<label class="col-lg-3">Employee Cost </label>
+						<div class="col-lg-6">
+							<input type="number"  ng-model ="employeeCostProfit" ng-click="calculateProfitability();" ng-blur="calculateProfitability();" style="  font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Sell Rate </label>
+						<div class="col-lg-6">
+							<input type="number" ng-model="sellRateProfit" ng-click="calculateProfitability();"  ng-blur="calculateProfitability();" style=" font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Profit $</th>
+									<th>Profit %</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="number"  ng-model= "profitdoller"  ng-click="calculateProfitability();" ng-blur="calculateProfitability();"  style="  font-size: 10px;"/></td>
+									<td><input type="number" ng-model= "profitpercentage"  ng-click="calculateProfitability();" ng-blur="calculateProfitability();" style="  font-size: 10px;" /></td>
+
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+
+
+
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<label class="col-lg-3">Employee Cost </label>
+						<div class="col-lg-6">
+							<input type="number" ng-model="employeeCostminsellRate" ng-click="minSellRate();"  ng-blur="minSellRate();" style="  font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Profit </label>
+						<div class="col-lg-6">
+							<input type="number"  ng-model= "profitMinSellRate"  ng-click="minSellRate();" ng-blur="minSellRate();" style="  font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Min sell Rate</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="number"  ng-model= "minsellRate" ng-click="minSellRate();"  ng-blur="minSellRate();" style="  font-size: 10px;" /></td>
+
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="row mbm">
+					<div class="col-lg-12">
+						<label class="col-lg-3">Time and Material Rate </label>
+						<div class="col-lg-6">
+							<input type="number"  ng-click="calMaxSalary();"  ng-blur = "calMaxSalary();" ng-model="timeandmaterialRate"  style="font-size: 10px;"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<label class="col-lg-3">Profit </label>
+						<div class="col-lg-6">
+							<input type="number" ng-model="profitMaxSalary" ng-click="calMaxSalary();" ng-blur = "calMaxSalary();" style="  font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table table-responsive">
+							<thead>
+								<tr>
+									<th>Max salary</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="number"  ng-model="maxSalary" ng-click="calMaxSalary();"  ng-blur = "calMaxSalary();" style="  font-size: 10px;"/></td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div> -->
+
+
+
+
+
+
+<div class="row">
+	<div class="col-lg-4">
+		<div class="panel panel-green" style="margin-left: 1%;">
+			<div class="panel-heading">Inputs</div>
+			<div class="panel-body">
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">Hours</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="hours"
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%;" />
+					</div>
+				</div>
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">Fringe</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="fringe"
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%;" />
+					</div>
+				</div>
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">Overhead</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="overhead"
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%;" />
+					</div>
+				</div>
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">G&A</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="ganda" 
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%;" />
+					</div>
+				</div>
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">G&A Wrap</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="gandaWrap" 
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%;" />
+					</div>
+				</div>
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">Overhead Wrap</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="overheadWrap" 
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%;" />
+					</div>
+				</div>
+				<div class="col-lg-12" style="margin-top: 1%; padding: 0px;">
+					<label class="col-lg-6">Fringe Wrap</label>
+					<div class="col-lg-5">
+						<input type="text" onkeypress="return isNumberKey(event)"
+							ng-model="fringeWrap" 
+							ng-blur="calculateFirst();" style="font-size: 13px; width: 145%" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-8" style="padding: 0px; width: 64%;">
+		<div class="panel panel-green">
+			<div class="panel-heading">
+				<h3 class="panel-title">Employee Cost</h3>
+			</div>
+			<div class="panel-body" style="height: 227px">
+				<div class="col-lg-12">
+					<label class="col-lg-3">Salary </label>
+					<div class="col-lg-6">
+						<input type="text" ng-model="salary"
+							onkeypress="return isNumberKey(event)"
+							 ng-blur="calculateFirst();"
+							style="font-size: 13px;" />
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<table class="table" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<th>Hourly Cost &#x24;</th>
+								<th>Fringe Cost &#x24;</th>
+								<th>Overhead Cost &#x24;</th>
+								<th>Employee Cost &#x24;</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td ><span
+									onkeypress="return isNumberKey(event)" ng-model="hourlyCost"
+									style="font-size: 13px; width: 98%;"   readonly="readonly" >{{hourlyCost |setDecimal:2}}</span></td>
+								<td ><span
+									ng-model="fringeCost" onkeypress="return isNumberKey(event)"
+									style="font-size: 13px; width: 98%;" readonly >{{fringeCost |setDecimal:2}}</span></td>
+								<td ><span
+									ng-model="overheadCost" onkeypress="return isNumberKey(event)"
+									style="font-size: 13px; width: 98%;" readonly >{{overheadCost |setDecimal:2}}</span></td>
+								<td ><span
+									ng-model="employeeCost" onkeypress="return isNumberKey(event)"
+									style="font-size: 13px; width: 98%;" readonly >{{employeeCost |setDecimal:2}}</span></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+	
+<div class="row">
+	<div class="col-lg-12">
+		<div class="col-lg-4" style="  padding: 0px;">
+			<div class="panel panel-green" style="margin-left: 1%;width: 93.5%;">
+				<div class="panel-heading">
+					<h3 class="panel-title">Profitability</h3>
+				</div>
+				<div class="panel-body">
+					<div class="col-lg-12" style="padding:0px;">
+						<label class="col-lg-6">Employee Cost  &#x24;</label>
+						<div class="col-lg-5">
+							<input type="text" onkeypress="return isNumberKey(event)" ng-model="employeeCostProfit"
+								
+								ng-blur="calculateProfitability();" style="font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12" style="padding:0px;">
+						<label class="col-lg-6">Sell Rate &#x24; </label>
+						<div class="col-lg-5">
+							<input type="text" ng-model="sellRateProfit"
+								
+							onkeypress="return isNumberKey(event)"	ng-blur="calculateProfitability();" style="font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table" style="margin-top: 20px;">
+							<thead>
+								<tr>
+									<th>Profit $</th>
+									<th>Profit %</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span ng-model="profitdoller"
+										ng-click="calculateProfitability();" 
+										ng-blur="calculateProfitability();" style="font-size: 13px;"  readonly="readonly">{{ profitdoller | setDecimal:2}}</span></td>
+									<td><span ng-model="profitpercentage"
+										ng-click="calculateProfitability();"
+										ng-blur="calculateProfitability();" style="font-size: 13px;"  readonly="readonly">{{profitpercentage | setDecimal:2}}</span></td>
+
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-lg-4" >
+			<div class="panel panel-green" style="margin-left:-6%;  ">
+				<div class="panel-heading">
+					<h3 class="panel-title">Min Sell rate</h3>
+				</div>
+				<div class="panel-body">
+					<div class="col-lg-12" style="padding:0px">
+					
+					<!-- <span class="glyphicon glyphicon-search" aria-hidden="true"></span> -->
+						<label class="col-lg-6">Employee Cost &#x24; </label>
+						<div class="col-lg-5">
+							<input type="text" ng-model="employeeCostminsellRate"
+								onkeypress="return isNumberKey(event)" ng-blur="minSellRate();"
+								style="font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12" style="padding:0px">
+						<label class="col-lg-6">Profit &#x25; </label>
+						<div class="col-lg-5">
+							<input type="text" onkeypress="return isNumberKey(event)" ng-model="profitMinSellRate"
+								 ng-blur="minSellRate();"
+								style="font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table" style="margin-top: 20px;">
+							<thead>
+								<tr>
+									<th>Min sell Rate &#x24;</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span ng-model="minsellRate"
+										ng-click="minSellRate();" ng-blur="minSellRate();"
+										style="font-size: 13px;" readonly="readonly" >{{minsellRate | setDecimal:2}}</span></td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4" style="padding: 0px; ">
+			<div class="panel panel-green" style="width: 96.5%;">
+				<div class="panel-heading">
+					<h3 class="panel-title">Max Salary</h3>
+				</div>
+				<div class="panel-body">
+					<div class="col-lg-12" style="padding: 0px; ">
+						<label class="col-lg-6">T and M Rate &#x24; </label>
+						<div class="col-lg-5">
+							<input type="text" 
+								ng-blur="calMaxSalary();" onkeypress="return isNumberKey(event)" ng-model="timeandmaterialRate"
+								style="font-size: 10px;" />
+						</div>
+					</div>
+					<div class="col-lg-12" style="padding: 0px; ">
+						<label class="col-lg-6" >Profit &#x25; </label>
+						<div class="col-lg-5">
+							<input type="text" ng-model="profitMaxSalary"
+								 ng-blur="calMaxSalary();"
+								style="font-size: 10px;"  onkeypress="return isNumberKey(event)" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<table class="table table-responsive" style="margin-top: 20px;">
+							<thead>
+								<tr>
+									<th>Max salary &#x24;</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span ng-model="maxSalary"
+										ng-click="calMaxSalary();" ng-blur="calMaxSalary();"
+										style="font-size: 13px;"  readonly="readonly">{{maxSalary |setDecimal:2}}</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+function isNumberKey(evt){  <!--Function to accept only numeric values-->
+//var e = evt || window.event;
+var charCode = (evt.which) ? evt.which : evt.keyCode
+if (charCode != 46 && charCode > 31 
+&& (charCode < 48 || charCode > 57))
+    return false;
+    return true;
+}
+</script>
+
+

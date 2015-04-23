@@ -40,7 +40,7 @@ public class AppliedJobs extends Model {
 	public String clearancereq;
 	public String skills;
     public String archived ="N"; 
-    public String duetoPmo;
+    public String scheduledCloseDate;
      
 	public static Finder<Long, AppliedJobs> find = new Finder<Long, AppliedJobs>(
 			Long.class, AppliedJobs.class);

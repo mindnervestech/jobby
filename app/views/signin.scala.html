@@ -254,7 +254,6 @@
 								<div ng-show="desc== true" ng-hide="asc ==  false" ng-click="descClicked();"><span
 									class="glyphicon glyphicon-chevron-up" style="color:#2120F5; cursor:pointer;  margin-left: 1%;"></span>&nbsp;&nbsp;<i
 								class="glyphicon glyphicon-question-sign"></i></div>
- 
 						</div>
 						<div class="col-md-2 control-label">
 							<!-- Sort by Location<br> <input type="checkbox"
@@ -326,7 +325,7 @@
 						<h4>Forgot your Password?</h4>
 						<span>
 							 <a ng-click='getForgetPassword(useremail)' 
-								class='btn-forgot-pwd'><strong style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click to reset your password ">no worries, click here to reset your password.</strong></a>
+								class='btn-forgot-pwd'><strong style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click to reset your password ">No worries, click here to reset your password.</strong></a>
 						</span>
 					</div>
 				<!-- 	<hr /> -->
@@ -336,10 +335,9 @@
 					</span>
 					<br />
 					 <span>
-						 <a id="btn-register" ng-click ="openContactAdminForm();" data-toggle="tooltip" data-placement="bottom" title="Click to contact Admin "><strong style="cursor:pointer">Contact Admin</strong>
+						 <a id="btn-register" ng-click ="openContactAdminForm();" data-toggle="tooltip" data-placement="bottom" title="Click to contact Admin "><strong style="cursor:pointer">Need more help? Contact and administrator</strong>
 							</a>
 					</span>
-					
 					
 					<!--  <span>
 						 <a id="btn-register" href="/assets/app/templates/states/manage_apps.html">Contact Admin						</a>
@@ -765,11 +763,11 @@
 						</div>
 					</div><div class="col-md-4">
 						<div class="">
-							<label class="">Due to Pmo</label>
+							<label class="">Scheduled Close Date</label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="duetoPmo" name="duetoPmo"
-								ng-model="editJob.duetoPmo" placeholder="Due to Pmo"
+								ng-model="editJob.scheduledCloseDate" placeholder="Due to Pmo"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
 					</div><div class="col-md-4">
@@ -784,11 +782,11 @@
 					</div>
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Due to Govt</label>
+							<label class="">Date of Status </label>
 						</div>
 						<div class="form-group">
 							<input type="text" id="duetoGovt" name="duetoGovt"
-								ng-model="editJob.duetoGovt" placeholder="Due to Govt"
+								ng-model="editJob.dateofStatus" placeholder="Due to Govt"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
 					</div>

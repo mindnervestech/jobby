@@ -168,13 +168,13 @@
 													data-placement="bottom" title="Clearance  "></i>&nbsp;{{job.clearanceRequired}}
 											</small></strong></span> <span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-calendar" data-toggle="tooltip"
-													data-placement="bottom" title="Due to Pmo"></i>&nbsp;{{job.duetoPmo}}
+													data-placement="bottom" title="Scheduled Close Date"></i>&nbsp;{{job.scheduledCloseDate}}
 											</small></strong></span> <span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-calendar" data-toggle="tooltip"
-													data-placement="bottom" title="Update date "></i>&nbsp;{{job.updateDate}}
+													data-placement="bottom" title="Update Date"></i>&nbsp;{{job.updateDate}}
 											</small></strong></span> <span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-calendar" data-toggle="tooltip"
-													data-placement="bottom" title="Due to Govt"></i>&nbsp;{{job.duetoGovt}}
+													data-placement="bottom" title="Date of Status "></i>&nbsp;{{job.dateofStatus}}
 											</small></strong></span>
 									</p>
 									<p class="desc">
@@ -408,7 +408,7 @@
 					</div>
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Due to Pmo</label>
+							<label class="">Scheduled Close Date</label>
 						</div>
 						<div class="form-group">
 							<!-- <input type="text" id="duetoPmo" name="duetoPmo"
@@ -416,7 +416,7 @@
 								style="font-size: 12px;" class="form-control" required> -->
 
 							<input class="form-control" ng-click="initduetoPmoDatePicker();"
-								id="duetoPmo" ng-model="editJob.duetoPmo" required
+								id="duetoPmo" ng-model="editJob.scheduledCloseDate" required
 								style="font-size: 12px;" data-provide="datepicker"
 								data-date-autoclose="true" data-date-format="mm/dd/yyyy">
 
@@ -440,14 +440,14 @@
 					</div>
 					<div class="col-md-4">
 						<div class="">
-							<label class="">Due to Govt</label>
+							<label class="">Date of Status </label>
 						</div>
 						<div class="form-group">
-							<!-- <input type="text" id="duetoGovt" name="duetoGovt"
-								ng-model="editJob.duetoGovt" placeholder="Due to Govt"
+							<!-- <input type="text" id="dateofStatus" name="duetoGovt"
+								ng-model="editJob.dateofStatus" placeholder="Due to Govt"
 								style="font-size: 12px;" class="form-control" required> -->
 							<input class="form-control" ng-click="initduetoGovtDatePicker();"
-								id="duetoGovt" ng-model="editJob.duetoGovt" required
+								id="duetoGovt" ng-model="editJob.dateofStatus" required
 								style="font-size: 12px;" data-provide="datepicker"
 								data-date-autoclose="true" data-date-format="mm/dd/yyyy">
 
@@ -487,6 +487,19 @@
 								class="form-control" required>
 						</div>
 					</div>
+					
+					<div class="col-md-4">
+						<div class="">
+							<label class="">Max Offer</label>
+						</div>
+						<div class="form-group">
+							<input type="text" id="reghrperYear" name="reghrperYear"
+								ng-model="editJob.maxOffer" style="font-size: 12px;"
+								class="form-control" required>
+						</div>
+					</div>
+					
+					
 					<div class="col-md-4">
 						<div class="">
 							<label class="" data-toggle="tooltip" data-placement="bottom"

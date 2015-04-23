@@ -103,6 +103,9 @@ App.config(function ($routeProvider) {
         .when('/page-calendar', { templateUrl: 'assets/app/templates/states/page-calendar.html', controller: 'PageCalendarController'})
         .when('/extra-profile', { templateUrl: 'assets/app/templates/states/_extra-profile.html', controller: 'ExtraProfileController'})
         .when('/updateExcel', { templateUrl: 'assets/app/templates/states/storeexcel.html', controller: 'ExcelFileController'})
+        .when('/uploadPositions', { templateUrl: 'assets/app/templates/states/uploadPositions.html', controller: 'UploadPositionsController'})
+       
+        
         .when('/forgetPassword', { templateUrl: 'assets/app/templates/states/forget_password.html', controller: 'ForgetPasswordController'})
         .when('/viewJobs', { templateUrl: 'assets/app/templates/states/view_jobs.html', controller: 'ViewJobsController'})
         .when('/viewAllJobsforAdmin', { templateUrl: 'assets/app/templates/states/all_jobs_admin.html', controller: 'ViewAllForAdminJobsController'})
@@ -113,10 +116,10 @@ App.config(function ($routeProvider) {
         .when('/allSkills', { templateUrl: 'assets/app/templates/states/all_skills.html', controller: 'ViewAllSkillsController'})
         .when('/allAdmin', { templateUrl: 'assets/app/templates/states/all_admin.html', controller: 'ViewAllAdminController'})
         .when('/userAppliedJobs', { templateUrl: 'assets/app/templates/states/user_appliedjobs.html', controller: 'ViewAllUserAppliedController'})
-       
-       .when('/allArchivedJobs', { templateUrl: 'assets/app/templates/states/user_archivedjobs.html', controller: 'ViewAllArchivedJobsController'})
-       
-       .when('/helppage', { templateUrl: 'assets/app/templates/states/help.html', controller: 'HelpPageController'})
+         .when('/allArchivedJobs', { templateUrl: 'assets/app/templates/states/user_archivedjobs.html', controller: 'ViewAllArchivedJobsController'})
+         .when('/calculator', { templateUrl: 'assets/app/templates/states/calculator.html', controller: 'CalculatorController'})
+      
+         .when('/helppage', { templateUrl: 'assets/app/templates/states/help.html', controller: 'HelpPageController'})
         .when('/extra-signin', { templateUrl: 'assets/app/templates/states/extra-signin.html', controller: 'ExtraSigninController'})
         .when('/extra-signup', { templateUrl: 'assets/app/templates/states/extra-signup.html', controller: 'ExtraSignupController'})
         .when('/extra-lock-screen', { templateUrl: 'assets/app/templates/states/extra-lock-screen.html', controller: 'ExtraLockScreenController'})
@@ -733,6 +736,115 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 
 
 
+App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval){
+	 $http.get('/getUserName')
+		.success(function(data) {
+		// $scope.userData = data;
+			$rootScope.username = data;
+			console.log("data"+data);
+		});
+	  
+	// check for gthe admin
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+		
+		
+		$scope.hours = 2080;
+		$scope.fringe = 1.4127;
+		$scope.overhead = 1.1469;
+		$scope.ganda = 1.0480;
+		$scope.gandaWrap = 1.697981;
+		$scope.overheadWrap = 1.620145;
+		$scope.fringeWrap = 1.412677 ;
+		$scope.salary;
+		$scope.sellRate;
+		$scope.employeeCost;
+		
+		
+		$scope.hourlyCost = 0;
+		$scope.fringeCost = 0;
+		$scope.overheadCost = 0;
+		$scope.employeeCost = 0;
+		
+		$scope.calculateFirst = function(){
+			if($scope.hours !="" && !(angular.isUndefined($scope.hours)) && $scope.fringe !="" && !(angular.isUndefined($scope.fringe)) &&
+			 $scope.overhead !="" && !(angular.isUndefined($scope.overhead)) && $scope.ganda !="" && !(angular.isUndefined($scope.ganda))&&
+		     $scope.gandaWrap !="" && !(angular.isUndefined($scope.gandaWrap)) && $scope.overheadWrap !="" && !(angular.isUndefined($scope.overheadWrap)) &&
+		     $scope.fringeWrap !="" && !(angular.isUndefined($scope.fringeWrap))
+		     &&  $scope.salary !="" && !(angular.isUndefined($scope.salary))
+			){
+				$scope.hourlyCost = (parseInt($scope.salary)/parseInt($scope.hours));
+				$scope.fringeCost = (parseInt($scope.hourlyCost) * parseInt($scope.fringe));
+				$scope.overheadCost = (parseInt($scope.fringeCost) * parseInt($scope.overhead));
+				$scope.employeeCost = (parseInt($scope.overheadCost) * parseInt($scope.ganda));
+				
+			}else{
+				$scope.hourlyCost = "0";
+				$scope.fringeCost = 0;
+				$scope.overheadCost = 0;
+				$scope.employeeCost = 0;
+			}
+		}
+		
+		$scope.profitdoller;
+		$scope.profitpercentage;
+		$scope.sellRateProfit;
+		$scope.employeeCostProfit;
+		$scope.profitdoller = 0;
+		$scope.profitpercentage = 0;
+		
+		$scope.calculateProfitability = function(){
+		//	$scope.calculateFirst();
+			if($scope.sellRateProfit != "" && !(angular.isUndefined($scope.sellRateProfit)) && $scope.employeeCostProfit != "" && !(angular.isUndefined($scope.employeeCostProfit))){
+				$scope.profitdoller = parseInt(($scope.sellRateProfit) - parseInt($scope.employeeCostProfit));
+				$scope.profitpercentage = parseInt(($scope.profitdoller) - parseInt($scope.employeeCostProfit));
+			}else{
+				$scope.profitdoller = 0;
+				$scope.profitpercentage = 0;
+			}
+			
+			
+		}
+		
+		$scope.profitMinSellRate ;
+		$scope.employeeCostminsellRate;
+		$scope.minsellRate =  0;
+		
+		$scope.minSellRate = function(){
+			if($scope.employeeCostminsellRate != "" && !(angular.isUndefined($scope.employeeCostminsellRate)) && $scope.profitMinSellRate != "" && !(angular.isUndefined($scope.profitMinSellRate))){
+			$scope.minsellRate = parseInt(($scope.employeeCostminsellRate) * parseInt($scope.profitMinSellRate + 1)); 
+		}else{
+			$scope.minsellRate =  0;
+		}
+		
+		}
+		$scope.timeandmaterialRate;
+		$scope.profitMaxSalary;
+		$scope.maxSalary =  0;
+		
+		$scope.calMaxSalary  = function(){
+			
+			if($scope.timeandmaterialRate != "" && !(angular.isUndefined($scope.timeandmaterialRate)) && $scope.hours != "" && !(angular.isUndefined($scope.hours))
+					&&	$scope.gandaWrap != "" && !(angular.isUndefined($scope.gandaWrap)) && $scope.profitMaxSalary != "" && !(angular.isUndefined($scope.profitMaxSalary))){
+			       
+				$scope.maxSalary =( parseInt(($scope.timeandmaterialRate) * parseInt($scope.hours + 1))/ ((parseInt($scope.gandaWrap))/parseInt(1+$scope.profitMaxSalary))); 
+			}else{
+				$scope.maxSalary = 0;
+			}
+		}
+		
+});  
+
+
 App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval){
 	 $http.get('/getUserName')
 		.success(function(data) {
@@ -759,6 +871,7 @@ App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootSco
 		$scope.sent = false;
 		$scope.onfeedBackClicked = function(){
 			$scope.sent = true;
+			
 			$http.post('/sendFeedbackMail',{contactus:$scope.contactus})
 			.success(function(data){
 				console.log("success");
@@ -1277,8 +1390,9 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						//$('#saveTemplate').modal();
 						 $('#saveTemplate'+index).hide();
 						console.log("Comment:"+comment);
-							$http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
+							$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
 							.success(function(data) {
+									
 								console.log("data"+data);
 								$scope.templateName = "";
 							});
@@ -1293,8 +1407,9 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						//$('#saveTemplate').modal();
 						 $('#saveTemplateDesiredSkills'+index).hide();
 						console.log("Comment:"+comment);
-							$http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
-							.success(function(data) {
+						$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+						.success(function(data) {
+						
 								console.log("data"+data);
 								$scope.templateName= "";
 							});
@@ -1405,8 +1520,10 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					 $scope.save = function(id,name,content) {
 					        $scope.editMode = false;
 					       console.log(id,name,content);
-					        $http.get('/updateTemplateById/'+id+"/"+name +"/"+content)
-							.success(function(data) {
+								
+								$http.post('/updateTemplateById',{id:id,name:name,content:content})
+								.success(function(data) {
+								
 								$http.get('getSavedUserTemplate')
 								.success(function(data) {
 									$scope.userTemplateData = data.template;
@@ -1473,7 +1590,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	 $scope.save = function(id,name,content) {
 	        $scope.editMode = false;
 	       console.log(id,name,content);
-	        $http.get('/updateTemplateById/'+id+"/"+name +"/"+content)
+	       $http.post('/updateTemplateById',{id:id,name:name,content:content})
 			.success(function(data) {
 				$http.get('getSavedUserTemplate')
 				.success(function(data) {
@@ -2099,9 +2216,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			//$('#saveTemplate').modal();
 			 $('#saveTemplate'+index).hide();
 			console.log("Comment:"+comment);
-				$http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
-				.success(function(data) {
-					console.log("data"+data);
+			$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+			.success(function(data) {
+				console.log("data"+data);
 				});
 		}
 		
@@ -2114,8 +2231,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			//$('#saveTemplate').modal();
 			 $('#saveTemplateDesiredSkills'+index).hide();
 			console.log("Comment:"+comment);
-				$http.get('/saveUserTemplate/'+$scope.userTemplate+"/"+$scope.templateName)
-				.success(function(data) {
+			$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+			.success(function(data) {
+		
 					console.log("data"+data);
 				});
 		}
@@ -8744,11 +8862,11 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 	
 	// get all users applied jobs to admin
 	$scope.getAllPosition = function(){
-		$http.get('getAllPosition')
+		$http.get('getAllPositionForAdmin')
 		.success(function(data){
 			if(data) {
-				$scope.allPosition = data;
-				console.log("data"+JSON.stringify(data));
+				$scope.allPosition = data.position;
+				console.log("data checcking"+JSON.stringify($scope.allPosition));
 			} 
 		});
 	}
@@ -8779,24 +8897,41 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 	$scope.addNewPosition =  function(){
 		console.log($scope.positionname);
 		if((!angular.isUndefined($scope.positionname)) && (! $scope.positionname == "")){
-		$http.get('/addnewPosition/'+$scope.positionname).success(function(data){
+		/*$http.get('/addnewPosition/'+$scope.positionname).success(function(data){
 			console.log("added");
 			$scope.getAllPosition();
 			$('#addposition').modal('hide');
 			$scope.positionname = "";
 			$scope.error = false;
-		});
+		});*/
+			
+			$http.post('/addnewPosition',{position:$scope.positionname,positionList:$scope.positionRateList})
+			.success(function(data){
+				$scope.getAllPosition();
+				$('#addposition').modal('hide');
+				$scope.positionname = "";
+				$scope.error = false;
+				$scope.positionRateList = [];
+
+				
+			});
 		
 	}else{
 		$scope.error = true;
 		
 	}
  }
-
 	
 	//open add position modal
 	$scope.pos;
+	$scope.positionRateList = [];
+	$scope.levelList = [{level:"Management"},{level:"Developmental"},{level:"Expert"},{level:"Full Performance"},{level:"Senior"},{level:"SME"}];
+	
 	$scope.addPosition = function(){
+		
+		for(var i = 0; i<$scope.levelList.length; i++ ){
+			$scope.positionRateList.push({level:$scope.levelList[i].level,rate:""});
+		}
 		$('#addposition').modal();
 		
 	}
@@ -8822,11 +8957,14 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 	$scope.editPosition;
 	//Open edit position  modal
 	$scope.editPosname = function(pos){
-		$scope.editPositionNew = pos ;
-		//used to compare the Position in backend 
-		$scope.editPositionOld = pos;
-		$('#editPositionModal').modal();
-		
+		console.log(JSON.stringify(pos));
+		$http.post('/editPositionRateDetails',{positionList:pos})
+		.success(function(data){
+			$scope.getAllPosition();
+			$scope.editposerror  = false;
+			$('#editPositionModal').modal('hide');
+			$scope.editPositionNew = ""
+		});
 	}
 
 	$scope.editposerror;
@@ -8843,6 +8981,10 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 		}else{
 			$scope.editposerror  = true; 		
 		}
+	}
+	
+	$scope.emptyPositionList = function(){
+		$scope.positionRateList = [];
 	}
 	
 	
@@ -9311,6 +9453,104 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 
 
 
+App.controller('UploadPositionsController', function ($scope, $rootScope, $routeParams, $http, $upload){
+	$scope.uploadSuccess;
+	$scope.uploadFaild;
+	$scope.newRow = false;
+	$scope.updateRow = false;
+	// used to uplopad pdf (clicked on upload button)
+	/*$scope.uploadExcel = function(){
+		$http.post('/uploadExcel')
+		.success(function(data){
+			console.log("success");
+			$scope.uploadSuccess = true;
+			console.log("adas"+data);
+			$scope.newrowscount = data.newrowscount;
+			$scope.updatedRowsCount = data.updatedRowsCount;
+			$scope.newRow = true;
+			$scope.updateRow = true;
+		});
+		
+	}*/
+	
+	$http.get('/getUserName')
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		console.log("data"+data);
+	});
+	
+	var file=null;
+	// called when file is selelcted
+	$scope.onFileSelect = function($files) {
+	    file=$files[0];
+	};
+	
+	$scope.succUpload = false;
+	$scope.errorUpload = false;
+	$scope.pleasWait = false; 
+	$scope.fileUpload = function (sub) {
+		console.log(file);
+		/*$http.post('deleteSendEmailAlertData')
+		.success(function(data){
+			
+		});*/
+		
+		$scope.pleasWait = true;		
+		if(file){
+		$scope.upload = $upload.upload({
+				url: 'uploadPositions', 
+				method:'POST',
+				fileFormDataName:'file',
+				file:file,
+			}).progress(function(evt) {
+				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+			}).success(function(data, status, headers, config) {
+				if(data){
+				
+					$scope.succUpload = true;
+					$scope.newRow = true;
+					$scope.updateRow = true;
+					$scope.newrowscount = data.newrowscount;
+					$scope.updatedRowsCount = data.updatedRowsCount;
+					$scope.pleasWait = false;
+					/*$http.post('sendmailAlertToUserAboutJobMatched')
+					.success(function(data){
+						
+					});*/
+					
+					
+				}else{
+					$scope.errorUpload = true;
+					$scope.newRow = false;
+					$scope.updateRow = false;
+					$scope.pleasWait = false;
+				}
+				
+			});
+		}else{
+			alert("Choose file");
+		}
+	};
+	
+	// check for gthe admin when page refresh
+	$http.get('checkForadmin')
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	
+	
+});
+
+
 App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams, $http, $upload){
 	$scope.uploadSuccess;
 	$scope.uploadFaild;
@@ -9584,11 +9824,11 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     	.success(function(data) {
     		$scope.userProfile = data;
     		console.log("Profile data:"+JSON.stringify($scope.userProfile));
-    		$scope.userPosition = data.userPosition;
+    		$scope.userPosition = data.userDetails.userPosition;
     		$scope.userClearance = data.userClearance;
     		$scope.userDetails = data.userDetails;
     		$scope.userExperience = data.userDetails.userExperiance;
-    		console.log("$scope.userExperience"+JSON.stringify($scope.userExperience));
+    		console.log("$scope.userPosition"+JSON.stringify($scope.userPosition));
          	if(data.educationDetails == ""){
          		
          	}else{
@@ -9740,13 +9980,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			$scope.cleranceUError = false;
 			$scope.positionUError = false;
 			$scope.empHistory = false;
-			console.log("hi"+JSON.stringify($scope.addEducation.length));
-			console.log("hi"+JSON.stringify($scope.addNewEmphistory));
-			console.log("hi"+JSON.stringify($scope.addCertificate));
-			console.log("hi"+JSON.stringify($scope.userDetails));
-			console.log("Clearance"+JSON.stringify($scope.userClearance));
-			console.log("position"+JSON.stringify($scope.userPosition));
-			console.log("userExperience"+JSON.stringify($scope.userExperience));
 			// chk for the education,employee cmp,user posi/clearance selected or
 			// not if not gives gives error
 				console.log($scope.userDetails.willingtorelocate);
@@ -13297,4 +13530,16 @@ App.directive('inlineEdit', function($timeout,$http) {
       };
     }
   };
+});
+
+
+App.filter('setDecimal', function ($filter) {
+    return function (input, places) {
+        if (isNaN(input)) return input;
+        // If we want 1 decimal place, we want to mult/div by 10
+        // If we want 2 decimal places, we want to mult/div by 100, etc
+        // So use the following to create that factor
+        var factor = "1" + Array(+(places > 0 && places + 1)).join("0");
+        return Math.round(input * factor) / factor;
+    };
 });

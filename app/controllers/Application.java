@@ -2,10 +2,6 @@ package controllers;
 
 import java.io.File;
 
-
-
-
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,6 +67,7 @@ import views.html.signin;
 import Utility.MailUtility;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -355,14 +352,14 @@ public class Application extends Controller {
 						// sd.labourCategory = c.getStringCellValue();
 						// used to add the Positon in UserPosition model when
 						// not present
-						UserPosition up = UserPosition.getPositionByPosName(c
+						/*UserPosition up = UserPosition.getPositionByPosName(c
 								.getStringCellValue());
 						if (up == null) {
 							UserPosition u = new UserPosition();
 							u.position = c.getStringCellValue();
 							
 							u.save();
-						}
+						}*/
 
 						if (storeExcelFile != null) {
 							storeExcelFile.labourCategory = c
@@ -836,17 +833,19 @@ public class Application extends Controller {
 					c = row.getCell(26);
 					if (c != null) {
 						switch (c.getCellType()) {
+
 						case Cell.CELL_TYPE_NUMERIC:
 							if (storeExcelFile != null) {
 								if (DateUtil.isCellDateFormatted(c)) {
 									Date date = c.getDateCellValue();
-									System.out.println("date" + date);
+									System.out.println(date);
 									if (date != null) {
 										String DATE_FORMAT_NOW = "MM/dd/yyyy";
 										SimpleDateFormat sdf = new SimpleDateFormat(
 												DATE_FORMAT_NOW);
-										storeExcelFile.duetoPmo = sdf
+										storeExcelFile.dateofStatus = sdf
 												.format(date);
+
 									}
 
 								}
@@ -854,71 +853,36 @@ public class Application extends Controller {
 								if (DateUtil.isCellDateFormatted(c)) {
 									Date date = c.getDateCellValue();
 									if (date != null) {
+										System.out.println(date);
 										String DATE_FORMAT_NOW = "MM/dd/yyyy";
 										SimpleDateFormat sdf = new SimpleDateFormat(
 												DATE_FORMAT_NOW);
-										sd.duetoPmo = sdf.format(date);
-										
-										List <UserDetails> ud = UserDetails.getallUserEmail();
-										for(UserDetails u: ud){
-											List<UserPosition> position = u.userPosition;
-											
-											//check if user only reg not saved there profile
-											if(position.size() != 0){
-												for(UserPosition userPos : position){
-													String userPositonName =  userPos.position;
-													//System.out.println("userPositonName"+userPositonName);
-													//user position matched with the job positio name then add for the email alert 
-													if(userPositonName.equalsIgnoreCase(userPosition)){
-														String DATE_FORMAT_NOW1 = "MM/dd/yyyy";
-													    Date date1 = new Date();
-													    SimpleDateFormat sdf1 = new SimpleDateFormat(DATE_FORMAT_NOW1);
-													    String stringDate = sdf.format(date1);
-													    String dueToPmo = sdf.format(date);
-													 
-													    	 try{
-													    		Date todaysDate = sdf1.parse(stringDate);
-													 	        Date jobPMODate = sdf1.parse(dueToPmo);
-													 	       if(jobPMODate.before(todaysDate)){
-													               //does nothing if date(date) is before the todays date
-													            }else{
-													            	 //save for email alert  if date is after(date1) the todays date
-													            	SendEmailAlert emailAlert = new  SendEmailAlert();
-																	emailAlert.position = userPositonName;
-																	emailAlert.userEmail = u.email;
-																	emailAlert.jobNumber = jobNum;
-																	emailAlert.save();
-													            }
-													 	        
-													 	    }catch(Exception e){
-													 	     //handle exception
-													 	    } 
-													   
-													
-													}
-													}
-													
-											}
-									
-										}
-
+										sd.dateofStatus = sdf.format(date);
 									}
 
 								}
 							}
+							
 							break;
 						case Cell.CELL_TYPE_STRING:
 							if (storeExcelFile != null) {
-								storeExcelFile.duetoPmo = c
+								storeExcelFile.dateofStatus = c
 										.getStringCellValue();
+								System.out.println("c.getStringCellValue()"
+										+ c.getStringCellValue());
 							} else {
-								sd.duetoPmo = c.getStringCellValue();
+								sd.dateofStatus = c.getStringCellValue();
+								System.out.println("c.getStringCellValue()"
+										+ c.getStringCellValue());
 							}
 
 							break;
 						}
+					
+					
+					//
+					
 					}
-
 					c = row.getCell(27);
 					if (c != null) {
 						switch (c.getCellType()) {
@@ -963,53 +927,91 @@ public class Application extends Controller {
 					}
 
 					c = row.getCell(28);
+					//
 					if (c != null) {
-						switch (c.getCellType()) {
+					switch (c.getCellType()) {
+					case Cell.CELL_TYPE_NUMERIC:
+						if (storeExcelFile != null) {
+							if (DateUtil.isCellDateFormatted(c)) {
+								Date date = c.getDateCellValue();
+								System.out.println("date" + date);
+								if (date != null) {
+									String DATE_FORMAT_NOW = "MM/dd/yyyy";
+									SimpleDateFormat sdf = new SimpleDateFormat(
+											DATE_FORMAT_NOW);
+									storeExcelFile.scheduledCloseDate = sdf
+											.format(date);
+								}
 
-						case Cell.CELL_TYPE_NUMERIC:
-							if (storeExcelFile != null) {
-								if (DateUtil.isCellDateFormatted(c)) {
-									Date date = c.getDateCellValue();
-									System.out.println(date);
-									if (date != null) {
-										String DATE_FORMAT_NOW = "MM/dd/yyyy";
-										SimpleDateFormat sdf = new SimpleDateFormat(
-												DATE_FORMAT_NOW);
-										storeExcelFile.duetoGovt = sdf
-												.format(date);
-
+							}
+						} else {
+							if (DateUtil.isCellDateFormatted(c)) {
+								Date date = c.getDateCellValue();
+								if (date != null) {
+									String DATE_FORMAT_NOW = "MM/dd/yyyy";
+									SimpleDateFormat sdf = new SimpleDateFormat(
+											DATE_FORMAT_NOW);
+									sd.scheduledCloseDate = sdf.format(date);
+									
+									List <UserDetails> ud = UserDetails.getallUserEmail();
+									for(UserDetails u: ud){
+										List<UserPosition> position = u.userPosition;
+										
+										//check if user only reg not saved there profile
+										if(position.size() != 0){
+											for(UserPosition userPos : position){
+												String userPositonName =  userPos.position;
+												//System.out.println("userPositonName"+userPositonName);
+												//user position matched with the job positio name then add for the email alert 
+												if(userPositonName.equalsIgnoreCase(userPosition)){
+													String DATE_FORMAT_NOW1 = "MM/dd/yyyy";
+												    Date date1 = new Date();
+												    SimpleDateFormat sdf1 = new SimpleDateFormat(DATE_FORMAT_NOW1);
+												    String stringDate = sdf.format(date1);
+												    String scheduledCloseDate = sdf.format(date);
+												 
+												    	 try{
+												    		Date todaysDate = sdf1.parse(stringDate);
+												 	        Date jobPMODate = sdf1.parse(scheduledCloseDate);
+												 	       if(jobPMODate.before(todaysDate)){
+												               //does nothing if date(date) is before the todays date
+												            }else{
+												            	 //save for email alert  if date is after(date1) the todays date
+												            	SendEmailAlert emailAlert = new  SendEmailAlert();
+																emailAlert.position = userPositonName;
+																emailAlert.userEmail = u.email;
+																emailAlert.jobNumber = jobNum;
+																emailAlert.save();
+												            }
+												 	        
+												 	    }catch(Exception e){
+												 	     //handle exception
+												 	    } 
+												   
+												
+												}
+												}
+												
+										}
+								
 									}
 
 								}
-							} else {
-								if (DateUtil.isCellDateFormatted(c)) {
-									Date date = c.getDateCellValue();
-									if (date != null) {
-										System.out.println(date);
-										String DATE_FORMAT_NOW = "MM/dd/yyyy";
-										SimpleDateFormat sdf = new SimpleDateFormat(
-												DATE_FORMAT_NOW);
-										sd.duetoGovt = sdf.format(date);
-									}
 
-								}
 							}
-							break;
-						case Cell.CELL_TYPE_STRING:
-							if (storeExcelFile != null) {
-								storeExcelFile.duetoGovt = c
-										.getStringCellValue();
-								System.out.println("c.getStringCellValue()"
-										+ c.getStringCellValue());
-							} else {
-								sd.duetoGovt = c.getStringCellValue();
-								System.out.println("c.getStringCellValue()"
-										+ c.getStringCellValue());
-							}
-
-							break;
 						}
+						break;
+					case Cell.CELL_TYPE_STRING:
+						if (storeExcelFile != null) {
+							storeExcelFile.scheduledCloseDate = c
+									.getStringCellValue();
+						} else {
+							sd.scheduledCloseDate = c.getStringCellValue();
+						}
+
+						break;
 					}
+				}
 					if (storeExcelFile != null) {
 
 						storeExcelFile.update(storeExcelFile);
@@ -1042,7 +1044,7 @@ public class Application extends Controller {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("newrowscount", newrowscount);
 			map.put("updatedRowsCount", updatedRowsCount);
-
+			Application.deactivateTheJobByPMODate();
 			return ok(Json.stringify(Json.toJson(map)));
 		}
 
@@ -1215,10 +1217,11 @@ public class Application extends Controller {
 		public String shiftWork;
 		public String warzone;
 		public String coop;
-		public String duetoPmo;
+		public String scheduledCloseDate;
 		public String updateDate;
-		public String duetoGovt;
+		public String dateofStatus;
 		public String jobStatus;
+		public String maxOffer;
 
 	}
 
@@ -2024,10 +2027,10 @@ public class Application extends Controller {
 			jobVM.shiftWork = s.shiftWork;
 			jobVM.warzone = s.warzone;
 			jobVM.coop = s.coop;
-			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.scheduledCloseDate = s.scheduledCloseDate;
 		
 			jobVM.updateDate = s.updateDate;
-			jobVM.duetoGovt = s.duetoGovt;
+			jobVM.dateofStatus = s.dateofStatus;
 
 			jobVM.jobStatus = s.jobStatus;
 			// check if the desired skill does not contain null value;
@@ -2089,6 +2092,8 @@ public class Application extends Controller {
 			System.out.println("jobVM.manadatorySkills"
 					+ jobVM.manadatorySkills);
 			jobVM.desiredSkill = desSkill;
+			jobVM.maxOffer = s.maxOffer;
+			
 			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
 
 			jobVMs.add(jobVM);
@@ -2259,9 +2264,9 @@ public class Application extends Controller {
 			jobVM.shiftWork = s.shiftWork;
 			jobVM.warzone = s.warzone;
 			jobVM.coop = s.coop;
-			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.scheduledCloseDate = s.scheduledCloseDate;
 			jobVM.updateDate = s.updateDate;
-			jobVM.duetoGovt = s.duetoGovt;
+			jobVM.dateofStatus = s.dateofStatus;
 			jobVM.jobStatus = s.jobStatus;
 
 			// check if the desired skill does not contain null value;
@@ -2599,9 +2604,9 @@ public class Application extends Controller {
 			jobVM.shiftWork = s.shiftWork;
 			jobVM.warzone = s.warzone;
 			jobVM.coop = s.coop;
-			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.scheduledCloseDate = s.scheduledCloseDate;
 			jobVM.updateDate = s.updateDate;
-			jobVM.duetoGovt = s.duetoGovt;
+			jobVM.dateofStatus = s.dateofStatus;
 			jobVM.jobStatus = s.jobStatus;
 			
 			// check if the desired skill does not contain null value;
@@ -2804,7 +2809,8 @@ public class Application extends Controller {
 		List<AddEducationVM> addEducation;
 		List<AddEmpHistoryVM> addNewEmphistory;
 		List<AddCertificateVM> addCertificate;
-
+		
+		
 		String email = session().get("email");
 		UserDetails u = UserDetails.getUserByEmail(email);
 
@@ -2817,6 +2823,8 @@ public class Application extends Controller {
 		JsonNode userSkills = json.path("skills");
 		JsonNode userExperience = json.path("experience");
 
+		
+		
 		u.deleteManyToManyAssociations("userSkill");
 
 		ArrayNode skills = (ArrayNode) userSkills;
@@ -2828,12 +2836,9 @@ public class Application extends Controller {
 		}
 
 		u.saveManyToManyAssociations("userSkill");
-
 		u.deleteManyToManyAssociations("userExperiance");
 
 		//ArrayNode exp = (ArrayNode) userExperience;
-	
-		
 			String s = userExperience.asText();
 			System.out.println(s);
 			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
@@ -2844,12 +2849,16 @@ public class Application extends Controller {
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
 			String position = positions.get(j).asText();
-			UserPosition up = UserPosition.getPositionByPosName(position);
-			u.userPosition.add(up);
+			UserPosition up = UserPosition.getRecoredByPositionNameAndLevel(position,userExperience.asText());
+			
+			if(up != null){
+				u.userPosition.add(up);
+			}
 
 		}
 
 		u.saveManyToManyAssociations("userPosition");
+		
 		u.deleteManyToManyAssociations("userClearance");
 		//ArrayNode clearance = (ArrayNode) userClearance;
 		
@@ -2860,6 +2869,8 @@ public class Application extends Controller {
 
 		u.saveManyToManyAssociations("userClearance");
 
+		
+		
 		ObjectMapper mapper = new ObjectMapper();
 		addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
 				.constructCollectionType(List.class, AddEmpHistoryVM.class));
@@ -3025,8 +3036,12 @@ public class Application extends Controller {
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
 			String position = positions.get(j).asText();
-			UserPosition up = UserPosition.getPositionByPosName(position);
-			u.userPosition.add(up);
+			UserPosition up = UserPosition.getRecoredByPositionNameAndLevel(position,userExperience.asText());
+			
+			if(up != null){
+				u.userPosition.add(up);
+			}
+			//u.userPosition.add(up);
 		}
 
 		u.saveManyToManyAssociations("userPosition");
@@ -3162,24 +3177,79 @@ public class Application extends Controller {
 
 	@JsonIgnore
 	public static Result getAllSkills() {
-
 		List<UserSkill> skill = UserSkill.getAllSkills();
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("skills", skill);
 		return ok((Json.stringify(Json.toJson(map))));
-
 	}
 
 	@JsonIgnore
 	public static Result getAllPosition() {
-		List<UserPosition> up = UserPosition.getAllPosition();
+		//List<UserPosition> up = UserPosition.getAllPosition();
+		
+		List<SqlRow> up = UserPosition.getAllDistinctPositionForAdmin();
+		List<PositionVM> positionVM = new ArrayList<PositionVM>();
+		
+		for(SqlRow u: up){
+			PositionVM pvm = new PositionVM();
+			pvm.level = u.getString("level");
+			pvm.position = u.getString("position");
+			pvm.rate = u.getString("rate");
+			positionVM.add(pvm);
+			
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("position", up);
+		map.put("position", positionVM);
 		return ok((Json.stringify(Json.toJson(map))));
 
 	}
 
+	
+	public static class PositionVM{
+		public int id;
+		public String position;
+		public String level;
+		public String rate;
+		
+	}
+	
+	
+	public static class PositionDetailsVM{
+		public 	List<PositionVM> positionVM; 
+	   public String position;
+	} 
+	
+	@JsonIgnore
+	public static Result getAllPositionForAdmin() {
+		List<SqlRow> up = UserPosition.getAllDistinctPositionForAdmin();
+		List<PositionDetailsVM> positionDetailsVM = new ArrayList<PositionDetailsVM>();
+		
+		
+		for(SqlRow u: up){
+			List<UserPosition> userPosition = UserPosition.getAllPositionForAdmin(u.getString("position"));
+			List<PositionVM> positionVM = new ArrayList<PositionVM>();
+			for(UserPosition upp:userPosition){
+					PositionVM pvm = new PositionVM();
+					pvm.level = upp.level;
+					pvm.position = upp.position;
+					pvm.rate = upp.rate;
+					positionVM.add(pvm);
+			}
+			
+			PositionDetailsVM PosDetailsVM =new PositionDetailsVM();
+			PosDetailsVM.positionVM  =    positionVM;
+			PosDetailsVM.position = u.getString("position");
+			positionDetailsVM.add(PosDetailsVM);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("position", positionDetailsVM);
+		return ok((Json.stringify(Json.toJson(map))));
+
+	}
+	
+	
 	@JsonIgnore
 	public static Result getAllExperiance() {
 		List<UserExperiance> ue = UserExperiance.getAllExperiance();
@@ -3189,9 +3259,46 @@ public class Application extends Controller {
 
 	}
 
+	public static class PositionRateVM{
+		
+		public String level;
+		public String rate;
+	}
+	
 	@JsonIgnore
-	public static Result addnewPosition(String position) {
-		UserPosition up = UserPosition.getPositionByPosName(position);
+	public static Result addnewPosition() {
+		JsonNode json = request().body().asJson();
+		
+		String  position = json.get("position").asText();
+		List<PositionRateVM> positionRateVM;
+      	
+		JsonNode posJson = json.get("positionList");
+		ObjectMapper mapper = new ObjectMapper();
+		positionRateVM = mapper.convertValue(posJson, mapper.getTypeFactory()
+				.constructCollectionType(List.class, PositionRateVM.class));
+	
+		
+		for (int i = 0; i < positionRateVM.size(); i++) {
+			UserPosition up = UserPosition.getRecoredByPositionNameAndLevel(position,positionRateVM.get(i).level);
+			if(up == null){
+	        	UserPosition u = new UserPosition();
+	        	u.setPosition(position);
+	        	u.setLevel(positionRateVM.get(i).level);
+	        	u.setRate(positionRateVM.get(i).rate);
+	        	u.save();
+
+	        }else{
+	        	up.setPosition(position);
+	        	up.setLevel(positionRateVM.get(i).level);
+	        	up.setRate(positionRateVM.get(i).rate);
+	        	up.update();
+	        	
+	        }		
+  
+		}
+		
+		
+		/*UserPosition up = UserPosition.getPositionByPosName(position);
 		if (up == null) {
 			UserPosition u = new UserPosition();
 			u.position = position;
@@ -3199,8 +3306,8 @@ public class Application extends Controller {
 			return ok(Json.toJson(u));
 		} else {
 			return ok("");
-		}
-
+		}*/
+		return ok("");
 	}
 
 	@JsonIgnore
@@ -3233,14 +3340,16 @@ public class Application extends Controller {
 
 	@JsonIgnore
 	public static Result deletePositionByName(String position) {
-		UserPosition up = UserPosition.getPositionByPosName(position);
-		if (up != null) {
-			up.delete();
-			return ok("deleted");
+		List<UserPosition>up = UserPosition.getPositionListByPosName(position);
+		if (up.size() != 0) {
+			for(UserPosition u: up){
+				u.delete();
+			}
+			
 		} else {
-			return ok("");
+			
 		}
-
+		return ok("deleted");
 	}
 
 	@JsonIgnore
@@ -3327,6 +3436,7 @@ public class Application extends Controller {
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class DesiredSkillsVM1 {
+		
 		List<dskill> dskill;
 		public String comment;
 
@@ -3346,7 +3456,7 @@ public class Application extends Controller {
 		public List<DesiredSkillsVM> desiredSkill;
 		public String username;
 		public String jobStatus;
-		public String duetoPmo;
+		public String scheduledCloseDate;
 
 		public long id;
 
@@ -3367,7 +3477,7 @@ public class Application extends Controller {
 		public String [] skills;
 		public String username;
 		public String jobStatus;
-		public String duetoPmo;
+		public String scheduledCloseDate;
 		public long id;
 
 	}
@@ -3456,7 +3566,7 @@ public class Application extends Controller {
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
-			apj.duetoPmo = saveAppliedJobsVM.duetoPmo;
+			apj.scheduledCloseDate = saveAppliedJobsVM.scheduledCloseDate;
 			apj.save();
 
 			//String email = session().get("email");*/
@@ -3507,7 +3617,7 @@ public class Application extends Controller {
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
-			apj.duetoPmo = saveAppliedJobsVM.duetoPmo;
+			apj.scheduledCloseDate = saveAppliedJobsVM.scheduledCloseDate;
 			apj.save();
 
 		} catch (JsonParseException e1) {
@@ -3581,7 +3691,7 @@ public class Application extends Controller {
 			apj.performancelevel = saveAppliedJobsVM.performanceLevel;
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
-			apj.duetoPmo = saveAppliedJobsVM.duetoPmo;
+			apj.scheduledCloseDate = saveAppliedJobsVM.scheduledCloseDate;
 			apj.save();
 			
 			String email = session().get("email");
@@ -3648,6 +3758,7 @@ public class Application extends Controller {
 		public String reqType;
 		public String performancelevel;
 		public String clearancereq;
+		public String desiredSalary;
 
 		public List<DesiredSkills> dsSkills;
 		public List<MandatorySkills> msSkils;
@@ -3673,6 +3784,7 @@ public class Application extends Controller {
 		public String clearanceRequired;
 		public String workLocation;
 		public String workDescription;
+		
 		public List<UserSkillsVM> skills;
 		/*
 		 * public String manadatorySkills; public String desiredSkill;
@@ -3681,7 +3793,7 @@ public class Application extends Controller {
 
 		public List<MandatorySkills> manadatorySkills;
 		public List<DesiredSkills> desiredSkill;
-		public String duetoPmo;
+		public String scheduledCloseDate;
 
 	}
 
@@ -3703,6 +3815,8 @@ public class Application extends Controller {
 			apvm.requestNumber = apj.jobno;
 			apvm.location = apj.location;
 			apvm.positionName = apj.positionname;
+			UserDetails ud= UserDetails.getUserByEmail(apj.username);
+			apvm.desiredSalary = ud.desiredsalary;
 			appliedJobVM.add(apvm);
 
 		}
@@ -3731,6 +3845,8 @@ public class Application extends Controller {
 			apvm.requestNumber = apj.jobno;
 			apvm.location = apj.location;
 			apvm.positionName = apj.positionname;
+			UserDetails ud= UserDetails.getUserByEmail(apj.username);
+			apvm.desiredSalary = ud.desiredsalary;
 			appliedJobVM.add(apvm);
 
 		}
@@ -4344,9 +4460,9 @@ public class Application extends Controller {
 		public String shiftWork;
 		public String warzone;
 		public String coop;
-		public String duetoPmo;
+		public String scheduledCloseDate;
 		public String updateDate;
-		public String duetoGovt;
+		public String dateofStatus;
 	}
 
 	public static Result saveEditJob() {
@@ -4492,9 +4608,9 @@ public class Application extends Controller {
 			} else {
 				storeExcel.coop = "N";
 			}
-			storeExcel.duetoPmo = editJobVM.duetoPmo;
+			storeExcel.scheduledCloseDate = editJobVM.scheduledCloseDate;
 			storeExcel.updateDate = editJobVM.updateDate;
-			storeExcel.duetoGovt = editJobVM.duetoGovt;
+			storeExcel.dateofStatus = editJobVM.dateofStatus;
 			storeExcel.update(storeExcel);
 
 		} catch (JsonParseException e1) {
@@ -4866,8 +4982,8 @@ public class Application extends Controller {
 			 * jobVM.pagerdutyComments =s.pagerdutyComments; jobVM.workonHoliday
 			 * = s.workonHoliday; jobVM.workonWeekends = s.workonWeekends;
 			 * jobVM.shiftWork =s.shiftWork; jobVM.warzone = s.warzone;
-			 * jobVM.coop = s.coop; jobVM.duetoPmo = s.duetoPmo;
-			 * jobVM.updateDate = s.updateDate; jobVM.duetoGovt = s.duetoGovt;
+			 * jobVM.coop = s.coop; jobVM.scheduledCloseDate = s.scheduledCloseDate;
+			 * jobVM.updateDate = s.updateDate; jobVM.dateofStatus = s.dateofStatus;
 			 */
 			/*String  skills = s.skills.replaceAll("\\[", "").replaceAll("\\]","");
 			
@@ -4886,7 +5002,7 @@ public class Application extends Controller {
 			
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
-		    jobVM.duetoPmo = s.duetoPmo;
+		    jobVM.scheduledCloseDate = s.scheduledCloseDate;
 			String DATE_FORMAT_NOW = "MM/dd/yyyy";
 		    Date date = new Date();
 		    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
@@ -4895,7 +5011,7 @@ public class Application extends Controller {
 			//check for the due to pmo date if  before the todays date then does not add to list else add  
 			try{
 	    		Date todaysDate = sdf.parse(stringDate);
-	 	        Date jobPMODate = sdf.parse(s.duetoPmo);
+	 	        Date jobPMODate = sdf.parse(s.scheduledCloseDate);
 	 	       if(jobPMODate.before(todaysDate)){
 	 	    	  count = count - 1;
 	            }else{
@@ -4996,8 +5112,13 @@ public class Application extends Controller {
 		return ok();
 	}
 
-	public static Result saveUserTemplate(String template, String templatename) {
+	public static Result saveUserTemplate() {
 		String email = session().get("email");
+		
+		JsonNode json = request().body().asJson();
+	    String template = json.get("userTemplate").asText();
+	    String templatename = json.get("templateName").asText();
+		
 		UserTemplate ut = UserTemplate.getUserTemplateByName(templatename,
 				email);
 		if (ut != null) {
@@ -5077,14 +5198,14 @@ public class Application extends Controller {
 			 * jobVM.pagerdutyComments =s.pagerdutyComments; jobVM.workonHoliday
 			 * = s.workonHoliday; jobVM.workonWeekends = s.workonWeekends;
 			 * jobVM.shiftWork =s.shiftWork; jobVM.warzone = s.warzone;
-			 * jobVM.coop = s.coop; jobVM.duetoPmo = s.duetoPmo;
-			 * jobVM.updateDate = s.updateDate; jobVM.duetoGovt = s.duetoGovt;
+			 * jobVM.coop = s.coop; jobVM.scheduledCloseDate = s.scheduledCloseDate;
+			 * jobVM.updateDate = s.updateDate; jobVM.dateofStatus = s.dateofStatus;
 			 */
 			jobVM.jobStatus = s.jobStatus;
 			jobVM.skills = getAllUserSkill(s.skills);
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
-			jobVM.duetoPmo = s.duetoPmo;
+			jobVM.scheduledCloseDate = s.scheduledCloseDate;
 
 			// System.out.println("jobVM.desiredSkill" + jobVM.dsSkills);
 
@@ -5096,7 +5217,7 @@ public class Application extends Controller {
 			//check for the due to pmo date if  before the todays date then does not add to list else add  
 			try{
 	    		Date todaysDate = sdf.parse(stringDate);
-	 	        Date jobPMODate = sdf.parse(s.duetoPmo);
+	 	        Date jobPMODate = sdf.parse(s.scheduledCloseDate);
 	 	       if(jobPMODate.before(todaysDate)){
 	 	    	  
 	            }else{
@@ -5323,7 +5444,7 @@ public class Application extends Controller {
 	    for(StoreExcelFile s: stexcel){
 	    	 try{
 	    		Date todaysDate = sdf.parse(stringDate);
-	 	        Date jobPMODate = sdf.parse(s.duetoPmo);
+	 	        Date jobPMODate = sdf.parse(s.scheduledCloseDate);
 	 	       if(jobPMODate.before(todaysDate)){
 	                s.jobStatus = "inactive";
 	                s.update(s);
@@ -5395,8 +5516,7 @@ public class Application extends Controller {
 	}
 	
  public static Result 	unSubribeFormEmailAlertByAdmin(boolean alert,String email){
-		System.out.println("email"+email);		
-		System.out.println("alert"+alert);
+		
 		if(alert == false){
 			UserDetails ud = UserDetails.getUserByEmail(email);
 			if(ud != null){
@@ -5433,15 +5553,213 @@ public class Application extends Controller {
 	 return ok("success");
  }
  
- public static Result updateTemplateById(int id,String name,String content){
+ public static Result updateTemplateById(){
 	 
-	 UserTemplate  ut = UserTemplate.deleteUserTemplateByid(session().get("email"),id);
-	if(ut != null){
-		ut.templateName = name;
-		ut.template = content;
-		ut.update();
+	 	JsonNode json = request().body().asJson();
+	    int id  = json.get("id").asInt();
+	    String name = json.get("name").asText();
+	    String content =  json.get("content").asText();
+	 
+	    UserTemplate  ut = UserTemplate.deleteUserTemplateByid(session().get("email"),id);
+	    	if(ut != null){
+	    		ut.templateName = name;
+	    		ut.template = content;
+	    		ut.update();
+	    	}
+	    	return ok("success");
+ 	}
+ 
+ 
+//upload the excel
+	public static Result uploadPositions() {
+		play.mvc.Http.MultipartFormData body = request().body()
+				.asMultipartFormData();
+		MultipartFormData.FilePart excelpart = body.getFile("file");
+		File excelfile = excelpart.getFile();
+		String filename = excelpart.getFilename();
+		System.out.println("filename"+filename);
+		// ArrayList<String> al = new ArrayList<>();
+		Workbook wb_xssf; //Declare XSSF WorkBook
+	    Workbook wb_hssf;//Declare HSSf WorkBook
+		
+		int newRows = 0;
+		int updatedRows = 0;
+		Sheet sheet = null;
+		String  jobNum = ""; 
+		String positionName = "";
+		try {
+			
+			 FileInputStream file = new FileInputStream(excelfile);
+			 String fileExtn = FilenameUtils.getExtension(filename);
+			
+			 if (fileExtn.equalsIgnoreCase("xlsx")){
+			       wb_xssf = new XSSFWorkbook(file);
+			       
+			       sheet = wb_xssf.getSheetAt(0);
+		      }
+
+			 if (fileExtn.equalsIgnoreCase("xls")){
+			      POIFSFileSystem fs = new POIFSFileSystem(file);
+		    	  wb_hssf = new HSSFWorkbook(fs);
+		    	  sheet = wb_hssf.getSheetAt(0);
+		      }
+			 
+			 UserPosition userPosition = null;
+			Row row;
+			String reqNo = null;
+
+			Iterator<Row> rowIterator = sheet.iterator();
+			rowIterator.next();
+			while (rowIterator.hasNext()) {
+				reqNo = null;
+				row = rowIterator.next();
+				if (!row.getZeroHeight()) {
+
+					UserPosition sd = new UserPosition();
+					Cell c = row.getCell(0);
+
+					switch (c.getCellType()) {
+					case Cell.CELL_TYPE_NUMERIC:
+						sd.position = c.getNumericCellValue() + "";
+ 						break;
+					case Cell.CELL_TYPE_STRING:
+						System.out.println("nukmberString");
+						/*userPosition = UserPosition.getregNumber(c
+								.getStringCellValue());*/
+						positionName =  c
+								.getStringCellValue();
+						break;
+					}
+
+					c = row.getCell(1);
+
+					switch (c.getCellType()) {
+					case Cell.CELL_TYPE_NUMERIC:
+						userPosition = UserPosition.getRecoredByPositionNameAndLevel(positionName,c
+								.getStringCellValue());
+						
+						
+						if (userPosition != null) {
+							userPosition.level =  Double.toString(c
+									.getNumericCellValue());;
+							userPosition.position = positionName;
+						} else {
+							sd.level = c.getStringCellValue();
+							sd.position = positionName;
+						}
+						break;
+					case Cell.CELL_TYPE_STRING:
+						// sd.requestType=c.getStringCellValue();
+						
+						userPosition = UserPosition.getRecoredByPositionNameAndLevel(positionName,c
+								.getStringCellValue());
+						
+						if (userPosition != null) {
+							userPosition.level = c.getStringCellValue();
+							userPosition.position = positionName;
+						} else {
+							sd.level = c.getStringCellValue();
+							sd.position = positionName;
+						}
+
+						break;
+					}
+
+					c = row.getCell(2);
+					switch (c.getCellType()) {
+					case Cell.CELL_TYPE_NUMERIC:
+						if (userPosition != null) {
+							userPosition.rate =  Double.toString(c
+									.getNumericCellValue());
+						} else {
+							sd.rate =  Double.toString(c.getNumericCellValue());
+							//userPosition = sd.l;
+						
+						}
+						break;
+					case Cell.CELL_TYPE_STRING:
+						
+						
+						if (userPosition != null) {
+							userPosition.rate = c
+									.getStringCellValue();
+						} else {
+							sd.rate = c.getStringCellValue();
+							//userPosition = sd.l;
+						
+						}
+
+						break;
+					}
+						
+					if (userPosition != null) {
+						
+						//userPosition.id = userPosition.id;
+						userPosition.update(userPosition);
+							updatedRows = updatedRows + 1;
+							System.out.println("updatedRows" + updatedRows
+									+ "reqNo" + reqNo);
+						
+						// System.out.println("in update");
+					} else {
+							newRows = newRows + 1;
+							sd.save();
+					}
+
+				}
+			}
+			file.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			flash().put("error", "Upload Failed");
+			String newrowscount = Integer.toString(newRows);
+			String updatedRowsCount = Integer.toString(updatedRows);
+			System.out.println("updatedRowsCount" + updatedRowsCount);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("newrowscount", newrowscount);
+			map.put("updatedRowsCount", updatedRowsCount);
+
+			return ok(Json.stringify(Json.toJson(map)));
+		}
+
+		String newrowscount = Integer.toString(newRows);
+		String updatedRowsCount = Integer.toString(updatedRows);
+		System.out.println("updatedRowsCount" + updatedRowsCount);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("newrowscount", newrowscount);
+		map.put("updatedRowsCount", updatedRowsCount);
+		Application.deactivateTheJobByPMODate();
+		return ok(Json.stringify(Json.toJson(map)));
 	}
-	 return ok("success");
- }
+ 
+	public static class EditPositionRateVM{
+		
+		public int id;
+		public String level;
+		public String rate;
+		public String position;
+	}
+	
+	
+	public static Result  editPositionRateDetails(){
+        JsonNode json = request().body().asJson();
+		System.out.println("json"+json);
+		List<EditPositionRateVM> positionRateVM;
+		JsonNode posJson = json.get("positionList");
+		ObjectMapper mapper = new ObjectMapper();
+		positionRateVM = mapper.convertValue(posJson, mapper.getTypeFactory()
+				.constructCollectionType(List.class, EditPositionRateVM.class));
+	
+		for(int i=0;i< positionRateVM.size();i++){
+			UserPosition u = UserPosition.getRecoredByPositionNameAndLevel(positionRateVM.get(i).position, positionRateVM.get(i).level)	;
+			if(u != null){
+				u.setRate(positionRateVM.get(i).rate);
+				u.setPosition(positionRateVM.get(i).position);
+				u.setLevel(positionRateVM.get(i).level);
+				u.update();
+			}
+		}
+		return ok("success");
+	}
  
 }
