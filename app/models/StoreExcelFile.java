@@ -45,10 +45,13 @@ public class StoreExcelFile {
 	public String shiftWork;
 	public String warzone;
 	public String coop;
-	public String duetoPmo;
+	//SCHEDULED CLOSE DATE value stored
+	public String scheduledCloseDate; 
 	public String updateDate;
-	public String duetoGovt;
+	//DATE OF STATUS CHANGE value stored
+	public String dateofStatus;
 	public String jobStatus = "active";
+	public String maxOffer = "0"; 
 	
 	public StoreExcelFile() {
 
@@ -125,6 +128,7 @@ public class StoreExcelFile {
 		return totalPages;
 	}*/
 
+	
 	public void update(StoreExcelFile storeExcelFile) {
 		Ebean.update(storeExcelFile);
 	}

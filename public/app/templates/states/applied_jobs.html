@@ -48,7 +48,8 @@ background-color: #999999;
 											<th>Job Id</th>
 											<th>Location</th>
 											<th>Position Name</th>
-											<!-- <th>Download</th> -->
+										    <th>Desired Salary</th>
+										    <th>Max Salary </th>  
 											<th>View Resume</th>
 											<th>Delete</th>
 											<th>Archive</th>
@@ -59,6 +60,9 @@ background-color: #999999;
 											<td ng-click="">{{appliedJobs.requestNumber}}</td>
 											<td ng-click="">{{appliedJobs.location}}</td>
 											<td ng-click="">{{appliedJobs.positionName}}</td>
+											<td ng-click="">{{appliedJobs.desiredSalary}}</td>
+											<td ng-click=""></td>
+											
 											<!-- <td><div id="download">
 	    <a 										class="btn btn-success" href="/generatePDF/{{appliedJobs.id}}" ><button>Download</button></a>
 	</div>								</td>
