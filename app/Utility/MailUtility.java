@@ -32,7 +32,7 @@ public class MailUtility {
 	Properties props = new Properties();
 	props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.host", "smtp.office365.com");
 	props.put("mail.smtp.port", "587");
 
 	Session session = Session.getInstance(props,
@@ -85,7 +85,7 @@ try {
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.host", "smtp.office365.com");
 		props.put("mail.smtp.port", "587");
 
 		Session session = Session.getInstance(props,
@@ -137,7 +137,7 @@ public void sendRegistrationMail(String  email,String pass){
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.host", "smtp.office365.com");
 		props.put("mail.smtp.port", "587");
 
 		Session session = Session.getInstance(props,
@@ -189,7 +189,7 @@ public void sendMailForgetpassword(String  email,String pass){
 	Properties props = new Properties();
 	props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.host", "smtp.office365.com");
 	props.put("mail.smtp.port", "587");
 
 	Session session = Session.getInstance(props,
@@ -239,7 +239,7 @@ public void sendMailToAlluser(String  mailsubject,String mailcontent,ArrayList<S
 	Properties props = new Properties();
 	props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.host", "smtp.office365.com");
 	props.put("mail.smtp.port", "587");
 
 	Session session = Session.getInstance(props,
@@ -304,7 +304,7 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 	Properties props = new Properties();
 	props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.host", "smtp.office365.com");
 	props.put("mail.smtp.port", "587");
 
 	Session session = Session.getInstance(props,
