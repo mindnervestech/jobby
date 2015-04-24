@@ -45,7 +45,7 @@ public class MailUtility {
 try {
      	//send a  order order confirmation  mail to Admin,registered(currently order placed user)  user.
 		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress("Ardent"));
+		message.setFrom(new InternetAddress(username));
 		    //Add multiple recipients. including Admin
 			//message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
 			message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
@@ -58,20 +58,21 @@ try {
 			 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 			 String dateToSend = formatter.format(todaysDate);
              //set the msg body text.	 
+			 System.out.println("User Email id: "+email+"\nPosition Applied For: "+positionName+"\nPosition Type: "+positiontype+"\nPerformance  Level: "+performance_level+"\nClearance Required: "+clearance_req+"\nWork Location: "+workLocation);
 			 messageBodyPart.setText("User Email id: "+email+"\nPosition Applied For: "+positionName+"\nPosition Type: "+positiontype+"\nPerformance  Level: "+performance_level+"\nClearance Required: "+clearance_req+"\nWork Location: "+workLocation);
 		         // Create a multipart message
 	         Multipart multipart = new MimeMultipart();
 	         // Set text message part
 	         multipart.addBodyPart(messageBodyPart);
 	         message.setContent(multipart);
-		     Transport.send(message);
+		     Transport.send(message); 
 		
 		
 		
 		} catch (Exception e) {
-			//e.printStackTrace();
-		  //throw new RuntimeException(e);
-			return ;
+			e.printStackTrace();
+		     throw new RuntimeException(e);
+			//return ;
 	}
 	}
 	
@@ -98,7 +99,7 @@ try {
 	try {
 	     	//send a  order order confirmation  mail to Admin,registered(currently order placed user)  user.
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("Ardent"));
+			message.setFrom(new InternetAddress(username));
 			    //Add multiple recipients. including Admin
 				message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
 				//message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
@@ -150,7 +151,7 @@ public void sendRegistrationMail(String  email,String pass){
 	try {
 	     	//send a  order order confirmation  mail to Admin,registered(currently order placed user)  user.
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("Ardent"));
+			message.setFrom(new InternetAddress(username));
 			    //Add multiple recipients. including Admin
 			//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
 				message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
@@ -204,7 +205,7 @@ public void sendMailForgetpassword(String  email,String pass){
 		
 		       System.out.println("send mail");
      		     Message message = new MimeMessage(session);
-				  message.setFrom(new InternetAddress("Ardent"));
+				  message.setFrom(new InternetAddress(username));
 					message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 					//set msg text body
 					 message.setSubject( " Your  password  Details  ");
@@ -317,7 +318,7 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 	try {
 
      		     Message message = new MimeMessage(session);
-				message.setFrom(new InternetAddress("Ardent"));
+				message.setFrom(new InternetAddress(username));
 				    //Add multiple recipients. including Admin
 				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
 				//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(userEmailList));
@@ -331,7 +332,7 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 					 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 					 String dateToSend = formatter.format(todaysDate);*/
 		             //set the msg body text.
-					 String webaddress = "http://www.i2Simply-Done.com/login ";
+					 String webaddress = "http://www.apjobsportal.com";
 					 messageBodyPart.setText("You have "+matchjobJobSize+" new  Positions matching your profile,Please login to"+" "+  webaddress +" "+"to view the profile \n\n\n\n\n Regards,\ni2Simply-Done team \nrobert.mccauley@ardentprinciples.com");
 			         // Create a multipart message
 			         Multipart multipart = new MimeMultipart();

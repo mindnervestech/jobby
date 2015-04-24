@@ -89,6 +89,11 @@ public class UserPosition extends Model {
 	public static UserPosition getRecoredByPositionNameAndLevel(String pos,String level) {
 		return find.where().eq("position", pos).eq("level", level).findUnique();
 	}
+	
+	@JsonIgnore
+	public static UserPosition getRecoredByPositionNameAndLevelAsc(String pos,String level) {
+		return find.where().eq("position", pos).eq("level", level).order().asc("level").findUnique();
+	}
 
 	public void save(UserPosition userPosition) {
 		Ebean.save(userPosition);
@@ -119,7 +124,7 @@ public class UserPosition extends Model {
 	  	return find.where().eq("position", position).order().asc("level").findList();
 	}
 	
-	
+	 
 	
 	
 }
