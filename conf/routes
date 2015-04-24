@@ -85,3 +85,4 @@ GET   /deleteUserTemplateById/:id                               controllers.Appl
 POST   /updateTemplateById                  controllers.Application.updateTemplateById()
 GET   /getallSkillsForAdmin/:pageNumber                                        controllers.Application.getallSkillsForAdmin(pageNumber : Integer)
 POST   /editPositionRateDetails              					 controllers.Application.editPositionRateDetails()
+POST   /updateDefualtValues                      controllers.Application.updateDefualtValues()
