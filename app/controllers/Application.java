@@ -30,6 +30,7 @@ import javax.mail.internet.MimeMultipart;
 import models.Admin;
 import models.AppliedJobs;
 import models.CertificationDetails;
+import models.DefaultValues;
 import models.EducationDetails;
 import models.EmploymentDetails;
 import models.JobSearchStatus;
@@ -291,7 +292,9 @@ public class Application extends Controller {
 			StoreExcelFile storeExcelFile = null;
 			Row row;
 			String reqNo = null;
-
+			String posName = "";
+			String level = "" ;
+ 			
 			Iterator<Row> rowIterator = sheet.iterator();
 			rowIterator.next();
 			while (rowIterator.hasNext()) {
@@ -360,7 +363,8 @@ public class Application extends Controller {
 							
 							u.save();
 						}*/
-
+						posName =c.getStringCellValue();
+						
 						if (storeExcelFile != null) {
 							storeExcelFile.labourCategory = c
 									.getStringCellValue();
@@ -414,7 +418,27 @@ public class Application extends Controller {
 						if (storeExcelFile != null) {
 							storeExcelFile.performanceLevel = c
 									.getStringCellValue();
+							UserPosition up = UserPosition.getRecoredByPositionNameAndLevelAsc(posName,c.getStringCellValue());
+						    DefaultValues df =  DefaultValues.getDefaultValues();
+							if(up != null){
+								double result   = ((Double.parseDouble(up.rate) * df.hours) / (df.gandaWrap *( 1 + (df.profit/100))));
+								storeExcelFile.maxOffer = Double.toString(result);
+								System.out.println("storeExcelFile.maxOffer"+storeExcelFile.maxOffer);
+								
+							}
+						
+						
 						} else {
+							
+							UserPosition up = UserPosition.getRecoredByPositionNameAndLevelAsc(posName,c.getStringCellValue());
+						    DefaultValues df =  DefaultValues.getDefaultValues();
+							
+						    if(up != null){
+						    	Double.parseDouble(up.rate);
+								double result   = ((Double.parseDouble(up.rate) * df.hours) / (df.gandaWrap *( 1+ df.profit)));
+								sd.maxOffer = Double.toString(result);
+								System.out.println("storeExcelFile.maxOffer"+sd.maxOffer);
+							}
 							sd.performanceLevel = c.getStringCellValue();
 						}
 
@@ -2608,6 +2632,7 @@ public class Application extends Controller {
 			jobVM.updateDate = s.updateDate;
 			jobVM.dateofStatus = s.dateofStatus;
 			jobVM.jobStatus = s.jobStatus;
+			jobVM.maxOffer  =s.maxOffer;
 			
 			// check if the desired skill does not contain null value;
 			if (s.desiredSkill != null) {
@@ -4463,6 +4488,7 @@ public class Application extends Controller {
 		public String scheduledCloseDate;
 		public String updateDate;
 		public String dateofStatus;
+		public String maxOffer;
 	}
 
 	public static Result saveEditJob() {
@@ -5751,7 +5777,7 @@ public class Application extends Controller {
 				.constructCollectionType(List.class, EditPositionRateVM.class));
 	
 		for(int i=0;i< positionRateVM.size();i++){
-			UserPosition u = UserPosition.getRecoredByPositionNameAndLevel(positionRateVM.get(i).position, positionRateVM.get(i).level)	;
+			UserPosition u = UserPosition.getRecoredByPositionNameAndLevelAsc(positionRateVM.get(i).position, positionRateVM.get(i).level)	;
 			if(u != null){
 				u.setRate(positionRateVM.get(i).rate);
 				u.setPosition(positionRateVM.get(i).position);
@@ -5760,6 +5786,50 @@ public class Application extends Controller {
 			}
 		}
 		return ok("success");
+	}
+	
+	public static class DefaultValuesVM{
+		 public int  hours ;
+	     public  double  fringe ;
+	     public  double   overhead ;
+	     public  double   	ganda ;
+	     public  double   	gandaWrap ;
+	     public  double   overheadWrap ;
+	     public  double   	fringeWrap  ;
+	     public  double   profit ;
+		
+	}
+	
+	public static Result  updateDefualtValues() throws JsonParseException, JsonMappingException, IOException{
+		
+		  JsonNode json = request().body().asJson();
+		  System.out.println("json"+json);
+		  List<DefaultValues> items = Ebean.find(DefaultValues.class).findList();
+			if(items.size()!= 0){
+				Ebean.delete(items);
+				//return ok("success");
+			}
+		  
+		  DefaultValuesVM defaultValuesVM;
+		  ObjectMapper objectMapper = new ObjectMapper();
+		  defaultValuesVM = objectMapper.readValue(json.get("deFaultValues")
+					.traverse(), DefaultValuesVM.class);
+		  DefaultValues  DValues = new DefaultValues();
+		  
+		  DValues.fringe = defaultValuesVM.fringe;
+		  DValues.hours = defaultValuesVM.hours;
+		  
+		  DValues.overhead = defaultValuesVM.overhead;
+		  DValues.ganda = defaultValuesVM.ganda;
+		  
+		  DValues.gandaWrap = defaultValuesVM.gandaWrap;
+		  DValues.overheadWrap =defaultValuesVM.overheadWrap;
+		  DValues.fringeWrap = defaultValuesVM.fringeWrap;
+		  DValues.profit = defaultValuesVM.profit;
+		  
+		  DValues.save();
+		  
+		  return ok("");
 	}
  
 }

@@ -104,8 +104,7 @@ App.config(function ($routeProvider) {
         .when('/extra-profile', { templateUrl: 'assets/app/templates/states/_extra-profile.html', controller: 'ExtraProfileController'})
         .when('/updateExcel', { templateUrl: 'assets/app/templates/states/storeexcel.html', controller: 'ExcelFileController'})
         .when('/uploadPositions', { templateUrl: 'assets/app/templates/states/uploadPositions.html', controller: 'UploadPositionsController'})
-       
-        
+        .when('/defaultValues', { templateUrl: 'assets/app/templates/states/DefaultValues.html', controller: 'DefaultValueController'})
         .when('/forgetPassword', { templateUrl: 'assets/app/templates/states/forget_password.html', controller: 'ForgetPasswordController'})
         .when('/viewJobs', { templateUrl: 'assets/app/templates/states/view_jobs.html', controller: 'ViewJobsController'})
         .when('/viewAllJobsforAdmin', { templateUrl: 'assets/app/templates/states/all_jobs_admin.html', controller: 'ViewAllForAdminJobsController'})
@@ -736,7 +735,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 
 
 
-App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval){
+App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval ,$window){
 	 $http.get('/getUserName')
 		.success(function(data) {
 		// $scope.userData = data;
@@ -765,9 +764,9 @@ App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootS
 		$scope.gandaWrap = 1.697981;
 		$scope.overheadWrap = 1.620145;
 		$scope.fringeWrap = 1.412677 ;
-		$scope.salary;
-		$scope.sellRate;
-		$scope.employeeCost;
+		$scope.salary = 0;
+		$scope.sellRate = 0;
+		$scope.employeeCost = 0;
 		
 		
 		$scope.hourlyCost = 0;
@@ -783,30 +782,34 @@ App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootS
 		     &&  $scope.salary !="" && !(angular.isUndefined($scope.salary))
 			){
 				$scope.hourlyCost = (parseInt($scope.salary)/parseInt($scope.hours));
-				$scope.fringeCost = (parseInt($scope.hourlyCost) * parseInt($scope.fringe));
-				$scope.overheadCost = (parseInt($scope.fringeCost) * parseInt($scope.overhead));
-				$scope.employeeCost = (parseInt($scope.overheadCost) * parseInt($scope.ganda));
+				console.log($scope.hourlyCost);
+				$scope.fringeCost =	($scope.fringe * $scope.hourlyCost);
+				console.log($scope.fringeCost);
+				$scope.overheadCost = ($scope.fringeCost * $scope.overhead);
+				$scope.employeeCost = ($scope.overheadCost * $scope.ganda);
 				
 			}else{
-				$scope.hourlyCost = "0";
+				$scope.hourlyCost = 0;
 				$scope.fringeCost = 0;
 				$scope.overheadCost = 0;
 				$scope.employeeCost = 0;
 			}
 		}
 		
-		$scope.profitdoller;
-		$scope.profitpercentage;
-		$scope.sellRateProfit;
-		$scope.employeeCostProfit;
+		$scope.profitdoller = 0;
+		$scope.profitpercentage = 0;
+		$scope.sellRateProfit = 0;
+		$scope.employeeCostProfit = 0;
 		$scope.profitdoller = 0;
 		$scope.profitpercentage = 0;
 		
 		$scope.calculateProfitability = function(){
 		//	$scope.calculateFirst();
 			if($scope.sellRateProfit != "" && !(angular.isUndefined($scope.sellRateProfit)) && $scope.employeeCostProfit != "" && !(angular.isUndefined($scope.employeeCostProfit))){
-				$scope.profitdoller = parseInt(($scope.sellRateProfit) - parseInt($scope.employeeCostProfit));
-				$scope.profitpercentage = parseInt(($scope.profitdoller) - parseInt($scope.employeeCostProfit));
+				$scope.profitdoller = ($scope.sellRateProfit - $scope.employeeCostProfit);
+				$scope.profitpercentage = (($scope.profitdoller) / ($scope.employeeCostProfit));
+				console.log($scope.profitpercentage);
+				$scope.profitpercentage = (($scope.profitpercentage) * 100);
 			}else{
 				$scope.profitdoller = 0;
 				$scope.profitpercentage = 0;
@@ -815,32 +818,86 @@ App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootS
 			
 		}
 		
-		$scope.profitMinSellRate ;
-		$scope.employeeCostminsellRate;
+		$scope.profitMinSellRate  = 0;
+		$scope.employeeCostminsellRate =0;
 		$scope.minsellRate =  0;
-		
+		$scope.prf = 0
 		$scope.minSellRate = function(){
 			if($scope.employeeCostminsellRate != "" && !(angular.isUndefined($scope.employeeCostminsellRate)) && $scope.profitMinSellRate != "" && !(angular.isUndefined($scope.profitMinSellRate))){
-			$scope.minsellRate = parseInt(($scope.employeeCostminsellRate) * parseInt($scope.profitMinSellRate + 1)); 
+			$scope.prf = ($scope.profitMinSellRate / 100);
+				$scope.minsellRate = ($scope.employeeCostminsellRate * (($scope.prf) + 1)); 
 		}else{
 			$scope.minsellRate =  0;
+			$scope.prf = 0;
 		}
 		
 		}
-		$scope.timeandmaterialRate;
-		$scope.profitMaxSalary;
+		$scope.timeandmaterialRate = 0;
+		$scope.profitMaxSalary = 0;
 		$scope.maxSalary =  0;
+	
 		
 		$scope.calMaxSalary  = function(){
 			
 			if($scope.timeandmaterialRate != "" && !(angular.isUndefined($scope.timeandmaterialRate)) && $scope.hours != "" && !(angular.isUndefined($scope.hours))
 					&&	$scope.gandaWrap != "" && !(angular.isUndefined($scope.gandaWrap)) && $scope.profitMaxSalary != "" && !(angular.isUndefined($scope.profitMaxSalary))){
-			       
-				$scope.maxSalary =( parseInt(($scope.timeandmaterialRate) * parseInt($scope.hours + 1))/ ((parseInt($scope.gandaWrap))/parseInt(1+$scope.profitMaxSalary))); 
+				$scope.maxSalary =((($scope.timeandmaterialRate) * (parseInt($scope.hours) + 1)) / ((($scope.gandaWrap))*((1+ parseInt($scope.profitMaxSalary))))); 
 			}else{
 				$scope.maxSalary = 0;
 			}
 		}
+		
+});  
+
+
+App.controller('DefaultValueController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval ,$window){
+	 $http.get('/getUserName')
+		.success(function(data) {
+		// $scope.userData = data;
+			$rootScope.username = data;
+			console.log("data"+data);
+		});
+	  
+	// check for gthe admin
+		$http.get('checkForadmin')
+		.success(function(data){
+			if(data == 'notAdmin') {
+				$rootScope.isUser = true;
+				$rootScope.isAdmin = false;
+				console.log("admin"+$rootScope.isAdmin);
+			}else{
+				$rootScope.isAdmin = true;
+				$rootScope.isUser = false;
+			} 
+		});
+		
+		$scope.deFaultValues = {
+				
+				hours :2080,
+				fringe :1.4127,
+				overhead : 1.1469,
+				ganda :1.0480,
+				gandaWrap : 1.697981,
+				overheadWrap : 1.620145,
+				fringeWrap : 1.412677,
+				profit:14
+				
+		}
+		
+		
+		$scope.updateDefaultvalues = function(){
+
+			$http.post('/updateDefualtValues',{deFaultValues:$scope.deFaultValues})
+			.success(function(data){
+				console.log("success");
+				
+					$scope.deFaultValues = {};
+					$scope.sent = false;
+			});
+			
+		}
+		
+		
 		
 });  
 
