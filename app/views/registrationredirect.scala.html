@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+<title>i2Simply Done</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<link rel="stylesheet"
+	href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700" />
+<link rel="stylesheet"
+	href="http://fonts.googleapis.com/css?family=Oswald:400,700,300" />
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/font-awesome/css/font-awesome.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap/css/bootstrap.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/intro.js/introjs.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/calendar/zabuto_calendar.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/sco.message/sco.message.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/animate.css/animate.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/iCheck/skins/all.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-notific8/jquery.notific8.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/sco.message/sco.message.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.1.1.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-markdown/css/bootstrap-markdown.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/summernote/summernote.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/ion.rangeSlider/css/ion.rangeSlider.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/nouislider/jquery.nouislider.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-nestable/nestable.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-toastr/toastr.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jstree/dist/themes/default/style.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-treetable/stylesheets/jquery.treetable.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-treetable/stylesheets/jquery.treetable.theme.custom.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datepicker/css/datepicker.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.print.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/lightbox/css/lightbox.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/DataTables/media/css/jquery.dataTables.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/DataTables/media/css/dataTables.bootstrap.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-tablesorter/themes/blue/style-custom.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/DataTables/media/css/dataTables.bootstrap.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datepicker/css/datepicker3.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/dropzone/css/dropzone.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-file-upload/css/jquery.fileupload.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-file-upload/css/jquery.fileupload-ui.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-file-upload/css/blueimp-gallery.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-steps/css/jquery.steps.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-colorpicker/css/colorpicker.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker-bs3.css")"/>
+<!-- <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")"/>
+ --><link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-timepicker/css/bootstrap-timepicker.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-clockface/css/clockface.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-switch/css/bootstrap-switch.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/css/style.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/jplist/html/css/jplist-custom.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/select2/select2-madmin.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-select/bootstrap-select.min.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/multi-select/css/multi-select-madmin.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/select2/lib/select2-madmin.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/css/bootstrap-editable.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.css")"/>
+ <link rel="stylesheet" href="@routes.Assets.at("app/css/themes/style1/pink-blue.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("app/css/themes/{{style}}/{{theme}}.css")"/>
+<link rel="shortcut icon" href="@routes.Assets.at("app/images/icons/favicon.ico")"/>
+<link rel="apple-touch-icon" href="@routes.Assets.at("app/images/icons/favicon.png")"/>
+<link rel="apple-touch-icon" sizes="72x72" href="@routes.Assets.at("app/images/icons/favicon-72x72.png")"/>
+<link rel="apple-touch-icon" sizes="114x114" href="@routes.Assets.at("app/images/icons/favicon-114x114.png")"/>
+<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+
+			<!-- <script src="@routes.Assets.at("app/vendors/ckeditor/ckeditor.js")"></script> -->
+			<!-- <script src="@routes.Assets.at("app/js/lib.js")"></script> -->
+			 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+			<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+			<script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script>
+    	    <script src="@routes.Assets.at("app/bower_components/angular/angular.min.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular/angular-route.min.js")"></script>
+			<script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script>
+			<script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
+			<script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script>
+ 			<!--   <script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script> -->
+    		<script src="@routes.Assets.at("app/bower_components/angular/angular.min.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular/angular-route.min.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular-bootstrap/ui-bootstrap.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-migrate-1.2.1.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-ui.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap/js/bootstrap.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-bootstrap-wizard/jquery.bootstrap.wizard.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/lightbox/js/lightbox.min.js")"></script>
+            <!-- <script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script> -->
+          <!--   <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.categories.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.pie.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.tooltip.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.resize.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.fillbetween.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.stack.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.spline.js")"></script>
+            --> <script src="@routes.Assets.at("app/vendors/calendar/zabuto_calendar.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/slimScroll/jquery.slimscroll.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/responsive-tabs/responsive-tabs.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js")"></script>
+         <!--   <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-markdown/js/bootstrap-markdown.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script> -->
+            <script src="@routes.Assets.at("app/vendors/summernote/summernote.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-notific8/jquery.notific8.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/sco.message/sco.message.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-notific8/notific8.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-toastr/toastr.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/iCheck/color_change.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jstree/dist/jstree.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-treetable/javascripts/src/jquery.treetable.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/nouislider/jquery.nouislider.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-nestable/jquery.nestable.js")"></script>
+           <script src="@routes.Assets.at("app/vendors/DataTables/media/js/jquery.dataTables.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/DataTables/media/js/dataTables.bootstrap.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/DataTables/jquery.jeditable.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-tablesorter/jquery.tablesorter.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-datepicker/js/bootstrap-datepicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-cookie/jquery.cookie.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highchart.js")"></script> -->
+         <!--    <script src="@routes.Assets.at("app/vendors/jquery-highcharts/funnel.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highcharts-more.js")"></script>
+          -->   
+      <!--     <script src="@routes.Assets.at("app/vendors/jquery-highcharts/data.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-highcharts/exporting.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/chart.js/Chart.min.js")"></script>
+        -->   <!--   <script src="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.min.js")"></script> -->
+          <!--   <script src="@routes.Assets.at("app/vendors/mixitup/src/jquery.mixitup.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jplist/html/js/vendor/modernizr.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jplist/html/js/jplist.min.js")"></script>
+            --> <script src="@routes.Assets.at("app/vendors/jquery-validate/jquery.validate.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-steps/js/jquery.steps.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/moment/moment.js")"></script>
+             <script src="@routes.Assets.at("app/vendors/bootstrap/js/bootstrap.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-popover/bootstrap-modal-popover.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-popover/prettify.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-bootstrap-wizard/jquery.bootstrap.wizard.min.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/lightbox/js/lightbox.min.js")"></script> -->
+            <script src="@routes.Assets.at("app/bower_components/angular-validator/dist/angular-validator.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular-validator/dist/angular-validator-rules.js")"></script>
+            <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-animate.min.js"></script>
+             <script  src="@routes.Assets.at("app/js-lib/ng-dialog/js/ngDialog.min.js")"></script>
+    <script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
+    <script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-datepicker/js/bootstrap-datetimepicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-timepicker/js/bootstrap-timepicker.js")"></script>
+           <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-clockface/js/clockface.js")"></script>
+          -->   <script src="@routes.Assets.at("app/vendors/bootstrap-colorpicker/js/bootstrap-colorpicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-switch/js/bootstrap-switch.min.js")"></script>
+           <!--  <script src="@routes.Assets.at("app/vendors/jquery-maskedinput/jquery-maskedinput.js")"></script>
+ -->     <!--        <script src="@routes.Assets.at("app/vendors/dropzone/js/dropzone.js")"></script> -->
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/tmpl.min.js")"></script>
+           -->  <!-- <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/load-image.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/canvas-to-blob.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/jquery.blueimp-gallery.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.iframe-transport.js")"></script>
+            --> <!-- <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-process.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-image.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-audio.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-video.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-validate.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-ui.js")"></script>
+       -->    <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/cors/jquery.xdr-transport.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/gmaps/gmaps.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/charCount.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-news-ticker/jquery.newsTicker.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/select2/select2.min.js")"></script>
+            --> <script src="@routes.Assets.at("app/vendors/bootstrap-select/bootstrap-select.min.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/multi-select/js/jquery.multi-select.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/jquery.mockjax.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/select2/lib/select2.js")"></script>
+           -->  <script src="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/js/bootstrap-editable.min.js")"></script>
+           <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/typeaheadjs.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/wysihtml5/wysihtml5.js")"></script>
+          -->  <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.js")"></script>
+         -->    <script src="@routes.Assets.at("app/vendors/x-editable/demo-mock.js")"></script>
+     <script src="@routes.Assets.at("app/js/main.js")"></script>
+      <script src="@routes.Assets.at("app/js/loginmain.js")"></script>
+            </head>
+<body  ng-app ="Ardent"  ng-controller ="AppController" class="[header.menu_style, header.header_topbar, header.effect]"
+	class="animated" >
+	<div id="signin-page" ng-init = "init();"> 
+		<div class="page-form-wrapper"></div>
+		<div class="col-md-12">
+		
+		<div class="col-md-8" style="margin-top: 2%;">
+	
+		<div class="header-content">	
+			<!-- <span class="logo-text" style="font-size:30px;">Ardent Job Portal</span> -->
+					<!-- <h3>Search</h3> -->
+				</div>
+		<div class="jplist-panel box panel-top">
+           <!--  <div class="text-filter-box">
+              <div class="input-group"><span class="input-group-addon"></span>
+                <input data-path=".title" type="text" value="" placeholder="Filter by Title" data-control-type="textbox" data-control-name="title-filter" data-control-action="filter" class="form-control"/>
+              </div>
+            </div>
+            <div class="text-filter-box">
+              <div class="input-group"><span class="input-group-addon"></span>
+                <input data-path=".title" type="text" value="" placeholder="Filter by Title" data-control-type="textbox" data-control-name="title-filter" data-control-action="filter" class="form-control"/>
+              </div>
+            </div>
+            <div class="text-filter-box">
+              <div class="input-group"><span class="input-group-addon"></span>
+                <input data-path=".title" type="text" value="" placeholder="Filter by Title" data-control-type="textbox" data-control-name="title-filter" data-control-action="filter" class="form-control"/>
+              </div>
+            </div>
+            <button id="search" type="button" ng-click="searchJobByFilter()"
+								class="btn btn-success">
+								<i class="fa fa-search"></i>
+							</button>	
+   -->        <!--   <div data-control-type="default-sort" data-control-name="sort" data-control-action="sort" data-path=".title" data-order="desc" data-type="text" class="hidden"></div>
+            <div data-type="Page {current} of {pages}" data-control-type="pagination-info" data-control-name="paging" data-control-action="paging" class="jplist-label btn btn-default"></div>
+            <div data-control-type="pagination" data-control-name="paging" data-control-action="paging" class="jplist-pagination"></div>
+    -->     
+    
+    <img src="@routes.Assets.at("app/vendors/images/login/i2simply-done-banner-2.png")"  style="width: 100%;margin-left:15%;">
+   <!--  <div class="col-md-12">
+    <span><small><strong style="font-size:13px;">Welcome to  Ardent Principles  i2Simply Done tool. </strong>  We have implemented time saving solutions that simplify the application process for open positions on the <strong> i2S contract vehicle </strong> . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position and access the full functionality of our tool please <strong>register </strong> above.</small></span>
+    </div> -->
+    <!--  <div class="col-md-6 control-label" style="margin-top: 2%;">
+							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
+								name="jobType" ng-model="jobType" class="selectpicker"
+								ng-change="getAllJobByType();">
+								<option name="jobType" value="Full-Time">Full Time</option>
+								<option value="Part-Time">Part Time</option>
+								<option value="All">All</option>
+							</select>
+						</div> -->
+						
+						  <!-- <div class="col-md-6 control-label" data-toggle="tooltip"
+							data-placement="bottom"
+							title="Sort Jobs in Ascending or Descending Order" style="margin-top:2%;">
+							<label>Sort By&nbsp;&nbsp;</label> <select id="sortName"
+								name="sortName" ng-model="sortName" class="selectpicker"
+								ng-click="getAllJobBySelectedElement();">
+								<option value="Position">Position Name</option>
+								<option value="Location">Location</option>
+								<option value="Clearance">Clearance Level</option>
+								<option value="Experiance">Experience Level</option>
+							</select>  
+								<div ng-show="asc== true" ng-hide="desc == false" ng-click = "ascClicked();"><span
+									class="glyphicon glyphicon-chevron-down" style="color:#2120F5;cursor:pointer;  margin-left: 1%;"></span>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></div>
+								<div ng-show="desc== true" ng-hide="asc ==  false" ng-click="descClicked();"><span
+									class="glyphicon glyphicon-chevron-up" style="color:#2120F5; cursor:pointer;  margin-left: 1%;"></span>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign"></i></div>
+						</div> -->
+						<!-- <div class="col-md-2 control-label">
+							Sort by Location<br> <input type="checkbox"
+								ng-model="location" ng-change="onLocationClick();"
+								name="location">
+								<a class="aTagclass" ng-click="sortData()"><span class="spanClass">price</span><span class="setIcon soap-icon-roundtriangle-bottom"></span></a>
+						
+
+							<ul class="sort-bar clearfix block-sm">
+
+								<li class="sort-by-price active" ng-if="location == false"
+									ng-model="location"><a class="aTagclass"
+									ng-click="onLocationClick()"><span class="spanClass">Location</span>&nbsp;&nbsp;<span
+										class="glyphicon glyphicon-chevron-down"></span></a></li>
+								<li class="sort-by-price active" ng-if="location == true"
+									ng-model="location"><a class="aTagclass"
+									ng-click="onLocationClick()"><span class="spanClass">Location</span>&nbsp;&nbsp;<span
+										class="glyphicon glyphicon-chevron-up"></span></a></li>
+							</ul>
+
+						</div>
+						 -->
+						
+     
+      </div>
+		
+		</div>
+		<!-- <div class="col-md-4">
+			<form action="/SignIn" method = "POST" class="form">
+				<span ><code>@flash.get("error")</code></span>
+				<span ><code>@flash.get("AccountError")</code></span>
+				<span ng-if="emailId == true"><code>Please provide Email Id </code></span>
+				<span   id="success_email"  ng-if="forget_pass == true" ><code>Password has been sent to your registered email</code> </span>
+				<span   id="success" style = "color:green">@flash.get("registration_success") </span>
+				<span ng-if="waitMsg == true">Please Wait..... </span>
+				<span  ><code>@flash.get("email_error")</code> </span>
+				<div class="header-content">
+					<h1>Log In</h1>
+				</div>
+				<div class="body-content">
+					
+					<div class="form-group">
+						<div class="input-icon right" data-toggle="tooltip" data-placement="bottom" title="Enter username">
+							<i class="fa fa-user"></i> <input type="text"
+								placeholder="Username" ng-model = "useremail" name="username" id="username" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right" data-toggle="tooltip" data-placement="bottom" title="Enter password">
+							<i class="fa fa-key" ></i> <input type="password"
+								placeholder="Password" name="password" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group pull-left">
+						<div class="checkbox-list">
+							<label> <input type="checkbox" />&nbsp; Keep me signed
+								in
+							</label>
+						</div>
+					</div>
+					<div class="form-group pull-right">
+						<button type="submit"
+							class="btn btn-success-custom " data-toggle="tooltip" data-placement="bottom" title="Click to login">
+							Log In &nbsp;<i class="fa fa-chevron-circle-right"></i>
+						</button>
+					</div>
+					<div class="clearfix"></div>
+				 <div class="forget-password">
+						<h4>Forgot your Password?</h4>
+						<span>
+							 <a ng-click='getForgetPassword(useremail)' 
+								class='btn-forgot-pwd'><strong style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click to reset your password ">No worries, click here to reset your password.</strong></a>
+						</span>
+					</div>
+					<hr />
+				 <span>
+						Don't have an account? <a id="btn-register" href="/signup" data-toggle="tooltip" data-placement="bottom" title="Click here to register "><strong style="cursor:pointer">Register
+							Now</strong></a>
+					</span>
+					<br />
+					 <span>
+						 <a id="btn-register" ng-click ="openContactAdminForm();" data-toggle="tooltip" data-placement="bottom" title="Click to contact Admin "><strong style="cursor:pointer">Need more help? Contact and administrator</strong>
+							</a>
+					</span>
+					
+					 <span>
+						 <a id="btn-register" href="/assets/app/templates/states/manage_apps.html">Contact Admin						</a>
+					</span>
+				</div>
+			</form>
+		</div> -->
+	
+		</div>
+	
+	</div>
+	
+	
+	<div class="col-md-12" style="  margin-left: 11%;margin-top: 5%;"><span style="font-weight: 600; font-size:18px;"> Your is Account is created Successfully on i2Simply Done , Email And password  is sent on your  registered  email, <br> please <a href ="/login" style="color:#0088cc;;">click here</a> to login  </span></div>
+<!-- 	
+	<div class="modal fade" id="jobDetails" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Job Details</h4>
+				</div>
+				<div class="modal-body">
+					<div class="box text-shadow">
+
+						<table class="demo-tbl">
+
+							<tr class="tbl-item">
+								<td class="td-block">
+
+									<p>
+										<span class="title">{{jobDetails.labourCategory}}</span><span
+											class="desc"><strong><small>&nbsp;&nbsp;({{jobDetails.positionType}})</small></strong></span>
+									</p>
+									<p class="">
+										<strong><small><span><i
+													class="glyphicon glyphicon-map-marker"></i>&nbsp;{{jobDetails.workLocation}}</span></small></strong>
+										<span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-user"></i>&nbsp;{{jobDetails.requestType}}
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-screenshot"></i>&nbsp;{{jobDetails.performanceLevel}}
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="glyphicon glyphicon-ok"></i>&nbsp;{{jobDetails.clearanceRequired}}
+											</small></strong></span>
+									</p>
+									<p class="desc">
+										<small ng-bind="jobDetails.workDescription"
+											data-placement="bottom"></small>
+									</p>
+									<p class="text-danger">
+										<small>Mandatory Skills</small>
+									</p>
+									<p class="desc">
+										<small ng-bind="jobDetails.manadatorySkills"
+											data-placement="bottom"></small>
+									</p>
+
+									<p class="text-danger">
+										<small>Desired Skills</small>
+									</p> <p class="desc">
+										<small ng-bind="job.desiredSkill[0]  | cut:true:200:'    ...'"
+											data-placement="bottom"></small><small><span
+											popover="{{job.desiredSkill}}" popover-placement="bottom"><a
+												style="color: blue;">&nbsp;&nbsp;more</a> </span></small>
+									</p>
+									<p class="desc">
+										<small ng-bind="jobDetails.desiredSkill"
+											data-placement="bottom"></small>
+								</td>
+
+							</tr>
+						</table>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	
+
+
+</body>
+<!-- <script>
+	function forgetPassword(username){
+		 
+		var username = $('#username').val();
+    	$.ajax({url:"/forgetPassword",
+    		 type: 'POST',
+    	     data: { email: username} ,
+    	success:function(result){
+        console.log("success");
+        $("#success_email").show();
+        
+    }});
+  }
+
+</script>
+ -->
+ <style type="text/css">
+.popover {
+	max-width: 600px;
+}
+
+.the-legend {
+	border-style: none;
+	border-width: 0;
+	font-size: 14px;
+	line-height: 20px;
+	margin-bottom: 0;
+}
+.modal .modal-dialog {
+	width: 90%;
+}
+
+.modal .modal-body {
+	max-height: 620px;
+	overflow-y: auto;
+}
+
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
+
+.btn-success-customapply {
+color: white;
+background-color: #2120f5;
+}
+
+.btn-success-customapply:hover {
+color: white;
+background-color: #999999;
+}
+
+</style>
+<style>
+.datepicker{z-index:1151 !important;}
+</style>
+</html>

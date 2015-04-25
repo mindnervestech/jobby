@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.File;
 
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,6 +64,7 @@ import play.mvc.Http.MultipartFormData;
 import play.mvc.Result;
 import views.html.index;
 import views.html.register;
+import views.html.registrationredirect;
 import views.html.signin;
 
 import Utility.MailUtility;
@@ -104,6 +106,11 @@ public class Application extends Controller {
 	public static Result signup() {
 		return ok(register.render());
 	}
+	
+	public static Result registrationRedirect() {
+	
+		return ok(registrationredirect.render());
+	}
 
 	@JsonIgnoreProperties(ignoreUnknown=true)
 	public static class UserRegisterVM{
@@ -119,7 +126,7 @@ public class Application extends Controller {
 	
 	public static Result createNewUser() {
 		DynamicForm dynamicForm = Form.form().bindFromRequest();
-		System.out.println("dynamicForm" + dynamicForm);
+		//System.out.println("dynamicForm" + dynamicForm);
 		String email = dynamicForm.get("email");
 		String pass = dynamicForm.get("password");
 		String firstname = dynamicForm.get("firstname");
@@ -146,9 +153,11 @@ public class Application extends Controller {
 			Ebean.save(u);
 			
 			MailUtility mail = new MailUtility();
+			
 			mail.sendRegistrationMail(email,pass);
+			
 			flash("registration_success", " Account is created ! Please  log in");
-			return redirect("/login");
+			return redirect("/registrationredirect");
 
 		} else {
 			flash("error", "Email ID Already Exist");
@@ -157,9 +166,13 @@ public class Application extends Controller {
 		
 	}
 
+	
+	
 	// called when user login to get there details
 	public static Result getUserName() {
 		String uname = session().get("email");
+
+		System.out.println("Session:"+uname);
 		Admin ad = Admin.checkAdmin(uname);
 		if (ad == null) {
 			UserDetails ud = UserDetails.getUserByEmail(uname);
@@ -189,9 +202,11 @@ public class Application extends Controller {
 		String uname = dynamicForm.get("username");
 		String pass = dynamicForm.get("password");
 		Admin as = Admin.isAdmin(uname, pass);
+		
 		if (as != null) {
 			session().clear();
 			session().put("email", as.username);
+			System.out.println("After putting inSession" + session().get("email"));
 			session().put("role", as.role);
 			return redirect("/dashboard#/viewAllJobsforAdmin");
 
@@ -262,7 +277,7 @@ public class Application extends Controller {
 		MultipartFormData.FilePart excelpart = body.getFile("file");
 		File excelfile = excelpart.getFile();
 		String filename = excelpart.getFilename();
-		System.out.println("filename"+filename);
+		//System.out.println("filename"+filename);
 		// ArrayList<String> al = new ArrayList<>();
 		Workbook wb_xssf; //Declare XSSF WorkBook
 	    Workbook wb_hssf;//Declare HSSf WorkBook
@@ -310,7 +325,7 @@ public class Application extends Controller {
 						sd.requestNumber = c.getNumericCellValue() + "";
 						break;
 					case Cell.CELL_TYPE_STRING:
-						System.out.println("nukmberString");
+						//System.out.println("nukmberString");
 						storeExcelFile = StoreExcelFile.getregNumber(c
 								.getStringCellValue());
 						jobNum =  c
@@ -371,6 +386,7 @@ public class Application extends Controller {
 						} else {
 							sd.labourCategory = c.getStringCellValue();
 							userPosition = sd.labourCategory;
+							
 						/*List <UserDetails> ud = UserDetails.getallUserEmail();
 						for(UserDetails u: ud){
 							List<UserPosition> position = u.userPosition;
@@ -415,6 +431,8 @@ public class Application extends Controller {
 							u.save();
 						}
 
+						
+						
 						if (storeExcelFile != null) {
 							storeExcelFile.performanceLevel = c
 									.getStringCellValue();
@@ -422,11 +440,11 @@ public class Application extends Controller {
 						    DefaultValues df =  DefaultValues.getDefaultValues();
 							if(up != null){
 								double result   = ((Double.parseDouble(up.rate) * df.hours) / (df.gandaWrap *( 1 + (df.profit/100))));
-								storeExcelFile.maxOffer = Double.toString(result);
-								System.out.println("storeExcelFile.maxOffer"+storeExcelFile.maxOffer);
+								double rounded = (double) Math.round(result * 100) / 100;
 								
+								storeExcelFile.maxOffer = Double.toString(rounded);
+								//System.out.println("storeExcelFile.maxOffer"+storeExcelFile.maxOffer);
 							}
-						
 						
 						} else {
 							
@@ -434,10 +452,11 @@ public class Application extends Controller {
 						    DefaultValues df =  DefaultValues.getDefaultValues();
 							
 						    if(up != null){
-						    	Double.parseDouble(up.rate);
-								double result   = ((Double.parseDouble(up.rate) * df.hours) / (df.gandaWrap *( 1+ df.profit)));
-								sd.maxOffer = Double.toString(result);
-								System.out.println("storeExcelFile.maxOffer"+sd.maxOffer);
+								double result   = ((Double.parseDouble(up.rate) * df.hours) / (df.gandaWrap *( 1 + (df.profit/100))));
+								double rounded = (double) Math.round(result * 100) / 100;
+								sd.maxOffer = Double.toString(rounded);
+								//System.out.println("storeExcelFile.maxOffer"+sd.maxOffer);
+								
 							}
 							sd.performanceLevel = c.getStringCellValue();
 						}
@@ -862,7 +881,7 @@ public class Application extends Controller {
 							if (storeExcelFile != null) {
 								if (DateUtil.isCellDateFormatted(c)) {
 									Date date = c.getDateCellValue();
-									System.out.println(date);
+									//System.out.println(date);
 									if (date != null) {
 										String DATE_FORMAT_NOW = "MM/dd/yyyy";
 										SimpleDateFormat sdf = new SimpleDateFormat(
@@ -877,7 +896,7 @@ public class Application extends Controller {
 								if (DateUtil.isCellDateFormatted(c)) {
 									Date date = c.getDateCellValue();
 									if (date != null) {
-										System.out.println(date);
+										//System.out.println(date);
 										String DATE_FORMAT_NOW = "MM/dd/yyyy";
 										SimpleDateFormat sdf = new SimpleDateFormat(
 												DATE_FORMAT_NOW);
@@ -958,7 +977,7 @@ public class Application extends Controller {
 						if (storeExcelFile != null) {
 							if (DateUtil.isCellDateFormatted(c)) {
 								Date date = c.getDateCellValue();
-								System.out.println("date" + date);
+								//System.out.println("date" + date);
 								if (date != null) {
 									String DATE_FORMAT_NOW = "MM/dd/yyyy";
 									SimpleDateFormat sdf = new SimpleDateFormat(
@@ -1080,6 +1099,7 @@ public class Application extends Controller {
 		map.put("updatedRowsCount", updatedRowsCount);
 
 		Application.deactivateTheJobByPMODate();
+		
 		return ok(Json.stringify(Json.toJson(map)));
 	}
 
@@ -1181,17 +1201,26 @@ public class Application extends Controller {
 	}
 
 	public static Result logOut() {
-		// saveActivityLog("LogOut");
-		String  email = session().get("email");
-		Admin ad = Admin.getAdminByEmail(email);
-		
-		if(ad == null){
-			UserDetails ud = UserDetails.getUserByEmail(email);
-			ud.userLoggedInstatus = "loggedOut";
-			ud.update();
+
+		try {
+			String email = session().get("email");
+			Admin ad = Admin.getAdminByEmail(email);
+
+			if (ad == null) {
+				UserDetails ud = UserDetails.getUserByEmail(email);
+				ud.userLoggedInstatus = "loggedOut";
+				ud.update();
+
+				session().clear();
+				System.out.println("Session Log out" + session().get(email));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session().clear();
 		}
-		
-		session().clear();
+
 		return ok(signin.render());
 	}
 
@@ -2108,17 +2137,16 @@ public class Application extends Controller {
 						manSkill.add(token);
 					}
 				}
-				System.out.print(token);
+				//System.out.print(token);
 
 			}
 
 			jobVM.manadatorySkills = manSkill;
-			System.out.println("jobVM.manadatorySkills"
-					+ jobVM.manadatorySkills);
+			
 			jobVM.desiredSkill = desSkill;
 			jobVM.maxOffer = s.maxOffer;
 			
-			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
+			//System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
 
 			jobVMs.add(jobVM);
 		}
@@ -2140,7 +2168,7 @@ public class Application extends Controller {
 	public static Result getAllJobsOnlogin(int currentpage,String jobType,String sortName,Boolean sortType) {
 		List<StoreExcelFile> jobs = new ArrayList<>();
 		int count = 0;
-		System.out.println("jobtype"+jobType+"sortnamea"+sortName);
+		//System.out.println("jobtype"+jobType+"sortnamea"+sortName);
 		 
 		if("Position".equalsIgnoreCase(sortName) ){
 			if("All".equalsIgnoreCase(jobType) ){
@@ -2319,7 +2347,7 @@ public class Application extends Controller {
 					}
 					
 				}
-				System.out.print(token);
+				//System.out.print(token);
 			}
 
 			// check if the mandatory skill does not contain null value;
@@ -2350,7 +2378,7 @@ public class Application extends Controller {
 
 			jobVM.manadatorySkills = manSkill;
 			jobVM.desiredSkill = desSkill;
-			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
+			//System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
 
 			jobVMs.add(jobVM);
 		}
@@ -2372,7 +2400,7 @@ public class Application extends Controller {
 		// List<StoreExcelFile> userJobs = null;
 		//String emailId = session().get("email");
 		int count = 0;
-		System.out.println("jobType:" + jobType);
+		//System.out.println("jobType:" + jobType);
 
 		 if("Position".equalsIgnoreCase(sortName)){
 				if("All".equalsIgnoreCase(jobType) ){
@@ -2659,7 +2687,7 @@ public class Application extends Controller {
 						desSkill.add(token);
 					}
 				}
-				System.out.print(token);
+				//System.out.print(token);
 			}
 
 			// check if the mandatory skill does not contain null value;
@@ -2692,7 +2720,7 @@ public class Application extends Controller {
 
 			jobVM.manadatorySkills = manSkill;
 			jobVM.desiredSkill = desSkill;
-			System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
+			//System.out.println("jobVM.desiredSkill" + jobVM.desiredSkill);
 
 			jobVMs.add(jobVM);
 		}
@@ -2829,7 +2857,7 @@ public class Application extends Controller {
 	@JsonIgnore
 	public static Result updateUserProfile() {
 		JsonNode json = request().body().asJson();
-		System.out.println("json" + json);
+		//System.out.println("json" + json);
 
 		List<AddEducationVM> addEducation;
 		List<AddEmpHistoryVM> addNewEmphistory;
@@ -2855,7 +2883,7 @@ public class Application extends Controller {
 		ArrayNode skills = (ArrayNode) userSkills;
 		for (int k = 0; k < skills.size(); k++) {
 			String s = skills.get(k).asText();
-			System.out.println(s);
+			//System.out.println(s);
 			UserSkill us = UserSkill.getSkillByName(s);
 			u.userSkill.add(us);
 		}
@@ -2865,7 +2893,7 @@ public class Application extends Controller {
 
 		//ArrayNode exp = (ArrayNode) userExperience;
 			String s = userExperience.asText();
-			System.out.println(s);
+		//	System.out.println(s);
 			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
 			u.userExperiance.add(ue);
 			u.saveManyToManyAssociations("userExperiance");
@@ -3019,7 +3047,7 @@ public class Application extends Controller {
 	public static Result updateUserProfileByAdmin() {
 
 		JsonNode json = request().body().asJson();
-		System.out.println("json" + json);
+		//System.out.println("json" + json);
 
 		List<AddEducationVM> addEducation;
 		List<AddEmpHistoryVM> addNewEmphistory;
@@ -3041,7 +3069,7 @@ public class Application extends Controller {
 		ArrayNode skills = (ArrayNode) userSkills;
 		for (int k = 0; k < skills.size(); k++) {
 			String s = skills.get(k).asText();
-			System.out.println(s);
+			//System.out.println(s);
 			UserSkill us = UserSkill.getSkillByName(s);
 			u.userSkill.add(us);
 		}
@@ -3050,7 +3078,7 @@ public class Application extends Controller {
 		u.deleteManyToManyAssociations("userExperiance");
 		
 			String s = userExperience.asText();
-			System.out.println(s);
+			//System.out.println(s);
 			UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
 			u.userExperiance.add(ue);
 		
@@ -3095,7 +3123,7 @@ public class Application extends Controller {
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
 			eds.startdate = addNewEmphistory.get(i).startdate;
-			System.out.println("addNewEmphistory.get(i).enddate"+addNewEmphistory.get(i).enddate);
+			//System.out.println("addNewEmphistory.get(i).enddate"+addNewEmphistory.get(i).enddate);
 			if (("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) || addNewEmphistory.get(i).enddate == null) {
 				eds.enddate = "Present";
 			} else {
@@ -3168,7 +3196,7 @@ public class Application extends Controller {
 		try {
 			UserInfoVM ui = userinfoMapper.readValue(userDet.traverse(),
 					UserInfoVM.class);
-			System.out.println("ui.firstname --" + ui.firstname);
+			//System.out.println("ui.firstname --" + ui.firstname);
 			u.email = ui.email;
 			u.setFirstname(ui.firstname);
 			u.setMiddlename(ui.middlename);
@@ -3370,7 +3398,8 @@ public class Application extends Controller {
 			for(UserPosition u: up){
 				u.delete();
 			}
-			
+		
+		
 		} else {
 			
 		}
@@ -3510,7 +3539,7 @@ public class Application extends Controller {
 	@JsonIgnoreProperties
 	public static Result saveAppliedJob() {
 		JsonNode json = request().body().asJson();
-		System.out.println("json" + json);
+	//	System.out.println("json" + json);
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
 		SaveAppliedJobsVM saveAppliedJobsVM;
@@ -3537,7 +3566,7 @@ public class Application extends Controller {
 
 			String manadatorySkills = "";
 			int  pos =positions.size();
-			System.out.println("pos"+pos);
+			//System.out.println("pos"+pos);
 			for (int j = pos-1; j >=0 ; j--) {
 				String position = positions.get(j).path("mskill").toString();
 				manadatorySkills = position + "," + manadatorySkills  ;
@@ -3599,8 +3628,6 @@ public class Application extends Controller {
 			mailUtility.sendMailToUser(email, saveAppliedJobsVM.labourCategory, saveAppliedJobsVM.performanceLevel, saveAppliedJobsVM.positionType, saveAppliedJobsVM.clearanceRequired, saveAppliedJobsVM.workLocation);
 			mailUtility.sendMailToAdmin(email,saveAppliedJobsVM.labourCategory,saveAppliedJobsVM.positionType,saveAppliedJobsVM.workLocation);
 	
-			
-			
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -3618,7 +3645,7 @@ public class Application extends Controller {
 	@JsonIgnoreProperties
 	public static Result saveUserJobToDraft() {
 		JsonNode json = request().body().asJson();
-		System.out.println("json" + json);
+		//System.out.println("json" + json);
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -3784,6 +3811,7 @@ public class Application extends Controller {
 		public String performancelevel;
 		public String clearancereq;
 		public String desiredSalary;
+		public String maxOffer;
 
 		public List<DesiredSkills> dsSkills;
 		public List<MandatorySkills> msSkils;
@@ -3842,6 +3870,9 @@ public class Application extends Controller {
 			apvm.positionName = apj.positionname;
 			UserDetails ud= UserDetails.getUserByEmail(apj.username);
 			apvm.desiredSalary = ud.desiredsalary;
+			StoreExcelFile sef = StoreExcelFile.getJobByRequestNumber(apj.jobno);
+			apvm.maxOffer = sef.maxOffer;
+			
 			appliedJobVM.add(apvm);
 
 		}
@@ -3872,6 +3903,9 @@ public class Application extends Controller {
 			apvm.positionName = apj.positionname;
 			UserDetails ud= UserDetails.getUserByEmail(apj.username);
 			apvm.desiredSalary = ud.desiredsalary;
+			StoreExcelFile sef = StoreExcelFile.getJobByRequestNumber(apj.jobno);
+			apvm.maxOffer = sef.maxOffer;
+			
 			appliedJobVM.add(apvm);
 
 		}
@@ -3884,7 +3918,7 @@ public class Application extends Controller {
 	public static Result generatePDF(String id) {
 		final String rootDir = Play.application().configuration()
 				.getString("resume.path");
-		System.out.println("rootdir" + rootDir);
+		//System.out.println("rootdir" + rootDir);
 		File f = new File(rootDir);
 		if(!f.exists()){
 			f.mkdir();
@@ -3904,7 +3938,7 @@ public class Application extends Controller {
 			
 			String email = ap.username;
 			UserDetails ud = UserDetails.getUserByEmail(email);
-			System.out.println("ud" + ud);
+			//System.out.println("ud" + ud);
 			// String candidiatename = ud.fullname;
 			if (!("NA".equalsIgnoreCase(ud.middlename))) {
 				candidiatename = ud.firstname + " " + ud.middlename + " "
@@ -4016,7 +4050,7 @@ public class Application extends Controller {
 				// EmpHistorytable.addCell(cellemp);
 				cellexptble = new PdfPCell(
 				new Phrase("Resource Submission Level: ".toUpperCase()+" "+ue.experianceLevel, font1));
-				System.out.println("ue.experianceLevel" + ue.experianceLevel);
+				//System.out.println("ue.experianceLevel" + ue.experianceLevel);
 				cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
 				// cell2.setFont(font1);
 				cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -4024,7 +4058,7 @@ public class Application extends Controller {
 				
 				cellexptble = new PdfPCell(
 						new Phrase("CSR Level".toUpperCase() +":  "+csrNumber, font1));
-						System.out.println("ue.experianceLevel" + ue.experianceLevel);
+						//System.out.println("ue.experianceLevel" + ue.experianceLevel);
 						cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
 						// cell2.setFont(font1);
 						cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -4048,7 +4082,7 @@ public class Application extends Controller {
 				cell2 = new PdfPCell(new Phrase(sk.skillName));
 				cell2.setBackgroundColor(new BaseColor(248, 248, 255));
 				// cell2.setFont(font1);
-				System.out.println("sk.skillName" + sk.skillName);
+				//System.out.println("sk.skillName" + sk.skillName);
 				cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table2.addCell(cell2);
 			}
@@ -4384,7 +4418,7 @@ public class Application extends Controller {
 
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 			String date = sdf.format(new Date());
-			System.out.println(date); // 15/10/2013
+			//System.out.println(date); // 15/10/2013
 			Paragraph date1 = new Paragraph(date);
 			date1.setAlignment(Element.ALIGN_LEFT);
 			document.add(date1);
@@ -4493,7 +4527,7 @@ public class Application extends Controller {
 
 	public static Result saveEditJob() {
 		JsonNode json = request().body().asJson();
-		System.out.println("json" + json);
+		//System.out.println("json" + json);
 
 		JsonNode editJobJson = json.path("editJob");
 		ObjectMapper editJob = new ObjectMapper();
@@ -4523,6 +4557,8 @@ public class Application extends Controller {
 			}
 			System.out.println("json.pat.size()"
 					+ editJobJson.path("desiredSkill").size());
+			
+			
 			if (editJobJson.path("desiredSkill").size() != 0) {
 				String desSkill = editJobJson.path("desiredSkill").toString();
 				storeExcel.desiredSkill = desSkill.replaceAll("\\[", "")
@@ -5069,7 +5105,7 @@ public class Application extends Controller {
 
 	public static Result sendFeedbackMail() {
 		JsonNode json = request().body().asJson();
-		System.out.println("josn" + json);
+		//System.out.println("josn" + json);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		SendMailVM sendMailVM;
@@ -5380,7 +5416,7 @@ public class Application extends Controller {
 	
 	public static Result movetoArchive() {
 		JsonNode json = request().body().asJson();
-		System.out.println("josn" + json);
+	//	System.out.println("josn" + json);
 		
 		
 		
@@ -5409,7 +5445,7 @@ public class Application extends Controller {
 			
 			AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumberAdminforArchive(addEducation.get(i).requestNumber,addEducation.get(i).username);
 			if(apj != null){
-				System.out.println("in update");
+				//System.out.println("in update");
 				apj.archived = "Y";
 				apj.update();
 			}
@@ -5491,10 +5527,9 @@ public class Application extends Controller {
 		for(UserDetails u:ud){
 		  
 			List <SendEmailAlert> sendEmail = SendEmailAlert.getAllPositionMatchedJobCount(u.email);
-			if(sendEmail.size() !=0){
-				
+			if(sendEmail.size() != 0){
 				MailUtility mailUtility = new  MailUtility();
-				mailUtility.sendmailAlertToUserAboutJobMatched( u.email,sendEmail.size());
+				mailUtility.sendmailAlertToUserAboutJobMatched(u.email,sendEmail.size());
 				
 			}
 			
@@ -5518,8 +5553,8 @@ public class Application extends Controller {
 		
 		String email =  session().get("email");
 		
-		System.out.println("email"+email);		
-		System.out.println("alert"+alert);
+	//	System.out.println("email"+email);		
+	//	System.out.println("alert"+alert);
 		if(alert == false){
 			UserDetails ud = UserDetails.getUserByEmail(email);
 			if(ud != null){
@@ -5603,7 +5638,7 @@ public class Application extends Controller {
 		MultipartFormData.FilePart excelpart = body.getFile("file");
 		File excelfile = excelpart.getFile();
 		String filename = excelpart.getFilename();
-		System.out.println("filename"+filename);
+		//System.out.println("filename"+filename);
 		// ArrayList<String> al = new ArrayList<>();
 		Workbook wb_xssf; //Declare XSSF WorkBook
 	    Workbook wb_hssf;//Declare HSSf WorkBook
@@ -5649,7 +5684,7 @@ public class Application extends Controller {
 						sd.position = c.getNumericCellValue() + "";
  						break;
 					case Cell.CELL_TYPE_STRING:
-						System.out.println("nukmberString");
+						//System.out.println("nukmberString");
 						/*userPosition = UserPosition.getregNumber(c
 								.getStringCellValue());*/
 						positionName =  c
@@ -5740,7 +5775,7 @@ public class Application extends Controller {
 			flash().put("error", "Upload Failed");
 			String newrowscount = Integer.toString(newRows);
 			String updatedRowsCount = Integer.toString(updatedRows);
-			System.out.println("updatedRowsCount" + updatedRowsCount);
+			//System.out.println("updatedRowsCount" + updatedRowsCount);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("newrowscount", newrowscount);
 			map.put("updatedRowsCount", updatedRowsCount);
@@ -5750,7 +5785,7 @@ public class Application extends Controller {
 
 		String newrowscount = Integer.toString(newRows);
 		String updatedRowsCount = Integer.toString(updatedRows);
-		System.out.println("updatedRowsCount" + updatedRowsCount);
+		//System.out.println("updatedRowsCount" + updatedRowsCount);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("newrowscount", newrowscount);
 		map.put("updatedRowsCount", updatedRowsCount);
@@ -5769,7 +5804,7 @@ public class Application extends Controller {
 	
 	public static Result  editPositionRateDetails(){
         JsonNode json = request().body().asJson();
-		System.out.println("json"+json);
+		//System.out.println("json"+json);
 		List<EditPositionRateVM> positionRateVM;
 		JsonNode posJson = json.get("positionList");
 		ObjectMapper mapper = new ObjectMapper();
@@ -5800,10 +5835,12 @@ public class Application extends Controller {
 		
 	}
 	
+	
+	
 	public static Result  updateDefualtValues() throws JsonParseException, JsonMappingException, IOException{
 		
 		  JsonNode json = request().body().asJson();
-		  System.out.println("json"+json);
+		//  System.out.println("json"+json);
 		  List<DefaultValues> items = Ebean.find(DefaultValues.class).findList();
 			if(items.size()!= 0){
 				Ebean.delete(items);
@@ -5831,5 +5868,19 @@ public class Application extends Controller {
 		  
 		  return ok("");
 	}
- 
+	
+	public static Result  getDefaultValues(){
+	
+		DefaultValues df = DefaultValues.getDefaultValues();
+		HashMap<String , Object> map = new HashMap<>();
+		map.put("values", df);
+		
+		return ok(Json.stringify(Json.toJson(map)));
+	}  
+	
+	public static Result  gotoUserProfile(){
+		//System.out.println();
+		return redirect("/dashboard#/extra-profile");
+		
+	}
 }
