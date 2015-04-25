@@ -998,7 +998,13 @@ public class StoreExcelFile {
 			return find.where().eq("positionType", jobType).eq("jobStatus", jobStatus).order().desc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 		
+		@JsonIgnore
 		public static List <StoreExcelFile> getAllJobstoSchedular(){
 			return find.all(); 
 		}
+		
+		public static StoreExcelFile getJobByRequestNumber(String reqNumber){
+			return find.where().eq("requestNumber", reqNumber).findUnique(); 
+		}
+		
 }

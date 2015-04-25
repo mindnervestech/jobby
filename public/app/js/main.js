@@ -841,7 +841,7 @@ App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootS
 			
 			if($scope.timeandmaterialRate != "" && !(angular.isUndefined($scope.timeandmaterialRate)) && $scope.hours != "" && !(angular.isUndefined($scope.hours))
 					&&	$scope.gandaWrap != "" && !(angular.isUndefined($scope.gandaWrap)) && $scope.profitMaxSalary != "" && !(angular.isUndefined($scope.profitMaxSalary))){
-				$scope.maxSalary =((($scope.timeandmaterialRate) * (parseInt($scope.hours) + 1)) / ((($scope.gandaWrap))*((1+ parseInt($scope.profitMaxSalary))))); 
+				$scope.maxSalary =((($scope.timeandmaterialRate) * (($scope.hours))) / ((($scope.gandaWrap))*((1 )+ ($scope.profitMaxSalary/100)))); 
 			}else{
 				$scope.maxSalary = 0;
 			}
@@ -870,19 +870,39 @@ App.controller('DefaultValueController', function ($scope, ngDialog, $http, $roo
 				$rootScope.isUser = false;
 			} 
 		});
+		$scope.Values;
 		
-		$scope.deFaultValues = {
-				
-				hours :2080,
-				fringe :1.4127,
-				overhead : 1.1469,
-				ganda :1.0480,
-				gandaWrap : 1.697981,
-				overheadWrap : 1.620145,
-				fringeWrap : 1.412677,
-				profit:14
-				
-		}
+		$http.get('getDefaultValues')
+		.success(function(data){
+			
+			$scope.Values = data.values;
+			console.log(JSON.stringify($scope.Values.hours));
+			//$scope.hours = $scope.Values.hours
+			$scope.hours = $scope.Values.hours;
+			$scope.fringe = $scope.Values.fringe;
+			$scope.overhead =$scope.Values.overhead;
+			$scope.ganda = $scope.Values.ganda;
+			$scope.gandaWrap = $scope.Values.gandaWrap;
+			$scope.overheadWrap = $scope.Values.overheadWrap;
+			$scope.fringeWrap =$scope.Values.fringeWrap; 
+			$scope.profit = $scope.Values.profit;
+			
+			
+			$scope.deFaultValues = {
+					
+					hours : $scope.hours,
+					fringe :$scope.fringe,
+					overhead : $scope.overhead,
+					ganda :$scope.ganda,
+					gandaWrap : $scope.gandaWrap,
+					overheadWrap : $scope.overheadWrap,
+					fringeWrap : $scope.fringeWrap,
+					profit:$scope.profit
+					
+			}
+		});
+		
+		
 		
 		
 		$scope.updateDefaultvalues = function(){
@@ -893,6 +913,39 @@ App.controller('DefaultValueController', function ($scope, ngDialog, $http, $roo
 				
 					$scope.deFaultValues = {};
 					$scope.sent = false;
+					
+					$http.get('getDefaultValues')
+					.success(function(data){
+						
+						$scope.Values = data.values;
+						console.log(JSON.stringify($scope.Values.hours));
+						//$scope.hours = $scope.Values.hours
+						$scope.hours = $scope.Values.hours;
+						$scope.fringe = $scope.Values.fringe;
+						$scope.overhead =$scope.Values.overhead;
+						$scope.ganda = $scope.Values.ganda;
+						$scope.gandaWrap = $scope.Values.gandaWrap;
+						$scope.overheadWrap = $scope.Values.overheadWrap;
+						$scope.fringeWrap =$scope.Values.fringeWrap; 
+						$scope.profit = $scope.Values.profit;
+						
+						
+						$scope.deFaultValues = {
+								
+								hours : $scope.hours,
+								fringe :$scope.fringe,
+								overhead : $scope.overhead,
+								ganda :$scope.ganda,
+								gandaWrap : $scope.gandaWrap,
+								overheadWrap : $scope.overheadWrap,
+								fringeWrap : $scope.fringeWrap,
+								profit:$scope.profit
+								
+						}
+					});
+					
+					
+					
 			});
 			
 		}
@@ -1886,7 +1939,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  // called when user click on applied button
 	  $scope.applyForJob = function(job){
 		  $scope.jobData = job;
-		 
+		  //$scope.userDetails = "";
 		  $scope.manadatorySkills = [];
 		  $scope.desiredSkills = [];
 		  $scope.errorManaSkillComment = false;
@@ -1896,7 +1949,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $scope.jStatus = $scope.jobData.jobStatus;
 		  $scope.requestNumber = $scope.jobData.requestNumber;
 		  $scope.performanceLevel = $scope.jobData.performanceLevel;
-		 
+		  $scope.userClearance; 
 		 
 		  $scope.jStatus = $scope.jobData.jobStatus;
 		 
@@ -1904,9 +1957,9 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $http.get('/getUserProfile')
 	    	.success(function(data) {
 	    		$scope.userProfile = data;
-	    		console.log("Profile data:"+JSON.stringify($scope.userProfile));
+	    	
 	    		$scope.educationDetails = data.educationDetails;
-	           $scope.userDetails = data.userDetails;
+	            $scope.userDetails = data.userDetails;
 	    		console.log(JSON.stringify($scope.userDetails));
 	    		$scope.certificationDetails = data.certificationDetails;
 	    	    $scope.employmentDetails = data.employmentDetails;
@@ -1941,8 +1994,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			  
 		  }
 		 
-		    console.log("job"+$scope.jobData.desiredSkill);
-		    
+		  
 		    $scope.userSkill = [];
 		    $scope.allSkills = [];
 		    $scope.userAppSkills= [];
@@ -1957,11 +2009,11 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 				.success(function(data) {
 				// $scope.userData = data;
 					$scope.userSkill = data.userSkill;
-					console.log("data"+JSON.stringify(data.userSkill));
+					
 					angular.forEach($scope.allSkills, function(obj, index){
 		    			angular.forEach($scope.userSkill, function(obj1, index){
 		    				if ((obj.skillName == obj1.skillName)) {
-		    					console.log("in sME");
+		    					
 		    					$scope.skills.push(obj.skillName);
 		    					obj.isSelected = true;
 		    					$scope.checked++;
@@ -1991,8 +2043,45 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 				    			});
 					});
 		    }
-			$('#savedJobsPopup1').modal();
-			$("#tab1").click();
+		    
+		    $http.get('/getUserProfile')
+	    	.success(function(data) {
+	    		       	
+	    		
+	    	    	//$scope.userSkill = data.certificationDetails[0].user_details.userSkill;
+	         		$scope.userClearance = data.userDetails.residentcity;
+	         	 	$scope.userPosition = data.userDetails.residentState;
+	         	 	$scope.userExperiance = data.userDetails.phnumber;
+	         	 	console.log($scope.userClearance +""+$scope.userPosition +""+$scope.userExperiance);
+	                 if($scope.userClearance == "" || angular.isUndefined($scope.userClearance) || $scope.userClearance == null || 
+	        		 $scope.userPosition == "" || angular.isUndefined($scope.userPosition) || $scope.userPosition == null
+	        		 || $scope.userExperiance == "" || angular.isUndefined($scope.userExperiance) || $scope.userExperiance == null	){
+	        	 
+	        	 
+	 			 $('#applyJobPopupMsg').modal();
+	         }else{
+	        	 
+	        	 
+	        	 $('#savedJobsPopup1').modal();
+	 			  $("#tab1").click();
+	         }    	     
+	    	    
+	    	});
+		    
+		    
+		    
+		    console.log($scope.userClearance);
+			
+	  }
+	  
+	  $scope.gotoUserProfile = function(){
+		  $('#applyJobPopupMsg').modal('hide');
+		  $http.get('/gotoUserProfile')
+			.success(function(data) {
+			// $scope.userData = data;
+				
+				console.log("data"+data);
+			});
 	  }
 	  
 	  // called when user click on applied button
@@ -8644,7 +8733,6 @@ App.controller('ViewAllSkillsController', function ($scope, $rootScope, $routePa
 		} 
 	});
 	
-	
 	$scope.skillname;
 	//add new Admin 
 	$scope.addNewSkill =  function(skillname){
@@ -9355,14 +9443,14 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 					$('#pre').show();
 					$('#pre1').show();
 				}
-				console.log("data"+JSON.stringify(data.appliedJobs));
+				//console.log("data"+JSON.stringify(data.appliedJobs));
 			} 
 		});
 	}
 
 	$scope.nextCount  = 10;
 	$scope.clickNext = function() {
-		console.log("nexdt");
+		//console.log("nexdt");
 			  $scope.pageno++;
 			  $scope.nextCount = parseInt( $scope.nextCount) + 10;
 			  var count= 0;
@@ -9371,9 +9459,9 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 					
 					$scope.jobs = data.appliedJobs;
 					var count = parseInt(data.appliedJobCount);
-					console.log("count"+count);
+					//console.log("count"+count);
 					
-					console.log("$scope.JobPre"+$scope.JobPre);
+					//console.log("$scope.JobPre"+$scope.JobPre);
 					if(data.appliedJobCount <= 10){
 						$('#next1').hide();
 						$('#next').hide();
@@ -9405,7 +9493,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 				$scope.jobs = data.appliedJobs;
 				
 				$scope.count = parseInt(data.appliedJobCount);
-				console.log("count"+count);
+			//	console.log("count"+count);
 				//$scope.JobPre = count - 10;
 				
 				if(data.appliedJobCount <= 10){
@@ -9438,7 +9526,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
-		console.log("data"+data);
+		//console.log("data"+data);
 	});
 	
 	
@@ -9448,7 +9536,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
 			$rootScope.isAdmin = false;
-			console.log("admin"+$rootScope.isAdmin);
+			//console.log("admin"+$rootScope.isAdmin);
 		}else{
 			$rootScope.isAdmin = true;
 			$rootScope.isUser = false;
@@ -9460,7 +9548,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	// alert("in gen pdf fun");
 		$scope.jobId = id;
 	
-		console.log($scope.jobId);
+		//console.log($scope.jobId);
 		   var baseUrl = "/"
 		   var ifrm = document.getElementById('fred');
 			ifrm.setAttribute('src', baseUrl + 'generatePDF/' + $scope.jobId);
@@ -9478,7 +9566,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		  $http.post('/deleteJobById/'+ $scope.requestNumber)
 			.success(function(data) {
 				$scope.requestNumber= "";
-				console.log("data"+data);
+				//console.log("data"+data);
 				$('#deleteJobModule').modal('hide');
 				$scope.getAllAppliedJobs();
 				
@@ -9490,18 +9578,18 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	$scope.archived = false;
 	$scope.makeArchive = function(jobs){
 		$scope.requestNumber = jobs;
-		console.log(JSON.stringify($scope.requestNumber));
+		//console.log(JSON.stringify($scope.requestNumber));
 		//$scope.skills.push(obj.skillName);
 		$scope.archivedJobsId.push(jobs);
 		
 	}
 	
 	$scope.moveToArchive = function(){
-		console.log(JSON.stringify($scope.archivedJobsId));
+		//console.log(JSON.stringify($scope.archivedJobsId));
 		$http.post('/moveToArchive',{archivedJobsId:$scope.archivedJobsId})
 		.success(function(data){
 			$scope.requestNumber= "";
-			console.log("data"+data);
+			//console.log("data"+data);
 			$scope.getAllAppliedJobs();
 			
 		});
@@ -9534,7 +9622,7 @@ App.controller('UploadPositionsController', function ($scope, $rootScope, $route
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
-		console.log("data"+data);
+		//console.log("data"+data);
 	});
 	
 	var file=null;
@@ -9547,7 +9635,7 @@ App.controller('UploadPositionsController', function ($scope, $rootScope, $route
 	$scope.errorUpload = false;
 	$scope.pleasWait = false; 
 	$scope.fileUpload = function (sub) {
-		console.log(file);
+		//console.log(file);
 		/*$http.post('deleteSendEmailAlertData')
 		.success(function(data){
 			
@@ -9596,7 +9684,7 @@ App.controller('UploadPositionsController', function ($scope, $rootScope, $route
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
 			$rootScope.isAdmin = false;
-			console.log("admin"+$rootScope.isAdmin);
+			//console.log("admin"+$rootScope.isAdmin);
 		}else{
 			$rootScope.isAdmin = true;
 			$rootScope.isUser = false;
@@ -9632,7 +9720,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
-		console.log("data"+data);
+		//console.log("data"+data);
 	});
 	
 	var file=null;
@@ -9645,7 +9733,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	$scope.errorUpload = false;
 	$scope.pleasWait = false; 
 	$scope.fileUpload = function (sub) {
-		console.log(file);
+		//console.log(file);
 		$http.post('deleteSendEmailAlertData')
 		.success(function(data){
 			
@@ -9721,7 +9809,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
-		console.log("data"+data);
+		//console.log("data"+data);
 	});
 	
 	// check for the admin when page refresh
@@ -9730,7 +9818,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
 			$rootScope.isAdmin = false;
-			console.log("admin"+$rootScope.isAdmin);
+			//console.log("admin"+$rootScope.isAdmin);
 		}else{
 			$rootScope.isAdmin = true;
 			$rootScope.isUser = false;
@@ -9828,7 +9916,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		.success(function(data){
 			if(data) {
 				$scope.isAdmin = data;
-				console.log("admin"+$scope.isAdmin);
+				//console.log("admin"+$scope.isAdmin);
 			} 
 		});
 		
@@ -9836,7 +9924,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		$http.get('/getAllPosition')
     	.success(function(data) {
     		$scope.allPosition = data;
-    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		//console.log("all position:"+JSON.stringify($scope.allPosition));
     		// $scope.username = data.uname;
     	});
 		
@@ -9844,7 +9932,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		$http.get('/getAllExperiance')
     	.success(function(data) {
     		$scope.allExperiance = data;
-    		console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
+    		//console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
     		// $scope.username = data.uname;
     	});
 	
@@ -9859,19 +9947,19 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		$http.get('/getAllSkills')
     	.success(function(data) {
     		$scope.allSkills = data.skills;
-    		console.log(JSON.stringify($scope.allSkills));
+    		//console.log(JSON.stringify($scope.allSkills));
     	});
 
 		$http.get('/getAllStates')
     	.success(function(data) {
     		$scope.allStates = data.states;
-    		console.log(JSON.stringify($scope.allStates));
+    		//console.log(JSON.stringify($scope.allStates));
     	});
 		
 		$http.get('/getAllJobSearchStatus')
     	.success(function(data) {
     		$scope.allJobSearchStatus = data.jobsearchstatus;
-    		console.log(JSON.stringify($scope.allJobSearchStatus));
+    		//console.log(JSON.stringify($scope.allJobSearchStatus));
     	});
 				
 		
@@ -9880,7 +9968,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		$http.get('/getUserProfile')
     	.success(function(data) {
     		$scope.userProfile = data;
-    		console.log("Profile data:"+JSON.stringify($scope.userProfile));
+    		//console.log("Profile data:"+JSON.stringify($scope.userProfile));
     		$scope.userPosition = data.userDetails.userPosition;
     		$scope.userClearance = data.userClearance;
     		$scope.userDetails = data.userDetails;

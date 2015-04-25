@@ -8,7 +8,7 @@ GET		/login											controllers.Application.login()
 GET		/signup											controllers.Application.signup()
 POST	/SignIn                     					controllers.Application.SignIn()
 GET     /dashboard										controllers.Application.dashBoard()
-
+GET     /registrationredirect                          controllers.Application.registrationRedirect()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               					controllers.Assets.at(path="/public", file)
@@ -41,7 +41,7 @@ GET   /getUserSkills                               controllers.Application.getUs
 GET   /getAllStates                              controllers.Application.getAllStates()
 GET    /getAllJobSearchStatus                     controllers.Application.getAllJobSearchStatus()
 GET    /unSubribeFormEmailAlert/:alert                        controllers.Application.unSubribeFormEmailAlert(alert:Boolean)
-
+GET    /gotoUserProfile                                        controllers.Application.gotoUserProfile()
 #Admin		
 GET      /getAllAppliedJobs/:pageNumber                            controllers.Application.getAllAppliedJobs(pageNumber:Integer)
 GET     /getAllArchivedJobs/:pageNumber                                      controllers.Application.getAllArchivedJobs(pageNumber:Integer)
@@ -86,3 +86,4 @@ POST   /updateTemplateById                  controllers.Application.updateTempla
 GET   /getallSkillsForAdmin/:pageNumber                                        controllers.Application.getallSkillsForAdmin(pageNumber : Integer)
 POST   /editPositionRateDetails              					 controllers.Application.editPositionRateDetails()
 POST   /updateDefualtValues                      controllers.Application.updateDefualtValues()
+GET    /getDefaultValues                            controllers.Application.getDefaultValues()
