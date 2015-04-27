@@ -9921,8 +9921,10 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		});
 		
 		
-		
-		
+		$http.get('/getAllPosition')
+    	.success(function(data) {
+    		$scope.allPosition = data;
+    	});
 		
 		$http.get('/getAllExperiance')
     	.success(function(data) {
