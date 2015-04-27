@@ -172,7 +172,7 @@ public class Application extends Controller {
 	public static Result getUserName() {
 		String uname = session().get("email");
 
-		System.out.println("Session:"+uname);
+		System.out.println("Akash Session getUserName:"+uname);
 		Admin ad = Admin.checkAdmin(uname);
 		if (ad == null) {
 			UserDetails ud = UserDetails.getUserByEmail(uname);
@@ -188,6 +188,8 @@ public class Application extends Controller {
 	// called to check the usertype and also when page is refreshed
 	public static Result checkForadmin() {
 		String email = session().get("email");
+		System.out.println("Akash Session checkForadmin "+session().get("email"));
+		//System.out.println("checkForadmin: "+email);
 		Admin ad = Admin.checkAdmin(email);
 		if (ad == null) {
 			return ok("notAdmin");
@@ -205,8 +207,9 @@ public class Application extends Controller {
 		
 		if (as != null) {
 			session().clear();
-			session().put("email", as.username);
 			System.out.println("After putting inSession" + session().get("email"));
+			session().put("email", as.username);
+			System.out.println("Before putting inSession" + session().get("email"));
 			session().put("role", as.role);
 			return redirect("/dashboard#/viewAllJobsforAdmin");
 
@@ -217,7 +220,10 @@ public class Application extends Controller {
 			if (ud != null) {
 				if ("active".equalsIgnoreCase(ud.userstatus)) {
 					session().clear();
+					System.out.println("Akash  Before Sign In: "+session().get("email"));
 					session().put("email", ud.email);
+					
+					System.out.println("Akash After putting inSession" + session().get("email"));
 					  ud.lastlogin = new Date();
 					  ud.userLoggedInstatus = "loggedIn";
 					  ud.update();
@@ -1203,6 +1209,8 @@ public class Application extends Controller {
 	public static Result logOut() {
 
 		try {
+			
+			System.out.println("Akash  Before Logout: "+session().get("email"));
 			String email = session().get("email");
 			Admin ad = Admin.getAdminByEmail(email);
 
@@ -1210,15 +1218,18 @@ public class Application extends Controller {
 				UserDetails ud = UserDetails.getUserByEmail(email);
 				ud.userLoggedInstatus = "loggedOut";
 				ud.update();
-
 				session().clear();
-				System.out.println("Session Log out" + session().get(email));
+				System.out.println("Session after Log out" + session().get("email"));
+			}else{
+				session().clear();
+				
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			
 			session().clear();
+			System.out.println("Akash  After Logout: "+session().get("email"));
 		}
 
 		return ok(signin.render());
@@ -2111,7 +2122,7 @@ public class Application extends Controller {
 					}
 				}
 
-				System.out.print(token);
+				//System.out.print(token);
 			}
 
 			// check if the mandatory skill does not contain null value;
