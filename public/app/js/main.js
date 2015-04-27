@@ -642,7 +642,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$http.get('/getAllPosition')
     	.success(function(data) {
     		$scope.allPosition = data;
-    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		//console.log("all position:"+JSON.stringify($scope.allPosition));
     		// $scope.username = data.uname;
     	});
 		
@@ -650,7 +650,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$http.get('/getAllExperiance')
     	.success(function(data) {
     		$scope.allExperiance = data;
-    		console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
+    		//console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
     		// $scope.username = data.uname;
     	});
 	
@@ -2285,7 +2285,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			console.log("data"+data);
 		});
 	  
-	// check for gthe admin
+	// check for the admin
 		$http.get('checkForadmin')
 		.success(function(data){
 			if(data == 'notAdmin') {
@@ -9973,7 +9973,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		$scope.userClearance = data.userClearance;
     		$scope.userDetails = data.userDetails;
     		$scope.userExperience = data.userDetails.userExperiance;
-    		console.log("$scope.userPosition"+JSON.stringify($scope.userPosition));
+    	//	console.log("Profile data"+JSON.stringify(data));
          	if(data.educationDetails == ""){
          		
          	}else{
@@ -9986,13 +9986,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
          		$scope.addNewEmphistory = data.employmentDetails;
          	}
          	
-         	
-         	if(data.educationDetails[0].user_details.userSkill == ""){
-         		
-         	}else{
-         		$scope.userSkill = data.educationDetails[0].user_details.userSkill;
-         	}
-    		
          	if(data.educationDetails[0].user_details.userClearance == ""){
          		
          	}else{
@@ -10009,6 +10002,12 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
         		
          	}else{
          		$scope.userExperience = data.userDetails.userExperiance;
+         	}
+         	
+         	if(data.educationDetails[0].user_details.userSkill == ""){
+         		
+         	}else{
+         		$scope.userSkill = data.educationDetails[0].user_details.userSkill;
          	}
     		
          	if(data.certificationDetails == ""){

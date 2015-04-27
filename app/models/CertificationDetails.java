@@ -26,7 +26,7 @@ public class CertificationDetails extends Model {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", length = 11)
-	private int id;
+	public  int id;
 
 	public String certName;
 	public String certYear;
@@ -52,8 +52,8 @@ public class CertificationDetails extends Model {
 	}
 
 	@JsonIgnore
-	public static CertificationDetails getCetificateByName(String name) {
+	public static CertificationDetails getCetificateByName(int   id) {
 
-		return find.where().eq("certName", name).findUnique();
+		return find.where().eq("id", id).findUnique();
 	}
 }
