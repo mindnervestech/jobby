@@ -9921,12 +9921,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		});
 		
 		
-		$http.get('/getAllPosition')
-    	.success(function(data) {
-    		$scope.allPosition = data;
-    		//console.log("all position:"+JSON.stringify($scope.allPosition));
-    		// $scope.username = data.uname;
-    	});
+		
 		
 		
 		$http.get('/getAllExperiance')
@@ -10048,18 +10043,26 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     				});
     			});
     		
-    		angular.forEach($scope.allPosition.position, function(obj, index){
-    			angular.forEach($scope.userPosition, function(obj1, index){
-    				if ((obj.position == obj1.position)) {
-    					//console.log(obj1.clearance);
-    					//console.log(obj.clearance);
-    					// $scope.skills.push(obj.skillName);
-    					obj.isSelected = true;
-    					$scope.userPosition.push(obj.position);
-    					
-    					};
-    				});
-    			});
+    	
+    		$http.get('/getAllPosition')
+        	.success(function(data) {
+        		$scope.allPosition = data;
+        		console.log("all position:"+JSON.stringify($scope.allPosition));
+        		angular.forEach($scope.allPosition.position, function(obj, index){
+        			angular.forEach($scope.userPosition, function(obj1, index){
+        				if ((obj.position == obj1.position)) {
+        					//console.log(obj1.clearance);
+        					//console.log(obj.clearance);
+        					// $scope.skills.push(obj.skillName);
+        					obj.isSelected = true;
+        					$scope.userPosition.push(obj.position);
+        					
+        					};
+        				});
+        			});
+
+        	});
+    		
     		
     		
     		angular.forEach($scope.allExperiance.experiance, function(obj, index){
