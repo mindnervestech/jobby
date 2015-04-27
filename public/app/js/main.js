@@ -642,7 +642,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$http.get('/getAllPosition')
     	.success(function(data) {
     		$scope.allPosition = data;
-    		console.log("all position:"+JSON.stringify($scope.allPosition));
+    		//console.log("all position:"+JSON.stringify($scope.allPosition));
     		// $scope.username = data.uname;
     	});
 		
@@ -650,7 +650,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 		$http.get('/getAllExperiance')
     	.success(function(data) {
     		$scope.allExperiance = data;
-    		console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
+    		//console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
     		// $scope.username = data.uname;
     	});
 	
@@ -2285,7 +2285,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			console.log("data"+data);
 		});
 	  
-	// check for gthe admin
+	// check for the admin
 		$http.get('checkForadmin')
 		.success(function(data){
 			if(data == 'notAdmin') {
@@ -9924,10 +9924,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		$http.get('/getAllPosition')
     	.success(function(data) {
     		$scope.allPosition = data;
-    		//console.log("all position:"+JSON.stringify($scope.allPosition));
-    		// $scope.username = data.uname;
     	});
-		
 		
 		$http.get('/getAllExperiance')
     	.success(function(data) {
@@ -9973,7 +9970,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		$scope.userClearance = data.userClearance;
     		$scope.userDetails = data.userDetails;
     		$scope.userExperience = data.userDetails.userExperiance;
-    		console.log("$scope.userPosition"+JSON.stringify($scope.userPosition));
+    	//	console.log("Profile data"+JSON.stringify(data));
          	if(data.educationDetails == ""){
          		
          	}else{
@@ -9986,13 +9983,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
          		$scope.addNewEmphistory = data.employmentDetails;
          	}
          	
-         	
-         	if(data.educationDetails[0].user_details.userSkill == ""){
-         		
-         	}else{
-         		$scope.userSkill = data.educationDetails[0].user_details.userSkill;
-         	}
-    		
          	if(data.educationDetails[0].user_details.userClearance == ""){
          		
          	}else{
@@ -10009,6 +9999,12 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
         		
          	}else{
          		$scope.userExperience = data.userDetails.userExperiance;
+         	}
+         	
+         	if(data.educationDetails[0].user_details.userSkill == ""){
+         		
+         	}else{
+         		$scope.userSkill = data.educationDetails[0].user_details.userSkill;
          	}
     		
          	if(data.certificationDetails == ""){
@@ -10035,6 +10031,10 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			 * true; } }; };
 			 */
     		
+    		$http.get('/getAllClearance')
+        	.success(function(data) {
+        		$scope.allCleanrance = data;
+    		
     		angular.forEach($scope.allCleanrance.clearance, function(obj, index){
     			angular.forEach($scope.userClearance, function(obj1, index){
     				if ((obj.clearance == obj1.clearance)) {
@@ -10048,20 +10048,31 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     					};
     				});
     			});
+        	});
     		
-    		angular.forEach($scope.allPosition.position, function(obj, index){
-    			angular.forEach($scope.userPosition, function(obj1, index){
-    				if ((obj.position == obj1.position)) {
-    					//console.log(obj1.clearance);
-    					//console.log(obj.clearance);
-    					// $scope.skills.push(obj.skillName);
-    					obj.isSelected = true;
-    					$scope.userPosition.push(obj.position);
-    					
-    					};
-    				});
-    			});
+    	
+    		$http.get('/getAllPosition')
+        	.success(function(data) {
+        		$scope.allPosition = data;
+        		console.log("all position:"+JSON.stringify($scope.allPosition));
+        		angular.forEach($scope.allPosition.position, function(obj, index){
+        			angular.forEach($scope.userPosition, function(obj1, index){
+        				if ((obj.position == obj1.position)) {
+        					//console.log(obj1.clearance);
+        					//console.log(obj.clearance);
+        					// $scope.skills.push(obj.skillName);
+        					obj.isSelected = true;
+        					$scope.userPosition.push(obj.position);
+        					
+        					};
+        				});
+        			});
+
+        	});
     		
+    		$http.get('/getAllExperiance')
+        	.success(function(data) {
+        	$scope.allExperiance = data;
     		
     		angular.forEach($scope.allExperiance.experiance, function(obj, index){
     			angular.forEach($scope.userExperience, function(obj1, index){
@@ -10075,6 +10086,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     			});
     		
     		});
+    	});
 		
 		
 	}

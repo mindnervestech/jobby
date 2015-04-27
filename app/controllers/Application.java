@@ -2867,7 +2867,8 @@ public class Application extends Controller {
 		String email = session().get("email");
 		UserDetails u = UserDetails.getUserByEmail(email);
 
-		
+	//	System.out.println("addCertificate history:"+json.get("addCertificate"));
+
 		JsonNode eduJson = json.get("addEducation");
 		JsonNode empJson = json.get("addNewEmphistory");
 		JsonNode certJson = json.get("addCertificate");
@@ -2876,7 +2877,6 @@ public class Application extends Controller {
 		JsonNode userSkills = json.path("skills");
 		JsonNode userExperience = json.path("experience");
 
-		
 		
 		u.deleteManyToManyAssociations("userSkill");
 
@@ -2918,19 +2918,17 @@ public class Application extends Controller {
 			String clea = userClearance.asText();
 			UserClearance uc = UserClearance.getClearanceByName(clea);
 			u.userClearance.add(uc);
-		
 
 		u.saveManyToManyAssociations("userClearance");
-
-		
 		
 		ObjectMapper mapper = new ObjectMapper();
 		addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
 				.constructCollectionType(List.class, AddEmpHistoryVM.class));
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
 			EmploymentDetails ed = EmploymentDetails
-					.getEmploymentDetailsByName(addNewEmphistory.get(i).companyName);
+					.getEmploymentDetailsByName(addNewEmphistory.get(i).id);
 			if (ed != null) {
+			
 				ed.delete();
 
 			}
@@ -2959,8 +2957,9 @@ public class Application extends Controller {
 						List.class, AddEducationVM.class));
 		for (int i = 0; i < addEducation.size(); i++) {
 			EducationDetails eds = EducationDetails
-					.getEducationDetailsByName(addEducation.get(i).degree);
+					.getEducationDetailsByName(addEducation.get(i).id);
 			if (eds != null) {
+				
 				eds.delete();
 			}
 
@@ -2990,12 +2989,14 @@ public class Application extends Controller {
 
 		for (int i = 0; i < addCertificate.size(); i++) {
 			CertificationDetails c = CertificationDetails
-					.getCetificateByName(addCertificate.get(i).certName);
+					.getCetificateByName(addCertificate.get(i).id);
 			if (c != null) {
+				System.out.println("in delete");
 				c.delete();
 			}
 
 			CertificationDetails ce = new CertificationDetails();
+		
 			ce.certName = addCertificate.get(i).certName;
 			ce.certYear = addCertificate.get(i).certYear;
 			ce.user_details = UserDetails.getUserByEmail(email);
@@ -3113,7 +3114,7 @@ public class Application extends Controller {
 				.constructCollectionType(List.class, AddEmpHistoryVM.class));
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
 			EmploymentDetails ed = EmploymentDetails
-					.getEmploymentDetailsByName(addNewEmphistory.get(i).companyName);
+					.getEmploymentDetailsByName(addNewEmphistory.get(i).id);
 			if (ed != null) {
 				ed.delete();
 
@@ -3144,7 +3145,7 @@ public class Application extends Controller {
 						List.class, AddEducationVM.class));
 		for (int i = 0; i < addEducation.size(); i++) {
 			EducationDetails eds = EducationDetails
-					.getEducationDetailsByName(addEducation.get(i).degree);
+					.getEducationDetailsByName(addEducation.get(i).id);
 			if (eds != null) {
 				eds.delete();
 			}
@@ -3175,7 +3176,7 @@ public class Application extends Controller {
 
 		for (int i = 0; i < addCertificate.size(); i++) {
 			CertificationDetails c = CertificationDetails
-					.getCetificateByName(addCertificate.get(i).certName);
+					.getCetificateByName(addCertificate.get(i).id);
 			if (c != null) {
 				c.delete();
 			}
