@@ -149,11 +149,37 @@ App.config(function ($routeProvider) {
   });
 
 
-App.controller('AppController', function ($scope, $rootScope, $routeParams, $location){
-	$scope.isSuperAdmin = true;
+App.controller('AppController', function ($scope,$http, $rootScope, $routeParams, $location){
+	$rootScope.isAdmin;
 	$rootScope.style = 'style1';
     $rootScope.theme = 'pink-blue';
 
+	$rootScope.isUser;
+	$rootScope.isAdmin;
+	$rootScope.username;
+	
+    //$sscocope.username  = "";
+    
+    //alert("in app "+$rootScope.username);
+    $http.get('/getUserName?d='+Math.random())
+	.success(function(data) {
+		$rootScope.username = data;
+		//alert("username"+data);
+	});
+  
+// check for gthe admin
+	$http.get('checkForadmin?d='+Math.random())
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+		//	alert(data);
+			$rootScope.isAdmin = false;
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+    
     $scope.data = {};
     $scope.effect = '';
     $scope.header = {
@@ -299,7 +325,31 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  $scope.sortName = "Position"
 	  $scope.searchId;
  		  
-		  // called when page in loaded for getting all jobns form db
+	  $scope.init = function(){
+		  //alert("in alljobs init");
+		  $http.get('/getUserName?d='+Math.random())
+			.success(function(data) {
+			// $scope.userData = data;
+				$rootScope.username = data;
+				console.log("data"+data);
+			});
+		  
+		// check for the admin
+			$http.get('checkForadmin?d='+Math.random())
+			.success(function(data){
+				if(data == 'notAdmin') {
+					$rootScope.isUser = true;
+					$rootScope.isAdmin = false;
+					console.log("admin"+$rootScope.isAdmin);
+				}else{
+					$rootScope.isAdmin = true;
+					$rootScope.isUser = false;
+				} 
+			});
+		  
+			  
+	  }
+	    // called when page in loaded for getting all jobns form db
 	  // get all jobs  for the Admin
 	   $scope.onJobsForAdminLoad = function(){
 		$scope.jobType = "All";
@@ -621,7 +671,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  }
 	  
 	  
-	  $http.get('/getUserName')
+	 /* $http.get('/getUserName')
 		.success(function(data) {
 			$rootScope.username = data;
 			console.log("data"+data);
@@ -637,7 +687,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 				$rootScope.isAdmin = true;
 				$rootScope.isUser = false;
 			} 
-		});
+		});*/
 		
 		$http.get('/getAllPosition')
     	.success(function(data) {
@@ -736,7 +786,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 
 
 App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval ,$window){
-	 $http.get('/getUserName')
+	 $http.get('/getUserName?d='+Math.random())
 		.success(function(data) {
 		// $scope.userData = data;
 			$rootScope.username = data;
@@ -744,7 +794,7 @@ App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootS
 		});
 	  
 	// check for gthe admin
-		$http.get('checkForadmin')
+		$http.get('checkForadmin?d='+Math.random())
 		.success(function(data){
 			if(data == 'notAdmin') {
 				$rootScope.isUser = true;
@@ -851,7 +901,7 @@ App.controller('CalculatorController', function ($scope, ngDialog, $http, $rootS
 
 
 App.controller('DefaultValueController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval ,$window){
-	 $http.get('/getUserName')
+	 $http.get('/getUserName?d='+Math.random())
 		.success(function(data) {
 		// $scope.userData = data;
 			$rootScope.username = data;
@@ -859,7 +909,7 @@ App.controller('DefaultValueController', function ($scope, ngDialog, $http, $roo
 		});
 	  
 	// check for gthe admin
-		$http.get('checkForadmin')
+		$http.get('checkForadmin?d='+Math.random())
 		.success(function(data){
 			if(data == 'notAdmin') {
 				$rootScope.isUser = true;
@@ -956,7 +1006,7 @@ App.controller('DefaultValueController', function ($scope, ngDialog, $http, $roo
 
 
 App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootScope,  $routeParams,$interval){
-	 $http.get('/getUserName')
+	 $http.get('/getUserName?d='+Math.random())
 		.success(function(data) {
 		// $scope.userData = data;
 			$rootScope.username = data;
@@ -964,7 +1014,7 @@ App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootSco
 		});
 	  
 	// check for gthe admin
-		$http.get('checkForadmin')
+		$http.get('checkForadmin?d='+Math.random())
 		.success(function(data){
 			if(data == 'notAdmin') {
 				$rootScope.isUser = true;
@@ -997,7 +1047,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 	
 	
 	$scope.jobsData = [];
-	  $http.get('/getUserName')
+	  $http.get('/getUserName?d='+Math.random())
 		.success(function(data) {
 		// $scope.userData = data;
 			$rootScope.username = data;
@@ -1005,7 +1055,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 		});
 	  
 	// check for gthe admin
-		$http.get('checkForadmin')
+		$http.get('checkForadmin?d='+Math.random())
 		.success(function(data){
 			if(data == 'notAdmin') {
 				$rootScope.isUser = true;
@@ -1657,6 +1707,33 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  $scope.location = false;
 	  $scope.allPosition;
 	  $scope.sortName = "Position";
+	  
+	  
+	  $scope.init = function(){
+		//  alert("in alljobs init");
+		  $http.get('/getUserName?d='+Math.random())
+			.success(function(data) {
+			// $scope.userData = data;
+				$rootScope.username = data;
+				console.log("data"+data);
+			});
+		  
+		// check for the admin
+			$http.get('checkForadmin?d='+Math.random())
+			.success(function(data){
+				if(data == 'notAdmin') {
+					$rootScope.isUser = true;
+					$rootScope.isAdmin = false;
+					console.log("admin"+$rootScope.isAdmin);
+				}else{
+					$rootScope.isAdmin = true;
+					$rootScope.isUser = false;
+				} 
+			});
+		  
+			  
+	  }
+	  
 	  // called when page in loaded for getting all jobns form db
 	  // get all jobs  for the user
 	   $scope.onAllJobsLoad = function(){
@@ -2278,25 +2355,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  
 	  
 	  
-	  $http.get('/getUserName')
-		.success(function(data) {
-		// $scope.userData = data;
-			$rootScope.username = data;
-			console.log("data"+data);
-		});
-	  
-	// check for the admin
-		$http.get('checkForadmin')
-		.success(function(data){
-			if(data == 'notAdmin') {
-				$rootScope.isUser = true;
-				$rootScope.isAdmin = false;
-				console.log("admin"+$rootScope.isAdmin);
-			}else{
-				$rootScope.isAdmin = true;
-				$rootScope.isUser = false;
-			} 
-		});
+	 
 		
 	    //check for all fields Coments if nor raise error if not eroor
     	// goto the next  tab desirted skills
@@ -8191,14 +8250,14 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 			}
 		  }
  
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
 	});
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -8597,7 +8656,7 @@ App.controller('ViewAllUsersController', function ($scope, $rootScope, $routePar
 		
 		
 		$scope.ubSubribeFormEmailAlert = function(alert){
-			console.log(alert);
+			//console.log(alert);
 			$scope.userDetails.emailalert
 			if(alert  == "Yes" || alert == true){
 				alert = false;
@@ -8712,7 +8771,7 @@ App.controller('ViewAllSkillsController', function ($scope, $rootScope, $routePa
 			  }
 	
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -8721,7 +8780,7 @@ App.controller('ViewAllSkillsController', function ($scope, $rootScope, $routePa
 	
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -8904,7 +8963,7 @@ App.controller('ViewAllAdminController', function ($scope, $rootScope, $routePar
 			  }
 	
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -8913,7 +8972,7 @@ App.controller('ViewAllAdminController', function ($scope, $rootScope, $routePar
 	
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9016,7 +9075,7 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 		});
 	}
 
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9150,7 +9209,7 @@ App.controller('ViewAllClearanceController', function ($scope, $rootScope, $rout
 		});
 	}
 
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9159,7 +9218,7 @@ App.controller('ViewAllClearanceController', function ($scope, $rootScope, $rout
 	
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9352,7 +9411,7 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 		  }
 	
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9361,7 +9420,7 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 	
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9522,7 +9581,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 		  }
 	
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9531,7 +9590,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9618,7 +9677,7 @@ App.controller('UploadPositionsController', function ($scope, $rootScope, $route
 		
 	}*/
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9679,7 +9738,7 @@ App.controller('UploadPositionsController', function ($scope, $rootScope, $route
 	};
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9716,7 +9775,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 		
 	}*/
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9777,7 +9836,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	};
 	
 	// check for gthe admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9805,7 +9864,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	};
 
 	
-	$http.get('/getUserName')
+	$http.get('/getUserName?d='+Math.random())
 	.success(function(data) {
 	// $scope.userData = data;
 		$rootScope.username = data;
@@ -9813,7 +9872,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	});
 	
 	// check for the admin when page refresh
-	$http.get('checkForadmin')
+	$http.get('checkForadmin?d='+Math.random())
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
@@ -9912,7 +9971,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	$scope.allExperiance; 
 	$scope.init = function(){
 	
-		$http.get('checkForadmin')
+		$http.get('checkForadmin?d='+Math.random())
 		.success(function(data){
 			if(data) {
 				$scope.isAdmin = data;
@@ -11540,7 +11599,7 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
 	$rootScope.isAdmin;
 	$rootScope.isUser;
 	// alert("main");
-		$http.get('/getUserName')
+		$http.get('/getUserName?d='+Math.random())
     	.success(function(data) {
     	// $scope.userData = data;
     		$rootScope.username = data;
@@ -11548,7 +11607,7 @@ App.controller('MainController', function ($scope,  $rootScope, $routeParams, $h
     	});
 		
 	
-		$http.get('checkForadmin')
+		$http.get('checkForadmin?d='+Math.random())
 		.success(function(data){
 			if(data == 'notAdmin') {
 				$rootScope.isUser = true;
