@@ -10031,6 +10031,10 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			 * true; } }; };
 			 */
     		
+    		$http.get('/getAllClearance')
+        	.success(function(data) {
+        		$scope.allCleanrance = data;
+    		
     		angular.forEach($scope.allCleanrance.clearance, function(obj, index){
     			angular.forEach($scope.userClearance, function(obj1, index){
     				if ((obj.clearance == obj1.clearance)) {
@@ -10044,6 +10048,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     					};
     				});
     			});
+        	});
     		
     	
     		$http.get('/getAllPosition')
@@ -10065,7 +10070,9 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 
         	});
     		
-    		
+    		$http.get('/getAllExperiance')
+        	.success(function(data) {
+        	$scope.allExperiance = data;
     		
     		angular.forEach($scope.allExperiance.experiance, function(obj, index){
     			angular.forEach($scope.userExperience, function(obj1, index){
@@ -10079,6 +10086,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     			});
     		
     		});
+    	});
 		
 		
 	}
