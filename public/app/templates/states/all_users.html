@@ -500,7 +500,7 @@ background-color: #999999;
 									<label ng-repeat="skill in allSkills"
 										class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 										style="padding: 0px;"> <input type="checkbox"
-										name="allSkill" ng-click="skillClicked($event,skill)"
+										name="allSkill" ng-click="skillClicked($event,skill,$index)"
 										ng-model="skill.isSelected"> {{skill.skillName}}
 
 									</label>
@@ -598,7 +598,7 @@ background-color: #999999;
 
 										<div class="col-md-2">
 											<button class="btn btn-default"
-												ng-click="addNewEmphistory.splice(addNewEmphistory.length-1, 1)">
+												ng-click="DeleteAddEmphistory($index)">
 												<i class="fa fa-trash-o"></i>
 											</button>
 										</div>
@@ -706,7 +706,7 @@ background-color: #999999;
 									</div>
 									<div class="col-md-2">
 										<button class="btn btn-default"
-											ng-click="addEducation.splice(addEducation.length-1, 1)">
+											ng-click="deleteaddEducation($index)">
 											<i class="fa fa-trash-o"></i>
 										</button>
 									</div>
@@ -768,7 +768,7 @@ background-color: #999999;
 													<div class="col-md-2">
 
 														<button class="btn btn-default"
-															ng-click="addCertificate.splice(addCertificate.length-1, 1)">
+															ng-click="deleteAddCertificate($index)">
 															<i class="fa fa-trash-o"></i>
 														</button>
 													</div>
