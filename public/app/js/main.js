@@ -160,7 +160,7 @@ App.controller('AppController', function ($scope,$http, $rootScope, $routeParams
 	
     //$sscocope.username  = "";
     
-    //alert("in app "+$rootScope.username);
+   /* //alert("in app "+$rootScope.username);
     $http.get('/getUserName')
 	.success(function(data) {
 		$rootScope.username = data;
@@ -179,7 +179,7 @@ App.controller('AppController', function ($scope,$http, $rootScope, $routeParams
 			$rootScope.isUser = false;
 		} 
 	});
-    
+    */
     $scope.data = {};
     $scope.effect = '';
     $scope.header = {
