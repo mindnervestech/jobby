@@ -9292,8 +9292,8 @@ App.controller('ViewAllClearanceController', function ($scope, $rootScope, $rout
 	$scope.addNewClearance =  function(){
 		$('#addClearncemodal').modal();
 		if(!(angular.isUndefined($scope.clearancename))){
-			
-		$http.get('/addNewClearance/'+$scope.clearancename).success(function(data){
+			$http.post('addNewClearance',{clearancename:$scope.clearancename}).success(function(data){
+		
 			$scope.getAllClearance();
 			$('#addClearncemodal').modal('hide');
 			$scope.error = false;
@@ -10210,8 +10210,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 			//	alert($(e.target).is(":checked"));
 				$scope.skills.splice(index, 1);
 			}
-			
-			
 		}
 
 		};
