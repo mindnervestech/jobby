@@ -59,7 +59,7 @@ POST  /updateUserProfileByAdmin                                   controllers.Ap
 GET   /onActiveUser/:email 								controllers.Application.onActiveUser(email:String)
 GET   /onInActiveUser/:email 								controllers.Application.onInActiveUser(email:String)
 POST  /addnewPosition								controllers.Application.addnewPosition()
-GET  /addNewClearance/:clearance        						controllers.Application.addNewClearance(clearance:String)
+POST  /addNewClearance      						controllers.Application.addNewClearance()
 GET  /deletePositionByName/:position                              controllers.Application.deletePositionByName(position:String)
 POST  /deleteClearanceByName                         controllers.Application.deleteClearanceByName()
 GET  /editPositionName/:editPosition/:editPositionOld        controllers.Application.editPositionName(editPosition:String,editPositionOld:String)

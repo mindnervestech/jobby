@@ -2913,9 +2913,11 @@ public class Application extends Controller {
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
 			String position = positions.get(j).asText();
+
 			UserPosition up = UserPosition.getRecoredByPositionNameAndLevel(position,userExperience.asText());
 			
 			if(up != null){
+			System.out.println("positon: "+position);
 				u.userPosition.add(up);
 			}
 
@@ -3412,7 +3414,10 @@ public class Application extends Controller {
 	}
 
 	@JsonIgnore
-	public static Result addNewClearance(String clearance) {
+	public static Result addNewClearance() {
+		JsonNode json = request().body().asJson();
+	    String clearance = json.get("clearancename").asText();
+		
 		UserClearance uc = UserClearance.getClearanceByName(clearance);
 		if (uc == null) {
 			UserClearance u = new UserClearance();
