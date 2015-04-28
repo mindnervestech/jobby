@@ -643,7 +643,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
       //save admin edited job
 	  $scope.saveEditJob =  function(){
 		  $('#editJob').modal('hide');
-		  $http.post('/saveEditJob?d='+Math.random(),{editJob:$scope.editJob})
+		  $http.post('/saveEditJob',{editJob:$scope.editJob})
 			.success(function(data){
 				console.log("success");
 				$scope.updateSuccess = true;
@@ -957,7 +957,7 @@ App.controller('DefaultValueController', function ($scope, ngDialog, $http, $roo
 		
 		$scope.updateDefaultvalues = function(){
 
-			$http.post('/updateDefualtValues?d='+Math.random(),{deFaultValues:$scope.deFaultValues})
+			$http.post('/updateDefualtValues',{deFaultValues:$scope.deFaultValues})
 			.success(function(data){
 				console.log("success");
 				
@@ -1032,7 +1032,7 @@ App.controller('HelpPageController', function ($scope, ngDialog, $http, $rootSco
 		$scope.onfeedBackClicked = function(){
 			$scope.sent = true;
 			
-			$http.post('/sendFeedbackMail?d='+Math.random(),{contactus:$scope.contactus})
+			$http.post('/sendFeedbackMail',{contactus:$scope.contactus})
 			.success(function(data){
 				console.log("success");
 				$scope.feedbackSuccess = true;
@@ -1411,7 +1411,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					  $('#appliedJobsPopup').modal('hide');
 					   console.log($scope.userAppSkills);
 					   $scope.requestNumber = $scope.jobData.requestNumber;
-					   $http.post('/saveAppliedJob?d='+Math.random(),{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
+					   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
 						.success(function(data){
 							console.log("success");
 							 $scope.job_application_success = true;
@@ -1550,7 +1550,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						//$('#saveTemplate').modal();
 						 $('#saveTemplate'+index).hide();
 						console.log("Comment:"+comment);
-							$http.post('/saveUserTemplate?d='+Math.random(),{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+							$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
 							.success(function(data) {
 									
 								console.log("data"+data);
@@ -1567,7 +1567,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 						//$('#saveTemplate').modal();
 						 $('#saveTemplateDesiredSkills'+index).hide();
 						console.log("Comment:"+comment);
-						$http.post('/saveUserTemplate?d='+Math.random(),{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+						$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
 						.success(function(data) {
 						
 								console.log("data"+data);
@@ -1681,7 +1681,7 @@ App.controller('ViewAllUserAppliedController', function ($scope, ngDialog, $http
 					        $scope.editMode = false;
 					       console.log(id,name,content);
 								
-								$http.post('/updateTemplateById?d='+Math.random(),{id:id,name:name,content:content})
+								$http.post('/updateTemplateById',{id:id,name:name,content:content})
 								.success(function(data) {
 								
 								$http.get('getSavedUserTemplate?d='+Math.random())
@@ -1777,7 +1777,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	 $scope.save = function(id,name,content) {
 	        $scope.editMode = false;
 	       console.log(id,name,content);
-	       $http.post('/updateTemplateById?d='+Math.random(),{id:id,name:name,content:content})
+	       $http.post('/updateTemplateById',{id:id,name:name,content:content})
 			.success(function(data) {
 				$http.get('getSavedUserTemplate?d='+Math.random())
 				.success(function(data) {
@@ -2190,7 +2190,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $('#savedJobsPopup1').modal('hide');
 		   console.log($scope.desiredSkills);
 		   $scope.requestNumber = $scope.jobData.requestNumber;
-		   $http.post('/saveAppliedJob?d='+Math.random(),{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
+		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
 			.success(function(data){
 				console.log("success");
 				/*$http.get('/getUserSavedJobs/'+$scope.pageno)
@@ -2293,7 +2293,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  
 		  if($scope.errorDesSkillComment == false){
 			  $('#savedJobsPopup1').modal('hide');
-			  $http.post('/saveUserSavedJob?d='+Math.random(),{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
+			  $http.post('/saveUserSavedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
 				.success(function(data){
 					console.log("success");
 					 $scope.job_application_success = true;
@@ -2325,7 +2325,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 	  $scope.job_draft_application_success = false;
 	  $scope.saveUserJobToDraft = function(){
 		  $('#savedJobsPopup1').modal('hide');
-		  $http.post('/saveUserJobToDraft?d='+Math.random(),{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
+		  $http.post('/saveUserJobToDraft',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills})
 			.success(function(data){
 				console.log("success");
 				 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
@@ -2421,7 +2421,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			//$('#saveTemplate').modal();
 			 $('#saveTemplate'+index).hide();
 			console.log("Comment:"+comment);
-			$http.post('/saveUserTemplate?d='+Math.random(),{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+			$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
 			.success(function(data) {
 				console.log("data"+data);
 				});
@@ -2436,7 +2436,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			//$('#saveTemplate').modal();
 			 $('#saveTemplateDesiredSkills'+index).hide();
 			console.log("Comment:"+comment);
-			$http.post('/saveUserTemplate?d='+Math.random(),{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
+			$http.post('/saveUserTemplate',{userTemplate:$scope.userTemplate,templateName:$scope.templateName})
 			.success(function(data) {
 		
 					console.log("data"+data);
@@ -9158,7 +9158,7 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 			$scope.error = false;
 		});*/
 			
-			$http.post('/addnewPosition?d='+Math.random(),{position:$scope.positionname,positionList:$scope.positionRateList})
+			$http.post('/addnewPosition',{position:$scope.positionname,positionList:$scope.positionRateList})
 			.success(function(data){
 				$scope.getAllPosition();
 				$('#addposition').modal('hide');
@@ -9211,7 +9211,7 @@ App.controller('ViewAllPositionController', function ($scope, $rootScope, $route
 	//Open edit position  modal
 	$scope.editPosname = function(pos){
 		console.log(JSON.stringify(pos));
-		$http.post('/editPositionRateDetails?d='+Math.random(),{positionList:pos})
+		$http.post('/editPositionRateDetails',{positionList:pos})
 		.success(function(data){
 			$scope.getAllPosition();
 			$scope.editposerror  = false;
@@ -9316,7 +9316,7 @@ App.controller('ViewAllClearanceController', function ($scope, $rootScope, $rout
 	//Delete the existing clearance
 	$scope.deleteClearance = function(){
 		console.log($scope.delClea);
-		$http.post('deleteClearanceByName?d='+Math.random(),{clearance:$scope.delClea}).success(function(data){
+		$http.post('deleteClearanceByName',{clearance:$scope.delClea}).success(function(data){
 			console.log("deleted");
 			$scope.getAllClearance();
 			$('#deleteClearance').modal('hide');
@@ -9338,7 +9338,7 @@ App.controller('ViewAllClearanceController', function ($scope, $rootScope, $rout
 	// Edit/Update Position name
 	$scope.editClearanceName = function(){
 		if($scope.editClearanceNew != "" && (!angular.isUndefined($scope.editClearanceNew))){
-		$http.post('editClearanceName?d='+Math.random(),{editClearanceNew:$scope.editClearanceNew,editClearanceOld:$scope.editClearanceOld}).success(function(data){
+		$http.post('editClearanceName',{editClearanceNew:$scope.editClearanceNew,editClearanceOld:$scope.editClearanceOld}).success(function(data){
 		console.log("success");
 		$scope.getAllClearance();
 		$('#editClearanceModal').modal('hide');
@@ -9500,7 +9500,7 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 	}
 	
 	$scope.deleteSelectedJob = function(){
-		  $http.post('/deleteJobById/?d='+Math.random()+$scope.requestNumber)
+		  $http.post('/deleteJobById/'+$scope.requestNumber)
 			.success(function(data) {
 				$scope.requestNumber= "";
 				console.log("data"+data);
@@ -9671,7 +9671,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	
 	$scope.deleteSelectedJob = function(){
 		  
-		  $http.post('/deleteJobById/?d='+Math.random()+ $scope.requestNumber)
+		  $http.post('/deleteJobById/'+ $scope.requestNumber)
 			.success(function(data) {
 				$scope.requestNumber= "";
 				//console.log("data"+data);
@@ -9694,7 +9694,7 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 	
 	$scope.moveToArchive = function(){
 		//console.log(JSON.stringify($scope.archivedJobsId));
-		$http.post('/moveToArchive?d='+Math.random(),{archivedJobsId:$scope.archivedJobsId})
+		$http.post('/moveToArchive',{archivedJobsId:$scope.archivedJobsId})
 		.success(function(data){
 			$scope.requestNumber= "";
 			//console.log("data"+data);
@@ -9842,7 +9842,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 	$scope.pleasWait = false; 
 	$scope.fileUpload = function (sub) {
 		//console.log(file);
-		$http.post('deleteSendEmailAlertData?d='+Math.random())
+		$http.post('deleteSendEmailAlertData')
 		.success(function(data){
 			
 		});
@@ -9865,7 +9865,7 @@ App.controller('ExcelFileController', function ($scope, $rootScope, $routeParams
 					$scope.newrowscount = data.newrowscount;
 					$scope.updatedRowsCount = data.updatedRowsCount;
 					$scope.pleasWait = false;
-					$http.post('sendmailAlertToUserAboutJobMatched?d='+Math.random())
+					$http.post('sendmailAlertToUserAboutJobMatched')
 					.success(function(data){
 						
 					});
@@ -10207,7 +10207,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		} else{
 			$scope.checked--;
 			if (index > -1) {
-				//alert($(e.target).is(":checked"));
+			//	alert($(e.target).is(":checked"));
 				$scope.skills.splice(index, 1);
 			}
 			
@@ -10382,7 +10382,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		 $scope.editIdImage = -1;
 	}
 	$scope.onFileSelect = function($files) {
-		//alert('hi');
+	//	alert('hi');
 	    file=$files[0];
 	};
 	$scope.fileUpload = function (sub) {
@@ -10442,7 +10442,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	};
 	
 	$scope.updateUserProfile = function(user){
-		$http.post('/updateUserProfile?d='+Math.random(), user)
+		$http.post('/updateUserProfile', user)
     	.success(function(data) {
     		$scope.userData = data;
     	});
@@ -13840,3 +13840,13 @@ App.filter('setDecimal', function ($filter) {
         return Math.round(input * factor) / factor;
     };
 });
+
+App.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
+    $httpProvider.defaults.cache = false;
+    if (!$httpProvider.defaults.headers.get) {
+      $httpProvider.defaults.headers.get = {};
+    }
+    // disable IE ajax request caching
+    $httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+    //.....here proceed with your routes
+}]);
