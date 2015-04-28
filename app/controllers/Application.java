@@ -2935,15 +2935,20 @@ public class Application extends Controller {
 		ObjectMapper mapper = new ObjectMapper();
 		addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
 				.constructCollectionType(List.class, AddEmpHistoryVM.class));
+		
+		
+		List<EmploymentDetails> ed = EmploymentDetails
+				.getEmploymentDetailsByUserEmail(session().get("email"));
+		if (ed != null) {
+			for(EmploymentDetails edetails : ed)
+				edetails.delete();
+         }
+		
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
-			EmploymentDetails ed = EmploymentDetails
-					.getEmploymentDetailsByName(addNewEmphistory.get(i).id);
-			if (ed != null) {
 			
-				ed.delete();
-
-			}
-
+			
+			System.out.println("addNewEmphistory.size():"+addNewEmphistory.size());
+		 
 			EmploymentDetails eds = new EmploymentDetails();
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
@@ -2960,6 +2965,14 @@ public class Application extends Controller {
 
 		}
 
+		
+		List<EducationDetails> eds = EducationDetails
+				.getEducationDetailsByUserEmail(session().get("email"));
+		if (eds != null) {
+			for(EducationDetails edetails : eds){
+				edetails.delete();
+			}
+		}
 		ObjectMapper addEducationmapper = new ObjectMapper();
 
 		addEducation = mapper.convertValue(
@@ -2967,29 +2980,34 @@ public class Application extends Controller {
 				addEducationmapper.getTypeFactory().constructCollectionType(
 						List.class, AddEducationVM.class));
 		for (int i = 0; i < addEducation.size(); i++) {
-			EducationDetails eds = EducationDetails
-					.getEducationDetailsByName(addEducation.get(i).id);
-			if (eds != null) {
-				
-				eds.delete();
-			}
+			
 
-			EducationDetails ed = new EducationDetails();
-			ed.instituteName = (addEducation.get(i).instituteName);
-			ed.degree = (addEducation.get(i).degree);
-			ed.fromDate = (addEducation.get(i).fromDate);
+			EducationDetails eduDetails = new EducationDetails();
+			eduDetails.instituteName = (addEducation.get(i).instituteName);
+			eduDetails.degree = (addEducation.get(i).degree);
+			eduDetails.fromDate = (addEducation.get(i).fromDate);
 			//ed.toDate = (addEducation.get(i).toDate);
 			if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
-				ed.toDate = "Present";
+				eduDetails.toDate = "Present";
 			} else {
-				ed.toDate = addEducation.get(i).toDate;
+				eduDetails.toDate = addEducation.get(i).toDate;
 			}
 			
-			ed.user_details = UserDetails.getUserByEmail(email);
-			ed.save();
+			eduDetails.user_details = UserDetails.getUserByEmail(email);
+			eduDetails.save();
 
-			u.educationDetails.add(ed);
+			u.educationDetails.add(eduDetails);
 
+		}
+
+		List	<CertificationDetails> c = CertificationDetails
+				.getCertificateDetailsByUserEmail(session().get("email"));
+		if (c != null) {
+			System.out.println("in delete");
+			for(CertificationDetails cdetails :c){
+				cdetails.delete();
+			}
+			
 		}
 
 		ObjectMapper certMapper = new ObjectMapper();
@@ -2999,13 +3017,7 @@ public class Application extends Controller {
 						AddCertificateVM.class));
 
 		for (int i = 0; i < addCertificate.size(); i++) {
-			CertificationDetails c = CertificationDetails
-					.getCetificateByName(addCertificate.get(i).id);
-			if (c != null) {
-				System.out.println("in delete");
-				c.delete();
-			}
-
+		
 			CertificationDetails ce = new CertificationDetails();
 		
 			ce.certName = addCertificate.get(i).certName;
@@ -3098,6 +3110,9 @@ public class Application extends Controller {
 		u.saveManyToManyAssociations("userExperiance");
 
 		u.deleteManyToManyAssociations("userPosition");
+
+		
+		
 		ArrayNode positions = (ArrayNode) userPosition;
 		for (int j = 0; j < positions.size(); j++) {
 			String position = positions.get(j).asText();
@@ -3123,14 +3138,17 @@ public class Application extends Controller {
 		ObjectMapper mapper = new ObjectMapper();
 		addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
 				.constructCollectionType(List.class, AddEmpHistoryVM.class));
+		List <EmploymentDetails> ed = EmploymentDetails
+				.getEmploymentDetailsByUserEmail(email);
+		if (ed != null) {
+			for(EmploymentDetails edetails : ed){
+			edetails.delete();
+		}
+		}
+		
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
-			EmploymentDetails ed = EmploymentDetails
-					.getEmploymentDetailsByName(addNewEmphistory.get(i).id);
-			if (ed != null) {
-				ed.delete();
 
-			}
-
+			System.out.println("addNewEmphistory.size():"+addNewEmphistory.size());
 			EmploymentDetails eds = new EmploymentDetails();
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
@@ -3154,28 +3172,36 @@ public class Application extends Controller {
 				eduJson,
 				addEducationmapper.getTypeFactory().constructCollectionType(
 						List.class, AddEducationVM.class));
+		List<EducationDetails> eds = EducationDetails
+				.getEducationDetailsByUserEmail(email);
+		if (eds != null) {
+			for(EducationDetails edetails : eds){
+				edetails.delete();
+			}
+		}
+		
 		for (int i = 0; i < addEducation.size(); i++) {
-			EducationDetails eds = EducationDetails
+			/*EducationDetails eds = EducationDetails
 					.getEducationDetailsByName(addEducation.get(i).id);
 			if (eds != null) {
 				eds.delete();
 			}
-
-			EducationDetails ed = new EducationDetails();
-			ed.instituteName = (addEducation.get(i).instituteName);
-			ed.degree = (addEducation.get(i).degree);
-			ed.fromDate = (addEducation.get(i).fromDate);
+			 */
+			EducationDetails edudetails = new EducationDetails();
+			edudetails.instituteName = (addEducation.get(i).instituteName);
+			edudetails.degree = (addEducation.get(i).degree);
+			edudetails.fromDate = (addEducation.get(i).fromDate);
 //			ed.toDate = (addEducation.get(i).toDate);
 			if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
-				ed.toDate = "Present";
+				edudetails.toDate = "Present";
 			} else {
-				ed.toDate = addEducation.get(i).toDate;
+				edudetails.toDate = addEducation.get(i).toDate;
 			}
 			
-			ed.user_details = UserDetails.getUserByEmail(email);
-			ed.save();
+			edudetails.user_details = UserDetails.getUserByEmail(email);
+			edudetails.save();
 
-			u.educationDetails.add(ed);
+			u.educationDetails.add(edudetails);
 
 		}
 
@@ -3185,12 +3211,22 @@ public class Application extends Controller {
 				certMapper.getTypeFactory().constructCollectionType(List.class,
 						AddCertificateVM.class));
 
+		List	<CertificationDetails> c = CertificationDetails
+				.getCertificateDetailsByUserEmail(email);
+		if (c != null) {
+			System.out.println("in delete");
+			for(CertificationDetails cdetails :c){
+				cdetails.delete();
+			}
+			
+		}
+		
 		for (int i = 0; i < addCertificate.size(); i++) {
-			CertificationDetails c = CertificationDetails
+			/*CertificationDetails c = CertificationDetails
 					.getCetificateByName(addCertificate.get(i).id);
 			if (c != null) {
 				c.delete();
-			}
+			}*/
 
 			CertificationDetails ce = new CertificationDetails();
 			ce.certName = addCertificate.get(i).certName;
