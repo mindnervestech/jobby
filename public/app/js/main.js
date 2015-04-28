@@ -161,14 +161,14 @@ App.controller('AppController', function ($scope,$http, $rootScope, $routeParams
     //$sscocope.username  = "";
     
     //alert("in app "+$rootScope.username);
-    $http.get('/getUserName?d='+Math.random())
+    $http.get('/getUserName')
 	.success(function(data) {
 		$rootScope.username = data;
 		//alert("username"+data);
 	});
   
 // check for gthe admin
-	$http.get('checkForadmin?d='+Math.random())
+	$http.get('checkForadmin')
 	.success(function(data){
 		if(data == 'notAdmin') {
 			$rootScope.isUser = true;
