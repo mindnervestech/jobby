@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-<title>i2Simply Done</title>
+<title> AP Jobs Portal </title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -223,9 +223,9 @@
             <div data-control-type="pagination" data-control-name="paging" data-control-action="paging" class="jplist-pagination"></div>
     -->     
     
-    <img src="@routes.Assets.at("app/vendors/images/login/i2simply-done-banner-2.png")"  style="width: 100%;">
+    <img src="@routes.Assets.at("app/vendors/images/login/ap-jobs-portal-banner-.png")"  style="width: 100%;">
     <div class="col-md-12">
-    <span><small><strong style="font-size:13px;">Welcome to  Ardent Principles  i2Simply Done tool. </strong>  We have implemented time saving solutions that simplify the application process for open positions on the <strong> i2S contract vehicle </strong> . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position and access the full functionality of our tool please <strong>register </strong> above.</small></span>
+    <span><small><strong style="font-size:13px;"> Welcome to Ardent Principles' Job Portal.</strong> We have implemented time saving solutions that simplify the application process for multiple open requisitions. . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position and access the full functionality of our tool please <strong>register</strong> above. </small></span>
     </div>
      <div class="col-md-6 control-label" style="margin-top: 2%;">
 							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
@@ -338,8 +338,8 @@
 						 <a id="btn-register" ng-click ="openContactAdminForm();" data-toggle="tooltip" data-placement="bottom" title="Click to contact Admin "><strong style="cursor:pointer">Need more help? Contact and administrator</strong>
 							</a>
 					</span>
-					<hr style="padding: 0px;margin: 0px;">
-					 <span>
+					<hr style="padding: 0px;margin: 1px;color:red;">
+					 <!-- <span>
 			Experience Key<br />
 		    1] Management (16+ years of relative experience)<br />
 		    2] Subject Matter Expert(16+ years of relative experience<br />
@@ -347,7 +347,7 @@
 		    4] Senior (6+ years of relative experience)<br />
 		    5] Full Performance (3+ years of relative experience)<br />
 		    6] Developmental (0-3 years of relative experience) 
-					</span>
+					</span> -->
 					
 					<!--  <span>
 						 <a id="btn-register" href="/assets/app/templates/states/manage_apps.html">Contact Admin						</a>
@@ -385,9 +385,9 @@
 													class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Request Type"></i>&nbsp;{{job.requestType}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-screenshot" data-toggle="tooltip" data-placement="bottom" title="Performance level"></i>&nbsp;{{job.performanceLevel}}
-											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+											</small></strong></span><span class="desc"><!-- <strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="bottom" title="Clearance Required"></i>&nbsp;{{job.clearanceRequired}}
-											</small></strong></span>
+											</small></strong> --></span>
 									</p>
 									<p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
@@ -570,7 +570,7 @@
 								ng-model="editJob.positionType" 
 								style="font-size: 12px;" class="form-control"  readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div><!-- <div class="col-md-4">
 						<div class="">
 							<label class="">Clearance Required</label>
 						</div>
@@ -579,7 +579,7 @@
 								ng-model="editJob.clearanceRequired" 
 								style="font-size: 12px;" class="form-control"  readonly>
 						</div>
-					</div><div class="col-md-4">
+					</div> --><div class="col-md-4">
 						<div class="">
 							<label class="">Work Location</label>
 						</div>

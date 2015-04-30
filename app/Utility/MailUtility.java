@@ -325,7 +325,7 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 				 message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
 
 					//set msg text body
-					 message.setSubject("New Jobs Posted at i2Simply-Done");
+					 message.setSubject("New Jobs Posted at AP Jobs Portal");
 					 BodyPart messageBodyPart = new MimeBodyPart();
 					 // Now set the actual message
 					/* Date todaysDate = new Date();
@@ -333,7 +333,7 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 					 String dateToSend = formatter.format(todaysDate);*/
 		             //set the msg body text.
 					 String webaddress = "http://www.apjobsportal.com";
-					 messageBodyPart.setText("You have "+matchjobJobSize+" new  Positions matching your profile,Please login to"+" "+  webaddress +" "+"to view the profile \n\n\n\n\n Regards,\ni2Simply-Done team \nrobert.mccauley@ardentprinciples.com");
+					 messageBodyPart.setText("You have "+matchjobJobSize+" new  Positions matching your profile,Please login to"+" "+  webaddress +" "+"to view the profile \n\n\n\n\n Regards,\n AP Jobs Portal  team \nrobert.mccauley@ardentprinciples.com");
 			         // Create a multipart message
 			         Multipart multipart = new MimeMultipart();
 			         // Set text message part
