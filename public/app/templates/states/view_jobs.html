@@ -10,8 +10,7 @@
 
 				<div id="grid-layout-first-table" class="box jplist">
 					<div class="" id="wrapper12" style="font-size: 15px;">
-						<span><small><strong>Welcome to Ardent
-									Principles i2Simply Done tool.</strong> Below you will find a list of
+						<span><small><strong>Welcome to  AP Jobs Portal  tool.</strong> Below you will find a list of
 								all current i2S opportunities that match the positions you
 								selected in your profile. Select the <strong>All Jobs</strong>
 								check box to view ALL available <strong> i2S positions
@@ -214,10 +213,10 @@
 													class="glyphicon glyphicon-screenshot"
 													data-toggle="tooltip" data-placement="bottom"
 													title="Performance Level"></i>&nbsp;{{job.performanceLevel}}
-											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+											</small></strong></span><span class="desc"><strong><!-- <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-ok" data-toggle="tooltip"
 													data-placement="bottom" title="Clearance Type"></i>&nbsp;{{job.clearanceRequired}}
-											</small></strong></span>
+											</small> --></strong></span>
 									</p>
 									<p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
@@ -1680,7 +1679,7 @@
 								class="form-control" readonly>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<!-- <div class="col-md-4">
 						<div class="">
 							<label class="">Clearance Required</label>
 						</div>
@@ -1689,7 +1688,7 @@
 								name="clearanceRequired" ng-model="editJob.clearanceRequired"
 								style="font-size: 12px;" class="form-control" readonly>
 						</div>
-					</div>
+					</div> -->
 					<div class="col-md-4">
 						<div class="">
 							<label class="">Work Location</label>

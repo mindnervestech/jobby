@@ -9520,7 +9520,9 @@ App.controller('ViewAllArchivedJobsController', function ($scope, $rootScope, $r
 			$scope.getAllAppliedJobs();
 		});
 	}*/
-	
+	$scope.closeResume = function(){
+		$('#viewresume').modal('hide');
+	}
 });
 
 App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $routeParams, $http, $upload){
@@ -9701,6 +9703,11 @@ App.controller('ViewAppliedJobsController', function ($scope, $rootScope, $route
 			$scope.getAllAppliedJobs();
 			
 		});
+	}
+	
+	$scope.closeResume = function(){
+	//	alert("in close");
+		$('#viewresume').modal('hide');
 	}
 });
 
