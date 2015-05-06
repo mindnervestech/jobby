@@ -283,13 +283,13 @@
 		</div>
 		<div class="col-md-4">
 			<form action="/SignIn" method = "POST" class="form">
-				<span ><code>@flash.get("error")</code></span>
-				<span ><code>@flash.get("AccountError")</code></span>
-				<span ng-if="emailId == true"><code>Please provide Email Id </code></span>
-				<span   id="success_email"  ng-if="forget_pass == true" ><code>Password has been sent to your registered email</code> </span>
-				<span   id="success" style = "color:green">@flash.get("registration_success") </span>
-				<span ng-if="waitMsg == true">Please Wait..... </span>
-				<span  ><code>@flash.get("email_error")</code> </span>
+				<span style = "color:red">@flash.get("error")</span>
+				<span style = "color:red">@flash.get("AccountError")</span>
+				<span style = "color:red" ng-if="emailId == true">Please provide Email Id </span>
+				<span id="success_email"   ><code ng-if="forget_pass == true">Password has been sent to your registered email</code> </span>
+				<span id="success" style = "color:green">@flash.get("registration_success") </span>
+				<span ng-if="waitMsg == true"><code>Please Wait.....</code> </span>
+				<span style = "color:red" >@flash.get("email_error")</span>
 				<div class="header-content">
 					<h1>Log In</h1>
 				</div>
