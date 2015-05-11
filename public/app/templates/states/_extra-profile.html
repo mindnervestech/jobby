@@ -506,13 +506,7 @@ background-color: #999999;
 																		fill)</code></small></span>
 																&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"
 																data-toggle="tooltip" data-placement="bottom"
-																title="Experience Key
-		   1] Management (16+ years of relative experience)
-		    2] Subject Matter Expert(16+ years of relative experience
-		    3] Expert (11+ years of relative experience)
-		    4] Senior (6+ years of relative experience)
-		    5] Full Performance (3+ years of relative experience)
-		   6] Developmental (0-3 years of relative experience) "></i>
+																title="Click to view Skill level Instruction"ng-click="showKeyInstruction();" ></i>
 															</label><br /> <label class=""><small><strong>Click
 																		on the tool tip to see the experience level key</strong></small> </label>
 
@@ -711,12 +705,19 @@ background-color: #999999;
 																	</button>
 																</div>
 
-																<div class="col-md-8">
+																<div class="col-md-12">
+																<span class="col-md-8">
 																	<label class="">Experience Details</label>
 																	<textarea rows="3" name="expdesc"
 																		ng-model="emp.expdesc" class="form-control"
 																		placeholder="e.g. Experience Description"
-																		style="font-size: 12px;"></textarea>
+																		style="font-size: 12px;"></textarea></span><span style="float:left;margin-top:5%;" >
+																		<i class="glyphicon glyphicon-question-sign"
+																data-toggle="tooltip" data-placement="bottom"
+																title="Click to view the Experience Instructions " ng-click="onEmpExpInstructions();"></i></span>
+																		
+																			
+																		
 
 																</div>
 																<div class="col-md-12">
@@ -763,6 +764,9 @@ background-color: #999999;
 															<small><strong>Please input all of your
 																	Education History</strong></small>
 														</div>
+														<div>
+															<small><strong> If No degree please   input NA</strong></small>
+														</div>
 
 														<div class="col-md-12" ng-repeat="edu in addEducation">
 
@@ -782,9 +786,15 @@ background-color: #999999;
 																<label for="inputName" class="control-label">Degree
 																	<code>* </code></label>
 																<div class="input-icon right">
-																	<input id="degree" name="degree" type="text"
+																	<!-- <input id="degree" name="degree" type="text"
 																		ng-model="edu.degree" placeholder="Degree"
-																		class="form-control" style="font-size: 12px;" required>
+																		class="form-control" style="font-size: 12px;" required> -->
+																		
+																		<select ng-model="edu.degree"
+																		ng-change="onLabourCategoryChange()" class="form-control">
+																		<option ng-selected="degree.degreeName  == edu.degree"
+																		ng-repeat="degree in allDegree.allDegress">{{degree.degreeName}}</option>
+																		</select>
 																</div>
 															</div>
 
@@ -792,19 +802,19 @@ background-color: #999999;
 															<label class="col-md-3">Date</label>
 															<div class="col-md-4">
 																<div class="input-group input-daterange">
-																	<span class="input-group-addon">From <code>*</code></span>
+																	<span class="input-group-addon">End Date <code>*</code></span>
 																	<!-- <input
 																		type="text" name="startdate" ng-model="edu.fromDate"
 																		class="form-control" id="edudateform"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
-																		required /> -->
-																	<input class="form-control"
+																	<!-- 	required /> -->
+																	<!-- <input class="form-control"
 																		ng-click="initeduDateform();" id="datepicker"
 																		ng-model="edu.fromDate" 
 																		style="font-size: 12px;" data-provide="datepicker"
 																		data-date-autoclose="true"
 																		data-date-format="mm/dd/yyyy" required > <span
-																		class="input-group-addon" >to</span>
+																		class="input-group-addon" >to</span>  -->
 																	<!-- <input
 																		ng-model="edu.toDate" type="text" name="enddate"
 																		class="form-control" id="edudateto"
@@ -949,6 +959,110 @@ background-color: #999999;
 								</div>
 							</div>
 						</div>
+
+<!-- Modal -->
+<div class="modal fade" id="keySkillInstruction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Skill level Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+<strong>      Skill Levels:</strong> 
+<table border="1">
+<tbody><tr>
+<td><strong>Performance Level</strong> </td><td><strong>Required Years Specialized 
+Experience </strong></td>
+</tr>
+<tr>
+<td>Subject Matter Expert</td> <td>16+</td> 
+
+</tr>
+<tr>
+<td>Expert</td><td> 11+</td> 
+</tr>
+<tr>
+<td>Senior</td><td> 6+</td> 
+</tr>
+<tr>
+<td>Full Performance</td> <td>3+</td> 
+</tr>
+<tr>
+<td>Developmental</td><td> <3</td>
+</tr>
+</tbody> 
+</table>
+You may also add credit to your years of specific experience per the following guidelines:
+<ul>
+<li>
+ Technical Certification (industry recognized) = +3 months experience
+</li>
+<li>
+ Associate degree in CS, IS, Engineering, Business or related technical discipline = 
+
++18 months experience
+</li>
+<li>
+ Bachelor’s degree in CS, IS, Engineering, Business or related technical discipline = +3 
+
+years experience
+</li>
+<li>
+ Master’s degree in CS, IS, Engineering, Business or related technical discipline = +2 
+
+years experience plus credit for BS
+</li>
+<li>
+ Doctorate in CS, IS, Engineering, Business or related technical discipline = +2 years 
+
+experience plus credit for BS and MS
+</li>
+<li>
+ General years of experience may be added to specific years of experience at a ratio 
+
+of 3 years general to 1 year specific
+</li>
+<li> Specific experience is work experience related to the position
+</li>
+<li>
+ Internships do not count towards specific or general work experience
+   </li>
+   </ul>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+    
+    
+    <!-- Modal -->
+<div class="modal fade" id="empExpInstructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Experience Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+       	1]Companies/positions/date ranges correspond between Employment History and Experience<br />
+		2]Work experience should have no gaps longer than 1 month. If you were not employed for a period of time, 
+		please note that. Ensure that any periods of unemployment longer than 1mo are accounted for (e.g., “Student,” “Leave of Absence,” “Personal,” etc.)<br />
+		3]Please only bullet individual project roles.<br />
+		4]Date ranges (mm/yyyy) for project roles fall within tenure at company.<br />
+		5]No gaps exist between project roles.<br />​
+		6]Role descriptions are unclassified (no sensitive/classified program names/organizations are used).
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 
 						<script type="text/javascript">
 							$(document)

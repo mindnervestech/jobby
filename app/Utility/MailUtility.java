@@ -3,7 +3,9 @@ package Utility;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.BodyPart;
@@ -111,7 +113,8 @@ try {
 				/* Date todaysDate = new Date();
 				 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 				 String dateToSend = formatter.format(todaysDate);*/
-	             //set the msg body text.	 
+	             //set the msg body text.	
+				// System.out.println("in send mail admin");
 				 messageBodyPart.setText("User Email id: "+email+"\nPosition Applied For: "+positionName+"\nPosition Type: "+positiontype+"\nWork Location: "+workLocation);
 		         // Create a multipart message
 		         Multipart multipart = new MimeMultipart();
@@ -128,6 +131,59 @@ try {
 				return ;
 		}
 		}
+	
+	
+	public void sendMailToAdminAboutNewUserRegistration(String  email){
+		
+		final String username =  Play.application().configuration()
+				.getString("mail.id");;
+		final String password =  Play.application().configuration()
+				.getString("mail.password");;
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.office365.com");
+		props.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(props,
+		  new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		  });
+
+	try {
+	     	//send a  order order confirmation  mail to Admin,registered(currently order placed user)  user.
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			    //Add multiple recipients. including Admin
+			//	message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
+				message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(username));
+
+				//set msg text body
+				 message.setSubject( " New user Register ");
+				 BodyPart messageBodyPart = new MimeBodyPart();
+				 // Now set the actual message
+				/* Date todaysDate = new Date();
+				 Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+				 String dateToSend = formatter.format(todaysDate);*/
+	             //set the msg body text.	 
+				 messageBodyPart.setText("Email is: "+email);
+		         // Create a multipart message
+		         Multipart multipart = new MimeMultipart();
+		         // Set text message part
+		         multipart.addBodyPart(messageBodyPart);
+		         message.setContent(multipart);
+			     Transport.send(message);
+			
+			
+			} catch (Exception e) {
+				//e.printStackTrace();
+			  //throw new RuntimeException(e);
+				return ;
+		}
+		}
+	
 	
 public void sendRegistrationMail(String  email,String pass){
 		
@@ -346,13 +402,66 @@ public void sendmailAlertToUserAboutJobMatched(String  email,int matchjobJobSize
 	} catch (MessagingException e) {
 		return ;
 	}
-	
-	
 
 }
 
+public void  inviteUsers(String emails,String subject,String content){
+	
+	
+	final String username = Play.application().configuration()
+			.getString("mail.id");
+	final String password = Play.application().configuration()
+			.getString("mail.password");
 
+	Properties props = new Properties();
+	props.put("mail.smtp.auth", "true");
+	props.put("mail.smtp.starttls.enable", "true");
+	props.put("mail.smtp.host", "smtp.office365.com");
+	props.put("mail.smtp.port", "587");
 
+	Session session = Session.getInstance(props,
+			new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username,password);
+				}
+			});
+	
+
+	try {
+		
+		 
+
+     		     Message message = new MimeMessage(session);
+				 message.setFrom(new InternetAddress(username));
+					
+				 
+				 List<String> userEmailList = Arrays.asList(emails.split(","));
+				 
+				 InternetAddress[] recipientAddress = new InternetAddress[userEmailList.size()];
+					int counter = 0;
+					for (String recipient : userEmailList) {
+					    recipientAddress[counter] = new InternetAddress(recipient.trim());
+					    counter++;
+					}
+					message.setRecipients(Message.RecipientType.TO, recipientAddress);
+					//set msg text body
+					 message.setSubject( subject);
+					 BodyPart messageBodyPart = new MimeBodyPart();
+				 
+					 messageBodyPart.setText(content);
+			         // Create a multipart message
+			         Multipart multipart = new MimeMultipart();
+			         // Set text message part
+			         multipart.addBodyPart(messageBodyPart);
+			         message.setContent(multipart);
+				     Transport.send(message);
+		     
+		     
+		
+	} catch (MessagingException e) {
+		e.printStackTrace();
+	}
+}
 
 
 }

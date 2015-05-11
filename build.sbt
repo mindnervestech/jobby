@@ -13,6 +13,7 @@ libraryDependencies ++= Seq(
     "javax.mail" % "mail" % "1.4.1",
     "com.itextpdf" % "itextpdf" % "5.5.4",
     "com.itextpdf.tool" % "xmlworker" % "1.0.0",
+    "dom4j" % "dom4j" % "1.6.1",
   javaJdbc,
   javaEbean,
   cache

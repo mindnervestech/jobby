@@ -41,6 +41,7 @@ public class AppliedJobs extends Model {
 	public String skills;
     public String archived ="N"; 
     public String scheduledCloseDate;
+    public String userskillsSpecification;
      
 	public static Finder<Long, AppliedJobs> find = new Finder<Long, AppliedJobs>(
 			Long.class, AppliedJobs.class);

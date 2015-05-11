@@ -34,7 +34,7 @@
 								class="glyphicon glyphicon-chevron-up" style="color: #2120F5;"></span></a>
 							&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign"
 							data-toggle="tooltip" data-placement="bottom"
-							title="Sort Jobs in Ascending or Descending Order"></i></span> <span
+							title="Sort Jobs in Ascending or Descending Order" ng-click="opensortinghelpInstruction();"></i></span> <span
 							class="sort-by-price active" ng-if="sortType == true"
 							ng-model="sortType"><a class="aTagclass"
 							ng-click="onSortTypeClick()"><span class="spanClass"></span><span
@@ -411,17 +411,17 @@
 											</button>
 										</div>
 										<div ng-if="jStatus == 'Applied'">
-											<div class="form-group">
+											<div class="form-group" style="height:300px;">
 												<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span>
 												
 												 -->
 												<div class="col-md-10">
-													<small style="color: #21205F;"><strong>Please
+													<small style="color: #21205F;"><strong><!-- Please
 															select a maximum of 12 of your most relevant key skill
 															areas specific to this position. Use the add function for
-															key skills specific to this position that are not listed.</strong></small>
+															key skills specific to this position that are not listed. -->Skill Level Justification</strong></small>
 												</div>
-												<div class="col-md-5" ng-repeat="skill in allSkills">
+												<!-- <div class="col-md-5" ng-repeat="skill in allSkills">
 													<label class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
 														style="padding: 0px;"> <input type="checkbox"
 														name="allSkill" ng-click="skillClicked($event,skill)"
@@ -429,11 +429,73 @@
 														ng-disabled="checked == limit && !skill.isSelected">
 														{{skill.skillName}}
 													</label>
+												</div> -->
+												<div class="col-md-5">
+														<textarea cols="60" ng-model="$parent.userskillsSpecification" rows="8"></textarea>
+												<span style="font-size:11px;"><br />
+													<strong>Example:</strong>
+<br />
+
+Mr. Smith is an expert in the field of software development, specializing in web 
+
+development. For over 10 years, he has worked in an Agile environment. As demonstrated 
+
+through his work on his current project with ABC Solutions, he has extensive experience 
+
+with JavaScript, HTML, and CSS and is highly comfortable developing on Linux/UNIX 
+
+platforms.  Overall, his experience includes 11.5 years of industry-specific experience, 3 
+
+years of general experience, and a Bachelor’s Degree in Computer Science, for the 
+
+equivalent of 15.5 years overall.
+													</span>
+												
 												</div>
+												<div class="col-md-5" style="font-size:11px;">
+													<span><strong>Skill Justification </strong><br /> 
+
+Candidates’ skill levels require specific justification, to include a quantification of their 
+
+experience, as well as a detailed description of their relevant skills. This section should be 
+
+written as prose and must demonstrate the candidate’s satisfaction of the position 
+
+requirements.
+
+In addition to justifying the candidate’s experience level, this section should be used as an 
+
+opportunity to market the candidate by highlighting his/her relevant skills. Each Skill Level 
+
+Justification section should contain the following components: 
+<br />
+ Introductory sentence stating candidate’s skill level
+<br />
+ Brief description (1-3 sentences) describing candidate’s area(s) of expertise
+<br />
+ Sentence entailing any relevant education/certifications the candidate has
+<br />
+ Concluding sentence with “word equation” 
+<br />
+ Should speak to position requirements
+<br />
+ Total years relevant experience
+<br />
+ Total years general experience 
+<br />
+ Education/certifications
+<br />
+ Total overall experience
+<br />
+
+</span>
+													</div>
+											
+												
 											</div>
 
 											<br /> <br />
-											<div class="form-group">
+											<!-- <div class="form-group">
 												<div class="col-md-9">
 													<div class="col-md-5">
 														<span ng-show="error">Please enter Skill Name</span> <input
@@ -448,7 +510,7 @@
 															class="btn btn-success-custom ">Add</button>
 													</div>
 												</div>
-											</div>
+											</div> -->
 
 
 										</div>
@@ -551,10 +613,11 @@
 
 
 										<div ng-if="jStatus == 'Applied'">
+<span  style="float:right; font-size:11px;"class="col-md-4">For each Mandatory  skill, please respond to every aspect of the requirement, and provide details citing where the work was performed, for whom, and what the positive impact was to the client</span>
 
 											<div class="form-group" ng-repeat="mskill in mdSkill">
 												<div class="form-group">
-													<label class="col-sm-10 control-label"
+													<label class="col-sm-8 control-label"
 														ng-model="manadatorySkills.skillName"> <small
 														class="desc">{{mskill.mskill}} </small></label>
 												</div>
@@ -738,10 +801,12 @@
 												</div> -->
 
 											<div ng-if="jStatus == 'Applied'">
+											<span  style="float:right;font-size:11px;"class="col-md-4">For each Desired skill, please respond to every aspect of the requirement, and provide details citing where the work was performed, for whom, and what the positive impact was to the client</span>
+											
 												<div class="form-group" ng-repeat="dskill in dSkills">
 													<div class="form-group">
 														<div class="form-group" ng-model="desiredSkills.dskill">
-															<label class="col-sm-12 control-label" value="">
+															<label class="col-sm-8 control-label" value="">
 																<small class="desc">{{dskill.dskill}} </small>
 															</label>
 														</div>
@@ -921,16 +986,28 @@
 					<table class="table table-striped">
 				    <tbody>
 				      <tr>
-				        <td><strong>Candidate's Full Legal Name: </strong>{{userDetails.firstname}} {{userDetails.lastname}}</td>
+				        <td><strong>Candidate Name: </strong>{{userDetails.firstname}} {{userDetails.lastname}}</td>
+				       <!-- <td><strong>Job ID: </strong> {{requestNumber}}</td> -->
+				       <td><strong>Company name </strong> Ardent Principles</td>
 				      </tr>
 				      <tr>
-				        <td><strong>Job ID: </strong> {{requestNumber}}</td>
-				        
+				        <td><strong>CSR LEVEL:</strong> {{performanceLevel}}</td>
+				        <td ng-repeat = " c in userClearance" > <strong>Clearance Level:</strong>{{c.clearance}}</td>
 				      </tr>
+				      
+				       <tr>
+				        <td><strong>Labour Category</strong> {{performanceLevel}}</td>
+				        <td  > <strong>Skill Level:</strong>{{c.clearance}}</td>
+				      </tr>
+				       <tr>
+				        <td colspan="2"><strong>Skill Level Justification:</strong>{{userskillsSpecification}}</td>
+				       </tr>
+				      
+				      
 				    </tbody>
 				    
 				  </table>
-					<table class="table table-striped">
+					<!-- <table class="table table-striped">
 				    <tbody>
 				      <tr>
 				        <td ng-repeat = " e in userExperiance"><strong>RESOURCE SUBMISSION LEVEL:</strong> {{e.experianceLevel}}</td>
@@ -939,9 +1016,9 @@
 				        <td><strong>CSR LEVEL:</strong> {{performanceLevel}}</td>
 				      </tr>
 				    </tbody>
-				  </table>
+				  </table> -->
 				  
-				  <table class="table table-striped">
+				  <!-- <table class="table table-striped">
 				    <thead>
 				      <tr>
 				        <th>SECURITY CLEARANCE</th>
@@ -952,7 +1029,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-					
+					 -->
 					
 					<!-- <table class="table table-striped">
 				    <thead>
@@ -968,14 +1045,14 @@
 				  </table> 		
 				  
 				   -->
-				   
+				  <!--  
 				   <div class="col-md-10"> <strong>KEY SKILL AREA</strong> </div> 
 				   <div  class="col-md-4" style="border:1px solid black" ng-repeat = "s  in userAppSkills"> 
 				 			 <div  class="col-md-12">{{s.skillName}}</div>
-				   </div>
+				   </div> -->
 				   
 				   
-				  <div class="col-md-10" style="  margin-top: 2%;"><strong>MANDATORY SKILL</strong></div>										
+				  <div class="form-control" style="  margin-top: 2%;text-align: center"><strong>MANDATORY SKILL</strong></div>										
 					<table class="table table-striped">
 				    
 				    <tbody>
@@ -985,7 +1062,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-						<div class="form-control"><strong>DESIRED SKILLS</strong></div>											
+						<div class="form-control" style="text-align: center;"><strong>DESIRED SKILLS</strong></div>											
 				   <table class="table table-striped">
 				    
 				    <tbody>
@@ -996,7 +1073,7 @@
 				    </tbody>
 				  </table>
 				  
-				 <div class="form-control"><strong>EMPLOYMENT HISTORY</strong></div>		
+				 <!-- <div class="form-control" style="text-align: center;"><strong>EMPLOYMENT HISTORY</strong></div>		
 				 <table class="table table-striped">
 				    <thead>
 				      <tr>
@@ -1016,25 +1093,29 @@
 				        <td class="col-md-4"  >{{e.position}}</td>
 				      </tr>
 				    </tbody>
-				  </table>
+				  </table> -->
 					 
-				 <div class="form-control"><strong>EDUCATION</strong> </div>		
+				 <div class="form-control" style="text-align: center;"><strong>EDUCATION</strong> </div>		
 				  <table class="table table-striped">
 				    <thead>
 				      <tr>
 				        <th>Degree</th>
+				         <th>School name</th>
+				         <th>Degree/Major</th>
 				        <th>Completion Date</th>
 				      </tr>
 				    </thead>
 				    <tbody>
 				      <tr ng-repeat = "e  in educationDetails" >
 				        <td class="col-md-4"  >{{e.degree}}</td>
+				        <td class="col-md-4"  >{{e.instituteName}}</td>
+				        <td class="col-md-4"  >{{e.degree}}</td>
 				        <td class="col-md-4"  >{{e.toDate}}</td>
 				      </tr>
 				    </tbody>
 				  </table>
 				
-				<div class="form-control"> <strong>CERTIFICATION HISTORY</strong></div>
+				<div class="form-control" style="text-align: center"> <strong>CERTIFICATION HISTORY</strong></div>
 					<table class="table table-striped">
 				     <thead>
 				      <tr>
@@ -1056,11 +1137,26 @@
 				    </tbody>
 				  </table>
 				  
-				  <div class="form-control"><strong>EXPERIENCE</strong></div>
+				  <div class="form-control" style="text-align: center"><strong>WORK EXPERIENCE</strong></div>
 				 
 				  <div  ng-repeat = "e  in employmentDetails">
-				 	 	<div class="col-md-12"  style="background-color:#f9f9f9" ><strong>{{e.companyName}} , {{e.position}}  ({{e.startdate}} - {{e.enddate}})</strong></div>
-				  		<div class="col-md-12" >{{e.expdesc}}</div>
+				 	 	<!-- <div class="col-md-12"  style="background-color:#f9f9f9" ><strong>{{e.companyName}} , {{e.position}}  ({{e.startdate}} - {{e.enddate}})</strong></div>
+				  		<div class="col-md-12" >{{e.expdesc}}</div> -->
+				  		
+				  		<table class="table table-striped">
+				     
+				    <tbody>
+				      <tr >
+				        <td>Employers Name: {{e.companyName}}</td>
+				        <td>Start Date: {{e.startdate}}</td>
+				        <td>End Date: {{e.enddate}}</td>
+				        <td>Position Held: {{e.position}}</td>
+				      </tr>
+				      <tr >
+				      <td colspan="4"> {{e.expdesc}}</td>
+				      </tr>
+				    </tbody>
+				    </table>
 				  </div>
 				</div>
 
@@ -1221,6 +1317,25 @@
 		</div>
 	</div>
 </div>
+
+
+<div class="modal fade" id="sortinghelpInstruction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:60%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <p >Sort  jobs in ascending and descending order.</p>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+       
+      </div> 
+    </div>
+  </div>
+</div>
+
 
 <style type="text/css">
 .popover {

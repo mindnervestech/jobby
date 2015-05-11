@@ -3,10 +3,14 @@ package controllers;
 import java.io.File;
 
 
+
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +36,7 @@ import models.Admin;
 import models.AppliedJobs;
 import models.CertificationDetails;
 import models.DefaultValues;
+import models.Degree;
 import models.EducationDetails;
 import models.EmploymentDetails;
 import models.JobSearchStatus;
@@ -54,6 +59,18 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.Borders;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTableStyle;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCellStyleXfs;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import play.Play;
 import play.data.DynamicForm;
@@ -88,10 +105,12 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.TabStop.Alignment;
+import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-
+//import com.itextpdf.text.List;;
 
 
 public class Application extends Controller {
@@ -155,6 +174,7 @@ public class Application extends Controller {
 			MailUtility mail = new MailUtility();
 			
 			mail.sendRegistrationMail(email,pass);
+			mail.sendMailToAdminAboutNewUserRegistration(email); 
 			
 			flash("registration_success", " Account is created ! Please  log in");
 			return redirect("/registrationredirect");
@@ -343,8 +363,8 @@ public class Application extends Controller {
 
 						} else {
 							sd.requestNumber = c.getStringCellValue();
-							System.out.println("sd.requestNumber"
-									+ c.getStringCellValue());
+							/*System.out.println("sd.requestNumber"
+									+ c.getStringCellValue());*/
 						}
 
 						break;
@@ -917,12 +937,12 @@ public class Application extends Controller {
 							if (storeExcelFile != null) {
 								storeExcelFile.dateofStatus = c
 										.getStringCellValue();
-								System.out.println("c.getStringCellValue()"
-										+ c.getStringCellValue());
+								/*System.out.println("c.getStringCellValue()"
+										+ c.getStringCellValue());*/
 							} else {
 								sd.dateofStatus = c.getStringCellValue();
-								System.out.println("c.getStringCellValue()"
-										+ c.getStringCellValue());
+								/*System.out.println("c.getStringCellValue()"
+										+ c.getStringCellValue());*/
 							}
 
 							break;
@@ -1066,9 +1086,9 @@ public class Application extends Controller {
 						storeExcelFile.update(storeExcelFile);
 						if (reqNo != null) {
 							updatedRows = updatedRows + 1;
-							System.out.println("updatedRows" + updatedRows
+							/*System.out.println("updatedRows" + updatedRows
 									+ "reqNo" + reqNo);
-						}
+*/						}
 
 						// System.out.println("in update");
 					} else {
@@ -1089,7 +1109,7 @@ public class Application extends Controller {
 			flash().put("error", "Upload Failed");
 			String newrowscount = Integer.toString(newRows);
 			String updatedRowsCount = Integer.toString(updatedRows);
-			System.out.println("updatedRowsCount" + updatedRowsCount);
+			//System.out.println("updatedRowsCount" + updatedRowsCount);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("newrowscount", newrowscount);
 			map.put("updatedRowsCount", updatedRowsCount);
@@ -1099,7 +1119,7 @@ public class Application extends Controller {
 
 		String newrowscount = Integer.toString(newRows);
 		String updatedRowsCount = Integer.toString(updatedRows);
-		System.out.println("updatedRowsCount" + updatedRowsCount);
+		//System.out.println("updatedRowsCount" + updatedRowsCount);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("newrowscount", newrowscount);
 		map.put("updatedRowsCount", updatedRowsCount);
@@ -1286,6 +1306,8 @@ public class Application extends Controller {
 		public String dateofStatus;
 		public String jobStatus;
 		public String maxOffer;
+		public long dateDiff;
+		
 
 	}
 
@@ -2673,6 +2695,24 @@ public class Application extends Controller {
 			jobVM.jobStatus = s.jobStatus;
 			jobVM.maxOffer  =s.maxOffer;
 			
+			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+			Date dateEnd = null;
+			try {
+				dateEnd = format.parse(s.scheduledCloseDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Date  dateStart  = new Date();
+			
+			long diff = dateEnd.getTime() -  dateStart.getTime() ;
+			
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+ 
+			System.out.print(diffDays + " days, "+s.labourCategory);
+			jobVM.dateDiff =  diffDays;
+			
 			// check if the desired skill does not contain null value;
 			if (s.desiredSkill != null) {
 				dSkills = s.desiredSkill;
@@ -2949,7 +2989,7 @@ public class Application extends Controller {
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
 			
 			
-			System.out.println("addNewEmphistory.size():"+addNewEmphistory.size());
+			//System.out.println("addNewEmphistory.size():"+addNewEmphistory.size());
 		 
 			EmploymentDetails eds = new EmploymentDetails();
 			eds.companyName = addNewEmphistory.get(i).companyName;
@@ -2982,7 +3022,6 @@ public class Application extends Controller {
 				addEducationmapper.getTypeFactory().constructCollectionType(
 						List.class, AddEducationVM.class));
 		for (int i = 0; i < addEducation.size(); i++) {
-			
 
 			EducationDetails eduDetails = new EducationDetails();
 			eduDetails.instituteName = (addEducation.get(i).instituteName);
@@ -3005,7 +3044,7 @@ public class Application extends Controller {
 		List	<CertificationDetails> c = CertificationDetails
 				.getCertificateDetailsByUserEmail(session().get("email"));
 		if (c != null) {
-			System.out.println("in delete");
+			//System.out.println("in delete");
 			for(CertificationDetails cdetails :c){
 				cdetails.delete();
 			}
@@ -3150,7 +3189,7 @@ public class Application extends Controller {
 		
 		for (int i = 0; i < addNewEmphistory.size(); i++) {
 
-			System.out.println("addNewEmphistory.size():"+addNewEmphistory.size());
+			//System.out.println("addNewEmphistory.size():"+addNewEmphistory.size());
 			EmploymentDetails eds = new EmploymentDetails();
 			eds.companyName = addNewEmphistory.get(i).companyName;
 			eds.position = addNewEmphistory.get(i).position;
@@ -3216,7 +3255,7 @@ public class Application extends Controller {
 		List	<CertificationDetails> c = CertificationDetails
 				.getCertificateDetailsByUserEmail(email);
 		if (c != null) {
-			System.out.println("in delete");
+			//System.out.println("in delete");
 			for(CertificationDetails cdetails :c){
 				cdetails.delete();
 			}
@@ -3564,6 +3603,7 @@ public class Application extends Controller {
 		public String username;
 		public String jobStatus;
 		public String scheduledCloseDate;
+		public String userskillsSpecification;
 
 		public long id;
 
@@ -3586,7 +3626,7 @@ public class Application extends Controller {
 		public String jobStatus;
 		public String scheduledCloseDate;
 		public long id;
-
+		public String userskillsSpecification;
 	}
 
 	@JsonIgnoreProperties
@@ -3674,6 +3714,7 @@ public class Application extends Controller {
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
 			apj.scheduledCloseDate = saveAppliedJobsVM.scheduledCloseDate;
+			apj.userskillsSpecification = json.get("userskillsSpecification").asText(); 
 			apj.save();
 
 			//String email = session().get("email");*/
@@ -3698,7 +3739,7 @@ public class Application extends Controller {
 	@JsonIgnoreProperties
 	public static Result saveUserJobToDraft() {
 		JsonNode json = request().body().asJson();
-		//System.out.println("json" + json);
+	   
 		AppliedJobs apj = new AppliedJobs();
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -3723,6 +3764,8 @@ public class Application extends Controller {
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
 			apj.scheduledCloseDate = saveAppliedJobsVM.scheduledCloseDate;
+			apj.userskillsSpecification = json.get("userskillsSpecification").asText();
+			
 			apj.save();
 
 		} catch (JsonParseException e1) {
@@ -3753,6 +3796,7 @@ public class Application extends Controller {
 
 			apj.manadatorySkill = json.get("manadatorySkills").toString();
 			apj.desiredSkil = json.get("desiredSkills").toString();
+		
 			apj.jobno = saveAppliedJobsVM.requestNumber;
 			String username = session().get("email");
 			apj.username = username;
@@ -3797,6 +3841,8 @@ public class Application extends Controller {
 			apj.workDesc = saveAppliedJobsVM.workDescription;
 			apj.positiontype = saveAppliedJobsVM.positionType;
 			apj.scheduledCloseDate = saveAppliedJobsVM.scheduledCloseDate;
+			apj.userskillsSpecification = json.get("userskillsSpecification").asText();
+			
 			apj.save();
 			
 			String email = session().get("email");
@@ -3865,6 +3911,7 @@ public class Application extends Controller {
 		public String clearancereq;
 		public String desiredSalary;
 		public String maxOffer;
+		public String userskillsSpecification;
 
 		public List<DesiredSkills> dsSkills;
 		public List<MandatorySkills> msSkils;
@@ -3900,6 +3947,7 @@ public class Application extends Controller {
 		public List<MandatorySkills> manadatorySkills;
 		public List<DesiredSkills> desiredSkill;
 		public String scheduledCloseDate;
+		public String userskillsSpecification;
 
 	}
 
@@ -3925,6 +3973,7 @@ public class Application extends Controller {
 			apvm.desiredSalary = ud.desiredsalary;
 			StoreExcelFile sef = StoreExcelFile.getJobByRequestNumber(apj.jobno);
 			apvm.maxOffer = sef.maxOffer;
+			apvm.userskillsSpecification = apj.userskillsSpecification;
 			
 			appliedJobVM.add(apvm);
 
@@ -3954,11 +4003,12 @@ public class Application extends Controller {
 			apvm.requestNumber = apj.jobno;
 			apvm.location = apj.location;
 			apvm.positionName = apj.positionname;
+			
 			UserDetails ud= UserDetails.getUserByEmail(apj.username);
 			apvm.desiredSalary = ud.desiredsalary;
 			StoreExcelFile sef = StoreExcelFile.getJobByRequestNumber(apj.jobno);
-			apvm.maxOffer = sef.maxOffer;
-			
+			apvm.maxOffer = sef.maxOffer; 
+			apvm.userskillsSpecification = apj.userskillsSpecification;
 			appliedJobVM.add(apvm);
 
 		}
@@ -3988,18 +4038,16 @@ public class Application extends Controller {
 		String csrNumber = ap.performancelevel;
 		Document document = new Document();
 		try {
-			
 			String email = ap.username;
 			UserDetails ud = UserDetails.getUserByEmail(email);
-			//System.out.println("ud" + ud);
-			// String candidiatename = ud.fullname;
+			
 			if (!("NA".equalsIgnoreCase(ud.middlename))) {
 				candidiatename = ud.firstname + " " + ud.middlename + " "
 						+ ud.lastname;
 				ResumeName =  
 						   ud.lastname+"_"+ud.firstname;
 			} else {
-				candidiatename = ud.firstname + " " + ud.lastname;
+				candidiatename = ud.firstname + " NMI " + ud.lastname;
 				ResumeName = "";
 				ResumeName  = ud.lastname + "_" + ud.firstname;
 			}
@@ -4011,55 +4059,46 @@ public class Application extends Controller {
 			List<UserSkill> skills = ud.userSkill;
 			List<UserExperiance> userExperiance = ud.userExperiance;
 			// used for the table name (heading)
-			Font font = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD,
+			Font font = new Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD,
 					BaseColor.BLACK);
 			// used for the table column data
 			Font font1 = new Font(FontFamily.TIMES_ROMAN, 10, Font.NORMAL,
+					BaseColor.BLACK);
+			Font font4 = new Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD,
 					BaseColor.BLACK);
 			// used for the column name
 			Font font2 = new Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD,
 					BaseColor.BLACK);
 
 			// Mandatory skills
-			Chunk chunkSkills = new Chunk("Mandatory Skill".toUpperCase());
+			/*Chunk chunkSkills = new Chunk("Mandatory Skill".toUpperCase());
 			chunkSkills.setBackground(new BaseColor(230, 230, 250));
 			chunkSkills.setFont(font);
 
+			
 			Chunk chunkExpDetails = new Chunk("experience".toUpperCase());
 			chunkExpDetails.setBackground(new BaseColor(230, 230, 250));
 			chunkExpDetails.setFont(font);
-
-			Chunk userName = new Chunk(candidiatename);
+*/
+			/*Chunk userName = new Chunk(candidiatename);
 			userName.setBackground(new BaseColor(230, 230, 250));
 			userName.setFont(font);
 
 			Chunk userNameDetails = new Chunk(email);
 			userNameDetails.setBackground(new BaseColor(230, 230, 250));
 			userNameDetails.setFont(font);
-
-			Chunk chunk = new Chunk("Key Skill Area".toUpperCase());
+*/
+			/*Chunk chunk = new Chunk("Key Skill Area".toUpperCase());
 			chunk.setBackground(new BaseColor(230, 230, 250));
 			chunk.setFont(font);
 
-			Chunk eduChunk = new Chunk("EDUCATION");
-			eduChunk.setBackground(new BaseColor(230, 230, 250));
-			eduChunk.setFont(font);
+			*/
 
-			Chunk chunkDesired = new Chunk("DESIRED SKILLS");
-			chunkDesired.setBackground(new BaseColor(230, 230, 250));
-			chunkDesired.setFont(font);
+			
 
-			Chunk chunkClearance = new Chunk("Security Clearance".toUpperCase());
+			/*Chunk chunkClearance = new Chunk("Security Clearance".toUpperCase());
 			chunkClearance.setBackground(new BaseColor(230, 230, 250));
 			chunkClearance.setFont(font);
-
-			Chunk empChunk = new Chunk("EMPLOYMENT HISTORY");
-			empChunk.setBackground(new BaseColor(230, 230, 250));
-			empChunk.setFont(font);
-
-			Chunk certChunk = new Chunk("CERTIFICATION HISTORY");
-			certChunk.setBackground(new BaseColor(230, 230, 250));
-			certChunk.setFont(font);
 
 			Chunk chunkUserExp = new Chunk(
 					"Resource Submission Level".toUpperCase());
@@ -4070,34 +4109,18 @@ public class Application extends Controller {
 					"CSR Level".toUpperCase() +":  "+csrNumber);
 			chunkUserExp.setBackground(new BaseColor(230, 230, 250));
 			chunkUserExp.setFont(font1);
-			
-			Chunk chunkResourceSubmissionLevel = null;
-
-			
-			// Experiance table
+			*/
+			/*// Experiance table
 			PdfPTable expLevelTable = new PdfPTable(1);
 			// table2.set
 			expLevelTable.setWidthPercentage(100);
-			/*
+			
 			 * float[] widthexp = { 2f}; expLevelTable.setWidths(widthexp);
-			 */
+			 
 
 			PdfPCell cellexptble = new PdfPCell(new Paragraph(
 					"Resource Submission Level".toUpperCase()));
-			/*
-			 * cellexptble.setColspan(3);
-			 * cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-			 * cellexptble.setPadding(10.0f); cellexptble.setBackgroundColor(new
-			 * BaseColor(140, 221, 8)); expLevelTable.addCell(cellexptble);
-			 */
-
-			/*
-			 * cellexptble = new PdfPCell(new
-			 * Phrase("RESOURCE SUBMISSION LEVEL " ,font1));
-			 * cellexptble.setBackgroundColor(new BaseColor(230, 230, 250));
-			 * cellexptble.setHorizontalAlignment(Element.ALIGN_LEFT);
-			 * expLevelTable.addCell(cellexptble);
-			 */
+			
 
 			for (UserExperiance ue : userExperiance) {
 				// EmpHistorytable.addCell(cellemp);
@@ -4118,8 +4141,61 @@ public class Application extends Controller {
 						expLevelTable.addCell(cellexptble);
 				
 				
+			}*/
+			String userSkillLevel = "";
+			for (UserExperiance ue : userExperiance) {
+				
+				userSkillLevel = ue.experianceLevel;
 			}
+			
+			// skill table
+						PdfPTable userDetailsTable = new PdfPTable(2);
+						// table2.set
+						userDetailsTable.setWidthPercentage(100);
+						float[] userDetailswidth2 = { 2f, 2f};
+						userDetailsTable.setWidths(userDetailswidth2);
 
+						PdfPCell userDetailsCellcandidateName = new PdfPCell(new Paragraph(
+								"Candidate Name: "+candidiatename,font1));
+						userDetailsCellcandidateName.setBackgroundColor(new BaseColor(230, 230, 250));
+						userDetailsTable.addCell(userDetailsCellcandidateName);
+						
+						PdfPCell userDetailsCellcmpname = new PdfPCell(new Paragraph(
+								"Company Name: " +"Ardent Principle" ,font1));
+						userDetailsCellcmpname.setBackgroundColor(new BaseColor(230, 230, 250));
+						userDetailsTable.addCell(userDetailsCellcmpname);
+						
+			
+						PdfPCell userDetailsCSRNumber =  new PdfPCell(new Paragraph(
+								"CSR Number: " +ap.jobno,font1));
+						userDetailsCSRNumber.setBackgroundColor(new BaseColor(230, 230, 250));
+						userDetailsTable.addCell(userDetailsCSRNumber);
+						
+						
+						PdfPCell userDetailsClearanceLevel =  new PdfPCell(new Paragraph(
+								"ClearanceLevel: " +"TS/SCI, favorable polygraph",font1));
+						userDetailsClearanceLevel.setBackgroundColor(new BaseColor(230, 230, 250));
+						userDetailsTable.addCell(userDetailsClearanceLevel);
+						
+						
+						PdfPCell userDetailsLaborCategory =  new PdfPCell(new Paragraph(
+								"LaborCategory: " +ap.positionname,font1));
+						userDetailsLaborCategory.setBackgroundColor(new BaseColor(230, 230, 250));
+						
+						userDetailsTable.addCell(userDetailsLaborCategory);
+						
+						PdfPCell userDetailsSkillLevel =  new PdfPCell(new Paragraph(
+								"Skill Level: " +userSkillLevel,font1));
+						userDetailsSkillLevel.setBackgroundColor(new BaseColor(230, 230, 250));
+						userDetailsTable.addCell(userDetailsSkillLevel);
+						
+						PdfPCell userDetailsSkillLevelJustification =  new PdfPCell(new Paragraph(
+								"Skill Level Justification: " +ap.userskillsSpecification,font1));
+						userDetailsSkillLevelJustification.setBackgroundColor(new BaseColor(230, 230, 250));
+						userDetailsSkillLevelJustification.setColspan(2);
+						userDetailsTable.addCell(userDetailsSkillLevelJustification);
+						
+			
 			// skill table
 			PdfPTable table2 = new PdfPTable(3);
 			// table2.set
@@ -4171,25 +4247,12 @@ public class Application extends Controller {
 			cell5.setHorizontalAlignment(Element.ALIGN_LEFT);
 			table4.addCell(cell5);
 
-			/*
-			 * // add email of canidiate at bottom of student full name cell4 =
-			 * new PdfPCell(new Phrase("Email: " + email, font1));
-			 * cell4.setBackgroundColor(new BaseColor(230, 230, 250));
-			 * cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
-			 * table4.addCell(cell4);
-			 */
-
-			/*cell4 = new PdfPCell(new Phrase("JOB ID: " + JobId, font1));
-			cell4.setBackgroundColor(new BaseColor(230, 230, 250));
-			cell4.setHorizontalAlignment(Element.ALIGN_LEFT);
-			table4.addCell(cell4);*/
+			
 
 			List<UserClearance> clearance = ud.userClearance;
 			PdfPTable table3 = new PdfPTable(1);
 			table3.setWidthPercentage(100);
-			/*
-			 * float[] width3 = { 10f }; table2.setWidths(width3);
-			 */
+			
 
 			PdfPCell cell3 = new PdfPCell(new Paragraph(
 					"Key Skill Area".toUpperCase()));
@@ -4217,15 +4280,28 @@ public class Application extends Controller {
 			cell.setPadding(10.0f);
 			cell.setBackgroundColor(new BaseColor(140, 221, 8));
 
+			
+			cell = new PdfPCell(new Phrase(" Desired Skills", font4));
+			cell.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table.addCell(cell);
+
+			
+			cell = new PdfPCell(new Phrase(" Candidate’s Skills/Experience", font4));
+			cell.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table.addCell(cell);
+
+			
 			for (DesiredSkills ds : desiredSkills) {
 				// EmpHistorytable.addCell(cellemp);
 				cell = new PdfPCell(new Phrase(ds.dskill, font1));
-				cell.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cell.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase(ds.comment, font1));
-				cell.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cell.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(cell);
 			}
@@ -4241,20 +4317,45 @@ public class Application extends Controller {
 			cell1.setColspan(3);
 			cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cell1.setPadding(10.0f);
+			
 			cell1.setBackgroundColor(new BaseColor(140, 221, 8));
+			
+			cell1 = new PdfPCell(new Phrase(" Mandatory Skills", font4));
+			cell1.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table1.addCell(cell1);
+
+			cell1 = new PdfPCell(new Phrase(" Candidate’s Skills/Experience", font4));
+			cell1.setBackgroundColor(new BaseColor(230, 230, 250));
+			cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table1.addCell(cell1);
+			
 			for (MandatorySkills ms : mandatorySkils) {
 				// EmpHistorytable.addCell(cellemp);
+				
 				cell1 = new PdfPCell(new Phrase(ms.mskill, font1));
-				cell1.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cell1.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table1.addCell(cell1);
 
 				cell1 = new PdfPCell(new Phrase(ms.comment, font1));
-				cell1.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cell1.setBackgroundColor(new BaseColor(248, 248, 255));
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table1.addCell(cell1);
 			}
 
+			PdfPTable EmpHistoryNametable = new PdfPTable(1);
+			EmpHistoryNametable.setWidthPercentage(100);
+			float[] columnWidthsemapnameTop = { 2f };
+			EmpHistoryNametable.setWidths(columnWidthsemapnameTop);
+			
+			PdfPCell cellemptablename = new PdfPCell(new Paragraph("EMPLOYMENT HISTORY",font4));
+			
+			cellemptablename.setHorizontalAlignment(Element.ALIGN_CENTER);
+			//cellemptablename.setPadding(10.0f);
+			cellemptablename.setBackgroundColor(new BaseColor(230, 230, 250));
+			EmpHistoryNametable.addCell(cellemptablename);
+			
 			PdfPTable EmpHistorytable = new PdfPTable(4);
 			EmpHistorytable.setWidthPercentage(100);
 			float[] columnWidthsTop = { 2f, 2f, 2f, 2f };
@@ -4292,29 +4393,42 @@ public class Application extends Controller {
 			for (EmploymentDetails emp : eds) {
 				// EmpHistorytable.addCell(cellemp);
 				cellemp = new PdfPCell(new Phrase(emp.companyName, font1));
-				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
 
 				cellemp = new PdfPCell(new Phrase(emp.startdate, font1));
-				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
+			//	cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
 
 				cellemp = new PdfPCell(new Phrase(emp.enddate, font1));
-				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
+			//	cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
 
 				cellemp = new PdfPCell(new Phrase(emp.position, font1));
-				cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cellemp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellemp.setHorizontalAlignment(Element.ALIGN_LEFT);
 				EmpHistorytable.addCell(cellemp);
 			}
 
-			PdfPTable edutable = new PdfPTable(2);
+			
+			PdfPTable EduHistoryNametable = new PdfPTable(1);
+			EduHistoryNametable.setWidthPercentage(100);
+			float[] columnWidthsedupnameTop = { 2f };
+			EduHistoryNametable.setWidths(columnWidthsedupnameTop);
+			
+			PdfPCell celledutablename = new PdfPCell(new Paragraph("EDUCATION",font4));
+			
+			celledutablename.setHorizontalAlignment(Element.ALIGN_CENTER);
+			//cellemptablename.setPadding(10.0f);
+			celledutablename.setBackgroundColor(new BaseColor(230, 230, 250));
+			EduHistoryNametable.addCell(celledutablename);
+			
+			PdfPTable edutable = new PdfPTable(4);
 			edutable.setWidthPercentage(100);
-			float[] colwidth = { 2f, 2f };
+			float[] colwidth = { 2f, 2f ,2f,2f};
 			edutable.setWidths(colwidth);
 
 			PdfPCell celledu = new PdfPCell(new Paragraph("EDUCATION"));
@@ -4327,9 +4441,19 @@ public class Application extends Controller {
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
+			
+			celledu = new PdfPCell(new Phrase("School Name", font2));
+			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
+			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+			edutable.addCell(celledu);
+			
+			celledu = new PdfPCell(new Phrase("Degree/Major", font2));
+			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
+			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+			edutable.addCell(celledu);
 
 			
-			celledu = new PdfPCell(new Phrase("Completion Date", font2));
+			celledu = new PdfPCell(new Phrase("Completion Date:", font2));
 			celledu.setBackgroundColor(new BaseColor(230, 230, 250));
 			celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 			edutable.addCell(celledu);
@@ -4339,29 +4463,42 @@ public class Application extends Controller {
 			for (EducationDetails edu : ed) {
 				// edutable.addCell(celledu);
 				celledu = new PdfPCell(new Phrase(edu.degree, font1));
-				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
+			//	celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
 
-				/*
-				 * celledu = new PdfPCell(new Phrase(edu.instituteName, font1));
-				 * celledu.setBackgroundColor(new BaseColor(248, 248, 255));
-				 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-				 * edutable.addCell(celledu);
-				 */
-
-				/*
-				 * celledu = new PdfPCell(new Phrase(edu.degree, font1));
-				 * celledu.setBackgroundColor(new BaseColor(248, 248, 255));
-				 * celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
-				 * edutable.addCell(celledu);
-				 */
+				
+				celledu = new PdfPCell(new Phrase(edu.instituteName, font1));
+				//  celledu.setBackgroundColor(new BaseColor(248, 248, 255));
+				  celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+				  edutable.addCell(celledu);
+				 
+				  celledu = new PdfPCell(new Phrase(edu.degree, font1));
+				//  celledu.setBackgroundColor(new BaseColor(248, 248, 255));
+				  celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
+				  edutable.addCell(celledu);
+				 
 				celledu = new PdfPCell(new Phrase(edu.toDate, font1));
-				celledu.setBackgroundColor(new BaseColor(248, 248, 255));
+				//celledu.setBackgroundColor(new BaseColor(248, 248, 255));
 				celledu.setHorizontalAlignment(Element.ALIGN_LEFT);
 				edutable.addCell(celledu);
 			}
 
+			
+			PdfPTable EmpCertNametable = new PdfPTable(1);
+			EmpCertNametable.setWidthPercentage(100);
+			float[] columnWidthscertpnameTop = { 2f };
+			EmpCertNametable.setWidths(columnWidthscertpnameTop);
+			
+			PdfPCell cellcerttablename = new PdfPCell(new Paragraph("Certifications",font4));
+			
+			cellcerttablename.setHorizontalAlignment(Element.ALIGN_CENTER);
+			//cellemptablename.setPadding(10.0f);
+			cellcerttablename.setBackgroundColor(new BaseColor(230, 230, 250));
+			EmpCertNametable.addCell(cellcerttablename);
+		
+			
+			
 			PdfPTable certtable = new PdfPTable(2);
 			certtable.getDefaultCell().setBorder(0);
 			certtable.setWidthPercentage(100);
@@ -4381,73 +4518,95 @@ public class Application extends Controller {
 			cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 			certtable.addCell(cellcert);
 
-			cellcert = new PdfPCell(new Phrase("Award Date", font2));
+			cellcert = new PdfPCell(new Phrase("Award Date:", font2));
 			cellcert.setBackgroundColor(new BaseColor(230, 230, 250));
 			cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 			certtable.addCell(cellcert);
 
-		
-			
 			if( cd.size() == 0  ||  cd.isEmpty() || cd.get(0).certName == null ){
 				cell.setBorder(Rectangle.NO_BORDER);
 				cellcert = new PdfPCell(new Phrase("None ", font1));
 				
-				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 				certtable.addCell(cellcert);
 				
 				cell.setBorder(Rectangle.NO_BORDER);
 				cellcert = new PdfPCell(new Phrase("None ", font1));
 				
-				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 				certtable.addCell(cellcert);
 				
 			}
 			
+			
 			for (CertificationDetails c : cd) {
 				// certtable.addCell(cellcert);
 				cell.setBorder(Rectangle.NO_BORDER);
 				cellcert = new PdfPCell(new Phrase(c.certName, font1));
-				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 				certtable.addCell(cellcert);
 				cellcert.setBorder(Rectangle.NO_BORDER);
 				cellcert = new PdfPCell(new Phrase(c.certYear, font1));
-				cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
+				//cellcert.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellcert.setHorizontalAlignment(Element.ALIGN_LEFT);
 				certtable.addCell(cellcert);
 				cellcert.setBorder(Rectangle.NO_BORDER);
 				// certtable.addCell(c.certName);
 				// certtable.addCell(c.certYear);
 			}
-			
 
-			PdfPTable expDesctable = new PdfPTable(1);
+			
+			PdfPTable expDescNametable = new PdfPTable(1);
+			expDescNametable.getDefaultCell().setBorder(0);
+			expDescNametable.setWidthPercentage(100);
+			float[] expnamecw = { 10f };
+			expDescNametable.setWidths(expnamecw);
+			
+			PdfPTable expDesctable = new PdfPTable(4);
 			expDesctable.getDefaultCell().setBorder(0);
 			expDesctable.setWidthPercentage(100);
-			float[] expcw = { 10f };
+			float[] expcw = { 2f,2f,2f,2f};
 			expDesctable.setWidths(expcw);
+			PdfPCell cellnameExp = new PdfPCell(new Phrase("List of Certification",font4));
+
+			cellnameExp = new PdfPCell(new Phrase("WORK EXPERIENCE", font4));
+			// cellExp .setBackgroundColor(new BaseColor(230, 230, 250));
+			cellnameExp.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cellnameExp.setBackgroundColor(new BaseColor(230, 230, 250));
+			//cellnameExp.setBorder(Rectangle.NO_BORDER);
+			expDescNametable.addCell(cellnameExp);
 
 			// PdfPCell cellExp = new PdfPCell(new
 			// Paragraph("CERTIFICATIONS:"));
-			PdfPCell cellExp = new PdfPCell(new Phrase("List of Certification",
-					font2));
-			Paragraph paragraph = new Paragraph();
-			paragraph.add(new Phrase("This is a chapter."));
-			// Chapter chapter = new Chapter(1);
+
+			PdfPCell cellExp = new PdfPCell(new Phrase("List of Certification",font4));
 			for (EmploymentDetails emp : eds) {
-				/*
-				 * chapter.addSection(emp.companyName);
-				 * chapter.addSection(emp.position);
-				 * chapter.addSection(emp.expdesc);
-				 */
-				cellExp = new PdfPCell(new Phrase(emp.companyName + ", " + " "
-						+ emp.position + " " + "(" + emp.startdate + " - "
-						+ emp.enddate + ")", font));
-				cellExp.setBackgroundColor(new BaseColor(230, 230, 250));
+				
+				cellExp = new PdfPCell(new Phrase("Employers Name: "+ emp.companyName,font));
+				//cellExp.setBackgroundColor(new BaseColor(248, 248, 255));
 				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
-				cellExp.setBorder(Rectangle.NO_BORDER);
+				
+				expDesctable.addCell(cellExp);
+				
+				cellExp = new PdfPCell(new Phrase("Start Date: "+emp.startdate,font));
+				//cellExp.setBackgroundColor(new BaseColor(248, 248, 255));
+				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
+				
+				expDesctable.addCell(cellExp);
+				
+				cellExp = new PdfPCell(new Phrase("End Date: " +emp.enddate,font));
+				//cellExp.setBackgroundColor(new BaseColor(248, 248, 255));
+				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
+				
+				expDesctable.addCell(cellExp);
+				
+				cellExp = new PdfPCell(new Phrase("Position Held : " +emp.position,font));
+				//cellExp.setBackgroundColor(new BaseColor(248, 248, 255));
+				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
+				
 				expDesctable.addCell(cellExp);
 
 				/*
@@ -4461,11 +4620,13 @@ public class Application extends Controller {
 				cellExp = new PdfPCell(new Phrase(emp.expdesc, font1));
 				// cellExp .setBackgroundColor(new BaseColor(230, 230, 250));
 				cellExp.setHorizontalAlignment(Element.ALIGN_LEFT);
-				cellExp.setBorder(Rectangle.NO_BORDER);
+				//cellExp.setBorder(Rectangle.NO_BORDER);
+				cellExp.setColspan(4);
 				expDesctable.addCell(cellExp);
 
 			}
 
+			 			
 			// Now Insert Every Thing Into PDF Document
 			document.open();// PDF document opened........
 
@@ -4477,32 +4638,26 @@ public class Application extends Controller {
 			document.add(date1);
 
 			document.add(Chunk.NEWLINE); // Something like in HTML :-)
-			// document.add(new Paragraph("Candidate's Name:",font1));
-			document.add(table4);
+			
+			document.add(userDetailsTable);
 			
 			document.add(Chunk.NEWLINE);
-			document.add(expLevelTable);
-			// preface.setAlignment(Element.ALIGN_CENTER);
+			
+			//document.add(table2);// skill table
 			document.add(Chunk.NEWLINE);
-			document.add(chunkClearance);
-			document.add(table3);// user clearance
-			document.add(Chunk.NEWLINE);
-			document.add(chunk);
-			document.add(table2);// skill table
-			document.add(Chunk.NEWLINE);
-			document.add(chunkSkills);
+			//document.add(chunkSkills);
 			document.add(table1);// mandatory skills
 
 			document.add(Chunk.NEWLINE);
-			document.add(chunkDesired);
+			//document.add(chunkDesired);
 			document.add(table);// desired skills
 
 			document.add(Chunk.NEWLINE);
-			document.add(empChunk);
-			document.add(EmpHistorytable);
+			//document.add(EmpHistoryNametable);
+			//.add(EmpHistorytable);
 
 			document.add(Chunk.NEWLINE);
-			document.add(eduChunk);
+			document.add(EduHistoryNametable);
 			document.add(edutable);
 
 			document.add(Chunk.NEWLINE);
@@ -4510,15 +4665,15 @@ public class Application extends Controller {
 		
 			//cert table added if it is present not selected
 			
-				document.add(certChunk);
-				document.add(Chunk.NEWLINE);
+				document.add(EmpCertNametable);
 				document.add(certtable);
 				document.add(Chunk.NEWLINE);
 			
 			
 			// document.add(Chunk.NEWLINE);
-			document.add(chunkExpDetails);
+			document.add(expDescNametable);
 			document.add(expDesctable);
+			//document.add(romanList);
 			// document.newPage(); // Opened new page.
 			response().setContentType("application/pdf");
 			response().setHeader("Content-Disposition",
@@ -4608,9 +4763,9 @@ public class Application extends Controller {
 				storeExcel.manadatorySkills = editJobVM.manadatorySkills
 						.toString();
 			}
-			System.out.println("json.pat.size()"
+			/*System.out.println("json.pat.size()"
 					+ editJobJson.path("desiredSkill").size());
-			
+			*/
 			
 			if (editJobJson.path("desiredSkill").size() != 0) {
 				String desSkill = editJobJson.path("desiredSkill").toString();
@@ -5111,13 +5266,14 @@ public class Application extends Controller {
 				allSkills.add(str);
 			}
 			*/
-			
+				
 			jobVM.jobStatus = s.jobStatus;
 			jobVM.skills = getAllUserSkill(s.skills);
 			
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
 		    jobVM.scheduledCloseDate = s.scheduledCloseDate;
+		    jobVM.userskillsSpecification = s.userskillsSpecification;
 			String DATE_FORMAT_NOW = "MM/dd/yyyy";
 		    Date date = new Date();
 		    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
@@ -5321,6 +5477,7 @@ public class Application extends Controller {
 			jobVM.manadatorySkills = getMandtorySkills(s.manadatorySkill);
 			jobVM.desiredSkill = getDesiredSkills(s.desiredSkil);
 			jobVM.scheduledCloseDate = s.scheduledCloseDate;
+			jobVM.userskillsSpecification = s.userskillsSpecification; 
 
 			// System.out.println("jobVM.desiredSkill" + jobVM.dsSkills);
 
@@ -5936,4 +6093,466 @@ public class Application extends Controller {
 		return redirect("/dashboard#/extra-profile");
 		
 	}
+	
+	public static Result getSampleResumeTemplate(){
+			String filepath = "app/resumetemplate/Ardent-Resume-Template.doc";
+			File f = new File(filepath);
+		    System.out.println("f"+f);
+		    
+		    return ok(f);		
+		
+	}
+
+	public static Result generateDocument(String id) throws IOException {
+		final String rootDir = Play.application().configuration()
+				.getString("resume.path");
+		//System.out.println("rootdir" + rootDir);
+		File f = new File(rootDir);
+		if(!f.exists()){
+			f.mkdir();
+		}
+		String candidiatename = "";
+		String ResumeName = ""; 
+		
+		
+		XWPFDocument document= new XWPFDocument(); 
+		   //Write the Document in file system
+		 
+		   int ids = Integer.parseInt(id);
+
+		   AppliedJobs ap = AppliedJobs.getUserAppliedJobById(ids);
+					String email = ap.username;
+					UserDetails ud = UserDetails.getUserByEmail(email);
+		   //List<UserExperiance> userExperiance = ud.userExperiance;
+					
+					
+					String JobId = ap.jobno;
+					String csrNumber = ap.performancelevel;
+					
+					if (!("NA".equalsIgnoreCase(ud.middlename))) {
+						candidiatename = ud.firstname + " " + ud.middlename + " "
+								+ ud.lastname;
+						ResumeName =  
+								   ud.lastname+"_"+ud.firstname;
+					} else {
+						candidiatename = ud.firstname + " NMI " + ud.lastname;
+						ResumeName = "";
+						ResumeName  = ud.lastname + "_" + ud.firstname;
+					}
+					
+					ResumeName = ResumeName + "_"+JobId;
+					String fileName = rootDir+candidiatename + ".docx";
+				
+					  FileOutputStream out = new FileOutputStream(
+							   new File(fileName));
+					  String clor = "E6E6FA";
+					  
+					 XWPFTable  userDetailsTable = document.createTable();	
+					 userDetailsTable.setWidth(100);
+					   
+					   XWPFTableRow userDetailsTableRowOne = userDetailsTable.getRow(0);
+					   userDetailsTableRowOne.getCell(0).setText("Candidate Name: "+candidiatename);
+					   userDetailsTableRowOne.getCell(0).setColor(clor);
+					  
+					   
+					   CTTblWidth widthmanSkill1 =  userDetailsTableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+					   widthmanSkill1.setType(STTblWidth.DXA);
+					   widthmanSkill1.setW(BigInteger.valueOf(6000));
+					  
+					   
+					   userDetailsTableRowOne.addNewTableCell();
+					   userDetailsTableRowOne.getCell(1).setText("Company Name: "+"Ardent Principles");	
+					   userDetailsTableRowOne.getCell(1).setColor(clor);
+					  
+					   CTTblWidth userDetailsWidth2 =  userDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+					   userDetailsWidth2.setType(STTblWidth.DXA);
+					   userDetailsWidth2.setW(BigInteger.valueOf(5000));
+					  
+					    
+					   XWPFTableRow userDetailsTableRowTwo = userDetailsTable.createRow();
+					
+					   userDetailsTableRowTwo.getCell(0).setText("CSR Number: "+ap.jobno);
+					   userDetailsTableRowTwo.getCell(0).setColor(clor);
+					  
+					   CTTblWidth userDetailsWidth3 =  userDetailsTableRowTwo.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+					   userDetailsWidth3.setType(STTblWidth.DXA);
+					   userDetailsWidth3.setW(BigInteger.valueOf(5000));
+					  
+					   userDetailsTableRowTwo.addNewTableCell();
+					   userDetailsTableRowTwo.getCell(1).setText("Clearance Level: "+ap.clearancereq);	
+					   userDetailsTableRowTwo.getCell(1).setColor(clor);
+					  
+					   
+					   CTTblWidth userDetailsWidth4 =  userDetailsTableRowTwo.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+					   userDetailsWidth4.setType(STTblWidth.DXA);
+					   userDetailsWidth4.setW(BigInteger.valueOf(5000));
+					  
+					   
+					   
+					   XWPFTableRow  userDetailsTableRowThree = userDetailsTable.createRow();
+						
+					   
+					   userDetailsTableRowThree.getCell(0).setText("Labor Category: "+ap.positionname);
+					   userDetailsTableRowThree.getCell(0).setColor(clor);
+					   
+					   CTTblWidth userDetailsWidth5 =  userDetailsTableRowThree.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+					   userDetailsWidth5.setType(STTblWidth.DXA);
+					   userDetailsWidth5.setW(BigInteger.valueOf(5000));
+					  
+					   
+					   userDetailsTableRowThree.addNewTableCell();
+					   userDetailsTableRowThree.getCell(1).setText("Skill Level: "+ap.performancelevel);	
+					   userDetailsTableRowThree.getCell(1).setColor(clor);
+					  
+					   CTTblWidth userDetailsWidth6 =  userDetailsTableRowThree.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+					   userDetailsWidth6.setType(STTblWidth.DXA);
+					   userDetailsWidth6.setW(BigInteger.valueOf(5000));
+					  
+					   XWPFTableRow userDetailsTableRowFour = userDetailsTable.createRow();
+					   userDetailsTableRowFour.getCell(0).setText("Skill Level Justification: ");
+					   userDetailsTableRowFour.getCell(0).setColor(clor);
+					   userDetailsTableRowFour.addNewTableCell();
+					   userDetailsTableRowFour.getCell(1).setColor(clor);
+					   
+					   userDetailsTableRowFour.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+					   userDetailsTableRowFour.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+					   //userDetailsTableRowFour.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+					  
+					   
+					   XWPFParagraph paragraph4 = document.createParagraph();
+					   XWPFRun run4=paragraph4.createRun();
+					   run4.setText("");
+					   
+					   List<MandatorySkills> mandatorySkils = getMandtorySkills(ap.manadatorySkill);
+					    
+					    XWPFTable manSkill = document.createTable();
+					    
+						   
+						   XWPFTableRow manSkillRowone = manSkill.getRow(0);
+						   manSkillRowone.addNewTableCell();
+						   manSkillRowone.getCell(0).setText("Mandatory Skills");
+						
+						   CTTblWidth widthmanSkill0 =  manSkillRowone.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+						   widthmanSkill0.setType(STTblWidth.DXA);
+						   widthmanSkill0.setW(BigInteger.valueOf(5000));
+						  // CTTableStyle style = ((Object) manSkillRowone.getCell(0).getCTTc()).addNewCnfStyle(Font.BOLD);
+						  // style.set
+						   manSkillRowone.getCell(0).setColor(clor);
+						   // manSkillRowone.getCell(0).getCTTc().g;
+						   
+						   manSkillRowone.getCell(1).setText("Candidate’s Skills/Experience");	
+						   manSkillRowone.getCell(1).setColor(clor);
+						  
+						   CTTblWidth widthmanSkill2 =  manSkillRowone.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+						   widthmanSkill2.setType(STTblWidth.DXA);
+						   widthmanSkill2.setW(BigInteger.valueOf(5000));
+						  
+						   for (MandatorySkills ms : mandatorySkils) {
+							   XWPFTableRow manSkillRowTwo = manSkill.createRow();
+							   
+							   manSkillRowTwo.getCell(0).setText(ms.mskill);
+							   
+							   manSkillRowTwo.addNewTableCell();
+							   manSkillRowTwo.getCell(1).setText(ms.comment);	
+								
+							}
+					   
+					   
+						   XWPFParagraph paragraph3 = document.createParagraph();
+						   XWPFRun run3=paragraph3.createRun();
+						   run3.setText("");
+						   
+		   List<DesiredSkills> desiredSkills = getDesiredSkills(ap.desiredSkil);
+		   XWPFTable desiredSkill = document.createTable();
+		   desiredSkill.setWidth(100);
+		   
+		   
+		   XWPFTableRow tableRowTwo = desiredSkill.getRow(0);
+		  
+		   tableRowTwo.getCell(0).setText("Desired Skills");
+		   tableRowTwo.getCell(0).setColor(clor);
+
+		   CTTblWidth widthdesSkill0 =  tableRowTwo.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+		   widthdesSkill0.setType(STTblWidth.DXA);
+		   widthdesSkill0.setW(BigInteger.valueOf(5000));
+		   
+		   tableRowTwo.addNewTableCell();
+		   tableRowTwo.getCell(1).setText("Candidate’s Skills/Experience");	
+		   tableRowTwo.getCell(1).setColor(clor);
+		  
+		   CTTblWidth widthdesSkill1 =  tableRowTwo.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+		   widthdesSkill1.setType(STTblWidth.DXA);
+		   widthdesSkill1.setW(BigInteger.valueOf(5000));
+		   
+		   
+		  
+		   for (DesiredSkills ds : desiredSkills) {
+			   XWPFTableRow tableRowThree = desiredSkill.createRow();
+			   tableRowThree.getCell(0).setText(ds.dskill);
+			   
+			   tableRowThree.addNewTableCell();
+			   tableRowThree.getCell(1).setText(ds.comment);	
+				
+			}
+		  
+		  
+			   XWPFParagraph paragraph2 = document.createParagraph();
+			   XWPFRun run2=paragraph2.createRun();
+			   run2.setText("");
+			   run2.setBold(true);
+			   run2.setColor(clor);
+			   XWPFTable  certificationDetailsTable = document.createTable();;
+			   //certificationDetailsTable.setWidth(100);
+			   XWPFTableRow certificationDetailsTableRowTHREE = certificationDetailsTable.getRow(0);
+				  
+			   certificationDetailsTableRowTHREE.getCell(0).setText("Certifications");
+			   certificationDetailsTableRowTHREE.getCell(0).setColor(clor);
+			  
+			   certificationDetailsTableRowTHREE.addNewTableCell();
+			   certificationDetailsTableRowTHREE.getCell(1).setColor(clor);
+			   
+			   certificationDetailsTableRowTHREE.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+			   certificationDetailsTableRowTHREE.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			  // certificationDetailsTableRowTHREE.getCell(1).getCTTc().getTcPr().setGridSpan(Alignment.CENTER);
+			   
+			   //certificationDetailsTableRowTHREE.getCell(1).getCTTc().addNewColor().setVal("FF0000")
+			   XWPFTableRow certificationDetailsTableRowOne = certificationDetailsTable.createRow();
+			    
+			   //  employmentDetailsTableRowOne.addNewTableCell();
+			   certificationDetailsTableRowOne.getCell(0).setText("List of Certifications");
+			   certificationDetailsTableRowOne.getCell(0).setColor(clor);
+			  
+			   CTTblWidth widthcert =  certificationDetailsTableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+			   widthcert.setType(STTblWidth.DXA);
+			   widthcert.setW(BigInteger.valueOf(5000));
+			  
+			   
+			   
+			   certificationDetailsTableRowOne.addNewTableCell();
+			   certificationDetailsTableRowOne.getCell(1).setText("Certification Date:");	
+			   certificationDetailsTableRowOne.getCell(1).setColor(clor);
+			   
+			   CTTblWidth width =  certificationDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+			   width.setType(STTblWidth.DXA);
+			   width.setW(BigInteger.valueOf(5000));
+			  
+			   
+			   List<CertificationDetails> cd = CertificationDetails
+						.getCertificateDetailsByUserEmail(email);
+				for (CertificationDetails c : cd) {
+				
+					
+					XWPFTableRow certificationDetailsTableRowTwo = certificationDetailsTable.createRow();
+					certificationDetailsTableRowTwo.getCell(0).setText(c.certName);
+					//certificationDetailsTableRowTwo.getCell(0).setColor(clor);
+					
+					certificationDetailsTableRowTwo.addNewTableCell();
+					certificationDetailsTableRowTwo.getCell(1).setText(c.certYear);	
+					//certificationDetailsTableRowTwo.getCell(1).setColor(clor);
+					   
+				}
+			   
+			   
+			   
+				XWPFParagraph paragraph1 = document.createParagraph();
+				   XWPFRun run1=paragraph1.createRun();
+				   run1.setText("");
+				   run1.setBold(true);
+				   run1.setColor(clor);
+				 
+				   
+			   XWPFTable  educationDetailsTable = document.createTable();;
+			   //educationDetailsTable.setWidth(100);
+			   
+			   XWPFTableRow educationDetailsTableRowthree = educationDetailsTable.getRow(0);
+				  
+			   educationDetailsTableRowthree.getCell(0).setText("Education");
+			   educationDetailsTableRowthree.getCell(0).setColor(clor);
+			  
+			   educationDetailsTableRowthree.addNewTableCell();
+			   educationDetailsTableRowthree.getCell(1).setColor(clor);
+			 
+			   educationDetailsTableRowthree.addNewTableCell();
+			   educationDetailsTableRowthree.getCell(2).setColor(clor);
+			 
+			   
+			   educationDetailsTableRowthree.addNewTableCell();
+			   educationDetailsTableRowthree.getCell(2).setColor(clor);
+			 
+			   educationDetailsTableRowthree.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+			   educationDetailsTableRowthree.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			   educationDetailsTableRowthree.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			   educationDetailsTableRowthree.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			   
+			   
+			   XWPFTableRow educationDetailsTableRowOne = educationDetailsTable.createRow();
+			 //  employmentDetailsTableRowOne.addNewTableCell();
+			   educationDetailsTableRowOne.getCell(0).setText("Degree");
+			   educationDetailsTableRowOne.getCell(0).setColor(clor);
+			   
+			   CTTblWidth widthedu1 =  educationDetailsTableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+			   widthedu1.setType(STTblWidth.DXA);
+			   widthedu1.setW(BigInteger.valueOf(3500));
+			   
+			   educationDetailsTableRowOne.addNewTableCell();
+			   educationDetailsTableRowOne.getCell(1).setText("School Name ");	
+			   educationDetailsTableRowOne.getCell(1).setColor(clor);
+				
+			   
+			   CTTblWidth widthedu2 =  educationDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+			   widthedu2.setType(STTblWidth.DXA);
+			   widthedu2.setW(BigInteger.valueOf(3500));
+			   educationDetailsTableRowOne.addNewTableCell();
+			   educationDetailsTableRowOne.getCell(2).setText("Degree/Major");	
+			   educationDetailsTableRowOne.getCell(2).setColor(clor);
+				  
+			   CTTblWidth widthedu3 =  educationDetailsTableRowOne.getCell(2).getCTTc().addNewTcPr().addNewTcW();
+			   widthedu3.setType(STTblWidth.DXA);
+			   widthedu3.setW(BigInteger.valueOf(3500));
+			   
+			   educationDetailsTableRowOne.addNewTableCell();
+			   educationDetailsTableRowOne.getCell(3).setText("Completion Date: ");	
+			   educationDetailsTableRowOne.getCell(3).setColor(clor);
+			   CTTblWidth widthedu4 =  educationDetailsTableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW();
+			   widthedu4.setType(STTblWidth.DXA);
+			   widthedu4.setW(BigInteger.valueOf(3500));
+			   
+			   
+			   List<EducationDetails> ed = EducationDetails
+						.getEducationDetailsByUserEmail(email);
+				for (EducationDetails edu : ed) {
+			   
+					XWPFTableRow educationDetailsTableRowTWO = educationDetailsTable.createRow();
+					 //  employmentDetailsTableRowOne.addNewTableCell();
+					educationDetailsTableRowTWO.getCell(0).setText(edu.degree);
+					//educationDetailsTableRowTWO.getCell(0).setColor(clor);
+					  
+					   
+					educationDetailsTableRowTWO.addNewTableCell();
+					educationDetailsTableRowTWO.getCell(1).setText(edu.instituteName);	
+					//educationDetailsTableRowTWO.getCell(1).setColor(clor);
+						
+					educationDetailsTableRowTWO.addNewTableCell();
+					educationDetailsTableRowTWO.getCell(2).setText(edu.degree);	
+					//educationDetailsTableRowTWO.getCell(2).setColor(clor);
+						  
+					educationDetailsTableRowTWO.addNewTableCell();
+					educationDetailsTableRowTWO.getCell(3).setText(edu.toDate);	
+					//educationDetailsTableRowTWO.getCell(3).setColor(clor);
+					   
+				}
+		   
+				XWPFParagraph paragraph = document.createParagraph();
+				   XWPFRun run=paragraph.createRun();
+				   run.setText("");
+				   run.setBold(true);
+				   run.setColor(clor);
+			   XWPFTable  employmentDetailsTable = document.createTable();;
+			  
+			   XWPFTableRow EmploymentDetailsTableRowthree = employmentDetailsTable.getRow(0);
+				  
+			   EmploymentDetailsTableRowthree.getCell(0).setText("WORK EXPERIENCE");
+			   EmploymentDetailsTableRowthree.getCell(0).setColor(clor);
+			  
+			   EmploymentDetailsTableRowthree.addNewTableCell();
+			   EmploymentDetailsTableRowthree.getCell(1).setColor(clor);
+			 
+			   EmploymentDetailsTableRowthree.addNewTableCell();
+			   EmploymentDetailsTableRowthree.getCell(2).setColor(clor);
+			 
+			   
+			   EmploymentDetailsTableRowthree.addNewTableCell();
+			   EmploymentDetailsTableRowthree.getCell(2).setColor(clor);
+			 
+			   EmploymentDetailsTableRowthree.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+			   EmploymentDetailsTableRowthree.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			   EmploymentDetailsTableRowthree.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			   EmploymentDetailsTableRowthree.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			 
+			   
+			   
+			   List<EmploymentDetails> eds = EmploymentDetails
+						.getEmploymentDetailsByUserEmail(email);
+			   
+			   
+			   int[] cols = {10000,0,0,0}; 
+				
+			   
+			   for (EmploymentDetails ue : eds) {
+					XWPFTableRow employmentDetailsTableRowTwo = employmentDetailsTable.createRow();
+					
+					employmentDetailsTableRowTwo.getCell(0).setText("Employers Name: "+ue.companyName);
+					//employmentDetailsTableRowTwo.getCell(0).setColor(clor);
+					
+					employmentDetailsTableRowTwo.addNewTableCell();
+					employmentDetailsTableRowTwo.getCell(1).setText("Start Date: "+ue.startdate);	
+					//employmentDetailsTableRowTwo.getCell(1).setColor(clor);
+					
+					employmentDetailsTableRowTwo.addNewTableCell();
+					employmentDetailsTableRowTwo.getCell(2).setText("End Date: "+ue.enddate);	
+					//employmentDetailsTableRowTwo.getCell(2).setColor(clor);
+					  
+					employmentDetailsTableRowTwo.addNewTableCell();
+					employmentDetailsTableRowTwo.getCell(3).setText("Position Held: "+ue.position);	
+					//employmentDetailsTableRowTwo.getCell(3).setColor(clor);
+					XWPFTableRow employmentDetailsTableRowThree = employmentDetailsTable.createRow();
+					employmentDetailsTableRowThree.getCell(0).setText(ue.expdesc);
+					//employmentDetailsTableRowThree.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(BigInteger.valueOf(100));
+					employmentDetailsTableRowThree.addNewTableCell();
+					employmentDetailsTableRowThree.addNewTableCell();
+					employmentDetailsTableRowThree.addNewTableCell();
+					employmentDetailsTableRowThree.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+					employmentDetailsTableRowThree.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+					employmentDetailsTableRowThree.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+					employmentDetailsTableRowThree.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+						   
+					
+					
+					
+				}
+			   
+			   
+			   
+		    document.write(out);
+		    out.close();
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+			String date = sdf.format(new Date());
+			response().setContentType("application/docx");
+			response().setHeader("Content-Disposition",
+					"inline; filename=" + fileName);
+			System.out.println("document created successfully..");
+			File file = new File(fileName);
+			return ok(file);
+			
+	}
+	
+	
+	public static Result 	inviteUsers(){
+	
+    JsonNode json	 = request().body().asJson();
+    System.out.println(json);
+    ObjectMapper objectMapper =new ObjectMapper();
+    SendMailVM sendMailVM;
+    try{
+    	sendMailVM = objectMapper.readValue(json.get("inviteUsers").traverse(), SendMailVM.class);
+             	
+    	MailUtility mu  = new MailUtility();
+    	mu.inviteUsers(sendMailVM.email,sendMailVM.subject,sendMailVM.content);
+     	
+    }catch(Exception e){
+    	e.printStackTrace();
+    }
+    
+    return ok("");
+	}
+
+	public static Result getAllallDegree(){
+		
+		List<Degree> d = Degree.getAllDegress();
+	    HashMap<String, Object> map = new HashMap<>();
+	    map.put("allDegress", d);
+	   
+ 		return ok(Json.stringify(Json.toJson(map)));
+	}
+
 }

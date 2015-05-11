@@ -1,0 +1,74 @@
+<style type="text/css">
+.btn-success-custom {
+color: white;
+background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+color: white;
+background-color: #999999;
+}
+</style>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel">
+      <div class="panel-body" style="min-height:530px;">
+        <div class="row">
+          <div class="col-lg-12">
+            <div id="gmaps" ></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <h3>Invite Users </h3>
+            <!-- <p style="color:#21205f;">If you have any questions or need any assistance please use the form below to contact us.</p>
+        -->     <hr/>
+           <!--  <h4>Address</h4>
+            <address><strong>Loop, Inc.</strong><br/>7275 Crescent Canyon St<br/><abbr title="Phone">P: &nbsp;</abbr>(573)-119-1911</address>
+            <address class="mbxl"><strong>Email</strong><br/><a href="mailto:#">example@email.com</a></address>
+            <ul class="social-icons list-unstyled list-inline">
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="facebook" class="facebook"><i class="fa fa-facebook"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="github" class="github"><i class="fa fa-github"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="google Plus" class="googleplus"><i class="fa fa-google-plus"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="linkedin" class="linkedin"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="rss" class="rss"><i class="fa fa-rss"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="skype" class="skype"><i class="fa fa-skype"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="twitter" class="twitter"><i class="fa fa-twitter"></i></a></li>
+              <li><a href="javascript:void(0);" data-hover="tooltip" data-original-title="youtube" class="youtube"><i class="fa fa-youtube"></i></a></li>
+            </ul> -->
+          </div>
+           <span ng-show="inviteSuccess" style="color:green;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;	Invitation sent successfully !</span>
+           <span ng-if="sent== true">Please wait sending invitations....</span>
+           <span ng-if="receipients == true"><code>Please enter at least one email id</code></span>
+          <div class="col-lg-6">
+           <!--  <h3>Feedback</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            <hr/> -->
+            <form >
+            <div class="form-group">
+                <div class="input-icon"><i class="fa fa-envelope"></i>
+                  <input type="text" placeholder="Enter receipients seperated by comma" ng-model="inviteUsers.email" class="form-control"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-icon"><i class="fa fa-check"></i>
+                  <input type="text"  ng-model="inviteUsers.subject"placeholder="Subject" class="form-control"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <textarea rows="10" placeholder="Message" ng-model="inviteUsers.content" class="form-control"></textarea>
+              </div>
+              
+             
+              <div class ="pull-right">
+              <button type="button"  class="btn btn-success-custom "  ng-click="onInviteUsers();" style="background-color::#21205f; border-color: #55b555 !important;">Send</button>
+              <!-- <button type="button" ng-if="sent == true" class="btn btn-success-custom " style="background-color::#21205f; border-color: #55b555 !important; ">Sent </button> 
+             --></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

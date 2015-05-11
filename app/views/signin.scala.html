@@ -248,12 +248,12 @@
 								<option value="Clearance">Clearance Level</option>
 								<option value="Experiance">Experience Level</option>
 							</select>  
-								<div ng-show="asc== true" ng-hide="desc == false" ng-click = "ascClicked();"><span
-									class="glyphicon glyphicon-chevron-down" style="color:#2120F5;cursor:pointer;  margin-left: 1%;"></span>&nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></div>
-								<div ng-show="desc== true" ng-hide="asc ==  false" ng-click="descClicked();"><span
-									class="glyphicon glyphicon-chevron-up" style="color:#2120F5; cursor:pointer;  margin-left: 1%;"></span>&nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></div>
+								<div ng-show="asc== true" ng-hide="desc == false" ><span
+									class="glyphicon glyphicon-chevron-down" ng-click = "ascClicked();" style="color:#2120F5;cursor:pointer;  margin-left: 1%;"></span><span>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign" ng-click="opensortinghelpInstruction()"></i></span></div>
+								<div ng-show="desc== true" ng-hide="asc ==  false" ><span
+									class="glyphicon glyphicon-chevron-up" style="color:#2120F5; cursor:pointer;  margin-left: 1%;" ng-click="descClicked();"></span><span>&nbsp;&nbsp;<i
+								class="glyphicon glyphicon-question-sign" ng-click="opensortinghelpInstruction()"></i></span></div>
 						</div>
 						<div class="col-md-2 control-label">
 							<!-- Sort by Location<br> <input type="checkbox"
@@ -352,12 +352,14 @@
 					<!--  <span>
 						 <a id="btn-register" href="/assets/app/templates/states/manage_apps.html">Contact Admin						</a>
 					</span> -->
+					<span ng-click="applyWithoutReg();" style="cursor:pointer;"><strong>Apply with out registration </strong></span>
 				</div>
 			</form>
 		</div>
 	
 		</div>
 		<div  ><div class="col-md-12"><small style="margin-left: 2%;color: black;">Click on the <span style="color:#F03800;">position title</span> to view all of the details related to the position</small></div>
+			<div ng-click="showKeyInstruction();" style="float:right;margin-right: 3%;cursor:pointer;">Skills Level Instructions</div>
 			<div class="box text-shadow" style="margin-left: 3%;margin-right: 3%;">
 					<!-- <span style="color:green;" ng-if="job_application_success == true" class="pull-left">  Your application has been recieved, Thank you for applying</span> 
 					<span style="color:green;" ng-if="job_draft_application_success == true" class="pull-left">  Your application has been saved in draft</span> 
@@ -966,6 +968,121 @@
         <button type="button"  ng-if="sent == false" ng-click="onfeedBackClicked();" class="btn btn-primary">Send </button>
          <button type="button" ng-if="sent == true" class="btn btn-primary">Sent </button>
       </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="applyWithoutReegistration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:60%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       <!--  <h4 class="modal-title" id="myModalLabel">Modal title</h4> -->
+      </div>
+      <div class="modal-body">
+      <p >Click on download button to download sample resume format and send filled resume    to  careers@@ardentprinciples.com</p>
+    
+		<button type="button" class="btn btn-success-custom " data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success-custom s" ng-click="downloadSampleResume();"><a ng-href="http://localhost:9000/assets/app/resumetemplate/Ardent-Resume-Template.doc">Download</a></button>
+ </div>
+     <!--  <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="keySkillInstruction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Skill level Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+<strong>      Skill Levels:</strong> 
+<table border="1">
+<tbody><tr>
+<td><strong>Performance Level</strong> </td><td><strong>Required Years Specialized 
+Experience </strong></td>
+</tr>
+<tr>
+<td>Subject Matter Expert</td> <td>16+</td> 
+
+</tr>
+<tr>
+<td>Expert</td><td> 11+</td> 
+</tr>
+<tr>
+<td>Senior</td><td> 6+</td> 
+</tr>
+<tr>
+<td>Full Performance</td> <td>3+</td> 
+</tr>
+<tr>
+<td>Developmental</td><td> <3</td>
+</tr>
+</tbody> 
+</table>
+You may also add credit to your years of specific experience per the following guidelines:
+<ul>
+<li>
+ Technical Certification (industry recognized) = +3 months experience
+</li>
+<li>
+ Associate degree in CS, IS, Engineering, Business or related technical discipline = 
+
++18 months experience
+</li>
+<li>
+ Bachelor’s degree in CS, IS, Engineering, Business or related technical discipline = +3 
+
+years experience
+</li>
+<li>
+ Master’s degree in CS, IS, Engineering, Business or related technical discipline = +2 
+
+years experience plus credit for BS
+</li>
+<li>
+ Doctorate in CS, IS, Engineering, Business or related technical discipline = +2 years 
+
+experience plus credit for BS and MS
+</li>
+<li>
+ General years of experience may be added to specific years of experience at a ratio 
+
+of 3 years general to 1 year specific
+</li>
+<li> Specific experience is work experience related to the position
+</li>
+<li>
+ Internships do not count towards specific or general work experience
+   </li>
+   </ul>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="sortinghelpInstruction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:60%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <p >Sort  jobs in ascending and descending order.</p>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+       
+      </div> 
     </div>
   </div>
 </div>

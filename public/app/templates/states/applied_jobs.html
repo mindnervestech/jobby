@@ -53,6 +53,7 @@ background-color: #999999;
 											<th>View Resume</th>
 											<th>Delete</th>
 											<th>Archive</th>
+											<th>Download word doc</th>
 										</tr>
 										<tr data-ng-repeat="appliedJobs in jobs"
 											style="background-color: #fff !important; left: -900">
@@ -72,6 +73,7 @@ background-color: #999999;
 								          <td><button id="deleteJob" type="button"
 													ng-click="deleteJobById(appliedJobs.id)" data-toggle="modal"  class="btn btn-success-custom" data-toggle="tooltip" data-placement="bottom" title="Delete">Delete</button></td>
 								          <td><input type="checkbox"  id="archiveJobs{{$index}}" ng-model="archived" ng-click="makeArchive(appliedJobs);" data-toggle="tooltip" data-placement="bottom" title="Select (Check) to make archive "></td>
+									 <td> <a href = "generateDocument/{{appliedJobs.id}}">download</a></td>
 										</tr>
 									</tbody>	
 								</table>

@@ -43,7 +43,7 @@
 								ng-model="sortType"><a class="aTagclass"
 								ng-click="onSortTypeClick()"><span class="spanClass"></span><span
 									class="glyphicon glyphicon-chevron-down" style="color:#2120F5;"></span></a>&nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></span>
+								class="glyphicon glyphicon-question-sign" ng-click="opensortinghelpInstruction();"></i></span>
 
 						</div>
 						<div class="col-md-4 control-label">
@@ -149,9 +149,9 @@
 									<p ng-click="editUserJob(job)" style="cursor: pointer;" data-toggle="tooltip"
 													data-placement="bottom" title="Edit Job  Details">
 										<span class="title">{{job.labourCategory}}</span><span
-											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;</strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp; <ins>{{job.requestNumber}}</ins></small></strong>&nbsp;&nbsp;<i
+											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small>&nbsp;&nbsp;</strong><strong><small data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp; <ins>{{job.requestNumber}}</ins></small> </strong>&nbsp;&nbsp;<i
 								
-											class="glyphicon glyphicon-pencil"   ></i></span>
+											class="glyphicon glyphicon-pencil"   ></i>  <small class="badgeRed"  ng-if="job.dateDiff<=3" data-toggle="tooltip" data-placement="bottom" title="Job Status" > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small>  <small class="badgeYellow"   ng-if="job.dateDiff >= 4 &&  job.dateDiff <=6 " data-toggle="tooltip" data-placement="bottom" title="Job Status"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small> <small class="badgeGreen"   ng-if="job.dateDiff > 6"data-toggle="tooltip" data-placement="bottom" title="Job Status" > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small> </span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -702,6 +702,25 @@
 			</div>
 		</div>
 	</div>
+	
+	
+	
+<div class="modal fade" id="sortinghelpInstruction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:60%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <p >Sort  jobs in ascending and descending order.</p>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+       
+      </div> 
+    </div>
+  </div>
+</div>
 </div>
 <style type="text/css">
 .modal .modal-dialog {
@@ -729,5 +748,36 @@ background-color: #999999;
 <style>
 .datepicker {
 	z-index: 1151 !important;
+}
+
+.badgeRed {
+  height: 20px;
+  width: 20px;
+ 
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 100%;
+  background: red;
+}
+
+
+.badgeYellow {
+  height: 20px;
+  width: 20px;
+  
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 100%;
+  background: yellow;
+}
+
+.badgeGreen {
+  height: 20px;
+  width: 20px;
+  
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 100%;
+  background: green;
 }
 </style>

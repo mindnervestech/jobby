@@ -262,7 +262,11 @@ App.controller('AppController', function($scope, $http) {
 		$('#contactAdmin').modal();
 
 	}
-
+	$scope.showKeyInstruction = function(){
+		$('#keySkillInstruction').modal();
+	}
+	
+	
 	$scope.sent = false;
 	$scope.contactus = {};
 	$scope.feedbackSuccess = false;
@@ -367,5 +371,18 @@ App.controller('AppController', function($scope, $http) {
 			});
 	}
 	
+	$scope.applyWithoutReg =  function(){
+		$('#applyWithoutReegistration').modal();
+		
+	}
+
+	$scope.downloadSampleResume = function(){
+		$('#applyWithoutReegistration').modal('hide');
+		
+	}
 	
+	 $scope.opensortinghelpInstruction = function(){
+		  $('#sortinghelpInstruction').modal('show');
+			  
+		  }
 });
