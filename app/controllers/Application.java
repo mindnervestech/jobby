@@ -4161,7 +4161,7 @@ public class Application extends Controller {
 						userDetailsTable.addCell(userDetailsCellcandidateName);
 						
 						PdfPCell userDetailsCellcmpname = new PdfPCell(new Paragraph(
-								"Company Name: " +"Ardent Principle" ,font1));
+								"Company Name: " +"Booz Allen Hamilton" ,font1));
 						userDetailsCellcmpname.setBackgroundColor(new BaseColor(230, 230, 250));
 						userDetailsTable.addCell(userDetailsCellcmpname);
 						
@@ -4173,7 +4173,7 @@ public class Application extends Controller {
 						
 						
 						PdfPCell userDetailsClearanceLevel =  new PdfPCell(new Paragraph(
-								"ClearanceLevel: " +"TS/SCI, favorable polygraph",font1));
+								"ClearanceLevel: " +"TS/SCI with Favorable Polygraph",font1));
 						userDetailsClearanceLevel.setBackgroundColor(new BaseColor(230, 230, 250));
 						userDetailsTable.addCell(userDetailsClearanceLevel);
 						
@@ -6161,7 +6161,7 @@ public class Application extends Controller {
 					  
 					   
 					   userDetailsTableRowOne.addNewTableCell();
-					   userDetailsTableRowOne.getCell(1).setText("Company Name: "+"Ardent Principles");	
+					   userDetailsTableRowOne.getCell(1).setText("Company Name: "+"Booz Allen Hamilton");	
 					   userDetailsTableRowOne.getCell(1).setColor(clor);
 					  
 					   CTTblWidth userDetailsWidth2 =  userDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
@@ -6179,7 +6179,7 @@ public class Application extends Controller {
 					   userDetailsWidth3.setW(BigInteger.valueOf(5000));
 					  
 					   userDetailsTableRowTwo.addNewTableCell();
-					   userDetailsTableRowTwo.getCell(1).setText("Clearance Level: "+ap.clearancereq);	
+					   userDetailsTableRowTwo.getCell(1).setText("Clearance Level: "+"TS/SCI with Favorable Polygraph");	
 					   userDetailsTableRowTwo.getCell(1).setColor(clor);
 					  
 					   
@@ -6209,7 +6209,7 @@ public class Application extends Controller {
 					   userDetailsWidth6.setW(BigInteger.valueOf(5000));
 					  
 					   XWPFTableRow userDetailsTableRowFour = userDetailsTable.createRow();
-					   userDetailsTableRowFour.getCell(0).setText("Skill Level Justification: ");
+					   userDetailsTableRowFour.getCell(0).setText("Skill Level Justification: "+ap.userskillsSpecification);
 					   userDetailsTableRowFour.getCell(0).setColor(clor);
 					   userDetailsTableRowFour.addNewTableCell();
 					   userDetailsTableRowFour.getCell(1).setColor(clor);
