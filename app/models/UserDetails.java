@@ -87,9 +87,18 @@ public class UserDetails extends Model {
     public String currentjobtitle;
     public String phnumber;
     public String emailalert;
+    public String resumefilepath;
     
     
-    public String getResidentcity() {
+    public String getResumefilepath() {
+		return resumefilepath;
+	}
+
+	public void setResumefilepath(String resumefilepath) {
+		this.resumefilepath = resumefilepath;
+	}
+
+	public String getResidentcity() {
 		return residentcity;
 	}
 

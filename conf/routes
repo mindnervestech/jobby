@@ -91,3 +91,8 @@ POST   /updateDefualtValues                      controllers.Application.updateD
 GET    /getDefaultValues                            controllers.Application.getDefaultValues()
 GET    /generateDocument/:id                             controllers.Application.generateDocument(id:String)
 POST   /inviteUsers                                     controllers.Application.inviteUsers()
+GET    /getAllYear                                          controllers.Application.getAllYear()
+GET    /getAllMonth                                          controllers.Application.getAllMonth()
+POST  /uploadResume                                           controllers.Application.uploadResume()
+GET   /getresume/:email                                              controllers.Application.getresume(email:String)
+GET   /getuserresume                                             controllers.Application.getuserresume() 

@@ -117,173 +117,7 @@ background-color: #999999;
 														</div>
 
 													</div>
-													<!-- <div class="col-md-12">
-														<div class="">
-															<label class="">Phone Number *</label> <label
-																class="col-md-offset-3">Alternate Phone Number </label>
-															<label class="col-md-offset-3">Resident State *</label>
-														</div>
-														<div class="form-group">
-															<div class="col-md-4">
-																<input type="text" id="phnumber" name="phnumber"
-																	ng-model="userDetails.phnumber"
-																	placeholder="Enter phone Name" style="font-size: 12px;"
-																	class="form-control" required>
-															</div>
-															<div class="col-md-4">
-																<input type="text" id="altphnumber" name="altphnumber"
-																	ng-model="userDetails.altphnumber"
-																	placeholder="Enter altrenate  phone Number "
-																	style="font-size: 12px;" class="form-control">
-															</div>
-															<div class="col-md-4">
-																<input type="text" id="residentState" name="residentState"
-																	ng-model="userDetails.residentState"
-																	placeholder="Resident State" style="font-size: 12px;"
-																	class="form-control" required>
-
-
-																<select ng-model="userDetails.residentState"
-																	ng-change="onStatesChange()" class="form-control">
-																	<option
-																		ng-selected="clr.stateName == userDetails.residentState"
-																		ng-repeat="clr in allStates">{{clr.stateName}}</option>
-																</select>
-															</div>
-														</div>
-
-													</div> -->
-													<!-- <div class="col-md-12">
-														<div class="">
-															<label class="">Resident Zip Code *</label> <label
-																class="col-md-offset-3">Resident Salary </label> <label
-																class="col-md-offset-3">Willing to Relocate *</label>
-														</div>
-														<div class="form-group">
-															<div class="col-md-4">
-																<input type="text" id="zipcode" name="zipcode"
-																	ng-model="userDetails.zipcode"
-																	placeholder="Enter zipcode " style="font-size: 12px;"
-																	class="form-control" required>
-															</div>
-															<div class="col-md-4">
-																<input type="text" id="desiredsalary"
-																	name="desiredsalary"
-																	ng-model="userDetails.desiredsalary"
-																	placeholder="Desired Salary " style="font-size: 12px;"
-																	class="form-control">
-															</div>
-															<div class="col-md-4">
-																<input type="text" id="willingtorelocate" name="willingtorelocate"
-																	ng-model="userDetails.willingtorelocate"
-																	placeholder="Willing to Relocate" style="font-size: 12px;"
-																	class="form-control" required>
-
-
-																<select ng-model="userDetails.willingtorelocate"
-																	class="form-control">
-																	<option
-																		ng-selected="'Yes' == userDetails.willingtorelocate">Yes</option>
-																	<option
-																		ng-selected="'No' == userDetails.willingtorelocate">No</option>
-																</select>
-															</div>
-														</div>
-
-													</div> -->
-													<!-- <div class="col-md-12">
-														<div class="">
-															<label class="">Job Search Status *</label> <label
-																class="col-md-offset-3">Current Job Title </label> <label
-																class="col-md-offset-3">Alternate Email Address
-															</label>
-
-														</div>
-														<div class="form-group">
-															<div class="col-md-4">
-																<input type="text" id="jobsearchstatus" name="jobsearchstatus"
-																	ng-model="userDetails.jobsearchstatus"
-																	placeholder="Job Search Status" style="font-size: 12px;"
-																	class="form-control" required>
-
-																<select ng-model="userDetails.jobsearchstatus"
-																	ng-change="onJobSearchStatusChange()"
-																	class="form-control">
-																	<option
-																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
-																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
-																</select>
-															</div>
-															<div class="col-md-4">
-																<input type="text" id="currentjobtitle"
-																	name="currentjobtitle"
-																	ng-model="userDetails.currentjobtitle"
-																	placeholder="Current Job Title"
-																	style="font-size: 12px;" class="form-control">
-															</div>
-															<div class="col-md-4">
-																<input type="text" id="altemail" name="altemail"
-																	ng-model="userDetails.altemail"
-																	placeholder="Enter Alternate Email"
-																	style="font-size: 12px;" class="form-control" required>
-															</div>
-														</div>
-
-													</div> -->
-
-
-													<!-- <div class="col-md-12">
-														<div class="">
-															<label class="">Resident City  *</label> <label
-																class="col-md-offset-3">Email Address </label> <label
-																class="col-md-offset-3">Date  of Birth
-															</label>
-
-														</div>
-														<div class="form-group">
-															<div class="col-md-4">
-																 <input type="text" id="residentcity" name="residentcity"
-																	ng-model="userDetails.residentcity"
-																	placeholder="Resident City " style="font-size: 12px;"
-																	class="form-control" required>
-
-																<select ng-model="userDetails.jobsearchstatus"
-																	ng-change="onJobSearchStatusChange()"
-																	class="form-control">
-																	<option
-																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
-																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
-																</select>
-															</div>
-															<div class="col-md-4">
-																<div class="input-group">
-																	<span class="input-group-addon"><i
-																		class="fa fa-envelope"></i></span> <input type="email"
-																		placeholder="Email Address" name="email"
-																		ng-model="userDetails.email" id="email"
-																		class="form-control" style="font-size: 12px;" required>
-																</div>
-															</div>
-															<div class="col-md-4">
-																<div class="">
-															<div class="">
-																<label class="col-md-3 control-label">Date of
-																	Birth *</label>
-																<div class="input-group">
-																	<input type="text" ng-model="userDetails.dob"
-																		name="dob" class="form-control " id="dob"
-																		ng-click="initempDatepicker();"
-																		style="font-size: 12px;" required>
-																	<div class="input-group-addon">
-																		<i class="fa fa-calendar"></i>
-																	</div>
-																</div>
-															</div>
-														</div>
-															</div>
-														</div>
-
-													</div> -->
+											
 
 													<div class="col-md-12">
 														<div class="">
@@ -381,13 +215,7 @@ background-color: #999999;
 																	placeholder="Resident City " style="font-size: 12px;"
 																	class="form-control" required>
 
-																<!-- <select ng-model="userDetails.jobsearchstatus"
-																	ng-change="onJobSearchStatusChange()"
-																	class="form-control">
-																	<option
-																		ng-selected="clr.statusName == userDetails.jobsearchstatus"
-																		ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
-																</select> -->
+																
 															</div>
 															<div class="col-md-4">
 																<!-- <input type="text" id="residentState" name="residentState"
@@ -643,7 +471,7 @@ background-color: #999999;
 															<div class="col-md-12"
 																ng-repeat="emp in addNewEmphistory">
 																<br />
-																<div class="col-md-3">
+																<div class="col-md-2">
 																	<label for="inputName" class="control-label">Company
 																		Name  <code>* </code></label>
 																	<div ng-show="empHistory" style="color: red">
@@ -658,7 +486,7 @@ background-color: #999999;
 																</div>
 
 
-																<div class="col-md-3">
+																<div class="col-md-2">
 																	<label for="inputName" class="control-label">Position
 																		<code>*</code></label>
 																	<div class="input-icon right">
@@ -669,29 +497,47 @@ background-color: #999999;
 																	</div>
 																</div>
 																<label class="col-md-3 ">Date</label>
-																<div class="col-md-4">
+																<div class="col-md-6">
 																	<div class="input-group input-daterange">
 																		<span class="input-group-addon">From <code> * </code></span>
-																		<!-- <input
-																			type="text" name="startdate" id="startdateemp"
-																			ng-click="initCmpDatePicker();" class="form-control"
-																			ng-model="emp.startdate" style="font-size: 12px;"
-																			required /> -->
-																		<input class="form-control" validator="[required]"
+																		
+																		<!-- <input class="form-control" validator="[required]"
 																			ng-click="initCmpDatePicker();" id="datepicker"
 																			ng-model="emp.startdate" style="font-size: 12px;"
 																			data-provide="datepicker" data-date-autoclose="true"
-																			data-date-format="mm/dd/yyyy" required> <span
+																			data-date-format="mm/dd/yyyy" required> -->
+																			<select ng-model="emp.startdate"
+																		ng-change="onLabourCategoryChange()" class="col-md-5" style="height: 30px;">
+																		<option ng-selected="emp.startdate  == m.monthName"
+																		ng-repeat="m  in months" >{{m.monthName}}</option>
+																		</select>
+																		
+																		<select ng-model="emp.startYear"
+																		ng-change="onLabourCategoryChange()" class="col-md-7" style="height: 30px;">
+																		<option ng-selected="emp.startYear  == y.year"
+																		ng-repeat="y  in years">{{y.year}}</option>
+																		</select>
+																			
+																			 <span
 																			class="input-group-addon">to</span>
-																		<!-- <input type="text" id="enddateemp"
-																			class="form-control" ng-model="emp.enddate"
-																			style="font-size: 12px;"
-																			ng-click="initCmpDatePicker();" required> -->
+																	<!-- 
 																		<input class="form-control" validator="[required]"
 																			ng-click="initCmpDatePicker();" id="datepicker"
 																			ng-model="emp.enddate" style="font-size: 12px;"
 																			data-provide="datepicker" data-date-autoclose="true"
-																			data-date-format="mm/dd/yyyy">
+																			data-date-format="mm/dd/yyyy"> -->
+																			
+																		<select ng-model="emp.enddate"
+																		ng-change="onLabourCategoryChange()" class="col-md-5" style="height: 30px;">
+																		<option ng-selected="emp.enddate  == m.monthName"
+																		ng-repeat="m  in months">{{m.monthName}}</option>
+																		</select>
+																		
+																		<select ng-model="emp.endYear"
+																		ng-change="onLabourCategoryChange()" class="col-md-7" style="height: 30px;">
+																		<option ng-selected="emp.endYear  == y.year"
+																		ng-repeat="y  in years">{{y.year}}</option>
+																		</select>
 
 																	</div>
 
@@ -701,7 +547,11 @@ background-color: #999999;
 																<div class="col-md-2">
 																	<button class="btn btn-default"
 																		ng-click="DeleteAddEmphistory($index)">
-																		<i class="fa fa-trash-o"></i>
+																		<i class="fa fa-trash-o"></i>  
+																	</button>
+																	
+																	<button class="btn btn-default" ng-click="opencmpExpInstructionpopups();">
+																		<i class="glyphicon glyphicon-question-sign" ></i>
 																	</button>
 																</div>
 
@@ -714,9 +564,7 @@ background-color: #999999;
 																		style="font-size: 12px;"></textarea></span><span style="float:left;margin-top:5%;" >
 																		<i class="glyphicon glyphicon-question-sign"
 																data-toggle="tooltip" data-placement="bottom"
-																title="Click to view the Experience Instructions " ng-click="onEmpExpInstructions();"></i></span>
-																		
-																			
+																title="Click to view the  Instructions " ng-click="onEmpExpInstructions();"></i></span>
 																		
 
 																</div>
@@ -738,22 +586,7 @@ background-color: #999999;
 
 
 												</div>
-												<!-- <div class="form-group">
-													<div class="col-md-2">
-														<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
-														<button ng-click="addNewEmployment()">Add More</button>
-														<span ng-show="addNewEmphistory.length > 0"> </span>
-													</div>
-												</div> -->
-
-												<!-- <div class="form-group ">
-													<hr class="mtxxl mbxxl">
-													<div class="col-md-6">
-														<div ng-show="EducationError" style="color: red">
-															Please fill at least one Education Details</div>
-														<label>Education History </label>
-													</div>
-												</div> -->
+												
 												<div class="col-md-14">
 													<fieldset class="scheduler-border">
 														<legend class="scheduler-border">
@@ -803,29 +636,16 @@ background-color: #999999;
 															<div class="col-md-4">
 																<div class="input-group input-daterange">
 																	<span class="input-group-addon">End Date <code>*</code></span>
-																	<!-- <input
-																		type="text" name="startdate" ng-model="edu.fromDate"
-																		class="form-control" id="edudateform"
-																		ng-click="initeduDateform();" style="font-size: 12px;"
-																	<!-- 	required /> -->
-																	<!-- <input class="form-control"
-																		ng-click="initeduDateform();" id="datepicker"
-																		ng-model="edu.fromDate" 
-																		style="font-size: 12px;" data-provide="datepicker"
-																		data-date-autoclose="true"
-																		data-date-format="mm/dd/yyyy" required > <span
-																		class="input-group-addon" >to</span>  -->
-																	<!-- <input
-																		ng-model="edu.toDate" type="text" name="enddate"
-																		class="form-control" id="edudateto"
-																		ng-click="initeduDateform();" style="font-size: 12px;"
-																		required /> -->
-																	<input class="form-control"
-																		ng-click="initeduDateform();" id="datepicker"
-																		ng-model="edu.toDate" 
-																		style="font-size: 12px;" data-provide="datepicker"
-																		data-date-autoclose="true"
-																		data-date-format="mm/dd/yyyy">
+																	
+																	<select name="edu.toDate" ng-model="edu.toDate"
+																	class="form-control">
+																	<option ng-repeat="y in years"
+																		value="{{y.year}}"
+																		ng-selected="y.year  == edu.toDate"
+																		style="font-size: 12px;" required>{{y.year}}
+																	</option>
+																</select>
+																		
 																</div>
 
 															</div>
@@ -834,6 +654,9 @@ background-color: #999999;
 																	ng-click="deleteaddEducation($index)">
 																	<i class="fa fa-trash-o"></i>
 																</button>
+																<button class="btn btn-default" ng-click="openeEduinstrauctionPopup();">
+																		<i class="glyphicon glyphicon-question-sign" ></i>
+																	</button>
 															</div>
 
 														</div>
@@ -847,12 +670,7 @@ background-color: #999999;
 													</fieldset>
 												</div>
 
-												<!-- <div class="form-group ">
-													<hr class="mtxxl mbxxl">
-													<div class="col-md-6">
-														<label>Certificate History </label>
-													</div>
-												</div> -->
+											
 												<div class="col-md-14">
 													<fieldset class="scheduler-border">
 														<legend class="scheduler-border">
@@ -882,18 +700,15 @@ background-color: #999999;
 																	</div>
 																</div>
 
-																<div class='col-sm-5'>
-																	<label class="col-md-6 control-label">Year
+																<div class='col-sm-2'>
+																	<label class="col-md-12 control-label">Year
 																		Obtained</label>
-																	<div class="form-group">
-
-																		<div class='input-group date'>
 
 																			<!-- <input type='text' id="certYear"
 																				ng-model="cert.certYear" class="form-control"
 																				id="certdate" ng-click="initDatePicker();"
 																				style="font-size: 12px;" required /> -->
-																			<input class="form-control"
+																			<!-- <input class="form-control"
 																				ng-click="initDatePicker();" id="datepicker"
 																				ng-model="cert.certYear" 
 																				style="font-size: 12px;" data-provide="datepicker"
@@ -901,17 +716,27 @@ background-color: #999999;
 																				data-date-format="mm/dd/yyyy"> <span
 																				class="input-group-addon"><span
 																				class="glyphicon glyphicon-calendar"></span> </span>
-																			<div class="col-md-2">
+																						 -->
+																	<select name="cert.certYear" ng-model="cert.certYear"
+																	class="form-control">
+																	<option ng-repeat="y in years"
+																		value="{{y.year}}"
+																		ng-selected="cert.certYear == y.year"
+																		style="font-size: 12px;" required>{{y.year}}
+																	</option>
+																</select>
 
+																</div>
+																
+																<div class="col-md-2" style="margin-top:2.5%;">
 																				<button class="btn btn-default"
 																					ng-click="deleteAddCertificate($index)">
 																					<i class="fa fa-trash-o"></i>
 																				</button>
+																				<button class="btn btn-default" ng-click="opencertInstructionpopup();">
+																					<i class="glyphicon glyphicon-question-sign" ></i>
+																				</button>
 																			</div>
-																		</div>
-																	</div>
-
-																</div>
 
 															</div>
 														</div>
@@ -926,8 +751,42 @@ background-color: #999999;
 														</div>
 													</fieldset>
 												</div>
+												<div class="col-md-14">
+													<fieldset class="scheduler-border">
+														<legend class="scheduler-border">
+															<i class="glyphicon glyphicon-screenshot"></i>
+															&nbsp;&nbsp;Attach Resume
+														</legend>
+															<div class="form-group">
+														<div class="manageGenButton">
+															<!-- <label class="col-md-3 control-label"> File:</label> -->
+															<div class="col-md-12">
+															<div class="col-md-2">
+																<input style="margin-top: 5px;"
+																	ng-file-select="onFileSelect($files)" name=""
+																	type="file" />
+															</div>
+															<div class="col-md-2"> </div>
+															<button type="submit" ng-click="fileUpload()"
+															class="btn btn-success-custom">Upload</button>
+														</div>
+														</div>
+													</div>
+													<div class="form-group">
+													<div class="col-md-10" ng-if="succUpload == true"><span style="color:green;">Resume uploaded successfully</span></div>
+														<div class="col-md-12">
+														<span><strong>Resume</strong></span>
+														</div>
+														<div class="col-md-12">
+														<a target="_blank" href ="/getuserresume">{{resumefilepath}}</a>												
+														</div>	
+													</div>
+													</fieldset>
 
-													<div class="col-sm-12">
+						
+												
+												</div>
+												<div class="col-sm-12">
 													
 													<input type="checkbox" name="emailalert" ng-model="emailalert"
 							                         ng-checked="userDetails.emailalert == 'Yes'"    ng-click="ubSubribeFormEmailAlert(userDetails.emailalert);"> Subscribe for the Job  Alert.
@@ -1063,6 +922,116 @@ of 3 years general to 1 year specific
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="eduInstructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+       <strong>The Education table should include:</strong>
+	<ul>
+	<li> All degrees are entered along with year of completion</li>
+
+	<li> College degrees and Graduate certificates only (AA/AS and above).</li>
+
+	<li> NOT HS diploma, college coursework, etc.</li>
+   </ul>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="certInstructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+     <strong>The certifications table should include:</strong>
+			<ul>
+				<li> Certifications that are position relevant and industry recognized, such as PMP or CISSP.</li>
+
+				<li>Certifications are NOT in­house training.</li>
+
+				<li> Abbreviated certifications are spelled out, e.g., "Project Management Professional (PMP)".</li>
+			</ul>
+
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="empworkExperienceInstrcution" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+     <strong>In this section, list detailed descriptions for each individual project role you have held.</strong>
+
+		When completing this section, it is essential to keep the following points in mind:
+		<ul>
+		<li>Follow the format exactly as shown.</li>
+
+		<li> Any lapses in employment of more than 1 month should be addresses (e.g., "Student,"
+
+		"Unemployed," "Leave of Absence," etc.)</li>
+
+		<li>Use the most recent job title for each company.</li>
+
+		<li> Use separate bullet points for each assignment or project. Include: date range, project
+
+			role or job title, and descriptions of responsibilities that are thorough, yet concise.</li>
+
+		<li>Ensure no gaps exist between project roles. Address gaps between projects, such as
+
+		awaiting clearance, proposal support, etc.</li>
+
+		<li> Ensure patterns of short­term employment are addressed (i.e., held job for fewer than 18
+
+			months or held 3 or more jobs in a five year period). This only applies to positions held
+
+			within the past 15 years.</li>
+
+		<li> Written consistently in the first or third person.</li>
+
+		<li> Appropriate verb tense is used­ present tense for you current assignment, past tense for
+
+			previous assignments.</li>
+
+		<li> Spell out the first instance of all abbreviations.</li>
+	</ul>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+
+
 
 						<script type="text/javascript">
 							$(document)

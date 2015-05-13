@@ -7,17 +7,15 @@
 	color: red
 }
 
-
 .btn-success-custom {
-color: white;
-background-color: #21205f;
+	color: white;
+	background-color: #21205f;
 }
 
 .btn-success-custom:hover {
-color: white;
-background-color: #999999;
+	color: white;
+	background-color: #999999;
 }
-
 </style>
 
 <div class="row">
@@ -30,26 +28,26 @@ background-color: #999999;
 				<div class="row mbm">
 					<div class="col-lg-12">
 						<!-- {{jobs}} -->
-						<div >
-						     <div class="pull-left">
-						     <span > <button class="btn btn-success-custom" data-toggle="tooltip"
-													data-placement="bottom" title="send mail to all" ng-click="openSendMailPopup();">
-												 Mail To all</button> </span>
+						<div>
+							<div class="pull-left">
+								<span>
+									<button class="btn btn-success-custom" data-toggle="tooltip"
+										data-placement="bottom" title="send mail to all"
+										ng-click="openSendMailPopup();">Mail To all</button>
+								</span>
 
-						     </div>
-						     <div class="pull-right">
-									<label>Active Users:</label>&nbsp;&nbsp; <small><strong>{{activeusercount}}</strong></small>
-								</div>
-								</div>
-								<div class="pull-right">
-						
-								</div>
+							</div>
+							<div class="pull-right">
+								<label>Active Users:</label>&nbsp;&nbsp; <small><strong>{{activeusercount}}</strong></small>
+							</div>
+						</div>
+						<div class="pull-right"></div>
 						<div ng-init="getAllUsers()" class="table-responsive">
 							<div class="page-header">
 								<!-- <h3>
 									All users <i class="icon-chevron-right"></i>
 								</h3> -->
-								
+
 								<table id="table_id"
 									class="table table-hover table-striped table-bordered table-advanced tablesorter display">
 									<tbody>
@@ -66,6 +64,7 @@ background-color: #999999;
 											<th>Delete</th>
 											<th>Last Logged In</th>
 											<th>Current Status</th>
+											<th>Download resume </th>
 										</tr>
 										<tr data-ng-repeat="user in users"
 											style="background-color: #fff !important; left: -900">
@@ -84,14 +83,13 @@ background-color: #999999;
 													<i data-toggle="modal" class="glyphicon glyphicon-edit"></i>
 												</button></td>
 											<td><button class="btn btn-success-custom"
-													data-toggle="tooltip" ng-click="changeUserPassword(user);" data-placement="bottom"
-													title="Change Password">
-													<i data-toggle="modal"
-														class="glyphicon glyphicon-pencil"></i>
+													data-toggle="tooltip" ng-click="changeUserPassword(user);"
+													data-placement="bottom" title="Change Password">
+													<i data-toggle="modal" class="glyphicon glyphicon-pencil"></i>
 												</button></td>
-											<td><button class="btn btn-success-custom" data-toggle="tooltip"
-													data-placement="bottom" title="Deactivate user"
-													ng-if="user.userstatus == 'active'"
+											<td><button class="btn btn-success-custom"
+													data-toggle="tooltip" data-placement="bottom"
+													title="Deactivate user" ng-if="user.userstatus == 'active'"
 													ng-click="onInActiveUser(user)">
 													<i class="glyphicon glyphicon-ban-circle"></i>
 												</button>
@@ -113,11 +111,12 @@ background-color: #999999;
 											<td><i class="glyphicon glyphicon-log-in"
 												ng-if="user.userLoggedInstatus == 'loggedIn'"
 												data-toggle="tooltip" data-placement="bottom"
-												title="Logged In"></i><i
-												class="glyphicon glyphicon-log-out"
+												title="Logged In"></i><i class="glyphicon glyphicon-log-out"
 												ng-if="user.userLoggedInstatus == 'loggedOut'"
 												data-toggle="tooltip" data-placement="bottom"
 												title="Logged Out"></i></td>
+												<td>
+											<a target="_blank" href ="/getresume/{{user.email}}">Download</a></td>
 										</tr>
 									</tbody>
 								</table>
@@ -188,12 +187,15 @@ background-color: #999999;
 						class="form-horizontal ng-pristine ng-valid">
 						<div class="row">
 
-							
+
 							<div class="col-md-12">
 								<div class="">
-									<label class="">First Name  <code>*</code></label> <label
-										class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle Initial <code> *</code></label> <label class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Last
-										Name  <code>* </code></label>
+									<label class="">First Name <code>*</code></label> <label
+										class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle
+										Initial <code> *</code>
+									</label> <label class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Last
+										Name <code>* </code>
+									</label>
 								</div>
 								<div class="form-group">
 									<div class="col-md-4">
@@ -219,10 +221,11 @@ background-color: #999999;
 
 							<div class="col-md-12">
 								<div class="">
-									<label class="">Email Addess  <code>*</code></label> <label
+									<label class="">Email Addess <code>*</code></label> <label
 										class="col-md-offset-3">&nbsp;&nbsp;&nbsp;Alternate
 										Email Address </label> <label class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone
-										Number  <code>*</code>  </label>
+										Number <code>*</code>
+									</label>
 
 								</div>
 								<div class="form-group">
@@ -245,7 +248,7 @@ background-color: #999999;
 										</div>
 									</div>
 									<div class="col-md-4">
-								<!-- 	<span ng-if="phnumberError =true"> <code>Please enter phone number</code></span> -->
+										<!-- 	<span ng-if="phnumberError =true"> <code>Please enter phone number</code></span> -->
 										<input type="text" id="phnumber" name="phnumber"
 											ng-model="userDetails.phnumber"
 											placeholder="Enter phone Number" style="font-size: 12px;"
@@ -259,9 +262,11 @@ background-color: #999999;
 								<div class="">
 									<label class="">Alternate Phone Number </label> <label
 										class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job
-										Search Status <code>*</code>  &nbsp;&nbsp;<span ng-if="jobsearchstatusError == true"> (Please fill)</span></label> <label class="col-md-offset-3"
-										style="margin-left: 22%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current
-										Job Title  <code>*</code> </label>
+										Search Status <code>*</code> &nbsp;&nbsp;<span
+										ng-if="jobsearchstatusError == true"> (Please fill)</span>
+									</label> <label class="col-md-offset-3" style="margin-left: 22%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current
+										Job Title <code>*</code>
+									</label>
 
 								</div>
 								<div class="form-group">
@@ -287,9 +292,10 @@ background-color: #999999;
 										</select>
 									</div>
 									<div class="col-md-4">
-									<span ng-if="currentjobtitleError == true">	<code>please  enter current job title</code> </span>
-										<input type="text" id="currentjobtitle" name="currentjobtitle"
-											ng-model="userDetails.currentjobtitle"
+										<span ng-if="currentjobtitleError == true"> <code>please
+												enter current job title</code>
+										</span> <input type="text" id="currentjobtitle"
+											name="currentjobtitle" ng-model="userDetails.currentjobtitle"
 											placeholder="Current Job Title" style="font-size: 12px;"
 											class="form-control" required>
 									</div>
@@ -299,17 +305,20 @@ background-color: #999999;
 
 							<div class="col-md-12">
 								<div class="">
-									<label class="">Resident City  <code>*</code></label> <label
+									<label class="">Resident City <code>*</code></label> <label
 										class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Resident
-										State  <code>*</code>  <span ng-if="residentState == true"><code>(Please fill)</code></span></label> <label class="col-md-offset-3">&nbsp;&nbsp;Resident
-										Zip Code <code> *</code> </label>
+										State <code>*</code> <span ng-if="residentState == true"><code>(Please
+												fill)</code></span>
+									</label> <label class="col-md-offset-3">&nbsp;&nbsp;Resident
+										Zip Code <code> *</code>
+									</label>
 
 								</div>
 								<div class="form-group">
 									<div class="col-md-4">
-									<span ng-if="residentcityError == true"><code>Please  enter  resident city</code></span>
-										<input type="text" id="residentcity" name="residentcity"
-											ng-model="userDetails.residentcity"
+										<span ng-if="residentcityError == true"><code>Please
+												enter resident city</code></span> <input type="text" id="residentcity"
+											name="residentcity" ng-model="userDetails.residentcity"
 											placeholder="Resident City " style="font-size: 12px;"
 											class="form-control" required>
 
@@ -337,11 +346,11 @@ background-color: #999999;
 										</select>
 									</div>
 									<div class="col-md-4">
-									<span ng-if="zipcodeError == true"><code>Please  Enter zipcode</code> </span>
-										<input type="text" id="zipcode" name="zipcode"
-											ng-model="userDetails.zipcode" placeholder="Enter zipcode "
-											style="font-size: 12px;" class="form-control" maxlength="6"
-											required>
+										<span ng-if="zipcodeError == true"><code>Please
+												Enter zipcode</code> </span> <input type="text" id="zipcode"
+											name="zipcode" ng-model="userDetails.zipcode"
+											placeholder="Enter zipcode " style="font-size: 12px;"
+											class="form-control" maxlength="6" required>
 									</div>
 								</div>
 
@@ -349,10 +358,14 @@ background-color: #999999;
 
 							<div class="col-md-12">
 								<div class="">
-									<label class="">Date Of Birth  <code>*</code></label> <label
+									<label class="">Date Of Birth <code>*</code></label> <label
 										class="col-md-offset-3">&nbsp;&nbsp;&nbsp;&nbsp;Desired
-										Salary  <code>* </code></label> <label class="col-md-offset-3">&nbsp;Willing
-										to Relocate <code> *</code> &nbsp;&nbsp;<span ng-if="willingtorelocateError == true"> <code>(Please fill)</code></span></label>
+										Salary <code>* </code>
+									</label> <label class="col-md-offset-3">&nbsp;Willing to
+										Relocate <code> *</code> &nbsp;&nbsp;<span
+										ng-if="willingtorelocateError == true"> <code>(Please
+												fill)</code></span>
+									</label>
 								</div>
 								<div class="form-group">
 									<div class="col-md-4">
@@ -404,24 +417,28 @@ background-color: #999999;
 															</div>
 														</div> -->
 								<div class="">
-									<label class="">User Security Clearance Level  <code>*</code> &nbsp;&nbsp;<span class="" ng-if="cleranceUError == true"><small><code>(Please fill)</code></small></span></label>
+									<label class="">User Security Clearance Level <code>*</code>
+										&nbsp;&nbsp;<span class="" ng-if="cleranceUError == true"><small><code>(Please
+													fill)</code></small></span></label>
 								</div>
 								<div class="form-group">
 									<!-- <label class="col-md-3 control-label"></label> -->
 									<div class="col-md-9">
-										<select  name="userClearance"
-											ng-model="userClearance" class="form-control">
+										<select name="userClearance" ng-model="userClearance"
+											class="form-control">
 											<option ng-repeat="clear in allCleanrance.clearance"
 												value="{{clear.clearance}}"
 												ng-selected="clear.isSelect  == true"
 												style="font-size: 12px;" required>{{clear.clearance}}</option>
 										</select>
 									</div>
-									
+
 								</div>
 
 								<div class="">
-									<label class="">Select Experience Level <code>*</code> &nbsp;&nbsp;<span class="" ng-if="expUError == true"><small><code>(Please fill)</code></small></span></label>
+									<label class="">Select Experience Level <code>*</code>
+										&nbsp;&nbsp;<span class="" ng-if="expUError == true"><small><code>(Please
+													fill)</code></small></span></label>
 								</div>
 								<div class="form-group">
 									<!-- <label class="col-md-3 control-label"></label> -->
@@ -434,7 +451,7 @@ background-color: #999999;
 												required>{{exp.experianceLevel}}</option>
 										</select>
 									</div>
-									
+
 
 								</div>
 
@@ -460,7 +477,9 @@ background-color: #999999;
 															</div>
 														</div> -->
 								<div class="">
-									<label class="">Position(s)/Title(s) of interest  <code>*</code>&nbsp;&nbsp;<span class="" ng-if="userPositionError == true"><small><code>(Please fill) </code></small></span></label>
+									<label class="">Position(s)/Title(s) of interest <code>*</code>&nbsp;&nbsp;<span
+										class="" ng-if="userPositionError == true"><small><code>(Please
+													fill) </code></small></span></label>
 								</div>
 								<div class="form-group">
 									<!-- <label class="col-md-3 control-label">User
@@ -474,7 +493,7 @@ background-color: #999999;
 												style="font-size: 12px;" required>{{posi.position}}</option>
 										</select>
 									</div>
-									
+
 								</div>
 							</div>
 
@@ -493,9 +512,9 @@ background-color: #999999;
 										&nbsp;&nbsp;User Key Skill Area
 									</legend>
 									<div class="form-group">
-										<small><strong>Please select a maximum of 12 of your most
-											relevant key skill areas. Use the add function for key skills
-											that are not listed.</strong></small>
+										<small><strong>Please select a maximum of 12
+												of your most relevant key skill areas. Use the add function
+												for key skills that are not listed.</strong></small>
 									</div>
 									<label ng-repeat="skill in allSkills"
 										class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
@@ -537,16 +556,19 @@ background-color: #999999;
 										&nbsp;&nbsp;Employment History
 									</legend>
 									<div class="form-group">
-									<small><strong>Please input all of your relevant employment history.</strong></small>
-								</div>
+										<small><strong>Please input all of your
+												relevant employment history.</strong></small>
+									</div>
 
 									<div class="col-md-12" ng-repeat="emp in addNewEmphistory">
 										<br />
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<label for="inputName" class="control-label">Company
-												Name  <code>*</code></label>
-											<div ng-show="empHistory"><code>Please
-												fill at least one Company Details</code></div>
+												Name <code>*</code>
+											</label>
+											<div ng-show="empHistory">
+												<code>Please fill at least one Company Details</code>
+											</div>
 
 											<div class="input-icon right">
 												<input id="inputName" type="text" id="companyName"
@@ -557,9 +579,10 @@ background-color: #999999;
 										</div>
 
 
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<label for="inputName" class="control-label">Position
-												<code>* </code></label>
+												<code>* </code>
+											</label>
 											<div class="input-icon right">
 												<input id="position" type="text" name="position"
 													ng-model="emp.position" placeholder="Position"
@@ -567,30 +590,38 @@ background-color: #999999;
 											</div>
 										</div>
 										<label class="col-md-3 ">Date</label>
-										<div class="col-md-4">
+										<div class="col-md-6">
 											<div class="input-group input-daterange">
-												<span class="input-group-addon">From  <code>*</code></span>
-												<!-- <input
-																			type="text" name="startdate" id="startdateemp"
-																			ng-click="initCmpDatePicker();" class="form-control"
-																			ng-model="emp.startdate" style="font-size: 12px;"
-																			required /> -->
-												<input class="form-control" validator="[required]"
-													ng-click="initCmpDatePicker();" id="datepicker"
-													ng-model="emp.startdate" style="font-size: 12px;"
-													data-provide="datepicker" data-date-autoclose="true"
-													data-date-format="mm/dd/yyyy"> <span
-													class="input-group-addon">to</span>
-												<!-- <input type="text" id="enddateemp"
-																			class="form-control" ng-model="emp.enddate"
-																			style="font-size: 12px;"
-																			ng-click="initCmpDatePicker();" required> -->
-												<input class="form-control" validator="[required]"
-													ng-click="initCmpDatePicker();" id="datepicker"
-													ng-model="emp.enddate" style="font-size: 12px;"
-													data-provide="datepicker" data-date-autoclose="true"
-													data-date-format="mm/dd/yyyy">
+												<span class="input-group-addon">From <code>*</code></span> <select
+													ng-model="emp.startdate"
+													ng-change="onLabourCategoryChange()" class="col-md-5"
+													style="height: 30px;">
+													<option ng-selected="emp.startdate  == m.monthName"
+														ng-repeat="m  in months">{{m.monthName}}</option>
+												</select> <select ng-model="emp.startYear"
+													ng-change="onLabourCategoryChange()" class="col-md-7"
+													style="height: 30px;">
+													<option ng-selected="emp.startYear  == y.year"
+														ng-repeat="y  in years">{{y.year}}</option>
+												</select> <span class="input-group-addon">to</span>
+												<!-- 
+																		<input class="form-control" validator="[required]"
+																			ng-click="initCmpDatePicker();" id="datepicker"
+																			ng-model="emp.enddate" style="font-size: 12px;"
+																			data-provide="datepicker" data-date-autoclose="true"
+																			data-date-format="mm/dd/yyyy"> -->
 
+												<select ng-model="emp.enddate"
+													ng-change="onLabourCategoryChange()" class="col-md-5"
+													style="height: 30px;">
+													<option ng-selected="emp.enddate  == m.monthName"
+														ng-repeat="m  in months">{{m.monthName}}</option>
+												</select> <select ng-model="emp.endYear"
+													ng-change="onLabourCategoryChange()" class="col-md-7"
+													style="height: 30px;">
+													<option ng-selected="emp.endYear  == y.year"
+														ng-repeat="y  in years">{{y.year}}</option>
+												</select>
 											</div>
 
 										</div>
@@ -601,36 +632,24 @@ background-color: #999999;
 												ng-click="DeleteAddEmphistory($index)">
 												<i class="fa fa-trash-o"></i>
 											</button>
+											<button class="btn btn-default" ng-click="opencmpExpInstructionpopups();">
+												<i class="glyphicon glyphicon-question-sign" ></i>
+										   </button>
 										</div>
 
 										<div class="col-md-12">
-										<span class="col-md-8">
-											<label class="">Experiance Details</label>
-											<textarea rows="3" name="expdesc" ng-model="emp.expdesc"
-												class="form-control"
-												placeholder="e.g. Experiance Description"
-												style="font-size: 12px;"></textarea></span>
-												<span style="float:left;margin-top:5%;" >
-																		<i class="glyphicon glyphicon-question-sign"
-																data-toggle="tooltip" data-placement="bottom"
-																title="Click to view the Experience Instructions " ng-click="onEmpExpInstructions();"></i></span>
+											<span class="col-md-8"> <label class="">Experiance
+													Details</label> <textarea rows="3" name="expdesc"
+													ng-model="emp.expdesc" class="form-control"
+													placeholder="e.g. Experiance Description"
+													style="font-size: 12px;"></textarea></span> <span
+												style="float: left; margin-top: 5%;"> <i
+												class="glyphicon glyphicon-question-sign"
+												data-toggle="tooltip" data-placement="bottom"
+												title="Click to view the Experience Instructions "
+												ng-click="onEmpExpInstructions();"></i></span>
 
-											<div id="empExpInstructions" class="popover" style="z-index: 100;">
-													<div class="popover-content">
-														<div class="form-group" style="font-size:11px;">
-															1]Companies/positions/date ranges correspond between Employment History and Experience<br />
-															2]Work experience should have no gaps longer than 1 month. If you were not employed for a period of time, 
-																please note that. Ensure that any periods of unemployment longer than 1mo are accounted for (e.g., “Student,” “Leave of Absence,” “Personal,” etc.)<br />
-															3]Please only bullet individual project roles.<br />
-															4]Date ranges (mm/yyyy) for project roles fall within tenure at company.<br />
-															5]No gaps exist between project roles.<br />​
-															6]Role descriptions are unclassified (no sensitive/classified program names/organizations are used).
-														</div>
-														<button name="save" id="close"
-														 class="button btn-success-custom  pull-left" ng-click="closeonEmpExpInstructions();">close
-														</button>
-														</div>
-													</div>
+											
 
 										</div>
 										<div class="col-md-12">
@@ -675,13 +694,15 @@ background-color: #999999;
 								</legend>
 
 								<div class="form-group">
-									<small><strong>Please input all of your Education History.</strong></small>
+									<small><strong>Please input all of your
+											Education History.</strong></small>
 								</div>
 								<div class="col-md-12" ng-repeat="edu in addEducation">
 
 									<div class="col-md-3">
 										<label for="inputName" class="control-label">Institute
-											Name  <code>*</code></label>
+											Name <code>*</code>
+										</label>
 										<div class="input-icon right">
 											<input id="instituteName" name="instituteName" type="text"
 												ng-model="edu.instituteName" placeholder="Institute Name"
@@ -691,17 +712,19 @@ background-color: #999999;
 
 
 									<div class="col-md-3">
-										<label for="inputName" class="control-label">Degree <code> * </code> </label>
+										<label for="inputName" class="control-label">Degree <code>
+												* </code>
+										</label>
 										<div class="input-icon right">
 											<!-- <input id="degree" name="degree" type="text"
 												ng-model="edu.degree" placeholder="Degree"
 												class="form-control" style="font-size: 12px;" required> -->
-												
-																		<select ng-model="edu.degree"
-																		ng-change="onLabourCategoryChange()" class="form-control">
-																		<option ng-selected="degree.degreeName  == edu.degree"
-																		ng-repeat="degree in allDegree.allDegress">{{degree.degreeName}}</option>
-																		</select>
+
+											<select ng-model="edu.degree"
+												ng-change="onLabourCategoryChange()" class="form-control">
+												<option ng-selected="degree.degreeName  == edu.degree"
+													ng-repeat="degree in allDegree.allDegress">{{degree.degreeName}}</option>
+											</select>
 										</div>
 									</div>
 
@@ -709,7 +732,9 @@ background-color: #999999;
 									<label class="col-md-3">Date</label>
 									<div class="col-md-4">
 										<div class="input-group input-daterange">
-											<span class="input-group-addon">End Date  <code>* </code> </span>
+											<span class="input-group-addon">End Date <code>*
+												</code>
+											</span>
 											<!-- <input
 																		type="text" name="startdate" ng-model="edu.fromDate"
 																		class="form-control" id="edudateform"
@@ -725,10 +750,12 @@ background-color: #999999;
 																		class="form-control" id="edudateto"
 																		ng-click="initeduDateform();" style="font-size: 12px;"
 																		required /> -->
-											<input class="form-control" ng-click="initeduDateform();"
-												id="datepicker" ng-model="edu.toDate" 
-												style="font-size: 12px;" data-provide="datepicker"
-												data-date-autoclose="true" data-date-format="mm/dd/yyyy">
+											<select name="edu.toDate" ng-model="edu.toDate"
+												class="form-control">
+												<option ng-repeat="y in years" value="{{y.year}}"
+													ng-selected="y.year  == edu.toDate"
+													style="font-size: 12px;" required>{{y.year}}</option>
+											</select>
 										</div>
 
 									</div>
@@ -737,6 +764,9 @@ background-color: #999999;
 											ng-click="deleteaddEducation($index)">
 											<i class="fa fa-trash-o"></i>
 										</button>
+										<button class="btn btn-default" ng-click="openeEduinstrauctionPopup();">
+												<i class="glyphicon glyphicon-question-sign" ></i>
+									 </button>
 									</div>
 
 								</div>
@@ -764,45 +794,57 @@ background-color: #999999;
 								</legend>
 
 								<div class="form-group">
-									<small><strong>Please input all of your relevant Certifications</strong></small>
+									<small><strong>Please input all of your
+											relevant Certifications</strong></small>
 									<div class="col-md-12" ng-repeat="cert in addCertificate">
 
 										<div class="col-md-5">
-											<label for="inputName" class="control-label">Certificate
-												  </label>
+											<label for="inputName" class="control-label">Certification
+											</label>
+											<!-- <div ng-show="certHistory" style="color: red">
+																		Please fill at least one Certfi Details</div>
+ -->
 											<div class="input-icon right">
 												<small><input id="certName" name="certName"
 													type="text" placeholder="Certificate" class="form-control"
-													ng-model="cert.certName" style="font-size: 12px;" ></small>
+													ng-model="cert.certName" style="font-size: 12px;"></small>
 											</div>
 										</div>
 
-										<div class='col-sm-3'>
-											<label class="col-md-3 control-label">Year</label>
-											<div class="form-group">
+										<div class='col-sm-2'>
+											<label class="col-md-12 control-label">Year Obtained</label>
 
-												<div class='input-group date'>
-
-													<!-- <input type='text' id="certYear"
+											<!-- <input type='text' id="certYear"
 																				ng-model="cert.certYear" class="form-control"
 																				id="certdate" ng-click="initDatePicker();"
 																				style="font-size: 12px;" required /> -->
-													<input class="form-control" ng-click="initDatePicker();"
-														id="datepicker" ng-model="cert.certYear" 
-														style="font-size: 12px;" data-provide="datepicker"
-														data-date-autoclose="true" data-date-format="mm/dd/yyyy">
-													<span class="input-group-addon"><span
-														class="glyphicon glyphicon-calendar"></span> </span>
-													<div class="col-md-2">
+											<!-- <input class="form-control"
+																				ng-click="initDatePicker();" id="datepicker"
+																				ng-model="cert.certYear" 
+																				style="font-size: 12px;" data-provide="datepicker"
+																				data-date-autoclose="true"
+																				data-date-format="mm/dd/yyyy"> <span
+																				class="input-group-addon"><span
+																				class="glyphicon glyphicon-calendar"></span> </span>
+																						 -->
+											<select name="cert.certYear" ng-model="cert.certYear"
+												class="form-control">
+												<option ng-repeat="y in years" value="{{y.year}}"
+													ng-selected="cert.certYear == y.year"
+													style="font-size: 12px;" required>{{y.year}}</option>
+											</select>
 
-														<button class="btn btn-default"
-															ng-click="deleteAddCertificate($index)">
-															<i class="fa fa-trash-o"></i>
-														</button>
-													</div>
-												</div>
-											</div>
 
+										</div>
+
+										<div class="col-md-2" style="margin-top: 2.5%;">
+											<button class="btn btn-default"
+												ng-click="deleteAddCertificate($index)">
+												<i class="fa fa-trash-o"></i>
+											</button>
+											<button class="btn btn-default" ng-click="opencertInstructionpopup();">
+												<i class="glyphicon glyphicon-question-sign" ></i>
+										   </button>
 										</div>
 
 									</div>
@@ -819,18 +861,19 @@ background-color: #999999;
 							</fieldset>
 						</div>
 
-								<div class="col-sm-12">
-													
-													<input type="checkbox" name="emailalert" ng-model="emailalert"
-							ng-checked="userDetails.emailalert == 'Yes'"    ng-click="ubSubribeFormEmailAlert(userDetails.emailalert);"> Subscribe for the Job  Alert.
-													</div>
+						<div class="col-sm-12">
+
+							<input type="checkbox" name="emailalert" ng-model="emailalert"
+								ng-checked="userDetails.emailalert == 'Yes'"
+								ng-click="ubSubribeFormEmailAlert(userDetails.emailalert);">
+							Subscribe for the Job Alert.
+						</div>
 						<div class='col-sm-12'>
 							<label class="col-md-3 control-label" ng-show="updateSuccess"
 								style="font-size: 12px; color: green;">Profile Updated
-								Successfully! </label>
-													<label class="col-md-6 control-label"
-														ng-show="manaFieldError == true"><code>Please field
-															all Mandatory Details(*)</code> </label>
+								Successfully! </label> <label class="col-md-6 control-label"
+								ng-show="manaFieldError == true"><code>Please
+									field all Mandatory Details(*)</code> </label>
 							<!-- 	<div ng-show="userPoserror" style="color: red">Please fill
 								at least one Position/Security/Experience level.</div> -->
 						</div>
@@ -839,7 +882,9 @@ background-color: #999999;
 							<div class="pull-right">
 								<button type="submit" ng-click="updateUserProfileByAdmin();"
 									class="btn btn-success-custom">Update</button>
-								&nbsp;<button type="button" class="btn btn-success-custom" data-dismiss="modal">Close</button>
+								&nbsp;
+								<button type="button" class="btn btn-success-custom"
+									data-dismiss="modal">Close</button>
 								&nbsp;
 								<!-- <button type="button" class="btn btn-default">Cancel</button> -->
 							</div>
@@ -891,7 +936,8 @@ background-color: #999999;
 			<div class="modal-footer">
 				<button type="button" class="btn btn-success-custom"
 					data-ng-click="updateUserPassword();">Update</button>
-				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success-custom"
+					data-dismiss="modal">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -913,16 +959,16 @@ background-color: #999999;
 			<div class="modal-footer">
 				<button type="button" class="btn btn-success-custom"
 					data-ng-click="deleteUser();">Delete</button>
-				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success-custom"
+					data-dismiss="modal">Cancel</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <!-- send mail to all user Module -->
-<div class="modal fade" id="sendmailtoall" tabindex="-1"
-	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-	data-backdrop="false">
+<div class="modal fade" id="sendmailtoall" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
 	<div class="modal-dialog">
 		<div class="modal-content" style="width: 60%;">
 			<div class="modal-header">
@@ -931,19 +977,21 @@ background-color: #999999;
 				<h4 class="modal-title" id="myModalLabel">Send Mail</h4>
 			</div>
 			<div class="modal-body" id="deleteArticleBody">
-			<div class="form-group">
-  <label for="comment">Email  Subject</label>
- <input type="text"  ng-model="mailsubject"class="form-control" id="usr">
-</div>
-<div class="form-group">
-  <label for="comment">Email Content</label>
-  <textarea class="form-control"  ng-model="mailcontent"rows="5" id="comment"></textarea>
-</div>
+				<div class="form-group">
+					<label for="comment">Email Subject</label> <input type="text"
+						ng-model="mailsubject" class="form-control" id="usr">
+				</div>
+				<div class="form-group">
+					<label for="comment">Email Content</label>
+					<textarea class="form-control" ng-model="mailcontent" rows="5"
+						id="comment"></textarea>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-success-custom"
 					data-ng-click="sendMailtoAllUser();">Send</button>
-				<button type="button" class="btn btn-success-custom" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success-custom"
+					data-dismiss="modal">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -951,6 +999,160 @@ background-color: #999999;
 
 
 
+<div class="modal fade" id="certInstructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:60%;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+     <strong>The certifications table should include:</strong>
+			<ul>
+				<li> Certifications that are position relevant and industry recognized, such as PMP or CISSP.</li>
+
+				<li>Certifications are NOT in­house training.</li>
+
+				<li> Abbreviated certifications are spelled out, e.g., "Project Management Professional (PMP)".</li>
+			</ul>
+
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+											
+											
+<div class="modal fade" id="empExpInstructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:60%;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+     <strong>The certifications table should include:</strong>
+			1]Companies/positions/date ranges correspond between
+			Employment History and Experience<br /> 
+			2]Work experience should have no gaps longer than 1 month. If you were not employed for a period of time, please note that. Ensure
+			   that any periods of unemployment longer than 1mo are accounted for (e.g., “Student,” “Leave of Absence,” “Personal,” etc.)<br /> \
+			3]Please only bullet individual project roles.<br /> 
+			4]Date ranges (mm/yyyy) for project roles fall within tenure at company.<br /> 
+			5]No gaps exist between project roles.<br />​ 
+			6]Role descriptions are unclassified (no sensitive/classified program names/organizations are used).
+
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="eduInstructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:60%;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+       <strong>The Education table should include:</strong>
+	<ul>
+	<li> All degrees are entered along with year of completion</li>
+
+	<li> College degrees and Graduate certificates only (AA/AS and above).</li>
+
+	<li> NOT HS diploma, college coursework, etc.</li>
+   </ul>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="empworkExperienceInstrcution" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:60%;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> Instructions</h4>
+      </div>
+      <div class="modal-body" style="font-size:11px;">
+     <strong>In this section, list detailed descriptions for each individual project role you have held.</strong>
+
+		When completing this section, it is essential to keep the following points in mind:
+		<ul>
+		<li>Follow the format exactly as shown.</li>
+
+		<li> Any lapses in employment of more than 1 month should be addresses (e.g., "Student,"
+
+		"Unemployed," "Leave of Absence," etc.)</li>
+
+		<li>Use the most recent job title for each company.</li>
+
+		<li> Use separate bullet points for each assignment or project. Include: date range, project
+
+			role or job title, and descriptions of responsibilities that are thorough, yet concise.</li>
+
+		<li>Ensure no gaps exist between project roles. Address gaps between projects, such as
+
+		awaiting clearance, proposal support, etc.</li>
+
+		<li> Ensure patterns of short­term employment are addressed (i.e., held job for fewer than 18
+
+			months or held 3 or more jobs in a five year period). This only applies to positions held
+
+			within the past 15 years.</li>
+
+		<li> Written consistently in the first or third person.</li>
+
+		<li> Appropriate verb tense is used­ present tense for you current assignment, past tense for
+
+			previous assignments.</li>
+
+		<li> Spell out the first instance of all abbreviations.</li>
+	</ul>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewresume" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"   data-dismiss="modal"  ng-click="closeResume()" aria-label="Close" ><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Resume Preview</h4>
+      </div>
+      <div class="modal-body">
+					<div id="iframeContainer"
+						style="overflow: auto; padding: 10px 0 0 0">
+						<iframe id="fred"  src=" "
+							height="520" width="100%"> </iframe>
+					</div>
+
+				</div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 
 <style type="text/css">
 .modal .modal-dialog {

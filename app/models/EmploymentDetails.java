@@ -29,6 +29,9 @@ public class EmploymentDetails extends Model {
 	public String startdate;
 	public String enddate;
 	public String expdesc;
+	public String endYear;
+	public String startYear;
+	
 	
 	@ManyToOne
 	public UserDetails user_details;
