@@ -6085,8 +6085,7 @@ public class Application extends Controller {
 			File f = new File( filenamedbpath + fileName);
 			filenamedbpath =   filenamedbpath + fileName;
 	        try {
-				Files.copy(file.toPath(), f.toPath(),
-						java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(file.toPath(), f.toPath());
 		
 			u.setResumefilepath(filenamedbpath);
 			u.update();
