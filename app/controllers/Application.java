@@ -6066,14 +6066,41 @@ public class Application extends Controller {
 	}
 	
 	
+	 
+    public static void createDir(String rootDir) {
+		File file3 = new File(rootDir);
+		if (!file3.exists()) {
+			file3.mkdirs();
+		}
+	}
+    
+    
+	final static String rootDir = Play.application().configuration()
+			.getString("resume.storage.path");
+	static {
+		createRootDir();
+	}
+	
+	public static void createRootDir() {
+		File file = new File(rootDir);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+	}
+	
+	
+	
 	public static Result uploadResume(){
+		 createDir(rootDir);
+		
 		play.mvc.Http.MultipartFormData.FilePart docFile;
 		String fileName = null;
 		String filenamedbpath = null;
 		
-		System.out.println("getAbsolutePath:"+Play.application().path().getAbsolutePath());
-		filenamedbpath  = Play.application().path().getAbsolutePath();
-		filenamedbpath = filenamedbpath + "/public/app/resumetemplate/";
+		//System.out.println("getAbsolutePath:"+Play.application().path().getAbsolutePath());
+		//filenamedbpath  = Play.application().path().getAbsolutePath();
+		
+		filenamedbpath =   "/home/jobby/resumes";
 		play.mvc.Http.MultipartFormData body = request().body()
 				.asMultipartFormData();
 		docFile = body.getFile("file");
@@ -6082,10 +6109,10 @@ public class Application extends Controller {
 			fileName = docFile.getFilename();
 			File file = docFile.getFile();
 
-			File f = new File( filenamedbpath + fileName);
-			filenamedbpath =   filenamedbpath + fileName;
+			File f = new File( rootDir + "/" + fileName);
+			filenamedbpath =   rootDir + "/" + fileName;
 	        try {
-				Files.copy(file.toPath(), f.toPath());
+				Files.copy(file.toPath(), f.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 		
 			u.setResumefilepath(filenamedbpath);
 			u.update();
