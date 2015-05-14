@@ -3821,7 +3821,7 @@ public class Application extends Controller {
 					table2.addCell(cell2);
 				}
 			}
-
+			
 			// for username and email
 			PdfPTable table4 = new PdfPTable(1);
 			table4.setWidthPercentage(100);
@@ -6129,17 +6129,36 @@ public class Application extends Controller {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	public static Result getresume(String email){
 		UserDetails u =UserDetails.getUserByEmail(email);
-		File f = new File(u.resumefilepath);
 		
-		return ok(f);
+		if(u.resumefilepath != null){
+			File f = new File(u.resumefilepath);
+			if(f != null){
+				return ok(f);	
+			}
+		}else{
+			return ok();	
+		}
+		
+		return ok();
+		
 	}
 	
+	@SuppressWarnings("unused")
 	public static Result  getuserresume(){
 		UserDetails u =UserDetails.getUserByEmail(session().get("email"));
-		File f = new File(u.resumefilepath);
-		return ok(f);
+		if(u.resumefilepath != null){
+			File f = new File(u.resumefilepath);
+			if(f != null){
+				return ok(f);	
+			}
+		}else{
+			return ok();	
+		}
+		
+		return ok();
 		
 	}
 }
