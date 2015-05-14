@@ -90,9 +90,9 @@ background-color: #999999;
 													
 													<div class="col-md-12">
 														<div class="">
-															<label class="">First Name <code>*</code></label> <label
-																class="col-md-offset-3">&nbsp;Middle Initial <code>*</code> </label> <label
-																class="col-md-offset-3">&nbsp;Last Name <code>*</code></label>
+															<label class="col-md-4">First Name <code>*</code></label> <label
+																class="col-md-4">&nbsp;Middle Initial <code>*</code> </label> <label
+																class="col-md-4">&nbsp;Last Name <code>*</code></label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
@@ -121,9 +121,9 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Email Addess <code>*</code></label> <label
-																class="col-md-offset-3">Alternate Email Address
-															</label> <label class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone
+															<label class="col-md-4">Email Addess <code>*</code></label> <label
+																class="col-md-4">Alternate Email Address
+															</label> <label class="col-md-4">&nbsp;&nbsp;Phone
 																Number <code>*</code> </label>
 
 														</div>
@@ -160,10 +160,10 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Alternate Phone Number </label> <label
-																class="col-md-offset-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job
-																Search Status <code>*</code> &nbsp;&nbsp; <span ng-if="jobsearchstatusError == true"><code>(please fill)</code></span></label> <label class="col-md-offset-3"
-																style="margin-left: 22%;">Current Job Title <code>*</code> </label>
+															<label class="col-md-4">Alternate Phone Number </label> <label
+																class="col-md-4">Job
+																Search Status <code>*</code>  <span ng-if="jobsearchstatusError == true"><code>(please fill)</code></span></label> <label class="col-md-4"
+																>&nbsp;&nbsp;Current Job Title <code>*</code> </label>
 
 														</div>
 														<div class="form-group">
@@ -202,9 +202,9 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Resident City <code>*</code></label> <label
-																class="col-md-offset-3">Resident State <code>*</code>  &nbsp;&nbsp;<span ng-if="residentStateError == true"><code>(Please fill)</code></span></label> <label
-																class="col-md-offset-3">Resident Zip Code <code>*</code> </label>
+															<label class="col-md-4">Resident City <code>*</code></label> <label
+																class="col-md-4">Resident State <code>*</code>  &nbsp;&nbsp;<span ng-if="residentStateError == true"><code>(Please fill)</code></span></label> <label
+																class="col-md-4">&nbsp;&nbsp;Resident Zip Code <code>*</code> </label>
 
 														</div>
 														<div class="form-group">
@@ -246,9 +246,9 @@ background-color: #999999;
 
 													<div class="col-md-12">
 														<div class="">
-															<label class="">Date Of Birth <code>*</code></label> <label
-																class="col-md-offset-3">Desired Salary <code>* </code></label> <label
-																class="col-md-offset-3">Willing to Relocate <code>*</code>&nbsp;&nbsp;<span ng-if="willingtorelocateError == true"> <code>(Please fill)</code></span></label>
+															<label class="col-md-4">Date Of Birth <code>*</code></label> <label
+																class="col-md-4">Desired Salary <code>* </code></label> <label
+																class="col-md-4">&nbsp;&nbsp;Willing to Relocate <code>*</code>&nbsp;&nbsp;<span ng-if="willingtorelocateError == true"> <code>(Please fill)</code></span></label>
 														</div>
 														<div class="form-group">
 															<div class="col-md-4">
@@ -774,6 +774,9 @@ background-color: #999999;
 													</div>
 													<div class="form-group">
 													<div class="col-md-10" ng-if="succUpload == true"><span style="color:green;">Resume uploaded successfully</span></div>
+												<div class="col-md-10" ng-if="pleasWait == true"><span style="">Please Wait uploading resume......... </span></div>
+												
+														
 														<div class="col-md-12">
 														<span><strong>Resume</strong></span>
 														</div>
