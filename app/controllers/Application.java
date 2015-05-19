@@ -4716,6 +4716,18 @@ public class Application extends Controller {
 				storeExcel.coop = "N";
 			}
 			storeExcel.scheduledCloseDate = editJobVM.scheduledCloseDate;
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			String dateInString = editJobVM.scheduledCloseDate;
+			Date date = null ;
+			try {
+				 date = formatter.parse(dateInString);
+		 System.out.println(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			storeExcel.scheduledCloseDateforsort = date;
 			storeExcel.updateDate = editJobVM.updateDate;
 			storeExcel.dateofStatus = editJobVM.dateofStatus;
 			storeExcel.update(storeExcel);
