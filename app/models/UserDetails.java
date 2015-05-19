@@ -67,13 +67,17 @@ public class UserDetails extends Model {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public String email;
 	public String password;
+	
+
 	public String firstname;
 	public String middlename;
 	public String lastname;
 	public String gender;
+	
 	public String dob;
 	public String userstatus;
-    public Date  lastlogin;
+   
+	public Date  lastlogin;
     public String userLoggedInstatus;
     
     public String altemail;
@@ -87,14 +91,33 @@ public class UserDetails extends Model {
     public String currentjobtitle;
     public String phnumber;
     public String emailalert;
-    public String resumefilepath;
+   
+
+	public String resumefilepath;
     
     
+	
+	 public String getEmailalert() {
+			return emailalert;
+		}
+
+		public void setEmailalert(String emailalert) {
+			this.emailalert = emailalert;
+		}
+	
     public String getResumefilepath() {
 		return resumefilepath;
 	}
 
-	public void setResumefilepath(String resumefilepath) {
+    public String getUserstatus() {
+		return userstatus;
+	}
+
+	public void setUserstatus(String userstatus) {
+		this.userstatus = userstatus;
+	}
+
+    public void setResumefilepath(String resumefilepath) {
 		this.resumefilepath = resumefilepath;
 	}
 
@@ -126,6 +149,23 @@ public class UserDetails extends Model {
 	public String getAltphnumber() {
 		return altphnumber;
 	}
+	
+	public String getGender() {
+		return gender;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 
 	public void setAltphnumber(String altphnumber) {
 		this.altphnumber = altphnumber;

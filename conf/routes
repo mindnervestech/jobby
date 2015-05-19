@@ -16,6 +16,7 @@ GET		/Logout   										controllers.Application.logOut()
 
 #User
 POST   /updateUserProfile                               controllers.Application.updateUserProfile()
+POST   /updateUserBaseResume                            controllers.Application.updateUserBaseResume()
 POST   /createNewUser                                   controllers.Application.createNewUser() 
 GET   /getAllPosition                                   controllers.Application.getAllPosition()
 GET    /getAllallDegree                                 controllers.Application.getAllallDegree()
@@ -96,3 +97,5 @@ GET    /getAllMonth                                          controllers.Applica
 POST  /uploadResume                                           controllers.Application.uploadResume()
 GET   /getresume/:email                                              controllers.Application.getresume(email:String)
 GET   /getuserresume                                             controllers.Application.getuserresume() 
+GET   /getapplyWithoutRegResume/:id                               controllers.Application.getapplyWithoutRegResume(id:String) 
+ 

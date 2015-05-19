@@ -4,6 +4,8 @@ import java.io.File;
 
 
 
+
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -147,49 +149,96 @@ public class Application extends Controller {
 	
 	
 	public static Result createNewUser() {
-		DynamicForm dynamicForm = Form.form().bindFromRequest();
-		//System.out.println("dynamicForm" + dynamicForm);
-		String email = dynamicForm.get("email");
-		String pass = dynamicForm.get("password");
-		String firstname = dynamicForm.get("firstname");
-		String middlename = dynamicForm.get("middlename");
-		String lastname = dynamicForm.get("lastname");
-		String gender = dynamicForm.get("gender");
 
-		UserDetails existingUser = UserDetails.getUserByEmail(email);
-		if (existingUser == null) {
-			UserDetails u = new UserDetails();
-			u.email = email;
-			u.password = pass;
-			// u.fullname = firstname;
-			u.firstname = firstname;
-			if (middlename == null || "NA".equalsIgnoreCase(middlename) || middlename == "") {
-				u.middlename = "NA";
-			} else {
-				u.middlename = middlename;
-			}
-			u.lastname = lastname;
-			u.gender = gender;
-			u.userstatus = "active";
-			u.emailalert = "Yes";
-			Ebean.save(u);
+		Form<UserVM> form = DynamicForm.form(UserVM.class)
+				.bindFromRequest();
+		UserVM ui = form.get();
+				System.out.println(form);
+				UserDetails existingUser = UserDetails.getUserByEmail(ui.email);
+				if (existingUser == null) {
+				UserDetails u = new UserDetails();
+				u.setEmail(ui.email);
+				u.setDob(ui.dob);
+				u.setPassword(ui.password);
+				u.setFirstname(ui.firstname);
+				u.setMiddlename(ui.middlename);
+				u.setLastname(ui.lastname);
+				u.setJobsearchstatus(ui.jobsearchstatus);
+				u.setResidentcity(ui.residentcity);
+				//u.setAltphnumber(ui.altphnumber);
+				u.setResidentState(ui.residentState);
+				u.setZipcode(ui.zipcode);
+				u.setDesiredsalary(ui.desiredsalary);
+				u.setWillingtorelocate(ui.willingtorelocate);
+				u.setJobsearchstatus(ui.jobsearchstatus);
+				u.setCurrentjobtitle(ui.currentjobtitle);
+				u.setGender(ui.gender);
+				u.setAltemail(ui.altemail);
+				u.setUserstatus("active");
+				u.setEmailalert("Yes");
+				
+				//ui.userPosition;
+				
+				Ebean.save(u);
+				
+				u.deleteManyToManyAssociations("userExperiance");
+
+				String s = ui.userExperience;
+
+				UserExperiance ue = UserExperiance.getExperianceByExperianceName(s);
+				u.userExperiance.add(ue);
+				u.saveManyToManyAssociations("userExperiance");
 			
-			MailUtility mail = new MailUtility();
+				u.deleteManyToManyAssociations("userPosition");
+				
+				/*ArrayNode brandIds = (ArrayNode) Json.parse(form.get("brandIds"));
+				for(int i=0;i<brandIds.size();i++){
+				s.brandIds.add(brandIds.get(i).asLong());
+				}
+				*/
+				
+				System.out.println(ui.userPosition.size());
+				for (int j = 0; j < ui.userPosition.size(); j++) {
+				String position = ui.userPosition.get(j);
+						UserPosition up = UserPosition.getRecoredByPositionNameAndLevel(position,ui.userExperience);
+						if(up != null){
+						System.out.println("positon: "+position);
+							u.userPosition.add(up);
+						} 
+				}
+				u.saveManyToManyAssociations("userPosition");
+				
+				u.deleteManyToManyAssociations("userClearance");
+				
+					String clea = ui.userClearance;
+					UserClearance uc = UserClearance.getClearanceByName(clea);
+					u.userClearance.add(uc);
+
+				    u.saveManyToManyAssociations("userClearance");
+				   u.save();
+				    
+				    flash("registration_success", " Account is created ! Please  log in");
+					return redirect("/registrationredirect");
+				    
+				} else {
+					flash("error", "Email ID Already Exist");
+					return redirect("/signup");
+				}
+				
+					
+			
+
+			/*MailUtility mail = new MailUtility();
 			
 			mail.sendRegistrationMail(email,pass);
-			mail.sendMailToAdminAboutNewUserRegistration(email); 
+			mail.sendMailToAdminAboutNewUserRegistration(email); */
 			
-			flash("registration_success", " Account is created ! Please  log in");
-			return redirect("/registrationredirect");
+			
 
-		} else {
-			flash("error", "Email ID Already Exist");
-			return redirect("/signup");
-		}
+		
 		
 	}
 
-	
 	
 	// called when user login to get there details
 	public static Result getUserName() {
@@ -973,6 +1022,8 @@ public class Application extends Controller {
 											DATE_FORMAT_NOW);
 									storeExcelFile.scheduledCloseDate = sdf
 											.format(date);
+									
+									storeExcelFile.scheduledCloseDateforsort = date;
 								}
 
 							}
@@ -984,6 +1035,7 @@ public class Application extends Controller {
 									SimpleDateFormat sdf = new SimpleDateFormat(
 											DATE_FORMAT_NOW);
 									sd.scheduledCloseDate = sdf.format(date);
+									sd.scheduledCloseDateforsort = date;
 									
 									List <UserDetails> ud = UserDetails.getallUserEmail();
 									for(UserDetails u: ud){
@@ -2140,12 +2192,26 @@ public class Application extends Controller {
 							}else{
 								
 									if(sortType == true){
+										
 										count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-										jobs = StoreExcelFile.getAllJobsForUserByPositionSearchIdAdminAsc(currentpage, 10,searchId);
+										if(count != 0){
+											jobs = StoreExcelFile.getAllJobsForUserByPositionSearchIdAdminAsc(currentpage, 10,searchId);
+										}else{
+											jobs = StoreExcelFile.getAllJobsForUserByPositionNameAdminAsc(currentpage, 10,searchId);
+											count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+										}
 										
 									}else{
 										count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-										jobs = StoreExcelFile.getAllJobsForUserByPositionSearchIdAdminDesc(currentpage, 10,searchId);
+										
+										if( count != 0){
+											jobs = StoreExcelFile.getAllJobsForUserByPositionSearchIdAdminDesc(currentpage, 10,searchId);
+										}else{
+											count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+											jobs = StoreExcelFile.getAllJobsForUserByPositionNameAdminDesc(currentpage, 10,searchId);
+											
+										}
+										
 									}
 							}
 					
@@ -2168,11 +2234,24 @@ public class Application extends Controller {
 						
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeSearchIdAdminAsc(currentpage, 10,jobType,searchId);
+							if(count != 0 ){
+								jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeSearchIdAdminAsc(currentpage, 10,jobType,searchId);
+							}else{
+								jobs = StoreExcelFile.getAllJobsForUserByPositionNameJobTypeAdminAsc(currentpage, 10,jobType,searchId);
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,jobType);
+								
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
-							jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeSearchIdAdminDesc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeSearchIdAdminDesc(currentpage, 10,jobType,searchId);
+							}else{
+								jobs = StoreExcelFile.getAllJobsForUserByPositionNameJobTypeSearchIdAdminDesc(currentpage, 10,jobType,searchId);
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,jobType);
+							}
+							
 						}
 						
 					}
@@ -2198,11 +2277,24 @@ public class Application extends Controller {
 						
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByLocationSearchAdminDesc(currentpage, 10,searchId);
+							if(count  != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByLocationSearchAdminDesc(currentpage, 10,searchId);
+							}else{
+								jobs = StoreExcelFile.getAllJobsForUserByLocationByPositionNameAdminDesc(currentpage, 10,searchId);
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByLocationSearchAdminDesc(currentpage, 10,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByLocationSearchAdminDesc(currentpage, 10,searchId);
+							}else{
+								
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByLocationSearchIdPositionNameAdminDesc(currentpage, 10,searchId);
+							}
+							
 						}
 					}
 					
@@ -2223,12 +2315,26 @@ public class Application extends Controller {
 					}else{
 						
 						if(sortType == true){
+							
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchPositionNameAdminAsc(currentpage, 10,jobType,searchId);
+								
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);	
+								jobs = StoreExcelFile.getAllJobsForUserByLocationJobTypeSearchPositionNameAdminDesc(currentpage, 10,jobType,searchId);
+							}
+							
 						}
 					}
 					
@@ -2253,12 +2359,25 @@ public class Application extends Controller {
 						
 					}else{
 						if(sortType == true){
+							
 							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchAdminAsc(currentpage, 10,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchAdminAsc(currentpage, 10,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);	
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchPositionNameAdminAsc(currentpage, 10,searchId);
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchAdminDesc(currentpage, 10,searchId);
+							if(count != 0 ){
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchAdminDesc(currentpage, 10,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceSearchPositionNameAdminDesc(currentpage, 10,searchId);
+							}
+							
 						}
 						
 						
@@ -2280,11 +2399,23 @@ public class Application extends Controller {
 						
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchPositionNameAdminAsc(currentpage, 10,jobType,searchId);
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByClearanceJobTypeSearchPositionNameAdminDesc(currentpage, 10,jobType,searchId);
+							}
+							
 						}
 					}
 					
@@ -2308,11 +2439,23 @@ public class Application extends Controller {
 					}else{
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminAsc(currentpage, 10,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminAsc(currentpage, 10,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchPositionNameAdminAsc(currentpage, 10,searchId);
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminDesc(currentpage, 10,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminDesc(currentpage, 10,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchPositionNameAdminDesc(currentpage, 10,searchId);
+							}
+							
 						}
 						
 					}
@@ -2332,11 +2475,24 @@ public class Application extends Controller {
 						
 						if(sortType == true){
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminAsc(currentpage, 10,jobType,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+								jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchPositionNameAdminAsc(currentpage, 10,jobType,searchId);
+							}
+							
 							
 						}else{
 							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
-							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminDesc(currentpage, 10,jobType,searchId);
+	
+							 }else{
+								 count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+								 jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchPositionNameAdminDesc(currentpage, 10,jobType,searchId);
+
+							 }
 						}
 					}
 					
@@ -2345,6 +2501,86 @@ public class Application extends Controller {
 		    	
 			} 
 		
+		    
+		    if("closeDate".equalsIgnoreCase(sortName)){
+				if("All".equalsIgnoreCase(jobType) ){
+					
+					if("undefined".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByExperianceAdmincloseDateAsc(currentpage, 10);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountAdmin(currentpage);
+							jobs = StoreExcelFile.getAllJobsForUserByExperianceAdmincloseDateDesc(currentpage, 10);
+						}
+					}else{
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminClosedateAsc(currentpage, 10,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminClosedatePosAsc(currentpage, 10,searchId);
+							}
+							
+						}
+						else{
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminCloseDateDesc(currentpage, 10,jobType,searchId);
+	
+							 }else{
+								 count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,jobType);
+								 jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchPositionNameAdminCloseDateDesc(currentpage, 10,jobType,searchId);
+
+							 }
+						}
+						
+						
+						
+					}
+					
+					
+				}else{
+					if("undefined".equalsIgnoreCase(searchId)){
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAdminCloseDateAsc(currentpage, 10,jobType);
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+							jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeAdminDesc(currentpage, 10,jobType);
+						}
+					}else{
+						
+						if(sortType == true){
+							count = StoreExcelFile.getAllJobsCountjobTypeSearchIdAdmin(currentpage,jobType,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchAdminClosedateAsc(currentpage, 10,jobType,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountjobTypeAdmin(currentpage,jobType);
+								jobs = StoreExcelFile.getAllJobsForUserByExperienceJobTypeSearchPositionNameAdminCloseDateAsc(currentpage, 10,jobType,searchId);
+							}
+							
+							
+						}else{
+							count = StoreExcelFile.getAllJobsCountSearchIdAdmin(currentpage,searchId);
+							if(count != 0){
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminCloseDateDesc(currentpage, 10,searchId);
+							}else{
+								count = StoreExcelFile.getAllJobsCountPositionNameAdmin(currentpage,searchId);
+								jobs = StoreExcelFile.getAllJobsForUserByExperianceSearchAdminCloseDatePosnameDesc(currentpage, 10,searchId);
+							}
+							
+						}
+					}
+					
+					
+				}
+		    	
+			}
+		    
 		
 		List<JobVM> jobVMs = new ArrayList<JobVM>();
 
@@ -2485,7 +2721,7 @@ public class Application extends Controller {
 		public int id;
 		public String instituteName;
 		public String degree;
-		public String fromDate;
+		public String major;
 		public String toDate;
 	}
 
@@ -2531,6 +2767,34 @@ public class Application extends Controller {
 	    public String currentjobtitle;
 	    public String  altemail;
 	    public String residentcity;
+
+	}
+
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class UserVM {
+
+		public String firstname;
+		public String middlename;
+		public String lastname;
+		public String dob;
+		public String gender;
+		// public String userposition;
+		public String email;
+		public String password;
+		public String phnumber;
+	    public String altphnumber;
+	    public String residentState;
+	    public String zipcode;
+	    public String desiredsalary;
+	    public String willingtorelocate ;
+	    public String jobsearchstatus;
+	    public String currentjobtitle;
+	    public String  altemail;
+	    public String residentcity;
+	    public String userClearance;
+	    public ArrayList<String> userPosition  =  new ArrayList<>();
+	    public String userExperience;
 
 	}
 
@@ -2595,40 +2859,162 @@ public class Application extends Controller {
 
 	}
 
+	
+	
+	// update user profile
+		@JsonIgnore
+		public static Result updateUserBaseResume() {
+			JsonNode json = request().body().asJson();
+
+			List<AddEducationVM> addEducation;
+			List<AddEmpHistoryVM> addNewEmphistory;
+			List<AddCertificateVM> addCertificate;
+			
+			
+			String email = session().get("email");
+			UserDetails u = UserDetails.getUserByEmail(email);
+
+
+			JsonNode eduJson = json.get("addEducation");
+			JsonNode empJson = json.get("addNewEmphistory");
+			JsonNode certJson = json.get("addCertificate");
+			
+			JsonNode userSkills = json.path("skills");
+			
+			u.deleteManyToManyAssociations("userSkill");
+
+			ArrayNode skills = (ArrayNode) userSkills;
+			for (int k = 0; k < skills.size(); k++) {
+				String s = skills.get(k).asText();
+
+				UserSkill us = UserSkill.getSkillByName(s);
+				u.userSkill.add(us);
+			}
+
+			u.saveManyToManyAssociations("userSkill");
+			
+			ObjectMapper mapper = new ObjectMapper();
+			addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
+					.constructCollectionType(List.class, AddEmpHistoryVM.class));
+			
+			List<EmploymentDetails> ed = EmploymentDetails
+					.getEmploymentDetailsByUserEmail(session().get("email"));
+			if (ed != null) {
+				for(EmploymentDetails edetails : ed)
+					edetails.delete();
+	         }
+			
+			for (int i = 0; i < addNewEmphistory.size(); i++) {
+				
+				EmploymentDetails eds = new EmploymentDetails();
+				eds.companyName = addNewEmphistory.get(i).companyName;
+				eds.position = addNewEmphistory.get(i).position;
+				eds.startdate = addNewEmphistory.get(i).startdate;
+				eds.startYear = addNewEmphistory.get(i).startYear;
+				
+				if (("".equalsIgnoreCase(addNewEmphistory.get(i).endYear)) || addNewEmphistory.get(i).endYear == null) {
+					eds.endYear = "Present";
+				} else {
+					eds.endYear = addNewEmphistory.get(i).endYear;
+				}
+				
+				if (("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) || addNewEmphistory.get(i).enddate == null) {
+					eds.enddate = "Present";
+				} else {
+					eds.enddate = addNewEmphistory.get(i).enddate;
+				}
+				
+				eds.user_details = UserDetails.getUserByEmail(email);
+				eds.expdesc = addNewEmphistory.get(i).expdesc;
+				eds.save();
+				u.employmentDetails.add(eds);
+
+			}
+
+			
+			List<EducationDetails> eds = EducationDetails
+					.getEducationDetailsByUserEmail(session().get("email"));
+			if (eds != null) {
+				for(EducationDetails edetails : eds){
+					edetails.delete();
+				}
+			}
+			ObjectMapper addEducationmapper = new ObjectMapper();
+
+			addEducation = mapper.convertValue(
+					eduJson,
+					addEducationmapper.getTypeFactory().constructCollectionType(
+							List.class, AddEducationVM.class));
+			for (int i = 0; i < addEducation.size(); i++) {
+
+				EducationDetails eduDetails = new EducationDetails();
+				eduDetails.instituteName = (addEducation.get(i).instituteName);
+				eduDetails.degree = (addEducation.get(i).degree);
+				eduDetails.major = (addEducation.get(i).major);
+				if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
+					eduDetails.toDate = "Present";
+				} else {
+					eduDetails.toDate = addEducation.get(i).toDate;
+				}
+				
+				eduDetails.user_details = UserDetails.getUserByEmail(email);
+				eduDetails.save();
+
+				u.educationDetails.add(eduDetails);
+
+			}
+
+			List	<CertificationDetails> c = CertificationDetails
+					.getCertificateDetailsByUserEmail(session().get("email"));
+			if (c != null) {
+				for(CertificationDetails cdetails :c){
+					cdetails.delete();
+				}
+				
+			}
+
+			ObjectMapper certMapper = new ObjectMapper();
+			addCertificate = mapper.convertValue(
+					certJson,
+					certMapper.getTypeFactory().constructCollectionType(List.class,
+							AddCertificateVM.class));
+
+			for (int i = 0; i < addCertificate.size(); i++) {
+			
+				CertificationDetails ce = new CertificationDetails();
+			
+				ce.certName = addCertificate.get(i).certName;
+				ce.certYear = addCertificate.get(i).certYear;
+				ce.user_details = UserDetails.getUserByEmail(email);
+				ce.save();
+
+				u.certificationDetails.add(ce);
+
+			}
+
+			u.update();
+			return ok();
+		}
+		
+		
 	// update user profile
 	@JsonIgnore
 	public static Result updateUserProfile() {
 		JsonNode json = request().body().asJson();
 
-		List<AddEducationVM> addEducation;
-		List<AddEmpHistoryVM> addNewEmphistory;
-		List<AddCertificateVM> addCertificate;
-		
-		
 		String email = session().get("email");
 		UserDetails u = UserDetails.getUserByEmail(email);
 
 
-		JsonNode eduJson = json.get("addEducation");
-		JsonNode empJson = json.get("addNewEmphistory");
-		JsonNode certJson = json.get("addCertificate");
 		JsonNode userClearance = json.path("clearance");
 		JsonNode userPosition = json.path("position");
-		JsonNode userSkills = json.path("skills");
+		
 		JsonNode userExperience = json.path("experience");
-
 		
 		u.deleteManyToManyAssociations("userSkill");
 
-		ArrayNode skills = (ArrayNode) userSkills;
-		for (int k = 0; k < skills.size(); k++) {
-			String s = skills.get(k).asText();
-
-			UserSkill us = UserSkill.getSkillByName(s);
-			u.userSkill.add(us);
-		}
-
-		u.saveManyToManyAssociations("userSkill");
+		
+		
 		u.deleteManyToManyAssociations("userExperiance");
 
 			String s = userExperience.asText();
@@ -2661,108 +3047,6 @@ public class Application extends Controller {
 
 		u.saveManyToManyAssociations("userClearance");
 		
-		ObjectMapper mapper = new ObjectMapper();
-		addNewEmphistory = mapper.convertValue(empJson, mapper.getTypeFactory()
-				.constructCollectionType(List.class, AddEmpHistoryVM.class));
-		
-		
-		List<EmploymentDetails> ed = EmploymentDetails
-				.getEmploymentDetailsByUserEmail(session().get("email"));
-		if (ed != null) {
-			for(EmploymentDetails edetails : ed)
-				edetails.delete();
-         }
-		
-		for (int i = 0; i < addNewEmphistory.size(); i++) {
-			
-			
-		 
-			EmploymentDetails eds = new EmploymentDetails();
-			eds.companyName = addNewEmphistory.get(i).companyName;
-			eds.position = addNewEmphistory.get(i).position;
-			eds.startdate = addNewEmphistory.get(i).startdate;
-			eds.startYear = addNewEmphistory.get(i).startYear;
-			
-			if (("".equalsIgnoreCase(addNewEmphistory.get(i).endYear)) || addNewEmphistory.get(i).endYear == null) {
-				eds.endYear = "Present";
-			} else {
-				eds.endYear = addNewEmphistory.get(i).endYear;
-			}
-			
-			if (("".equalsIgnoreCase(addNewEmphistory.get(i).enddate)) || addNewEmphistory.get(i).enddate == null) {
-				eds.enddate = "Present";
-			} else {
-				eds.enddate = addNewEmphistory.get(i).enddate;
-			}
-			
-			eds.user_details = UserDetails.getUserByEmail(email);
-			eds.expdesc = addNewEmphistory.get(i).expdesc;
-			eds.save();
-			u.employmentDetails.add(eds);
-
-		}
-
-		
-		List<EducationDetails> eds = EducationDetails
-				.getEducationDetailsByUserEmail(session().get("email"));
-		if (eds != null) {
-			for(EducationDetails edetails : eds){
-				edetails.delete();
-			}
-		}
-		ObjectMapper addEducationmapper = new ObjectMapper();
-
-		addEducation = mapper.convertValue(
-				eduJson,
-				addEducationmapper.getTypeFactory().constructCollectionType(
-						List.class, AddEducationVM.class));
-		for (int i = 0; i < addEducation.size(); i++) {
-
-			EducationDetails eduDetails = new EducationDetails();
-			eduDetails.instituteName = (addEducation.get(i).instituteName);
-			eduDetails.degree = (addEducation.get(i).degree);
-			eduDetails.fromDate = (addEducation.get(i).fromDate);
-			if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
-				eduDetails.toDate = "Present";
-			} else {
-				eduDetails.toDate = addEducation.get(i).toDate;
-			}
-			
-			eduDetails.user_details = UserDetails.getUserByEmail(email);
-			eduDetails.save();
-
-			u.educationDetails.add(eduDetails);
-
-		}
-
-		List	<CertificationDetails> c = CertificationDetails
-				.getCertificateDetailsByUserEmail(session().get("email"));
-		if (c != null) {
-			for(CertificationDetails cdetails :c){
-				cdetails.delete();
-			}
-			
-		}
-
-		ObjectMapper certMapper = new ObjectMapper();
-		addCertificate = mapper.convertValue(
-				certJson,
-				certMapper.getTypeFactory().constructCollectionType(List.class,
-						AddCertificateVM.class));
-
-		for (int i = 0; i < addCertificate.size(); i++) {
-		
-			CertificationDetails ce = new CertificationDetails();
-		
-			ce.certName = addCertificate.get(i).certName;
-			ce.certYear = addCertificate.get(i).certYear;
-			ce.user_details = UserDetails.getUserByEmail(email);
-			ce.save();
-
-			u.certificationDetails.add(ce);
-
-		}
-
 		JsonNode userDet = json.path("userInfo");
 		ObjectMapper userinfoMapper = new ObjectMapper();
 
@@ -2928,7 +3212,7 @@ public class Application extends Controller {
 			EducationDetails edudetails = new EducationDetails();
 			edudetails.instituteName = (addEducation.get(i).instituteName);
 			edudetails.degree = (addEducation.get(i).degree);
-			edudetails.fromDate = (addEducation.get(i).fromDate);
+			edudetails.major = (addEducation.get(i).major);
 //			ed.toDate = (addEducation.get(i).toDate);
 			if (("".equalsIgnoreCase(addEducation.get(i).toDate)) || addEducation.get(i).toDate == null) {
 				edudetails.toDate = "Present";
@@ -6161,4 +6445,480 @@ public class Application extends Controller {
 		return ok();
 		
 	}
+	
+	 public static  Result getapplyWithoutRegResume( String id){
+		 final String rootDir = Play.application().configuration()
+					.getString("resume.path");
+			//System.out.println("rootdir" + rootDir);
+			File f = new File(rootDir);
+			if(!f.exists()){
+				f.mkdir();
+			}
+			String candidiatename = "";
+			String ResumeName = ""; 
+			
+			
+			XWPFDocument document= new XWPFDocument(); 
+			   //Write the Document in file system
+
+			StoreExcelFile s = StoreExcelFile.getJobByRequestNumber(id);
+						
+						ResumeName = ResumeName + "_"+s.requestNumber;
+						String fileName = rootDir+"your_Name" + ".docx";
+					
+						  FileOutputStream out = null;
+						try {
+							out = new FileOutputStream(
+									   new File(fileName));
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						  String clor = "E6E6FA";
+						  
+						 XWPFTable  userDetailsTable = document.createTable();	
+						 userDetailsTable.setWidth(100);
+						   
+						   XWPFTableRow userDetailsTableRowOne = userDetailsTable.getRow(0);
+						   userDetailsTableRowOne.getCell(0).setText("Candidate Name: " +"Put Your Name here" );
+						   userDetailsTableRowOne.getCell(0).setColor(clor);
+						  
+						   
+						   CTTblWidth widthmanSkill1 =  userDetailsTableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+						   widthmanSkill1.setType(STTblWidth.DXA);
+						   widthmanSkill1.setW(BigInteger.valueOf(6000));
+						  
+						   
+						   userDetailsTableRowOne.addNewTableCell();
+						   userDetailsTableRowOne.getCell(1).setText("Company Name: "+"Booz Allen Hamilton");	
+						   userDetailsTableRowOne.getCell(1).setColor(clor);
+						  
+						   CTTblWidth userDetailsWidth2 =  userDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+						   userDetailsWidth2.setType(STTblWidth.DXA);
+						   userDetailsWidth2.setW(BigInteger.valueOf(5000));
+						  
+						    
+						   XWPFTableRow userDetailsTableRowTwo = userDetailsTable.createRow();
+						
+						   userDetailsTableRowTwo.getCell(0).setText("CSR Number: "+s.requestNumber);
+						   userDetailsTableRowTwo.getCell(0).setColor(clor);
+						  
+						   CTTblWidth userDetailsWidth3 =  userDetailsTableRowTwo.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+						   userDetailsWidth3.setType(STTblWidth.DXA);
+						   userDetailsWidth3.setW(BigInteger.valueOf(5000));
+						  
+						   userDetailsTableRowTwo.addNewTableCell();
+						   userDetailsTableRowTwo.getCell(1).setText("Clearance Level: "+"TS/SCI with Favorable Polygraph");	
+						   userDetailsTableRowTwo.getCell(1).setColor(clor);
+						  
+						   
+						   CTTblWidth userDetailsWidth4 =  userDetailsTableRowTwo.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+						   userDetailsWidth4.setType(STTblWidth.DXA);
+						   userDetailsWidth4.setW(BigInteger.valueOf(5000));
+						  
+						   
+						   
+						   XWPFTableRow  userDetailsTableRowThree = userDetailsTable.createRow();
+							
+						   
+						   userDetailsTableRowThree.getCell(0).setText("Labor Category: "+s.labourCategory);
+						   userDetailsTableRowThree.getCell(0).setColor(clor);
+						   
+						   CTTblWidth userDetailsWidth5 =  userDetailsTableRowThree.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+						   userDetailsWidth5.setType(STTblWidth.DXA);
+						   userDetailsWidth5.setW(BigInteger.valueOf(5000));
+						  
+						   
+						   userDetailsTableRowThree.addNewTableCell();
+						   userDetailsTableRowThree.getCell(1).setText("Skill Level: "+ s.performanceLevel);	
+						   userDetailsTableRowThree.getCell(1).setColor(clor);
+						  
+						   CTTblWidth userDetailsWidth6 =  userDetailsTableRowThree.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+						   userDetailsWidth6.setType(STTblWidth.DXA);
+						   userDetailsWidth6.setW(BigInteger.valueOf(5000));
+						  
+						   XWPFTableRow userDetailsTableRowFour = userDetailsTable.createRow();
+						   userDetailsTableRowFour.getCell(0).setText("Skill Level Justification: "+ " ");
+						   userDetailsTableRowFour.getCell(0).setColor(clor);
+						   userDetailsTableRowFour.addNewTableCell();
+						   userDetailsTableRowFour.getCell(1).setColor(clor);
+						   
+						   userDetailsTableRowFour.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+						   userDetailsTableRowFour.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+						   //userDetailsTableRowFour.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+						  
+						   
+						   XWPFParagraph paragraph4 = document.createParagraph();
+						   XWPFRun run4=paragraph4.createRun();
+						   run4.setText("");
+						   
+						   
+						   
+						    String mskills = new String();
+						    
+						// check if the mandatory skill does not contain null value;
+							if (s.manadatorySkills != null) {
+								mskills = s.manadatorySkills;
+							} else {
+								mskills = " ";
+							}
+
+							// split the string with numbers
+							String[] tokensVal = mskills.split("(?=(\\d)(\\.)(\\s+))");
+							// prints the count of tokens  
+							ArrayList<String> mandatorySkils = new ArrayList<String>();
+							int tokenManCount = 0;
+							for (String token : tokensVal) {
+								// check for the number
+								tokenManCount++;
+								if (token.trim().length() != 0) {
+									if(tokenManCount > 10){
+										mandatorySkils.add("1" + token.substring(0,token.length()-1));
+									}else{
+										mandatorySkils.add(token);
+									}
+								}
+
+							}
+						   
+						   XWPFTable manSkill = document.createTable();
+						    
+							   
+							   XWPFTableRow manSkillRowone = manSkill.getRow(0);
+							   manSkillRowone.addNewTableCell();
+							   manSkillRowone.getCell(0).setText("Mandatory Skills");
+							
+							   CTTblWidth widthmanSkill0 =  manSkillRowone.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+							   widthmanSkill0.setType(STTblWidth.DXA);
+							   widthmanSkill0.setW(BigInteger.valueOf(5000));
+							  // CTTableStyle style = ((Object) manSkillRowone.getCell(0).getCTTc()).addNewCnfStyle(Font.BOLD);
+							  // style.set
+							   manSkillRowone.getCell(0).setColor(clor);
+							   // manSkillRowone.getCell(0).getCTTc().g;
+							   
+							   manSkillRowone.getCell(1).setText("Candidate’s Skills/Experience");	
+							   manSkillRowone.getCell(1).setColor(clor);
+							  
+							   CTTblWidth widthmanSkill2 =  manSkillRowone.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+							   widthmanSkill2.setType(STTblWidth.DXA);
+							   widthmanSkill2.setW(BigInteger.valueOf(5000));
+							  
+							   for (String  ms : mandatorySkils) {
+								   XWPFTableRow manSkillRowTwo = manSkill.createRow();
+								   
+								   manSkillRowTwo.getCell(0).setText(ms);
+								   CTTblWidth widthdesSkill2 =  manSkillRowTwo.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+								   widthdesSkill2.setType(STTblWidth.DXA);
+								   widthdesSkill2.setW(BigInteger.valueOf(5000));
+								   
+								   
+								   manSkillRowTwo.addNewTableCell();
+								   manSkillRowTwo.getCell(1).setText("");	
+									
+								}
+						   
+						   
+							   XWPFParagraph paragraph3 = document.createParagraph();
+							   XWPFRun run3=paragraph3.createRun();
+							   run3.setText("");
+							   
+			  
+							   String desSkill = new String();
+							   if (s.desiredSkill != null) {
+								   desSkill = s.desiredSkill;
+								} else {
+									desSkill = " ";
+								}
+
+								// split the string with numbers
+								String[] tokendesiredsVal = desSkill.split("(?=(\\d)(\\.)(\\s+))");
+
+								// prints the count of tokens
+								ArrayList<String> desiredSkills = new ArrayList<String>();
+								int tokenCount = 0;
+								for (String token : tokendesiredsVal) {
+									tokenCount++;
+									// add the string with number
+									if (token.trim().length() != 0) {
+										
+										if(tokenCount> 10 ){
+											desiredSkills.add("1"+token.substring(0,token.length()-1));
+										}else{
+											desiredSkills.add(token);
+										}
+									}
+
+								}
+			   
+			   
+			   
+			   XWPFTable desiredSkill = document.createTable();
+			   desiredSkill.setWidth(100);
+			   
+			   
+			   XWPFTableRow tableRowTwo = desiredSkill.getRow(0);
+			  
+			   tableRowTwo.getCell(0).setText("Desired Skills");
+			   tableRowTwo.getCell(0).setColor(clor);
+
+			   CTTblWidth widthdesSkill0 =  tableRowTwo.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+			   widthdesSkill0.setType(STTblWidth.DXA);
+			   widthdesSkill0.setW(BigInteger.valueOf(5000));
+			   
+			   tableRowTwo.addNewTableCell();
+			   tableRowTwo.getCell(1).setText("Candidate’s Skills/Experience");	
+			   tableRowTwo.getCell(1).setColor(clor);
+			  
+			   CTTblWidth widthdesSkill1 =  tableRowTwo.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+			   widthdesSkill1.setType(STTblWidth.DXA);
+			   widthdesSkill1.setW(BigInteger.valueOf(5000));
+			   
+			   
+			  
+			   for (String  ds : desiredSkills) {
+				   XWPFTableRow tableRowThree = desiredSkill.createRow();
+				   tableRowThree.getCell(0).setText(ds);
+				  
+				   CTTblWidth widthdesSkill2 =  tableRowThree.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+				   widthdesSkill2.setType(STTblWidth.DXA);
+				   widthdesSkill2.setW(BigInteger.valueOf(5000));
+				   
+				   tableRowThree.addNewTableCell();
+				   tableRowThree.getCell(1).setText(" ");	
+					
+				}
+			  
+			  
+				   XWPFParagraph paragraph2 = document.createParagraph();
+				   XWPFRun run2=paragraph2.createRun();
+				   run2.setText("");
+				   run2.setBold(true);
+				   run2.setColor(clor);
+				   XWPFTable  certificationDetailsTable = document.createTable();;
+				   //certificationDetailsTable.setWidth(100);
+				   XWPFTableRow certificationDetailsTableRowTHREE = certificationDetailsTable.getRow(0);
+					  
+				   certificationDetailsTableRowTHREE.getCell(0).setText("Certifications");
+				   certificationDetailsTableRowTHREE.getCell(0).setColor(clor);
+				  
+				   certificationDetailsTableRowTHREE.addNewTableCell();
+				   certificationDetailsTableRowTHREE.getCell(1).setColor(clor);
+				   
+				   certificationDetailsTableRowTHREE.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+				   certificationDetailsTableRowTHREE.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				  // certificationDetailsTableRowTHREE.getCell(1).getCTTc().getTcPr().setGridSpan(Alignment.CENTER);
+				   
+				   //certificationDetailsTableRowTHREE.getCell(1).getCTTc().addNewColor().setVal("FF0000")
+				   XWPFTableRow certificationDetailsTableRowOne = certificationDetailsTable.createRow();
+				    
+				   //  employmentDetailsTableRowOne.addNewTableCell();
+				   certificationDetailsTableRowOne.getCell(0).setText("List of Certifications");
+				   certificationDetailsTableRowOne.getCell(0).setColor(clor);
+				  
+				   CTTblWidth widthcert =  certificationDetailsTableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+				   widthcert.setType(STTblWidth.DXA);
+				   widthcert.setW(BigInteger.valueOf(5000));
+				  
+				   
+				   
+				   certificationDetailsTableRowOne.addNewTableCell();
+				   certificationDetailsTableRowOne.getCell(1).setText("Certification Date:");	
+				   certificationDetailsTableRowOne.getCell(1).setColor(clor);
+				   
+				   CTTblWidth width =  certificationDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+				   width.setType(STTblWidth.DXA);
+				   width.setW(BigInteger.valueOf(5000));
+				  
+				   
+				   
+					
+						
+						XWPFTableRow certificationDetailsTableRowTwo = certificationDetailsTable.createRow();
+						certificationDetailsTableRowTwo.getCell(0).setText("");
+						//certificationDetailsTableRowTwo.getCell(0).setColor(clor);
+						
+						certificationDetailsTableRowTwo.addNewTableCell();
+						certificationDetailsTableRowTwo.getCell(1).setText("");	
+						//certificationDetailsTableRowTwo.getCell(1).setColor(clor);
+						   
+					
+				   
+				   
+				   
+					XWPFParagraph paragraph1 = document.createParagraph();
+					   XWPFRun run1=paragraph1.createRun();
+					   run1.setText("");
+					   run1.setBold(true);
+					   run1.setColor(clor);
+					 
+					   
+				   XWPFTable  educationDetailsTable = document.createTable();;
+				   //educationDetailsTable.setWidth(100);
+				   
+				   XWPFTableRow educationDetailsTableRowthree = educationDetailsTable.getRow(0);
+					  
+				   educationDetailsTableRowthree.getCell(0).setText("Education");
+				   educationDetailsTableRowthree.getCell(0).setColor(clor);
+				  
+				   educationDetailsTableRowthree.addNewTableCell();
+				   educationDetailsTableRowthree.getCell(1).setColor(clor);
+				 
+				   educationDetailsTableRowthree.addNewTableCell();
+				   educationDetailsTableRowthree.getCell(2).setColor(clor);
+				 
+				   
+				   educationDetailsTableRowthree.addNewTableCell();
+				   educationDetailsTableRowthree.getCell(2).setColor(clor);
+				 
+				   educationDetailsTableRowthree.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+				   educationDetailsTableRowthree.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				   educationDetailsTableRowthree.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				   educationDetailsTableRowthree.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				   
+				   
+				   XWPFTableRow educationDetailsTableRowOne = educationDetailsTable.createRow();
+				 //  employmentDetailsTableRowOne.addNewTableCell();
+				   educationDetailsTableRowOne.getCell(0).setText("Degree");
+				   educationDetailsTableRowOne.getCell(0).setColor(clor);
+				   
+				   CTTblWidth widthedu1 =  educationDetailsTableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW();
+				   widthedu1.setType(STTblWidth.DXA);
+				   widthedu1.setW(BigInteger.valueOf(3500));
+				   
+				   educationDetailsTableRowOne.addNewTableCell();
+				   educationDetailsTableRowOne.getCell(1).setText("School Name ");	
+				   educationDetailsTableRowOne.getCell(1).setColor(clor);
+					
+				   
+				   CTTblWidth widthedu2 =  educationDetailsTableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW();
+				   widthedu2.setType(STTblWidth.DXA);
+				   widthedu2.setW(BigInteger.valueOf(3500));
+				   educationDetailsTableRowOne.addNewTableCell();
+				   educationDetailsTableRowOne.getCell(2).setText("Degree/Major");	
+				   educationDetailsTableRowOne.getCell(2).setColor(clor);
+					  
+				   CTTblWidth widthedu3 =  educationDetailsTableRowOne.getCell(2).getCTTc().addNewTcPr().addNewTcW();
+				   widthedu3.setType(STTblWidth.DXA);
+				   widthedu3.setW(BigInteger.valueOf(3500));
+				   
+				   educationDetailsTableRowOne.addNewTableCell();
+				   educationDetailsTableRowOne.getCell(3).setText("Completion Date: ");	
+				   educationDetailsTableRowOne.getCell(3).setColor(clor);
+				   CTTblWidth widthedu4 =  educationDetailsTableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW();
+				   widthedu4.setType(STTblWidth.DXA);
+				   widthedu4.setW(BigInteger.valueOf(3500));
+				   
+				 
+				   
+						XWPFTableRow educationDetailsTableRowTWO = educationDetailsTable.createRow();
+						 //  employmentDetailsTableRowOne.addNewTableCell();
+						educationDetailsTableRowTWO.getCell(0).setText(" ");
+						//educationDetailsTableRowTWO.getCell(0).setColor(clor);
+						  
+						   
+						educationDetailsTableRowTWO.addNewTableCell();
+						educationDetailsTableRowTWO.getCell(1).setText(" ");	
+						//educationDetailsTableRowTWO.getCell(1).setColor(clor);
+							
+						educationDetailsTableRowTWO.addNewTableCell();
+						educationDetailsTableRowTWO.getCell(2).setText(" ");	
+						//educationDetailsTableRowTWO.getCell(2).setColor(clor);
+							  
+						educationDetailsTableRowTWO.addNewTableCell();
+						educationDetailsTableRowTWO.getCell(3).setText(" ");	
+						//educationDetailsTableRowTWO.getCell(3).setColor(clor);
+						   
+					
+			   
+					XWPFParagraph paragraph = document.createParagraph();
+					   XWPFRun run=paragraph.createRun();
+					   run.setText("");
+					   run.setBold(true);
+					   run.setColor(clor);
+				   XWPFTable  employmentDetailsTable = document.createTable();;
+				  
+				   XWPFTableRow EmploymentDetailsTableRowthree = employmentDetailsTable.getRow(0);
+					  
+				   EmploymentDetailsTableRowthree.getCell(0).setText("WORK EXPERIENCE");
+				   EmploymentDetailsTableRowthree.getCell(0).setColor(clor);
+				  
+				   EmploymentDetailsTableRowthree.addNewTableCell();
+				   EmploymentDetailsTableRowthree.getCell(1).setColor(clor);
+				 
+				   EmploymentDetailsTableRowthree.addNewTableCell();
+				   EmploymentDetailsTableRowthree.getCell(2).setColor(clor);
+				 
+				   
+				   EmploymentDetailsTableRowthree.addNewTableCell();
+				   EmploymentDetailsTableRowthree.getCell(2).setColor(clor);
+				 
+				   EmploymentDetailsTableRowthree.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+				   EmploymentDetailsTableRowthree.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				   EmploymentDetailsTableRowthree.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				   EmploymentDetailsTableRowthree.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				 
+				   
+				  				   
+				   int[] cols = {10000,0,0,0}; 
+					
+				   
+				  
+						XWPFTableRow employmentDetailsTableRowTwo = employmentDetailsTable.createRow();
+						
+						employmentDetailsTableRowTwo.getCell(0).setText("Employers Name: " + "Employers Name" );
+						
+						//employmentDetailsTableRowTwo.getCell(0).setColor(clor);
+						
+						employmentDetailsTableRowTwo.addNewTableCell();
+						employmentDetailsTableRowTwo.getCell(1).setText("Start Date: "+ "MM" +"/"+  "YYYY");	
+						//employmentDetailsTableRowTwo.getCell(1).setColor(clor);
+						
+						employmentDetailsTableRowTwo.addNewTableCell();
+						employmentDetailsTableRowTwo.getCell(2).setText("End Date: "+ "MM" +"/"+  "YYYY");	
+						//employmentDetailsTableRowTwo.getCell(2).setColor(clor);
+						  
+						employmentDetailsTableRowTwo.addNewTableCell();
+						employmentDetailsTableRowTwo.getCell(3).setText("Position Held: "+ "Position Name ");	
+						//employmentDetailsTableRowTwo.getCell(3).setColor(clor);
+						XWPFTableRow employmentDetailsTableRowThree = employmentDetailsTable.createRow();
+						employmentDetailsTableRowThree.getCell(0).setText("Exp Desc");
+						//employmentDetailsTableRowThree.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(BigInteger.valueOf(100));
+						employmentDetailsTableRowThree.addNewTableCell();
+						employmentDetailsTableRowThree.addNewTableCell();
+						employmentDetailsTableRowThree.addNewTableCell();
+						employmentDetailsTableRowThree.getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+						employmentDetailsTableRowThree.getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+						employmentDetailsTableRowThree.getCell(2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+						employmentDetailsTableRowThree.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+							   
+						
+						
+						
+					
+				   
+				   
+				   
+			    try {
+					document.write(out);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+				String date = sdf.format(new Date());
+				response().setContentType("application/docx");
+				response().setHeader("Content-Disposition",
+						"inline; filename=" + fileName);
+				System.out.println("document created successfully..");
+				File file = new File(fileName);
+				return ok(file);
+		 
+	 }
+	
 }

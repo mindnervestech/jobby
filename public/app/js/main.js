@@ -121,6 +121,7 @@ App.config(function ($routeProvider) {
       .when('/sampleResume', { templateUrl: 'assets/app/templates/states/sampleResume.html', controller: 'ResumeTemplatePdfController'})
        .when('/sampleProfile', { templateUrl: 'assets/app/templates/states/sampleProfile.html', controller: 'SampleProfileController'})
       .when('/helppage', { templateUrl: 'assets/app/templates/states/help.html', controller: 'HelpPageController'})
+       .when('/baseresume', { templateUrl: 'assets/app/templates/states/baseResume.html', controller: 'BaseResumeController'})
         .when('/extra-signin', { templateUrl: 'assets/app/templates/states/extra-signin.html', controller: 'ExtraSigninController'})
         .when('/extra-signup', { templateUrl: 'assets/app/templates/states/extra-signup.html', controller: 'ExtraSignupController'})
         .when('/extra-lock-screen', { templateUrl: 'assets/app/templates/states/extra-lock-screen.html', controller: 'ExtraLockScreenController'})
@@ -2237,32 +2238,22 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		    
 		    $http.get('/getUserProfile?d='+Math.random())
 	    	.success(function(data) {
-	    		       	
-	    		
 	    	    	//$scope.userSkill = data.certificationDetails[0].user_details.userSkill;
-	         		$scope.userClearance = data.userDetails.residentcity;
-	         	 	$scope.userPosition = data.userDetails.residentState;
-	         	 	$scope.userExperiance = data.userDetails.phnumber;
-	         	 	console.log($scope.userClearance +""+$scope.userPosition +""+$scope.userExperiance);
-	                 if($scope.userClearance == "" || angular.isUndefined($scope.userClearance) || $scope.userClearance == null || 
-	        		 $scope.userPosition == "" || angular.isUndefined($scope.userPosition) || $scope.userPosition == null
-	        		 || $scope.userExperiance == "" || angular.isUndefined($scope.userExperiance) || $scope.userExperiance == null	){
-	        	 
-	        	 
-	 			 $('#applyJobPopupMsg').modal();
-	         }else{
-	        	 
-	        	 
+	         		$scope.educationDetails = data.educationDetails;
+	         	 	$scope.employmentDetails = data.employmentDetails;
+	         	 	console.log($scope.educationDetails +""+""+$scope.employmentDetails);
+	                 if($scope.educationDetails.length == 0 ||  $scope.employmentDetails.length == 0){
+	        	 alert(" Warning!!!! \n Please Complete your Profile, \n but you can still fill the job application form.  ");
+	 			// $('#applyJobPopupMsg').modal();
 	        	 $('#savedJobsPopup1').modal();
-	 			  $("#tab1").click();
+	        	 $("#tab1").click();
+	         }else{
+	        	 $('#savedJobsPopup1').modal();
+	 			 $("#tab1").click();
 	         }    	     
 	    	    
 	    	});
 		    
-		    
-		    
-		    console.log($scope.userClearance);
-			
 	  }
 	  
 	  $scope.gotoUserProfile = function(){
@@ -2301,44 +2292,77 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 
 	  // save current user applied job
 	  $scope.saveUserJob = function(){
-		  $('#savedJobsPopup1').modal('hide');
-		   console.log($scope.desiredSkills);
-		   $scope.requestNumber = $scope.jobData.requestNumber;
-		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills,userskillsSpecification:$scope.userskillsSpecification})
-			.success(function(data){
-				console.log("success");
-				/*$http.get('/getUserSavedJobs/'+$scope.pageno)
-				.success(function(data) {
-					$scope.jobsData = data.jobs;
-					  $scope.manadatorySkills = [];
-					  $scope.desiredSkills = [];
-					console.log("$scope.success"+JSON.stringify($scope.jobsData));
-					
-				});*/
-				 $scope.job_application_success = true;
-				 $scope.job_draft_application_success = false;
-				$scope.savedJobs = false;
-				 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
-					.success(function(data) {
-						$scope.jobsData = data.jobs;
-						  $scope.manadatorySkills = [];
-						  $scope.desiredSkills = [];
-						console.log("$scope.success"+$scope.jobsData);
-						$scope.totalJobs = data.jobsCount;
-						if(data.jobsCount <= 10){
-							$('#next1').hide();
-							$('#next').hide();
-							$scope.JobPre  = parseInt($scope.totalJobs);
-						}else{
-							$('#next1').show();
-							$('#next').show();
-						//	$scope.JobPre= 10;
-							$scope.JobPre =  10 ;
-						}
-					});
-			
-				
-			});
+		  $http.get('/getUserProfile?d='+Math.random())
+	    	.success(function(data) {
+	    	    	//$scope.userSkill = data.certificationDetails[0].user_details.userSkill;
+	         		$scope.educationDetails = data.educationDetails;
+	         	 	$scope.employmentDetails = data.employmentDetails;
+	         	 	console.log($scope.educationDetails +""+""+$scope.employmentDetails);
+	                 if($scope.educationDetails.length == 0 ||  $scope.employmentDetails.length == 0){
+	        	      alert("Profile is incomplete your applied job is saved in draft ,please complete your profile and re submit it .");
+	        	      $('#savedJobsPopup1').modal('hide');
+	        	      $http.post('/saveUserJobToDraft',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills,userskillsSpecification:$scope.userskillsSpecification})
+		      			.success(function(data){
+		      				console.log("success");
+		      				 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
+		      					.success(function(data) {
+		      						$scope.jobsData = data.jobs;
+		      						  $scope.manadatorySkills = [];
+		      						  $scope.desiredSkills = [];
+		      						  $scope.job_draft_application_success = true;
+		      						  $scope.job_application_success = false;
+		      						console.log("$scope.success"+$scope.jobsData);
+		      						$scope.totalJobs = data.jobsCount;
+		      						if(data.jobsCount <= 10){
+		      							$('#next1').hide();
+		      							$('#next').hide();
+		      							$scope.JobPre  = parseInt($scope.totalJobs);
+		      						}else{
+		      							$('#next1').show();
+		      							$('#next').show();
+		      						//	$scope.JobPre= 10;
+		      							$scope.JobPre =  10 ;
+		      						}
+		      					});
+		      				//$scope.updateSuccess = true;
+		      			});
+	 		
+	                 }else{
+	                	 $('#savedJobsPopup1').modal('hide');
+	                   
+	                   $scope.requestNumber = $scope.jobData.requestNumber;
+	           		   $http.post('/saveAppliedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills,userskillsSpecification:$scope.userskillsSpecification})
+	           			.success(function(data){
+	           				 $scope.job_application_success = true;
+	           				 $scope.job_draft_application_success = false;
+	           				$scope.savedJobs = false;
+	           				 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
+	           					.success(function(data) {
+	           						$scope.jobsData = data.jobs;
+	           						  $scope.manadatorySkills = [];
+	           						  $scope.desiredSkills = [];
+	           						console.log("$scope.success"+$scope.jobsData);
+	           						$scope.totalJobs = data.jobsCount;
+	           						if(data.jobsCount <= 10){
+	           							$('#next1').hide();
+	           							$('#next').hide();
+	           							$scope.JobPre  = parseInt($scope.totalJobs);
+	           						}else{
+	           							$('#next1').show();
+	           							$('#next').show();
+	           						//	$scope.JobPre= 10;
+	           							$scope.JobPre =  10 ;
+	           						}
+	           					});
+	           			
+	           				
+	           			});
+	                }
+	               
+	    	});
+		  
+		 
+		 
 	  
 	  } 
 
@@ -2376,64 +2400,73 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 
 	  $scope.job_application_success = false;
 	  $scope.saveUserSavedJob = function(){
-		
 		  $scope.job_draft_application_success = false;
-		  console.log(JSON.stringify($scope.userAppSkills))
-		 
-		 
-				var count = 0;
-				angular.forEach($scope.desiredSkills, function(obj1, index){
-					count ++;
-					//for(var i =0 ;i<$scope.manadatorySkills.length; i++ ){
-						if ((obj1.comment == " " )) {
-							$scope.errorDesSkillComment = true;
-						}else{
-							$scope.errorDesSkillComment = false;
-						}
-						
-						if(count == $scope.desiredSkills.length && $scope.errorDesSkillComment == false){
-							//$("#tab3").click();
-							$scope.errorDesSkillComment = false;
-						}
-						
-						if($scope.jStatus == 'Draft'){
-							$scope.errorDesSkillComment = false;
-							//$("#tab3").click();
-						}
-					//}
+		  $http.get('/getUserProfile?d='+Math.random())
+	    	.success(function(data) {
+	    	    	//$scope.userSkill = data.certificationDetails[0].user_details.userSkill;
+	         		$scope.educationDetails = data.educationDetails;
+	         	 	$scope.employmentDetails = data.employmentDetails;
+	         	 	console.log($scope.educationDetails +""+""+$scope.employmentDetails);
+	                 if($scope.educationDetails.length == 0 ||  $scope.employmentDetails.length == 0){
+	        	      alert("Profile is incomplete your applied job is saved in draft ,plase complete your profile and re submit it.");
+	        	      $('#savedJobsPopup1').modal('hide');
+	 			// $('#applyJobPopupMsg').modal();
+	        	      $http.post('/saveUserJobToDraft',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills,userskillsSpecification:$scope.userskillsSpecification})
+	      			.success(function(data){
+	      				console.log("success");
+	      				 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
+	      					.success(function(data) {
+	      						$scope.jobsData = data.jobs;
+	      						  $scope.manadatorySkills = [];
+	      						  $scope.desiredSkills = [];
+	      						  $scope.job_draft_application_success = true;
+	      						  $scope.job_application_success = false;
+	      						console.log("$scope.success"+$scope.jobsData);
+	      						$scope.totalJobs = data.jobsCount;
+	      						if(data.jobsCount <= 10){
+	      							$('#next1').hide();
+	      							$('#next').hide();
+	      							$scope.JobPre  = parseInt($scope.totalJobs);
+	      						}else{
+	      							$('#next1').show();
+	      							$('#next').show();
+	      						//	$scope.JobPre= 10;
+	      							$scope.JobPre =  10 ;
+	      						}
+	      					});
+	      				//$scope.updateSuccess = true;
+	      			});
+	         }else{
+	        	 $('#savedJobsPopup1').modal('hide');
+				  $http.post('/saveUserSavedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills,userskillsSpecification:$scope.userskillsSpecification})
+					.success(function(data){
+						console.log("success");
+						 $scope.job_application_success = true;
+						 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
+							.success(function(data) {
+								$scope.jobsData = data.jobs;
+								  $scope.manadatorySkills = [];
+								  $scope.desiredSkills = [];
+								  $scope.userskillsSpecification;
+								console.log("$scope.success"+$scope.jobsData);
+								$scope.totalJobs = data.jobsCount;
+								if(data.jobsCount <= 10){
+									$('#next1').hide();
+									$('#next').hide();
+									$scope.JobPre  = parseInt($scope.totalJobs);
+								}else{
+									$('#next1').show();
+									$('#next').show();
+								//	$scope.JobPre= 10;
+									$scope.JobPre =  10 ;
+								}
+							});
 					
 					});
-			
+	         }    	     
+	    	    
+	    	});
 		  
-		  if($scope.errorDesSkillComment == false){
-			  $('#savedJobsPopup1').modal('hide');
-			  $http.post('/saveUserSavedJob',{manadatorySkills:$scope.manadatorySkills,desiredSkills:$scope.desiredSkills,jobData:$scope.jobData,skills:$scope.userAppSkills,userskillsSpecification:$scope.userskillsSpecification})
-				.success(function(data){
-					console.log("success");
-					 $scope.job_application_success = true;
-					 $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
-						.success(function(data) {
-							$scope.jobsData = data.jobs;
-							  $scope.manadatorySkills = [];
-							  $scope.desiredSkills = [];
-							  $scope.userskillsSpecification;
-							console.log("$scope.success"+$scope.jobsData);
-							$scope.totalJobs = data.jobsCount;
-							if(data.jobsCount <= 10){
-								$('#next1').hide();
-								$('#next').hide();
-								$scope.JobPre  = parseInt($scope.totalJobs);
-							}else{
-								$('#next1').show();
-								$('#next').show();
-							//	$scope.JobPre= 10;
-								$scope.JobPre =  10 ;
-							}
-						});
-				
-				});
-		  }
-		 
 		  
 	  }
 	  
@@ -2505,8 +2538,16 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$("#tab2").click();
 		}
 		
+		$scope.userskillsSpecificationError = true;
+
 		$scope.gotoNext = function(){
-			$("#tab2").click();
+			if($scope.userskillsSpecification != " " && !(angular.isUndefined($scope.userskillsSpecification))){
+				$scope.userskillsSpecificationError = false;
+				$("#tab2").click();
+			}else{
+				$scope.userskillsSpecificationError = true;
+			}
+			
 		}
 		
 		$scope.preClickedfirst = function(){
@@ -10134,27 +10175,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 		} 
 	});
 	
-	
-	/*
-	 * $scope.open = function($event) { $event.preventDefault();
-	 * $event.stopPropagation();
-	 * 
-	 * $scope.opened = true; };
-	 * 
-	 * $scope.dateOptions = { formatYear: 'yy', startingDay: 1 };
-	 * 
-	 * $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy',
-	 * 'shortDate']; $scope.format = $scope.formats[2];
-	 */
-	/*
-	 * $('#startdateemp').datepicker({ format: 'mm-dd-yyyy' });
-	 * 
-	 * $('#enddateemp').datepicker({ format: 'mm-dd-yyyy' });
-	 */
-	
-		/*
-		 * $('#edudateform').datepicker({ format: 'mm-dd-yyyy' });
-		 */
 		$('#dob').datepicker({
 	    format: 'mm-dd-yyyy'
 		});
@@ -10257,6 +10277,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		//console.log(JSON.stringify($scope.allSkills));
     	});
 
+		
 		$http.get('/getAllStates?d='+Math.random())
     	.success(function(data) {
     		$scope.allStates = data.states;
@@ -10291,7 +10312,7 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		$scope.userProfile = data;
     		console.log("Profile data:"+JSON.stringify($scope.userProfile));
     		$scope.userPosition = data.userDetails.userPosition;
-    		$scope.userClearance = data.userClearance;
+    		$scope.userClearance = data.userDetails.userClearance;
     		$scope.userDetails = data.userDetails;
     		$scope.userExperience = data.userDetails.userExperiance;
     		var resume = $scope.userProfile.userDetails.resumefilepath;
@@ -10300,47 +10321,25 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     		}
     		
     	//	console.log("Profile data"+JSON.stringify(data));
-         	if(data.educationDetails == ""){
-         		
-         	}else{
-         		$scope.addEducation = data.educationDetails;
-         	}
          	
-         	if( data.employmentDetails == ""){
          	
-         	}else{
-         		$scope.addNewEmphistory = data.employmentDetails;
-         	}
-         	
-         	if(data.educationDetails[0].user_details.userClearance == ""){
+         	/*if(data.educationDetails[0].user_details.userClearance == ""){
          		
          	}else{
          		$scope.userClearance = data.educationDetails[0].user_details.userClearance;
-         	}
+         	}*/
          	
-         	if(data.educationDetails[0].user_details.userPosition == ""){
+         	/*if(data.educationDetails[0].user_details.userPosition == ""){
 		
          	}else{
          		$scope.userPosition = data.educationDetails[0].user_details.userPosition;
-         	}
+         	}*/
          	
-         	if(data.userDetails.userExperiance == ""){
+         	/*if(data.userDetails.userExperiance == ""){
         		
          	}else{
          		$scope.userExperience = data.userDetails.userExperiance;
-         	}
-         	
-         	if(data.educationDetails[0].user_details.userSkill == ""){
-         		
-         	}else{
-         		$scope.userSkill = data.educationDetails[0].user_details.userSkill;
-         	}
-    		
-         	if(data.certificationDetails == ""){
-         		
-         	}else{
-         		$scope.addCertificate = data.certificationDetails;
-         	}
+         	}*/
          	
     		angular.forEach($scope.allSkills, function(obj, index){
     			angular.forEach($scope.userSkill, function(obj1, index){
@@ -10352,12 +10351,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     				});
     			});
     		
-    		/*
-			 * var i,j; for(i=0;i<$scope.allCleanrance.length;i++) { for(j=0;j<$scope.userClearance.length;j++) {
-			 * if($scope.allCleanrance[j].clearance == $scope.userClearance[i]) {
-			 * $scope.allCleanrance[j].isSelected = true; $scope.isSelect =
-			 * true; } }; };
-			 */
     		
     		$http.get('/getAllClearance?d='+Math.random())
         	.success(function(data) {
@@ -10406,46 +10399,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
     	});
 		
 	}
-	    
- 	
-	$scope.skillClicked = function(e, skill,index) {
-		console.log(skill);
-		if($(e.target).is(":checked")) {
-		$scope.skills.push(skill.skillName);
-		$scope.checked++;
-		} else{
-			$scope.checked--;
-			if (index > -1) {
-			//	alert($(e.target).is(":checked"));
-				$scope.skills.splice(index, 1);
-			}
-		}
-
-		};
-	
-		
-		$scope.otherSkill;
-		$scope.error = false;
-		$scope.saveOtherSkill = function(){
-			if(!angular.isUndefined($scope.otherSkill)){
-				$http.get('saveOtherSkill/'+$scope.otherSkill)
-				.success(function(data){
-					if(data) {
-						
-						$scope.skills.push(data.skillName);
-						data.isSelected = true;
-						$scope.allSkills.push(data);
-						$scope.result = data;
-						
-						$scope.otherSkill = " ";
-						// $scope.init();
-					} 
-				});
-			}else{
-				$scope.error = true;
-			}
-			
-		}		
 		
 		$scope.updateSuccess = false;
 		$scope.manaFieldError = false;
@@ -10478,7 +10431,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 				}
 				
 				if($scope.userDetails.residentState =="" || $scope.userDetails.residentState== null ||  (angular.isUndefined($scope.userDetails.residentState)) ){
-					
 					$scope.residentStateError = true;
 				}else{
 					$scope.residentStateError = false;
@@ -10486,7 +10438,6 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 				
 				if($scope.userDetails.willingtorelocate =="" || $scope.userDetails.willingtorelocate== null ||  (angular.isUndefined($scope.userDetails.willingtorelocate)) ){
 					$scope.willingtorelocateError = true;
-					
 				}else{
 					$scope.willingtorelocateError = false;
 				}
@@ -10510,23 +10461,9 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 				}else{
 					$scope.positionUError = false;
 				}
-				
 				$scope.manaFieldError = true;
 			}else{
-			if(!(angular.isUndefined($scope.userClearance)) && !(angular.isUndefined($scope.userPosition)) && !(angular.isUndefined($scope.userExperience))){
-				console.log(JSON.stringify($scope.userPosition));
-					if($scope.addEducation.length == 0){
-					$scope.EducationError = true;
-					}else if ($scope.userExperience.length == 0){
-						$scope.expUError = true;
-					}else if ($scope.userClearance.length == 0){
-						$scope.cleranceUError = true;
-					}else if ($scope.userPosition.length == 0){
-						$scope.positionUError = true;
-					}else if($scope.addNewEmphistory.length == 0){
-						$scope.empHistory = true;
-					}else{
-						$http.post('/updateUserProfile?d='+Math.random(),{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,skills:$scope.skills,experience:$scope.userExperience})
+						$http.post('/updateUserProfile?d='+Math.random(),{userInfo:$scope.userDetails,clearance:$scope.userClearance,position:$scope.userPosition,experience:$scope.userExperience})
 						.success(function(data){
 							console.log("success");
 							$scope.updateSuccess = true;
@@ -10541,23 +10478,19 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 							$scope.willingtorelocateError = false;
 							$scope.residentStateError = false;
 							$scope.jobsearchstatusError = false;
-							$scope.init();
 							$scope.manaFieldError = false;
+							$scope.init();
+							
 						});
 					}
 					}
-			
-			else{
-					$scope.userPoserror = true;
-				}
-			}
-		}
+		
 		
 	$scope.setEditIdImage = function (userdata) {
 		$scope.mode = "edit";
 		$scope.editIdImage = userdata.id;
 	};
-	// $scope.img =
+
 	// "https://s3.amazonaws.com/uifaces/faces/twitter/kolage/48.jpg";
 	var file=null;
 	var generalPic = null;
@@ -10764,6 +10697,320 @@ App.controller('ExtraProfileController', function ($scope, $rootScope, $routePar
 	
 	
 });
+
+
+App.controller('BaseResumeController', function ($scope, $rootScope, $routeParams, $http, $upload){
+	
+	$scope.userData = {
+		aextra : []	
+	};
+
+	
+	$http.get('/getUserName?d='+Math.random())
+	.success(function(data) {
+	// $scope.userData = data;
+		$rootScope.username = data;
+		//console.log("data"+data);
+	});
+	
+	// check for the admin when page refresh
+	$http.get('checkForadmin?d='+Math.random())
+	.success(function(data){
+		if(data == 'notAdmin') {
+			$rootScope.isUser = true;
+			$rootScope.isAdmin = false;
+			//console.log("admin"+$rootScope.isAdmin);
+		}else{
+			$rootScope.isAdmin = true;
+			$rootScope.isUser = false;
+		} 
+	});
+	
+	
+		// used for init date picker in education form
+		$scope.initeduDateform = function(){
+			$('#edudateform').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+			$('#edudateto').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+			
+		}
+		
+		// used to init date picker in company form
+		$scope.initCmpDatePicker = function(){
+			$('#startdateemp').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+			$('#enddateemp').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+		} 
+		
+		// used to init date picker
+		$scope.initDatePicker  = function(){
+			
+			$('#certYear').datepicker({
+			    format: 'mm-dd-yyyy'
+				});
+		}
+		
+	$scope.addNewEmphistory = [{}];
+	$scope.addEducation = [{}];
+	$scope.addCertificate = [];
+	$scope.skills = [];
+	$scope.userDetails = {};
+	$scope.userPosition;
+	$scope.userClearance;
+	$scope.userExperience;
+	$scope.checked = 0;
+	$scope.limit = 12;
+	
+	// $scope.skills = [];
+	
+	$scope.addNewEmployment = function(){
+		
+		$scope.addNewEmphistory.push({ });
+	}
+	
+	$scope.addNewEducation = function(){
+		$scope.addEducation.push({ });
+	}
+	
+	$scope.addNewCertificate = function(){
+		$scope.addCertificate.push({ });
+		
+	}
+	
+	$scope.allSkills;
+	$scope.allCleanrance;
+	$scope.allPosition;
+	$scope.allExperiance; 
+	$scope.resumefilepath;
+	$scope.init = function(){
+
+		$http.get('checkForadmin?d='+Math.random())
+		.success(function(data){
+			if(data) {
+				$scope.isAdmin = data;
+				//console.log("admin"+$scope.isAdmin);
+			} 
+		});
+		
+		
+		
+		$http.get('/getAllSkills?d='+Math.random())
+    	.success(function(data) {
+    		$scope.allSkills = data.skills;
+    		//console.log(JSON.stringify($scope.allSkills));
+    	});
+
+		
+		$http.get('/getAllStates?d='+Math.random())
+    	.success(function(data) {
+    		$scope.allStates = data.states;
+    		//console.log(JSON.stringify($scope.allStates));
+    	});
+		
+		
+
+		$http.get('/getAllallDegree?d='+Math.random())
+    	.success(function(data) {
+    		$scope.allDegree = data;
+    	});
+		
+		
+		$http.get('/getAllYear?d='+Math.random())
+    	.success(function(data) {
+    		$scope.years = data.years;
+    		//console.log(JSON.stringify($scope.allDegree));
+    	});
+		
+		$http.get('/getAllMonth?d='+Math.random())
+    	.success(function(data) {
+    		$scope.months = data.months;
+    		//console.log(JSON.stringify($scope.allDegree));
+    	});
+		 
+		$http.get('/getUserProfile?d='+Math.random())
+    	.success(function(data) {
+    		$scope.userProfile = data;
+    		console.log("Profile data:"+JSON.stringify($scope.userProfile));
+    	
+         	
+         	
+    		
+         	if(data.educationDetails == ""){
+         		
+         	}else{
+         		$scope.addEducation = data.educationDetails;
+         	}
+         	
+         	if( data.employmentDetails == ""){
+         	
+         	}else{
+         		$scope.addNewEmphistory = data.employmentDetails;
+         	}
+         	
+         	if(data.userDetails.userSkill == ""){
+         		
+         	}else{
+         		$scope.userSkill = data.userDetails.userSkill;
+         	}
+         	
+         	angular.forEach($scope.allSkills, function(obj, index){
+    			angular.forEach($scope.userSkill, function(obj1, index){
+    				if ((obj.skillName == obj1.skillName)) {
+    					$scope.skills.push(obj.skillName);
+    					$scope.checked++;
+    					obj.isSelected = true;
+    					};
+    				});
+    			});
+         	
+         	if(data.certificationDetails == ""){
+         		
+         	}else{
+         		$scope.addCertificate = data.certificationDetails;
+         	}
+    		
+    	});
+		
+	}
+	    
+ 	
+	$scope.skillClicked = function(e, skill,index) {
+		console.log(skill);
+		if($(e.target).is(":checked")) {
+		$scope.skills.push(skill.skillName);
+		$scope.checked++;
+		} else{
+			$scope.checked--;
+			if (index > -1) {
+			//	alert($(e.target).is(":checked"));
+				$scope.skills.splice(index, 1);
+			}
+		}
+
+		};
+	
+		
+		$scope.otherSkill;
+		$scope.error = false;
+		$scope.saveOtherSkill = function(){
+			if(!angular.isUndefined($scope.otherSkill)){
+				$http.get('saveOtherSkill/'+$scope.otherSkill)
+				.success(function(data){
+					if(data) {
+						
+						$scope.skills.push(data.skillName);
+						data.isSelected = true;
+						$scope.allSkills.push(data);
+						$scope.result = data;
+						
+						$scope.otherSkill = " ";
+						// $scope.init();
+					} 
+				});
+			}else{
+				$scope.error = true;
+			}
+			
+		}		
+		
+		$scope.updateSuccess = false;
+		$scope.manaFieldError = false;
+		$scope.submitUserProfile = function(){
+			$scope.EducationError  = false;
+			$scope.empHistory  =  false;
+			$scope.expUError = false;
+			$scope.cleranceUError = false;
+			$scope.positionUError = false;
+			$scope.empHistory = false;
+			// chk for the education,employee cmp,user posi/clearance selected or
+			// not if not gives gives error
+			if($scope.addEducation.length == 0 || $scope.addNewEmphistory.length == 0 ){
+				$scope.manaFieldError = true;
+			}else{
+						$http.post('/updateUserBaseResume?d='+Math.random(),{addEducation:$scope.addEducation,addNewEmphistory:$scope.addNewEmphistory,addCertificate:$scope.addCertificate,skills:$scope.skills})
+						.success(function(data){
+							console.log("success");
+							$scope.updateSuccess = true;
+							$scope.expUError = false;
+							$scope.empHistory = false;
+							$scope.expUError = false;
+							$scope.init();
+							$scope.manaFieldError = false;
+						});
+					}
+	 }
+		
+		
+	$scope.isUserExists = function(uname){
+		if($scope.username !=uname) {
+			$http.get('/isUserExists/'+uname)
+			.success(function(data) {
+				console.log(data);
+				if(data == 'Failed'){
+					$scope.ngdialogFlag = true;
+					$scope.saveUpdateMsg = "User Name Allready Present";
+				}else{
+					$scope.ngdialogFlag = false;
+				}
+			});
+		}
+	};
+	
+	$scope.deleteaddEducation = function(index){
+		console.log(index);	
+		if (index > -1) {
+		    //array.splice(index, 1);
+		    $scope.addEducation.splice(index, 1);
+		}
+	}
+
+	$scope.DeleteAddEmphistory = function(index){
+		console.log(index);	
+		if (index > -1) {
+		    //array.splice(index, 1);
+		    $scope.addNewEmphistory.splice(index, 1);
+		}
+	}
+	
+	$scope.deleteAddCertificate = function(index){
+		console.log(index);	
+		if (index > -1) {
+		    //array.splice(index, 1);
+		    $scope.addCertificate.splice(index, 1);
+		}
+		
+	}
+	
+	$scope.showKeyInstruction = function(){
+		$('#keySkillInstruction').modal();
+	}
+	
+	$scope.onEmpExpInstructions = function(){
+		$('#empExpInstructions').modal();
+	}
+	
+	$scope.openeEduinstrauctionPopup = function(){
+		$('#eduInstructions').modal();
+	}
+	
+	$scope.opencertInstructionpopup = function(){
+		$('#certInstructions').modal();
+	}
+	
+	$scope.opencmpExpInstructionpopups = function(){
+		$('#empworkExperienceInstrcution').modal();
+	}
+	
+	
+});
+
+
 
 App.controller('ExtraSigninController', function ($scope, $routeParams){
     $("body>.default-page").hide();

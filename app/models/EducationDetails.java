@@ -29,8 +29,8 @@ public class EducationDetails extends Model {
 	@Column(name = "degree")
 	public String degree;
 
-	@Column(name = "startdate")
-	public String fromDate;
+	@Column(name = "major")
+	public String major;
 
 	@Column(name = "enddate")
 	public String toDate;

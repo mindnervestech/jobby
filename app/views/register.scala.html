@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<title>AP Jobs Portal </title>
+<title> AP Jobs Portal </title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -47,8 +47,8 @@
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/jquery-steps/css/jquery.steps.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-colorpicker/css/colorpicker.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker-bs3.css")"/>
-<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")"/>
-<link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-timepicker/css/bootstrap-timepicker.min.css")"/>
+<!-- <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")"/>
+ --><link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-timepicker/css/bootstrap-timepicker.min.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-clockface/css/clockface.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/bootstrap-switch/css/bootstrap-switch.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/css/style.css")"/>
@@ -59,21 +59,27 @@
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/select2/lib/select2-madmin.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/css/bootstrap-editable.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.css")"/>
- <link rel="stylesheet" href="@routes.Assets.at("app/css/themes/style1/pink-blue.css")"/> 
+ <link rel="stylesheet" href="@routes.Assets.at("app/css/themes/style1/pink-blue.css")"/>
 <link rel="stylesheet" href="@routes.Assets.at("app/css/themes/{{style}}/{{theme}}.css")"/>
 <link rel="shortcut icon" href="@routes.Assets.at("app/images/icons/favicon.ico")"/>
 <link rel="apple-touch-icon" href="@routes.Assets.at("app/images/icons/favicon.png")"/>
 <link rel="apple-touch-icon" sizes="72x72" href="@routes.Assets.at("app/images/icons/favicon-72x72.png")"/>
 <link rel="apple-touch-icon" sizes="114x114" href="@routes.Assets.at("app/images/icons/favicon-114x114.png")"/>
 <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<!-- <script src="@routes.Assets.at("app/vendors/ckeditor/ckeditor.js")"></script> -->
-<!-- <script src="@routes.Assets.at("app/js/lib.js")"></script> -->
 
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-            <script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script>
+			<!-- <script src="@routes.Assets.at("app/vendors/ckeditor/ckeditor.js")"></script> -->
+			<!-- <script src="@routes.Assets.at("app/js/lib.js")"></script> -->
+			 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+			<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+			<script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script>
+			<script src="@routes.Assets.at("app/vendors/jquery-validate/jquery.validate.min.js")"></script>
     	    <script src="@routes.Assets.at("app/bower_components/angular/angular.min.js")"></script>
             <script src="@routes.Assets.at("app/bower_components/angular/angular-route.min.js")"></script>
+		
+			<script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
+			<script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script>
+ 			<!--   <script src="@routes.Assets.at("app/bower_components/angular/jquery.min.js")"></script> -->
+    	
             <script src="@routes.Assets.at("app/bower_components/angular-bootstrap/ui-bootstrap.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-migrate-1.2.1.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-ui.js")"></script>
@@ -82,7 +88,7 @@
             <script src="@routes.Assets.at("app/vendors/lightbox/js/lightbox.min.js")"></script>
             <!-- <script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script> -->
-            <!--   <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.js")"></script>
             <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.categories.js")"></script>
             <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.pie.js")"></script>
             <script src="@routes.Assets.at("app/vendors/flot-chart/jquery.flot.tooltip.js")"></script>
@@ -94,9 +100,9 @@
             <script src="@routes.Assets.at("app/vendors/slimScroll/jquery.slimscroll.js")"></script>
             <script src="@routes.Assets.at("app/vendors/responsive-tabs/responsive-tabs.js")"></script>
             <script src="@routes.Assets.at("app/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js")"></script>
-            <!--    <script src="@routes.Assets.at("app/vendors/bootstrap-markdown/js/bootstrap-markdown.js")"></script>
+         <!--   <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-markdown/js/bootstrap-markdown.js")"></script>
             <script src="@routes.Assets.at("app/vendors/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script> -->
-            <!--  <script src="@routes.Assets.at("app/vendors/summernote/summernote.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/summernote/summernote.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-notific8/jquery.notific8.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/sco.message/sco.message.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-notific8/notific8.js")"></script>
@@ -107,7 +113,7 @@
             <script src="@routes.Assets.at("app/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/nouislider/jquery.nouislider.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-nestable/jquery.nestable.js")"></script>
-             -->       <script src="@routes.Assets.at("app/vendors/DataTables/media/js/jquery.dataTables.js")"></script>
+           <script src="@routes.Assets.at("app/vendors/DataTables/media/js/jquery.dataTables.js")"></script>
             <script src="@routes.Assets.at("app/vendors/DataTables/media/js/dataTables.bootstrap.js")"></script>
             <script src="@routes.Assets.at("app/vendors/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js")"></script>
@@ -115,30 +121,42 @@
             <script src="@routes.Assets.at("app/vendors/jquery-tablesorter/jquery.tablesorter.js")"></script>
             <script src="@routes.Assets.at("app/vendors/bootstrap-datepicker/js/bootstrap-datepicker.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-cookie/jquery.cookie.js")"></script>
-            <!-- <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highchart.js")"></script> -->
-             <!--    <script src="@routes.Assets.at("app/vendors/jquery-highcharts/funnel.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highchart.js")"></script> -->
+         <!--    <script src="@routes.Assets.at("app/vendors/jquery-highcharts/funnel.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-highcharts/highcharts-more.js")"></script>
-             -->   
-            <!--     <script src="@routes.Assets.at("app/vendors/jquery-highcharts/data.js")"></script>
+          -->   
+      <!--     <script src="@routes.Assets.at("app/vendors/jquery-highcharts/data.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-highcharts/exporting.js")"></script>
             <script src="@routes.Assets.at("app/vendors/chart.js/Chart.min.js")"></script>
-            -->     <!-- <script src="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.min.js")"></script> -->
-            <!--   <script src="@routes.Assets.at("app/vendors/mixitup/src/jquery.mixitup.js")"></script>
-             <script src="@routes.Assets.at("app/vendors/jplist/html/js/vendor/modernizr.min.js")"></script>
+        -->   <!--   <script src="@routes.Assets.at("app/vendors/fullcalendar/fullcalendar.min.js")"></script> -->
+          <!--   <script src="@routes.Assets.at("app/vendors/mixitup/src/jquery.mixitup.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jplist/html/js/vendor/modernizr.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jplist/html/js/jplist.min.js")"></script>
-             --> <script src="@routes.Assets.at("app/vendors/jquery-validate/jquery.validate.min.js")"></script>
+            --> 
             <script src="@routes.Assets.at("app/vendors/jquery-steps/js/jquery.steps.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/bootstrap-daterangepicker/daterangepicker.js")"></script>
             <script src="@routes.Assets.at("app/vendors/moment/moment.js")"></script>
-            <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")"></script>
-           -->   <script src="@routes.Assets.at("app/vendors/bootstrap-timepicker/js/bootstrap-timepicker.js")"></script>
-            <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-clockface/js/clockface.js")"></script>
-            -->   <script src="@routes.Assets.at("app/vendors/bootstrap-colorpicker/js/bootstrap-colorpicker.js")"></script>
+             <script src="@routes.Assets.at("app/vendors/bootstrap/js/bootstrap.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-popover/bootstrap-modal-popover.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-popover/prettify.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/jquery-bootstrap-wizard/jquery.bootstrap.wizard.min.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/lightbox/js/lightbox.min.js")"></script> -->
+            <script src="@routes.Assets.at("app/bower_components/angular-validator/dist/angular-validator.js")"></script>
+            <script src="@routes.Assets.at("app/bower_components/angular-validator/dist/angular-validator-rules.js")"></script>
+            <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+           
+             <script  src="@routes.Assets.at("app/js-lib/ng-dialog/js/ngDialog.min.js")"></script>
+    <script src="@routes.Assets.at("app/vendors/iCheck/icheck.min.js")"></script>
+    <script src="@routes.Assets.at("app/vendors/iCheck/custom.min.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-datepicker/js/bootstrap-datetimepicker.js")"></script>
+            <script src="@routes.Assets.at("app/vendors/bootstrap-timepicker/js/bootstrap-timepicker.js")"></script>
+           <!--  <script src="@routes.Assets.at("app/vendors/bootstrap-clockface/js/clockface.js")"></script>
+          -->   <script src="@routes.Assets.at("app/vendors/bootstrap-colorpicker/js/bootstrap-colorpicker.js")"></script>
             <script src="@routes.Assets.at("app/vendors/bootstrap-switch/js/bootstrap-switch.min.js")"></script>
            <!--  <script src="@routes.Assets.at("app/vendors/jquery-maskedinput/jquery-maskedinput.js")"></script>
-             -->     <!--        <script src="@routes.Assets.at("app/vendors/dropzone/js/dropzone.js")"></script> -->
+ -->     <!--        <script src="@routes.Assets.at("app/vendors/dropzone/js/dropzone.js")"></script> -->
             <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js")"></script>
-           <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/tmpl.min.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/tmpl.min.js")"></script>
            -->  <!-- <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/load-image.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/canvas-to-blob.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/vendor/jquery.blueimp-gallery.min.js")"></script>
@@ -150,112 +168,265 @@
             <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-video.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-validate.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/jquery.fileupload-ui.js")"></script>
-             -->    <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/cors/jquery.xdr-transport.js")"></script>
+       -->    <!--   <script src="@routes.Assets.at("app/vendors/jquery-file-upload/js/cors/jquery.xdr-transport.js")"></script>
             <script src="@routes.Assets.at("app/vendors/gmaps/gmaps.js")"></script>
             <script src="@routes.Assets.at("app/vendors/charCount.js")"></script>
             <script src="@routes.Assets.at("app/vendors/jquery-news-ticker/jquery.newsTicker.min.js")"></script>
             <script src="@routes.Assets.at("app/vendors/select2/select2.min.js")"></script>
             --> <script src="@routes.Assets.at("app/vendors/bootstrap-select/bootstrap-select.min.js")"></script>
-            <!--   <script src="@routes.Assets.at("app/vendors/multi-select/js/jquery.multi-select.js")"></script>
+          <!--   <script src="@routes.Assets.at("app/vendors/multi-select/js/jquery.multi-select.js")"></script>
             <script src="@routes.Assets.at("app/vendors/x-editable/jquery.mockjax.js")"></script>
             <script src="@routes.Assets.at("app/vendors/x-editable/select2/lib/select2.js")"></script>
-            -->  <script src="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/js/bootstrap-editable.min.js")"></script>
-            <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js")"></script>
+           -->  <script src="@routes.Assets.at("app/vendors/x-editable/bootstrap3-editable/js/bootstrap-editable.min.js")"></script>
+           <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js")"></script>
             <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/typeaheadjs/typeaheadjs.js")"></script>
             <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/wysihtml5/wysihtml5.js")"></script>
-             -->  <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.js")"></script>
-            -->   <!--  <script src="@routes.Assets.at("app/vendors/x-editable/demo-mock.js")"></script>
-            -->
-            <script
-	src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
-     <script src="@routes.Assets.at("app/js/loginmain.js")"></script>
-    
-     </head>
+          -->  <!--  <script src="@routes.Assets.at("app/vendors/x-editable/inputs-ext/address/address.js")"></script>
+         -->    <script src="@routes.Assets.at("app/vendors/x-editable/demo-mock.js")"></script>
+     <script src="@routes.Assets.at("app/js/main.js")"></script>
+      <script src="@routes.Assets.at("app/js/loginmain.js")"></script>
+
+</head>
 <body class="[header.menu_style, header.header_topbar, header.effect]"
-	class="animated">
-	
-<div id="signup-page">
-  <div class="page-form">
-    <form id="signup-form" method="POST" action="/createNewUser" class="form signup-form">
-      <div class="header-content">
-        <h1>Register</h1>
-      </div>
-     <code> @flash.get("error")</code>
-      <div class="body-content">
-       <!--  <div class="form-group">
+	class="animated" ng-app="Ardent"
+	ng-controller="registrationPageController">
+
+	<div id="signup-page">
+		<div class="page-form">
+			<form id="signup-form"  name="signup-form"  onsubmit="return validate_form();"   method="POST" action="/createNewUser"
+				class="form signup-form">
+				<div class="header-content">
+					<h1>Register</h1>
+				</div>
+				<code> @flash.get("error")</code>
+				<div class="body-content">
+					<!--  <div class="form-group">
           <div class="input-icon right"><i class="fa fa-user"></i>
             <input type="text" placeholder="Username" name="username" class="form-control"/>
           </div>
         </div> -->
-        <div class="form-group">
-          <div class="input-icon right"><i class="fa fa-envelope"></i>
-            <input type="email"  id = "email" placeholder="Email address" name="email" class="form-control"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-icon right"><i class="fa fa-key"></i>
-            <input id="password" type="password" placeholder="Password" name="password" onkeyup="validatePasswordstrong(this.value,document.getElementById('strendth'),document.getElementById('passError'));" minlength = "10"  class="form-control" />
-          	<span id="passError"></span><span id="strendth"></span>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-icon right"><i class="fa fa-key"></i>
-            <input type="password" placeholder="Confirm Password" name="passwordConfirm"  onClick="validatePassword();" class="form-control"/>
-          </div>
-        </div>
-        <hr/>
-       <div class="form-group">
-          <div class="input-icon right">
-              <input type="text" placeholder="First Name" name="firstname"  id= "firstname" class="form-control" required/>
-               <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
-          </div>
-        </div>
-         <div class="form-group">
-          <div class="input-icon right">
-              <input type="text" placeholder="Middle Initial"  id= "middlename" name="middlename" maxlength="1" class="form-control"/>
-               <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
-          </div>
-        </div>
-         <div class="form-group">
-          <div class="input-icon right">
-              <input type="text" placeholder="Last Name" name="lastname" class="form-control" required/>
-               <!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
-          </div>
-        </div>
-       
-         <!--  <div class="col-lg-6">
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Email<code>*</code></label>
+							<i class="fa fa-envelope"></i> <input type="email" id="email"
+								placeholder="Email address" ng-model="registrationDetails.email" name="email" class="form-control" required="required" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Password <code>*</code></label>
+							<i class="fa fa-key"></i> <input id="password" type="password"
+								placeholder="Password" ng-model="registrationDetails.password" name="password"
+								onkeyup="validatePasswordstrong(this.value,document.getElementById('strendth'),document.getElementById('passError'));"
+								minlength="10" class="form-control" required="required"/> <span id="passError"></span><span
+								id="strendth"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Confirm Password <code>*</code></label>
+							<i class="fa fa-key"></i> <input type="password"
+								placeholder="Confirm Password" name="passwordConfirm"
+								onClick="validatePassword();" class="form-control" />
+						</div>
+					</div>
+					<hr />
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>First Name <code>*</code></label>
+							<input type="text" ng-model="registrationDetails.firstname"  placeholder="First Name" name="firstname"
+								id="firstname" class="form-control" required />
+							<!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Middle Name <code>*</code></label>
+							<input type="text" ng-model="registrationDetails.middlename" placeholder="Middle Initial" id="middlename"
+								name="middlename" maxlength="1" class="form-control" />
+							<!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Last Name <code>*</code></label>
+							<input type="text" ng-model="registrationDetails.lastname" placeholder="Last Name" name="lastname"
+								class="form-control" required />
+							<!-- <input type="password" placeholder="Confirm Password" name="passwordConfirm" class="form-control"/> -->
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+										<label>Job Search Status <code>*</code></label>
+										<span id="jst" hidden = "hidden"><code>plese select</code></span>
+							<select ng-model="registrationDetails.jobsearchstatus" name="jobsearchstatus"
+								ng-change="onJobSearchStatusChange()" class="form-control"
+								id="jobsearchstatus" ng-required>
+								<option
+									ng-selected="clr.statusName == userDetails.jobsearchstatus"
+									ng-repeat="clr in allJobSearchStatus">{{clr.statusName}}</option>
+							</select>
+
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Current Job Title <code>*</code> </label>
+							<span ng-if="currentjobtitleError == true"> <code>please
+									enter current job title</code>
+							</span> <input type="text" id="currentjobtitle" name="currentjobtitle"
+								ng-model="uregistrationDetails.currentjobtitle"
+								placeholder="Current Job Title" style="font-size: 12px;"
+								class="form-control" required>
+
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Resident City  <code>*</code></label>
+							<input type="text" id="residentcity" name="residentcity"
+								ng-model="registrationDetails.residentcity" placeholder="Resident City "
+								style="font-size: 12px;" class="form-control" required>
+
+
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Resident State <code>*</code> </label>
+							<span id="state" hidden = "hidden"><code>please select</code></span>
+							<select id="residentState" name="residentState" ng-model="registrationDetails.residentState"
+								ng-change="onStatesChange()" class="form-control" ng-required>
+								<option ng-selected="clr.stateName == userDetails.residentState"
+									ng-repeat="clr in allStates">{{clr.stateName}}</option>
+							</select>
+
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Zip Code <code>*</code></label> 
+							<input type="text" id="zipcode" name="zipcode"
+								ng-model="registrationDetails.zipcode" placeholder="Enter zipcode "
+								style="font-size: 12px;" class="form-control" maxlength="6"
+								required>
+
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>DOB  <code>*</code></label> 
+							<input class="form-control" validator="[required]"
+								ng-click="initCmpDatePicker();" id="datepicker"
+								ng-model="registrationDetails.dob" name = "dob" style="font-size: 12px;"
+								data-provide="datepicker" data-date-autoclose="true"
+								data-date-format="mm/dd/yyyy" required>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+						<label>Desired Salary </label> 
+							<input type="text" id="desiredsalary" name="desiredsalary"
+								ng-model="registrationDetails.desiredsalary"
+								placeholder="Desired Salary " style="font-size: 12px;"
+								class="form-control" >
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+							<label>Willing to Relocate </label> <select
+								ng-model="registrationDetails.willingtorelocate"  name = "willingtorelocate" class="form-control"
+								id="willingtorelocate" required>
+								<option ng-selected="'Yes' == userDetails.willingtorelocate">Yes</option>
+								<option ng-selected="'No' == userDetails.willingtorelocate">No</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+							<label>User Security Level  <code>*</code></label> 
+							<span id="clear" hidden = "hidden"><code>please select</code></span>
+							<select id="userClearance" name="userClearance"
+								ng-model="registrationDetails.userClearance" validator="[required]" class="form-control">
+								<option ng-repeat="clear in allCleanrance.clearance"
+									value="{{clear.clearance}}"
+									ng-selected="clear.isSelect  == true" style="font-size: 12px;"
+									required>{{clear.clearance}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+							<label>Experience Level <code>*</code></label>
+							<span id="exp" hidden = "hidden"><code>please select</code></span>
+							 <select name="userExperience"
+								ng-model="registrationDetails.userExperience"  id= "userExperience" validator="[required]" class="form-control">
+								<option ng-repeat="exp in allExperiance.experiance"
+									value="{{exp.experianceLevel}}"
+									ng-selected="exp.isSelect  == true" style="font-size: 12px;"
+									required>{{exp.experianceLevel}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-icon right">
+							<label>Position(s) of Interest <code>*</code> </label> 
+							<span id="pos" hidden = "hidden"><code>please select</code></span>
+							<select
+								multiple="multiple" name="userPosition[]"  id="userPosition" validator="required" ng-model="registrationDetails.userPosition"
+								class="form-control" style="height: 80px;">
+								<option ng-repeat="posi in allPosition.position"
+									value="{{posi.position}}"
+									ng-selected="posi.isSelected  == true" style="font-size: 12px;"
+									required>{{posi.position}}</option>
+							</select>
+						</div>
+					</div>
+					<!--  <div class="col-lg-6">
             <label>
               <input type="text" placeholder="Last Name" name="lastname" class="form-control"/>
             </label>
           </div> -->
-       
-        <div class="form-group">
-          <label style="display: block" class="select">
-            <select name="gender" id= "gender" class="form-control" required>
-              <option value="0" selected="selected" disabled="disabled">Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            <!--   <option value="Other">Other</option> -->
-            </select>
-          </label>
-        </div>
-         </div>
-        <hr/>
-        <div class="form-group mbn"><a href="/" class="btn btn-success-custom "><i class="fa fa-chevron-circle-left"></i>&nbsp;
-            Back</a>
-          <button type="submit" class="btn btn-success-custom  pull-right">
-            Submit
-            &nbsp;<i class="fa fa-chevron-circle-right"></i>
-          </button>
-        </div>
-        </form>
-      </div>
-    
-  </div>
- <script>
+
+					<div class="form-group">
+					<label>Gender <code>*</code></label>
+					<span id="gen" hidden = "hidden"><code>please select</code></span>
+						<label style="display: block" class="select" > <select
+							name="gender" id="gender" class="form-control" validator="[required]">
+								<option value="0" ng-model="registrationDetails.gender" selected="selected" disabled="disabled">Gender</option>
+								<option value="Male" ng-model="registrationDetails.gender">Male</option>
+								<option value="Female" ng-model="registrationDetails.gender">Female</option>
+								<!--   <option value="Other">Other</option> -->
+						</select>
+						</label>
+					</div>
+				</div>
+				<hr />
+				<div class="form-group ">
+					<a href="/" class="btn btn-success-custom "><i
+						class="fa fa-chevron-circle-left"></i>&nbsp; Back</a>
+					<button  type="submit" id="submitform" value="Validate" class="btn btn-success-custom  pull-right" >
+						Submit &nbsp;<i class="fa fa-chevron-circle-right"></i>
+					</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+	<script>
 
 function validatePassword(){ 
- var validator = $("#signup-form").validate({
+	 var validator = $("#signup-form").validate({
   rules: {                   
 	  password :"required",
    passwordConfirm:{
@@ -306,8 +477,8 @@ function validatePasswordstrong(password,passwordStrength,errorField){
 
 
  </script>
- 
- <script type="text/javascript">
+
+	<script type="text/javascript">
 							$(document)
 									.ready(
 											function() {
@@ -344,71 +515,122 @@ function validatePasswordstrong(password,passwordStrength,errorField){
 																		},
 																		gender : {
 																			required : true
+																		},
+																		userClearance : {
+																			required : true
 																		}
+																		
 																	},
 																	messages : {
 																		firstname : "Please enter name properly",
 																		lastname : "Please enter name properly",
 																	    email : "Please enter email  properly",
-																	    gender:"Please select gender"
+																	    gender:"Please select gender",
+																	    userClearance:"Please select User Clearance"
 																	}
 																});
+												
+												
 
 											});
 						</script>
- 
- 
- <style>
- 
- .strength0
-{
-width:250px;
-background:#cccccc;
+<script type="text/javascript">
+function validate_form() {
+	
+	 if($("#jobsearchstatus").val()  == "? undefined:undefined ?"){
+	        
+	    	$("#jst").show();
+	        return false;
+	    
+	    }else{
+	    	$("#jst").hide();
+	    }
+	
+	 if($("#residentState").val()  == "? undefined:undefined ?"){
+	    	$("#state").show();
+	        return false;
+	    
+	    }else{
+	    	$("#state").hide();
+	    }
+	 
+    if ($("#userClearance").val()  == "? undefined:undefined ?"){  
+    	$("#clear").show();
+        return false;
+    }else{
+    	$("#clear").hide();
+    }
+    
+    if($("#userExperience").val()  == "? undefined:undefined ?"){
+    	$("#exp").show();
+        return false;
+    	}else{
+    		$("#exp").hide();
+    	}
+    
+   
+if($("#gender").val()  == "? undefined:undefined ?"){
+        
+    	$("#gen").show();
+        return false;
+    
+    }else{
+    	$("#gen").hide();
+    }
+
+if($("#userPosition").val()  == null){
+	$("#pos").show();
+    return false;
+
+}else{
+	$("#pos").hide();
 }
 
-.strength1
-{
-width:50px;
-background:#ff0000;
+}
+</script>
+
+	<style>
+.strength0 {
+	width: 250px;
+	background: #cccccc;
 }
 
-.strength2
-{
-width:100px;
-background:#ff5f5f;
+.strength1 {
+	width: 50px;
+	background: #ff0000;
 }
 
-.strength3
-{
-width:150px;
-background:#56e500;
+.strength2 {
+	width: 100px;
+	background: #ff5f5f;
 }
 
-.strength4
-{
-background:#4dcd00;
-width:200px;
+.strength3 {
+	width: 150px;
+	background: #56e500;
 }
 
-.strength5
-{
-background:#399800;
-width:250px;
+.strength4 {
+	background: #4dcd00;
+	width: 200px;
 }
 
- .btn-success-custom {
-color: white;
-background-color: #21205f;
+.strength5 {
+	background: #399800;
+	width: 250px;
+}
+
+.btn-success-custom {
+	color: white;
+	background-color: #21205f;
 }
 
 .btn-success-custom:hover {
-color: white;
-background-color: #999999;
+	color: white;
+	background-color: #999999;
 }
- 
- 
- </style>
-<!-- <script>
+</style>
+	<!-- <script>
 alert("fh");
 $('#passwordConfirm').on('keyup', function () {
     if ($(this).val() == $('#password').val()) {

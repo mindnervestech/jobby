@@ -30,20 +30,57 @@ var App = angular.module('Ardent', [ 'ui.bootstrap' ]).factory(
 	$httpProvider.interceptors.push('MyHttpInterceptor');
 });
 
-
 App.controller('registrationPageController', function($scope, $http) {
-console.log("registrationPageController");
-$scope.registrationDetails = {};
+	console.log("registrationPageController");
+	$scope.registrationDetails = {
+			userPosition:[]
+			
+	};
 
-$scope.registerUser = function(){
-	 $http.post('/createNewUser',{registrationDetails:$scope.registrationDetails})
-		.success(function(data){
+	$http.get('/getAllPosition?d=' + Math.random()).success(function(data) {
+		$scope.allPosition = data;
+	});
+
+	$http.get('/getAllExperiance?d=' + Math.random()).success(function(data) {
+		$scope.allExperiance = data;
+		// console.log("all Experiance:"+JSON.stringify($scope.allExperiance));
+		// $scope.username = data.uname;
+	});
+
+	$http.get('/getAllClearance?d=' + Math.random()).success(function(data) {
+		$scope.allCleanrance = data;
+		// console.log($scope.userCleanrance);
+
+	});
+
+	$http.get('/getAllStates?d=' + Math.random()).success(function(data) {
+		$scope.allStates = data.states;
+		// console.log(JSON.stringify($scope.allStates));
+	});
+
+	$http.get('/getAllJobSearchStatus?d=' + Math.random()).success(
+			function(data) {
+				$scope.allJobSearchStatus = data.jobsearchstatus;
+			});
+
+	
+	$scope.userClearance;
+	$scope.userExperience;
+	$scope.userPosition;
+	
+	
+	$scope.register = function() {
+		alert("in register");
+		$http.post('/createNewUser', {
+			registrationDetails : $scope.registrationDetails,userClearance:$scope.userClearance,userExperience:$scope.userExperience
+			,userPosition:$scope.userPosition
+		}).success(function(data) {
 			console.log("success");
+			$location.path('/')
 			$scope.updateSuccess = true;
 		});
-	
-}
 
+	}
 
 });
 
@@ -56,34 +93,37 @@ App.controller('AppController', function($scope, $http) {
 		$scope.jobType = "All";
 		$scope.labourCat = true;
 		$scope.sortName = "Position";
-		
-		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
-				function(data) {
-					$scope.jobsData = data.jobs;
-					console.log("$scope.jobsData"
-							+ JSON.stringify($scope.jobsData))
-					$scope.totalJobs = data.jobsCount;
-					if (data.jobsCount <= 10) {
-						$('#next').hide();
-						$('#next1').hide();
-						$scope.JobPre = data.jobsCount;
-					} else {
-						$('#next').show();
-						$('#next1').show();
-						$scope.JobPre = 10;
-					}
 
-					if ($scope.pageno <= 0) {
-						$('#pre').hide();
-						$('#pre1').hide();
-					} else {
-						$('#pre').show();
-						$('#pre1').show();
-					}
-					console.log("all position:"
-							+ JSON.stringify($scope.jobsData));
-					// $scope.username = data.uname;
-				});
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(
+						function(data) {
+							$scope.jobsData = data.jobs;
+							console.log("$scope.jobsData"
+									+ JSON.stringify($scope.jobsData))
+							$scope.totalJobs = data.jobsCount;
+							if (data.jobsCount <= 10) {
+								$('#next').hide();
+								$('#next1').hide();
+								$scope.JobPre = data.jobsCount;
+							} else {
+								$('#next').show();
+								$('#next1').show();
+								$scope.JobPre = 10;
+							}
+
+							if ($scope.pageno <= 0) {
+								$('#pre').hide();
+								$('#pre1').hide();
+							} else {
+								$('#pre').show();
+								$('#pre1').show();
+							}
+							console.log("all position:"
+									+ JSON.stringify($scope.jobsData));
+							// $scope.username = data.uname;
+						});
 
 	}
 
@@ -93,8 +133,10 @@ App.controller('AppController', function($scope, $http) {
 		$scope.pageno++;
 		$scope.nextCount = parseInt($scope.nextCount) + 10;
 		var count = 0;
-		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
-				function(data) {
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
 					$scope.jobsData = data.jobs;
 					count = parseInt(data.jobsCount);
 					console.log("count" + count);
@@ -106,7 +148,7 @@ App.controller('AppController', function($scope, $http) {
 					} else {
 						$('#next1').show();
 						$('#next').show();
-						//	$scope.JobPre= 10;
+						// $scope.JobPre= 10;
 						$scope.JobPre = parseInt($scope.JobPre) + 10;
 					}
 				});
@@ -128,24 +170,25 @@ App.controller('AppController', function($scope, $http) {
 		$scope.pageno--;
 		var count = 0;
 
-		
-		$http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType).success(
-				function(data) {
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
 					$scope.jobsData = data.jobs;
 
 					$scope.count = parseInt(data.jobsCount);
 					console.log("count" + count);
-					//$scope.JobPre = count - 10;
+					// $scope.JobPre = count - 10;
 
 					if (data.jobsCount <= 10) {
 						$('#next').hide();
 						$('#next1').hide();
-						//$scope.JobPre = data.jobsCount;
+						// $scope.JobPre = data.jobsCount;
 						$scope.JobPre = parseInt($scope.nextCount) - 10;
 					} else {
 						$('#next').show();
 						$('#next1').show();
-						//$scope.JobPre  = 10;
+						// $scope.JobPre = 10;
 						$scope.JobPre = parseInt($scope.nextCount) - 10;
 					}
 
@@ -163,91 +206,95 @@ App.controller('AppController', function($scope, $http) {
 		}
 	}
 
-	
-	  $scope.sortBy = false;
-	  $scope.sortName = "Position";
-	  $scope.getAllJobBySelectedElement = function(){
-		 $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-				$scope.totalJobs = data.jobsCount;
-				if (data.jobsCount <= 10) {
-					$('#next').hide();
-					$('#next1').hide();
-					$scope.JobPre = data.jobsCount;
-				} else {
-					$('#next').show();
-					$('#next1').show();
-					$scope.JobPre = 10;
-				}
+	$scope.sortBy = false;
+	$scope.sortName = "Position";
+	$scope.getAllJobBySelectedElement = function() {
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					$scope.totalJobs = data.jobsCount;
+					if (data.jobsCount <= 10) {
+						$('#next').hide();
+						$('#next1').hide();
+						$scope.JobPre = data.jobsCount;
+					} else {
+						$('#next').show();
+						$('#next1').show();
+						$scope.JobPre = 10;
+					}
 
-				if ($scope.pageno <= 0) {
-					$('#pre').hide();
-					$('#pre1').hide();
-				} else {
-					$('#pre').show();
-					$('#pre1').show();
-				}
-			});
-	  }
-	
-	  $scope.getAllJobByType = function(){
-		  $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-				$scope.totalJobs = data.jobsCount;
-				if (data.jobsCount <= 10) {
-					$('#next').hide();
-					$('#next1').hide();
-					$scope.JobPre = data.jobsCount;
-				} else {
-					$('#next').show();
-					$('#next1').show();
-					$scope.JobPre = 10;
-				}
+					if ($scope.pageno <= 0) {
+						$('#pre').hide();
+						$('#pre1').hide();
+					} else {
+						$('#pre').show();
+						$('#pre1').show();
+					}
+				});
+	}
 
-				if ($scope.pageno <= 0) {
-					$('#pre').hide();
-					$('#pre1').hide();
-				} else {
-					$('#pre').show();
-					$('#pre1').show();
-				}
-			});
-	  }
-	  
-	  $scope.onSortTypeClick =  function(){
-		  $scope.position = "notSelected";
-		//  $scope.sortType = sortType;
-		    console.log($scope.sortType1);
-		    console.log($scope.sortType);
-		    if($scope.sortType == true){
-		    	console.log("in if");
-		    	$scope.sortType = true;
-		    	
-		    	console.log($scope.sortType);
-		    } 
-		    
-		    if($scope.sortType == false){
-		    	$scope.sortType = true;
-		    }
-		    
-		    
-		    $scope.matchedpos = false;
-		    $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-				if(data.jobsCount <= 10){
-					$('#next').hide();
-					$('#next1').hide();
-				}else{
-					$('#next').show();
-					$('#next1').show();
-				}
-			
-			});
-	  }
-	  
+	$scope.getAllJobByType = function() {
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					$scope.totalJobs = data.jobsCount;
+					if (data.jobsCount <= 10) {
+						$('#next').hide();
+						$('#next1').hide();
+						$scope.JobPre = data.jobsCount;
+					} else {
+						$('#next').show();
+						$('#next1').show();
+						$scope.JobPre = 10;
+					}
+
+					if ($scope.pageno <= 0) {
+						$('#pre').hide();
+						$('#pre1').hide();
+					} else {
+						$('#pre').show();
+						$('#pre1').show();
+					}
+				});
+	}
+
+	$scope.onSortTypeClick = function() {
+		$scope.position = "notSelected";
+		// $scope.sortType = sortType;
+		console.log($scope.sortType1);
+		console.log($scope.sortType);
+		if ($scope.sortType == true) {
+			console.log("in if");
+			$scope.sortType = true;
+
+			console.log($scope.sortType);
+		}
+
+		if ($scope.sortType == false) {
+			$scope.sortType = true;
+		}
+
+		$scope.matchedpos = false;
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					if (data.jobsCount <= 10) {
+						$('#next').hide();
+						$('#next1').hide();
+					} else {
+						$('#next').show();
+						$('#next1').show();
+					}
+
+				});
+	}
+
 	$scope.editJob;
 	$scope.showJobDetails = function(jobs) {
 		$scope.editJob = jobs;
@@ -262,11 +309,10 @@ App.controller('AppController', function($scope, $http) {
 		$('#contactAdmin').modal();
 
 	}
-	$scope.showKeyInstruction = function(){
+	$scope.showKeyInstruction = function() {
 		$('#keySkillInstruction').modal();
 	}
-	
-	
+
 	$scope.sent = false;
 	$scope.contactus = {};
 	$scope.feedbackSuccess = false;
@@ -309,80 +355,88 @@ App.controller('AppController', function($scope, $http) {
 
 	$scope.forget_pass = false;
 	$scope.emailId = false;
-	$scope.waitMsg =  false;
+	$scope.waitMsg = false;
 	$scope.getForgetPassword = function(useremail) {
 		$scope.useremail = useremail;
 		console.log($scope.useremail);
-		
-		if(!($scope.useremail == "") &&  !(angular.isUndefined($scope.useremail))){
-			$scope.waitMsg =  true;
+
+		if (!($scope.useremail == "")
+				&& !(angular.isUndefined($scope.useremail))) {
+			$scope.waitMsg = true;
 			$http.get('/forgetPassword/' + $scope.useremail).success(
 					function(data) {
 						$scope.forget_pass = true;
 						console.log("success");
 						$scope.emailId = false;
-						$scope.waitMsg =  false;
+						$scope.waitMsg = false;
 						// $scope.username = data.uname;
 					});
-		}else{
+		} else {
 			$scope.emailId = true;
 		}
-	
+
 	}
-	
+
 	$scope.asc = true;
 	$scope.desc = false;
-	
-	$scope.descClicked = function(){
+
+	$scope.descClicked = function() {
 		$scope.asc = false;
 		$scope.desc = true;
 		$scope.sortType = true;
-		 $scope.matchedpos = false;
-		    $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-				if(data.jobsCount <= 10){
-					$('#next').hide();
-					$('#next1').hide();
-				}else{
-					$('#next').show();
-					$('#next1').show();
-				}
-			
-			});
+		$scope.matchedpos = false;
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					if (data.jobsCount <= 10) {
+						$('#next').hide();
+						$('#next1').hide();
+					} else {
+						$('#next').show();
+						$('#next1').show();
+					}
+
+				});
 	}
-	
-	$scope.ascClicked = function(){
+
+	$scope.ascClicked = function() {
 		$scope.asc = true;
 		$scope.desc = false;
 		$scope.sortType = false;
-		 $scope.matchedpos = false;
-		    $http.post('/getAllJobsOnlogin/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.sortName+'/'+$scope.sortType)
-			.success(function(data) {
-				$scope.jobsData = data.jobs;
-				if(data.jobsCount <= 10){
-					$('#next').hide();
-					$('#next1').hide();
-				}else{
-					$('#next').show();
-					$('#next1').show();
-				}
-			
-			});
-	}
-	
-	$scope.applyWithoutReg =  function(){
-		$('#applyWithoutReegistration').modal();
-		
+		$scope.matchedpos = false;
+		$http.post(
+				'/getAllJobsOnlogin/' + $scope.pageno + '/' + $scope.jobType
+						+ '/' + $scope.sortName + '/' + $scope.sortType)
+				.success(function(data) {
+					$scope.jobsData = data.jobs;
+					if (data.jobsCount <= 10) {
+						$('#next').hide();
+						$('#next1').hide();
+					} else {
+						$('#next').show();
+						$('#next1').show();
+					}
+
+				});
 	}
 
-	$scope.downloadSampleResume = function(){
-		$('#applyWithoutReegistration').modal('hide');
+	$scope.jobId;
+	$scope.applyWithoutReg = function(id) {
+		$scope.jobId = id;
 		
+		$('#applyWithoutReegistration').modal();
+
 	}
-	
-	 $scope.opensortinghelpInstruction = function(){
-		  $('#sortinghelpInstruction').modal('show');
-			  
-		  }
+
+	$scope.downloadSampleResume = function() {
+		$('#applyWithoutReegistration').modal('hide');
+
+	}
+
+	$scope.opensortinghelpInstruction = function() {
+		$('#sortinghelpInstruction').modal('show');
+
+	}
 });

@@ -352,7 +352,7 @@
 					<!--  <span>
 						 <a id="btn-register" href="/assets/app/templates/states/manage_apps.html">Contact Admin						</a>
 					</span> -->
-					<span ng-click="applyWithoutReg();" style="cursor:pointer;"><strong>Apply with out registration </strong></span>
+					<!-- <span ng-click="applyWithoutReg();" style="cursor:pointer;"><strong>Apply with out registration </strong></span> -->
 				</div>
 			</form>
 		</div>
@@ -376,9 +376,10 @@
 											class="btn btn-green" data-toggle="modal"
 											ng-click="applyForJob(job)">Resume</button> -->
 									</p>
-									<p ng-click="showJobDetails(job);">
-										<span class="title" data-toggle="tooltip" data-placement="bottom" title="View  Job Details" style="cursor:pointer;">{{job.labourCategory}}</span><span
+									<p >
+										<span class="title" data-toggle="tooltip" data-placement="bottom" title="View  Job Details" style="cursor:pointer;" ng-click="showJobDetails(job);">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
+											<span ng-click="applyWithoutReg(job.requestNumber);" style="cursor:pointer; margin-left: 16%;"><strong>Apply with out registration </strong></span>
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -983,7 +984,8 @@
       <p >Click on download button to download sample resume format and send filled resume    to  careers@@ardentprinciples.com</p>
     
 		<button type="button" class="btn btn-success-custom " data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success-custom s" ng-click="downloadSampleResume();"><a ng-href="http://localhost:9000/assets/app/resumetemplate/Ardent-Resume-Template.doc">Download</a></button>
+        <button type="button" class="btn btn-success-custom s" ng-click="downloadSampleResume();"><a ng-href="getapplyWithoutRegResume/{{jobId}}">Download</a></button>
+        
  </div>
      <!--  <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -20,7 +20,7 @@ public class Year extends Model{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long id;
-	public int year;
+	public String year;
 	
 	public static Finder<Long, Year> find = new Finder<Long, Year>(
 			Long.class, Year.class);
@@ -28,7 +28,7 @@ public class Year extends Model{
 	
 	public static  List<Year> getAllYear(){
 		
-		return find.all();
+		return find.where().order().desc("year").findList();
 		
 	}
 }
