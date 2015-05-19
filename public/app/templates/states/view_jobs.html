@@ -42,6 +42,7 @@
 								<option value="Location">Location</option>
 								<option value="Clearance">Clearance Level</option>
 								<option value="Experiance">Experience Level</option>
+								
 							</select> <span class="sort-by-price active" ng-if="location == false"
 								ng-model="location"><a class="aTagclass"
 								ng-click="onSortTypeClick()"><span class="spanClass"></span><span
@@ -390,6 +391,8 @@
 											</div>
 											<div ng-if="jStatus == 'active'">
 												<div class="form-group" style="height:300px;">
+												<div class="col-md-6"><span ng-if="userskillsSpecificationError == true"><code>Please fill</code></span></div>
+											
 													<div class="col-md-10">
 														<small><strong style="color: #21205F;"><!-- Please
 																select a maximum of 12 of your most relevant key skill
@@ -489,7 +492,10 @@ Justification section should contain the following components:
 
 											</div>
 											<div ng-if="jStatus == 'Draft'">
+											
 												<!-- <span ng-if="maxSkillError == true"><code>You can select maximum 12 Skills</code></span> -->
+												<div class="col-md-6"><span ng-if="userskillsSpecificationError == true"><code>Please fill</code></span></div>
+											
 												<div class="col-md-10">
 													<small><strong style="color: #21205F;"><!-- Please
 															select a maximum of 12 of your most relevant key skill

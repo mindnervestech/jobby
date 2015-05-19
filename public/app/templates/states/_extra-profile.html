@@ -410,7 +410,7 @@ background-color: #999999;
 														</div>
 													</div> -->
 
-													<div class="col-md-12">
+												<!-- 	<div class="col-md-12">
 														<fieldset class="scheduler-border">
 															<legend class="scheduler-border">
 																<i class="glyphicon glyphicon-screenshot"></i>
@@ -451,12 +451,12 @@ background-color: #999999;
 														</fieldset>
 													</div>
 
-													<!-- 	<div class="col-md-12 ">
+														<div class="col-md-12 ">
 														<hr class="mtxxl mbxxl">
 														<div class="col-md-6">
 															<label>Employment History </label>
 														</div>
-													</div> -->
+													</div>
 													<div class="col-md-12">
 														<fieldset class="scheduler-border">
 															<legend class="scheduler-border">
@@ -501,11 +501,11 @@ background-color: #999999;
 																	<div class="input-group input-daterange">
 																		<span class="input-group-addon">From <code> * </code></span>
 																		
-																		<!-- <input class="form-control" validator="[required]"
+																		<input class="form-control" validator="[required]"
 																			ng-click="initCmpDatePicker();" id="datepicker"
 																			ng-model="emp.startdate" style="font-size: 12px;"
 																			data-provide="datepicker" data-date-autoclose="true"
-																			data-date-format="mm/dd/yyyy" required> -->
+																			data-date-format="mm/dd/yyyy" required>
 																			<select ng-model="emp.startdate"
 																		ng-change="onLabourCategoryChange()" class="col-md-5" style="height: 30px;">
 																		<option ng-selected="emp.startdate  == m.monthName"
@@ -520,12 +520,12 @@ background-color: #999999;
 																			
 																			 <span
 																			class="input-group-addon">to</span>
-																	<!-- 
+																	
 																		<input class="form-control" validator="[required]"
 																			ng-click="initCmpDatePicker();" id="datepicker"
 																			ng-model="emp.enddate" style="font-size: 12px;"
 																			data-provide="datepicker" data-date-autoclose="true"
-																			data-date-format="mm/dd/yyyy"> -->
+																			data-date-format="mm/dd/yyyy">
 																			
 																		<select ng-model="emp.enddate"
 																		ng-change="onLabourCategoryChange()" class="col-md-5" style="height: 30px;">
@@ -619,9 +619,9 @@ background-color: #999999;
 																<label for="inputName" class="control-label">Degree
 																	<code>* </code></label>
 																<div class="input-icon right">
-																	<!-- <input id="degree" name="degree" type="text"
+																	<input id="degree" name="degree" type="text"
 																		ng-model="edu.degree" placeholder="Degree"
-																		class="form-control" style="font-size: 12px;" required> -->
+																		class="form-control" style="font-size: 12px;" required>
 																		
 																		<select ng-model="edu.degree"
 																		ng-change="onLabourCategoryChange()" class="form-control">
@@ -689,9 +689,9 @@ background-color: #999999;
 																<div class="col-md-5">
 																	<label for="inputName" class="control-label">Certification
 																		</label>
-																	<!-- <div ng-show="certHistory" style="color: red">
+																	<div ng-show="certHistory" style="color: red">
 																		Please fill at least one Certfi Details</div>
- -->
+
 																	<div class="input-icon right">
 																		<small><input id="certName" name="certName"
 																			type="text" placeholder="Certificate"
@@ -704,11 +704,11 @@ background-color: #999999;
 																	<label class="col-md-12 control-label">Year
 																		Obtained</label>
 
-																			<!-- <input type='text' id="certYear"
+																			<input type='text' id="certYear"
 																				ng-model="cert.certYear" class="form-control"
 																				id="certdate" ng-click="initDatePicker();"
-																				style="font-size: 12px;" required /> -->
-																			<!-- <input class="form-control"
+																				style="font-size: 12px;" required />
+																			<input class="form-control"
 																				ng-click="initDatePicker();" id="datepicker"
 																				ng-model="cert.certYear" 
 																				style="font-size: 12px;" data-provide="datepicker"
@@ -716,7 +716,7 @@ background-color: #999999;
 																				data-date-format="mm/dd/yyyy"> <span
 																				class="input-group-addon"><span
 																				class="glyphicon glyphicon-calendar"></span> </span>
-																						 -->
+																						
 																	<select name="cert.certYear" ng-model="cert.certYear"
 																	class="form-control">
 																	<option ng-repeat="y in years"
@@ -743,15 +743,15 @@ background-color: #999999;
 														<div class="form-group">
 															<div class="col-md-2">
 																<br />
-																<!-- <a style="float: right; margin-right: 60px;" ng-click="addNewEmployment()"> </i>Add Extra</a> -->
+																<a style="float: right; margin-right: 60px;" ng-click="addNewEmployment()"> </i>Add Extra</a>
 																&nbsp;&nbsp;<i class="fa fa-plus-square"> </i>&nbsp;&nbsp;
 																<button ng-click="addNewCertificate()">Add More</button>
 																<span ng-show="addEducation.length > 0"> </span>
 															</div>
 														</div>
 													</fieldset>
-												</div>
-												<div class="col-md-14">
+												</div> -->
+												<div class="col-md-12">
 													<fieldset class="scheduler-border">
 														<legend class="scheduler-border">
 															<i class="glyphicon glyphicon-screenshot"></i>
@@ -912,7 +912,7 @@ of 3 years general to 1 year specific
       <div class="modal-body" style="font-size:11px;">
        	1]Companies/positions/date ranges correspond between Employment History and Experience<br />
 		2]Work experience should have no gaps longer than 1 month. If you were not employed for a period of time, 
-		please note that. Ensure that any periods of unemployment longer than 1mo are accounted for (e.g., “Student,” “Leave of Absence,” “Personal,” etc.)<br />
+		please note that. Ensure that any periods of unemployment longer than 1month are accounted for (e.g., “Student,” “Leave of Absence,” “Personal,” etc.)<br />
 		3]Please only bullet individual project roles.<br />
 		4]Date ranges (mm/yyyy) for project roles fall within tenure at company.<br />
 		5]No gaps exist between project roles.<br />​

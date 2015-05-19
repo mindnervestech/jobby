@@ -1,0 +1,658 @@
+<style>
+.Color {
+	color: green
+}
+
+.redColor {
+	color: red
+}
+
+.btn-success-custom {
+	color: white;
+	background-color: #21205f;
+}
+
+.btn-success-custom:hover {
+	color: white;
+	background-color: #999999;
+}
+</style>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="portlet box" style="min-height: 500px;" ng-init=init();>
+			<div class="portlet-header">
+				<div class="caption">Base Resume</div>
+			</div>
+			<div class="portlet-body" ng-init="init();">
+				<div class="row mbm">
+
+					<div class="col-md-12">
+						<fieldset class="scheduler-border">
+							<legend class="scheduler-border">
+								<i class="glyphicon glyphicon-screenshot"></i> &nbsp;&nbsp;User
+								Key Skill Area
+							</legend>
+							<div class="col-md-10">
+								<small><strong> Please select a maximum of 12
+										of your most relevant key skill areas. Use the add function
+										for key skills that are not listed.</strong></small>
+							</div>
+							<label ng-repeat="skill in allSkills"
+								class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+								style="padding: 0px;"> <input type="checkbox"
+								name="allSkill" ng-click="skillClicked($event,skill,$index)"
+								ng-model="skill.isSelected"
+								ng-disabled="checked == limit && !skill.isSelected">
+								{{skill.skillName}}
+
+							</label>
+							<div class="form-group">
+
+								<div class="col-md-9">
+									<div class="col-md-5">
+										<span ng-show="error">Please enter Skill Name</span> <input
+											id="inputName" type="text" id="otherSkill"
+											ng-model="otherSkill" name="otherSkill"
+											placeholder="Other Skill" style="font-size: 12px;"
+											class="form-control">
+									</div>
+									<div class="col-md-4">
+										<button type="submit" ng-click="saveOtherSkill(otherSkill);"
+											class="btn btn-success-custom">Add</button>
+									</div>
+								</div>
+							</div>
+
+						</fieldset>
+					</div>
+
+					<div class="col-md-12 ">
+						<hr class="mtxxl mbxxl">
+						<!-- <div class="col-md-6">
+							<label>Employment History </label>
+						</div> -->
+					</div>
+					<div class="col-md-12">
+						<hr class="mtxxl mbxxl">
+						<fieldset class="scheduler-border">
+							<legend class="scheduler-border">
+
+								<i class="glyphicon glyphicon-user"> </i> &nbsp;&nbsp;Employment
+								History
+							</legend>
+							<label class=""><small><strong>Please
+										input all of your relevant employment history.</strong></small> </label> <label
+								class=""><small><strong>Not entering a
+										<strong> to date </strong> in the employment history section
+										defualts it to present
+								</strong></small> </label>
+							<div class="col-md-12" ng-repeat="emp in addNewEmphistory">
+								<br />
+								<div class="col-md-2">
+									<label for="inputName" class="control-label">Company
+										Name <code>* </code>
+									</label>
+									<div ng-show="empHistory" style="color: red">Please fill
+										at least one Company Details</div>
+
+									<div class="input-icon right">
+										<input id="inputName" type="text" id="companyName"
+											ng-model="emp.companyName" name="companyName"
+											placeholder="Company Name" style="font-size: 12px;"
+											class="form-control" required>
+									</div>
+								</div>
+
+
+								<div class="col-md-2">
+									<label for="inputName" class="control-label">Position <code>*</code></label>
+									<div class="input-icon right">
+										<input id="position" type="text" name="position"
+											ng-model="emp.position" placeholder="Position"
+											class="form-control" style="font-size: 12px;" required>
+									</div>
+								</div>
+								<label class="col-md-3 ">Date</label>
+								<div class="col-md-6">
+									<div class="input-group input-daterange">
+										<span class="input-group-addon">From <code> * </code></span>
+										<!-- <input
+											class="form-control" validator="[required]"
+											ng-click="initCmpDatePicker();" id="datepicker"
+											ng-model="emp.startdate" style="font-size: 12px;"
+											data-provide="datepicker" data-date-autoclose="true"
+											data-date-format="mm/dd/yyyy" required> -->
+										<select ng-model="emp.startdate"
+											ng-change="onLabourCategoryChange()" class="col-md-5"
+											style="height: 30px;">
+											<!-- <option ng-selected="emp.startdate  == 'Present' " value="Present">Present</option> -->
+											<option ng-selected="emp.startdate  == m.monthName"
+												ng-repeat="m  in months">{{m.monthName}}</option>
+												
+										</select> <select ng-model="emp.startYear"
+											ng-change="onLabourCategoryChange()" class="col-md-7"
+											style="height: 30px;">
+											<!-- <option ng-selected="emp.startdate  == 'From Year' " value="From Year">From Year</option>
+										 -->	<option ng-selected="emp.startYear  == y.year"
+												ng-repeat="y  in years">{{y.year}}</option>
+												
+										</select> <span class="input-group-addon">to</span>
+										<!-- <input
+											class="form-control" validator="[required]"
+											ng-click="initCmpDatePicker();" id="datepicker"
+											ng-model="emp.enddate" style="font-size: 12px;"
+											data-provide="datepicker" data-date-autoclose="true"
+											data-date-format="mm/dd/yyyy"> -->
+										<select ng-model="emp.enddate"
+											ng-change="onLabourCategoryChange()" class="col-md-5"
+											style="height: 30px;">
+											<option ng-selected="emp.startdate  == 'Present' " value="Present">Present</option>
+											<option ng-selected="emp.enddate  == m.monthName"
+												ng-repeat="m  in months">{{m.monthName}}</option>
+												
+										</select> <select ng-model="emp.endYear"
+											ng-change="onLabourCategoryChange()" class="col-md-7"
+											style="height: 30px;">
+											<option ng-selected="emp.startdate  == 'Present' " value="Present">Present</option>
+											<option ng-selected="emp.endYear  == y.year"
+												ng-repeat="y  in years">{{y.year}}</option>
+												
+										</select>
+
+									</div>
+
+								</div>
+
+
+								<div class="col-md-2">
+									<button class="btn btn-default"
+										ng-click="DeleteAddEmphistory($index)">
+										<i class="fa fa-trash-o"></i>
+									</button>
+
+									<button class="btn btn-default"
+										ng-click="opencmpExpInstructionpopups();">
+										<i class="glyphicon glyphicon-question-sign"></i>
+									</button>
+								</div>
+
+								<div class="col-md-12">
+									<span class="col-md-8"> <label class="">Experience
+											Details</label> <textarea rows="3" name="expdesc"
+											ng-model="emp.expdesc" class="form-control"
+											placeholder="e.g. Experience Description"
+											style="font-size: 12px;"></textarea></span><span
+										style="float: left; margin-top: 5%;"> <i
+										class="glyphicon glyphicon-question-sign"
+										data-toggle="tooltip" data-placement="bottom"
+										title="Click to view the  Instructions "
+										ng-click="onEmpExpInstructions();"></i></span>
+
+
+								</div>
+								<div class="col-md-12">
+									<hr class="">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-md-2">
+									<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
+									<button ng-click="addNewEmployment()">Add More</button>
+									<span ng-show="addNewEmphistory.length > 0"> </span>
+								</div>
+							</div>
+
+						</fieldset>
+					</div>
+
+
+				</div>
+
+				<div class="col-md-14">
+					<hr class="mtxxl mbxxl">
+					<fieldset class="scheduler-border">
+						<legend class="scheduler-border">
+							<i class="glyphicon glyphicon-user"> </i> &nbsp;&nbsp;
+							Education History
+						</legend>
+						<div>
+							<small><strong>Please input all of your
+									Education History</strong></small>
+						</div>
+						<div>
+							<small><strong> If No degree please input NA</strong></small>
+						</div>
+
+						<div class="col-md-12" ng-repeat="edu in addEducation">
+
+							<div class="col-md-3">
+								<label for="inputName" class="control-label">Institute
+									Name <code>*</code>
+								</label>
+								<div class="input-icon right">
+									<input id="instituteName" name="instituteName" type="text"
+										ng-model="edu.instituteName" placeholder="Institute Name"
+										class="form-control" style="font-size: 12px;" required>
+								</div>
+							</div>
+
+
+							<div class="col-md-2">
+								<label for="inputName" class="control-label">Degree <code>*
+									</code></label>
+								<div class="input-icon right">
+									<!-- <input id="degree" name="degree" type="text"
+										ng-model="edu.degree" placeholder="Degree"
+										class="form-control" style="font-size: 12px;" required> -->
+
+									<select ng-model="edu.degree"
+										ng-change="onLabourCategoryChange()" style="height: 30px;" class="form-control">
+										<option ng-selected="degree.degreeName  == edu.degree"
+											ng-repeat="degree in allDegree.allDegress">{{degree.degreeName}}</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="col-md-2">
+								<label for="inputName" class="control-label">Major <code>*
+									</code></label>
+								<div class="input-icon right">
+									 <input id="major" name="major" type="text"
+										ng-model="edu.major" placeholder="Major"
+										class="form-control" style="font-size: 12px;" required>
+
+									<!-- <select ng-model="edu.degree"
+										ng-change="onLabourCategoryChange()" class="form-control">
+										<option ng-selected="degree.degreeName  == edu.degree"
+											ng-repeat="degree in allDegree.allDegress">{{degree.degreeName}}</option>
+									</select> -->
+								</div>
+							</div>
+
+
+							<label class="col-md-3">Date</label>
+							<div class="col-md-3">
+								<div class="input-group input-daterange">
+									<span class="input-group-addon">End Date <code>*</code></span>
+
+									<select name="edu.toDate" ng-model="edu.toDate"
+										class="form-control" style="height: 30px;">
+										<option ng-selected="edu.toDate  == 'Present'" value="Present">Present</option>
+										<option ng-repeat="y in years" value="{{y.year}}"
+											ng-selected="y.year  == edu.toDate" style="font-size: 12px;"
+											required>{{y.year}}</option>
+											
+									</select>
+
+								</div>
+
+							</div>
+							<div class="col-md-2">
+								<button class="btn btn-default"
+									ng-click="deleteaddEducation($index)">
+									<i class="fa fa-trash-o"></i>
+								</button>
+								<button class="btn btn-default"
+									ng-click="openeEduinstrauctionPopup();">
+									<i class="glyphicon glyphicon-question-sign"></i>
+								</button>
+							</div>
+
+						</div>
+						<div class="form-group">
+							<div class="col-md-2">
+								<br /> <i class="fa fa-plus-square"> </i> &nbsp;&nbsp;
+								<button ng-click="addNewEducation()">Add More</button>
+								<span ng-show="addEducation.length > 0"> </span>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+
+
+				<div class="col-md-14">
+					<hr class="mtxxl mbxxl">
+					<fieldset class="scheduler-border">
+						<legend class="scheduler-border">
+							<i class="glyphicon glyphicon-screenshot"></i>
+							&nbsp;&nbsp;Certification
+						</legend>
+
+						<div class="form-group">
+
+							<div>
+								<small><strong>Please input all of your
+										relevant Certifications</strong></small>
+							</div>
+							<div class="col-md-12" ng-repeat="cert in addCertificate">
+
+								<div class="col-md-5">
+									<label for="inputName" class="control-label">Certification
+									</label>
+									<div ng-show="certHistory" style="color: red">Please fill
+										at least one Certfi Details</div>
+
+									<div class="input-icon right">
+										<small><input id="certName" name="certName"
+											type="text" placeholder="Certificate" class="form-control"
+											ng-model="cert.certName" style="font-size: 12px;"></small>
+									</div>
+								</div>
+
+								<div class='col-sm-2'>
+									<label class="col-md-12 control-label">Year Obtained</label>
+									<!--  <input
+										type='text' id="certYear" ng-model="cert.certYear"
+										class="form-control" id="certdate"
+										ng-click="initDatePicker();" style="font-size: 12px;" required /> -->
+									<!-- <input class="form-control" ng-click="initDatePicker();"
+										id="datepicker" ng-model="cert.certYear"
+										style="font-size: 12px;" data-provide="datepicker"
+										data-date-autoclose="true" data-date-format="mm/dd/yyyy"> -->
+									<!-- <span class="input-group-addon"><span
+										class="glyphicon glyphicon-calendar"></span> </span> -->
+									<select name="cert.certYear" ng-model="cert.certYear"
+										class="form-control" style="height: 30px;">
+											<option ng-selected="cert.certYear  == 'Present'" value="Present">Present</option>
+										<option ng-repeat="y in years" value="{{y.year}}"
+											ng-selected="cert.certYear == y.year"
+											style="font-size: 12px;" required>{{y.year}}</option>
+									</select>
+
+								</div>
+
+								<div class="col-md-2" style="margin-top: 2.5%;">
+									<button class="btn btn-default"
+										ng-click="deleteAddCertificate($index)">
+										<i class="fa fa-trash-o"></i>
+									</button>
+									<button class="btn btn-default"
+										ng-click="opencertInstructionpopup();">
+										<i class="glyphicon glyphicon-question-sign"></i>
+									</button>
+								</div>
+
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-2">
+								<br />
+								<!-- <a style="float: right; margin-right: 60px;"
+									ng-click="addNewEmployment()"> </i>Add Extra
+								</a>  -->
+								&nbsp;&nbsp;<i class="fa fa-plus-square"> </i>&nbsp;&nbsp;
+								<button ng-click="addNewCertificate()">Add More</button>
+								<span ng-show="addEducation.length > 0"> </span>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				
+				<div class='col-sm-12'>
+												<!-- 	<div ng-show="userPoserror" ><code>
+														Please fill at least one Position/Security/Experience
+														level.</code></div> -->
+													<label class="col-md-6 control-label"
+														ng-show="manaFieldError == true"><code>Please field
+															all Mandatory Details(*)</code> </label> <label
+														class="col-md-6 control-label" ng-show="updateSuccess"
+														style="font-size: 12px; color: green;">Profile
+														Updated Successfully! </label>
+												</div>
+				<div class="form-actions">
+					<div class="pull-right">
+						<button type="submit" ng-click="submitUserProfile();"
+							class="btn btn-success-custom">Save</button>
+						&nbsp;
+						<!-- <button type="button" class="btn btn-default">Cancel</button> -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="keySkillInstruction" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Skill level
+					Instructions</h4>
+			</div>
+			<div class="modal-body" style="font-size: 11px;">
+				<strong> Skill Levels:</strong>
+				<table border="1">
+					<tbody>
+						<tr>
+							<td><strong>Performance Level</strong></td>
+							<td><strong>Required Years Specialized Experience </strong></td>
+						</tr>
+						<tr>
+							<td>Subject Matter Expert</td>
+							<td>16+</td>
+
+						</tr>
+						<tr>
+							<td>Expert</td>
+							<td>11+</td>
+						</tr>
+						<tr>
+							<td>Senior</td>
+							<td>6+</td>
+						</tr>
+						<tr>
+							<td>Full Performance</td>
+							<td>3+</td>
+						</tr>
+						<tr>
+							<td>Developmental</td>
+							<td><3</td>
+						</tr>
+					</tbody>
+				</table>
+				You may also add credit to your years of specific experience per the
+				following guidelines:
+				<ul>
+					<li>Technical Certification (industry recognized) = +3 months
+						experience</li>
+					<li>Associate degree in CS, IS, Engineering, Business
+						or related technical discipline = +18 months experience</li>
+					<li>Bachelor’s degree in CS, IS, Engineering, Business
+						or related technical discipline = +3 years experience</li>
+					<li>Master’s degree in CS, IS, Engineering, Business
+						or related technical discipline = +2 years experience plus credit
+						for BS</li>
+					<li>Doctorate in CS, IS, Engineering, Business or related
+						technical discipline = +2 years experience plus credit for BS and
+						MS</li>
+					<li>General years of experience may be added to specific years
+						of experience at a ratio of 3 years general to 1 year specific</li>
+					<li>Specific experience is work experience related to the
+						position</li>
+					<li>Internships do not count towards specific or general work
+						experience</li>
+				</ul>
+			</div>
+			<!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="empExpInstructions" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Experience
+					Instructions</h4>
+			</div>
+			<div class="modal-body" style="font-size: 11px;">
+				1]Companies/positions/date ranges correspond between Employment
+				History and Experience<br /> 2]Work experience should have no gaps
+				longer than 1 month. If you were not employed for a period of time,
+				please note that. Ensure that any periods of unemployment longer
+				than 1month are accounted for (e.g., “Student,” “Leave of Absence,”
+				“Personal,” etc.)<br /> 3]Please only bullet individual project
+				roles.<br /> 4]Date ranges (mm/yyyy) for project roles fall within
+				tenure at company.<br /> 5]No gaps exist between project roles.<br />​
+				6]Role descriptions are unclassified (no sensitive/classified
+				program names/organizations are used).
+			</div>
+			<!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="eduInstructions" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Instructions</h4>
+			</div>
+			<div class="modal-body" style="font-size: 11px;">
+				<strong>The Education table should include:</strong>
+				<ul>
+					<li>All degrees are entered along with year of completion</li>
+
+					<li>College degrees and Graduate certificates only (AA/AS and
+						above).</li>
+
+					<li>NOT HS diploma, college coursework, etc.</li>
+				</ul>
+			</div>
+			<!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="modal fade" id="certInstructions" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Instructions</h4>
+			</div>
+			<div class="modal-body" style="font-size: 11px;">
+				<strong>The certifications table should include:</strong>
+				<ul>
+					<li>Certifications that are position relevant and industry
+						recognized, such as PMP or CISSP.</li>
+
+					<li>Certifications are NOT in­house training.</li>
+
+					<li>Abbreviated certifications are spelled out, e.g., "Project
+						Management Professional (PMP)".</li>
+				</ul>
+
+			</div>
+			<!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="empworkExperienceInstrcution" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Instructions</h4>
+			</div>
+			<div class="modal-body" style="font-size: 11px;">
+				<strong>In this section, list detailed descriptions for
+					each individual project role you have held.</strong> When completing this
+				section, it is essential to keep the following points in mind:
+				<ul>
+					<li>Follow the format exactly as shown.</li>
+
+					<li>Any lapses in employment of more than 1 month should be
+						addresses (e.g., "Student," "Unemployed," "Leave of Absence,"
+						etc.)</li>
+
+					<li>Use the most recent job title for each company.</li>
+
+					<li>Use separate bullet points for each assignment or project.
+						Include: date range, project role or job title, and descriptions
+						of responsibilities that are thorough, yet concise.</li>
+
+					<li>Ensure no gaps exist between project roles. Address gaps
+						between projects, such as awaiting clearance, proposal support,
+						etc.</li>
+
+					<li>Ensure patterns of short­term employment are addressed
+						(i.e., held job for fewer than 18 months or held 3 or more jobs in
+						a five year period). This only applies to positions held within
+						the past 15 years.</li>
+
+					<li>Written consistently in the first or third person.</li>
+
+					<li>Appropriate verb tense is used­ present tense for you
+						current assignment, past tense for previous assignments.</li>
+
+					<li>Spell out the first instance of all abbreviations.</li>
+				</ul>
+			</div>
+			<!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
