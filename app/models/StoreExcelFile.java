@@ -55,6 +55,7 @@ public class StoreExcelFile {
 	public String maxOffer = "0"; 
 	
 	public Date  scheduledCloseDateforsort;
+	public String extrahoursperyear;
 	
 	public StoreExcelFile() {
 
@@ -378,6 +379,14 @@ public class StoreExcelFile {
 
 		}
 		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAllJobsForUserByPositionAscSerchName(int currentPage, int rowsPerPage,String sortName){
+			String jobStatus = "active";
+			return find.where().eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().asc("labourCategory").findList();
+
+		}
+		
 		@JsonIgnore
 		public static List<StoreExcelFile> getAllJobsForUserByPositionAdminAsc(int currentPage, int rowsPerPage){
 			String jobStatus = "active";
@@ -440,6 +449,15 @@ public class StoreExcelFile {
 			return find.where().eq("jobStatus", jobStatus).setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("labourCategory").findList();
 
 		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAllJobsForUserByPositionDescSearchName(int currentPage, int rowsPerPage,String sortName){
+			String jobStatus = "active";
+			return find.where().eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).order().desc("labourCategory").findList();
+
+		}
+		
 		
 		@JsonIgnore
 		public static List<StoreExcelFile> getAllJobsForUserByPositionTypeDesc(int currentPage, int rowsPerPage,String JobType){
@@ -557,7 +575,16 @@ public class StoreExcelFile {
 		@JsonIgnore
 		public static List<StoreExcelFile> getAlluserPositionMatchedAsc(int currentPage,
 				int rowsPerPage, ArrayList<String> al) {
-			return find.where().in("labourCategory", al).order().asc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("jobStatus", jobStatus).order().asc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAlluserPositionMatchedAscSearchName(int currentPage,
+				int rowsPerPage, ArrayList<String> al,String sortName) {
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").order().asc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 		
 		@JsonIgnore
@@ -600,8 +627,20 @@ public class StoreExcelFile {
 		@JsonIgnore
 		public static List<StoreExcelFile> getAlluserPositionMatchedDesc(int currentPage,
 				int rowsPerPage, ArrayList<String> al) {
-			return find.where().in("labourCategory", al).order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("jobStatus", jobStatus).order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAlluserPositionMatchedDescSearchName(int currentPage,
+				int rowsPerPage, ArrayList<String> al,String sortName) {
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+		}
+		
+		
+		
 		
 		@JsonIgnore
 		public static int getAllJobsCountByuserPositionMatchedJobType(int pageNo,ArrayList<String> al,String jobType) {
@@ -621,7 +660,16 @@ public class StoreExcelFile {
 		@JsonIgnore
 		public static List<StoreExcelFile> getAlluserPositionMatchedJobTypeAsc(int currentPage,
 				int rowsPerPage, ArrayList<String> al,String jobType) {
-			return find.where().in("labourCategory", al).eq("positionType", jobType).order().asc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("positionType", jobType).eq("jobStatus", jobStatus).order().asc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAlluserPositionMatchedJobTypeAscSearchName(int currentPage,
+				int rowsPerPage, ArrayList<String> al,String jobType,String sortName) {
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("positionType", jobType).eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").order().asc("workLocation").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 		
 		@JsonIgnore
@@ -664,7 +712,16 @@ public class StoreExcelFile {
 		@JsonIgnore
 		public static List<StoreExcelFile> getAlluserPositionMatchedJobTypeDesc(int currentPage,
 				int rowsPerPage, ArrayList<String> al,String jobType) {
-			return find.where().in("labourCategory", al).eq("positionType", jobType).order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("positionType", jobType).eq("jobStatus", jobStatus).order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAlluserPositionMatchedJobTypeDescSearchName(int currentPage,
+				int rowsPerPage, ArrayList<String> al,String jobType,String sortName) {
+			String	jobStatus = "active";
+			return find.where().in("labourCategory", al).eq("positionType", jobType).eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 		
 		
@@ -701,6 +758,14 @@ public class StoreExcelFile {
 				int rowsPerPage,String jobType) {
 			String	jobStatus = "active";
 			return find.where().eq("positionType", jobType).eq("jobStatus", jobStatus).order().asc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAllJobsForUserByPositionJobTypeAscSearchName(int currentPage,
+				int rowsPerPage,String jobType,String sortName) {
+			String	jobStatus = "active";
+			return find.where().eq("positionType", jobType).eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").order().asc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 		
 		@JsonIgnore
@@ -755,6 +820,14 @@ public class StoreExcelFile {
 				int rowsPerPage,String jobType) {
 			String	jobStatus = "active";
 			return find.where().eq("positionType", jobType).eq("jobStatus", jobStatus).order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
+		}
+		
+		
+		@JsonIgnore
+		public static List<StoreExcelFile> getAllJobsForUserByPositionJobTypeDescSortName(int currentPage,
+				int rowsPerPage,String jobType,String sortName) {
+			String	jobStatus = "active";
+			return find.where().eq("positionType", jobType).eq("jobStatus", jobStatus).like("labourCategory", "%"+sortName+"%").order().desc("labourCategory").setFirstRow(currentPage * 10).setMaxRows(rowsPerPage).findList();
 		}
 
 		@JsonIgnore

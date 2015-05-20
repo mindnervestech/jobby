@@ -781,7 +781,8 @@ background-color: #999999;
 														<span><strong>Resume</strong></span>
 														</div>
 														<div class="col-md-12">
-														<a target="_blank" href ="/getuserresume">{{resumefilepath}}</a>												
+														<span ng-if = "resumefilepath != null || resumefilepath != '' "><a target="_blank" href ="/getuserresume">{{resumefilepath}}</a></span>
+														<span ng-if = "resumefilepath == null || resumefilepath == '' ">No resume uploaded</span>												
 														</div>	
 													</div>
 													</fieldset>

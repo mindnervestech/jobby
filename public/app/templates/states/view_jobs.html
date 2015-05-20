@@ -34,7 +34,7 @@
 
 						<div class="col-md-4 control-label" data-toggle="tooltip"
 							data-placement="bottom"
-							title="Sort Jobs in Ascending or Descending Order" ng-click="opensortinghelpInstruction()">
+							title="Sort Jobs in Ascending or Descending Order" >
 							<label>Sort By&nbsp;&nbsp;</label> <select id="sortName"
 								name="sortName" ng-model="sortName" class="selectpicker"
 								ng-click="getAllJobBySelectedElement();">
@@ -47,13 +47,13 @@
 								ng-model="location"><a class="aTagclass"
 								ng-click="onSortTypeClick()"><span class="spanClass"></span><span
 									class="glyphicon glyphicon-chevron-up" style="color: #2120F5;"></span></a>&nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></span> <span
+								class="glyphicon glyphicon-question-sign" ng-click="opensortinghelpInstruction()"></i></span> <span
 								class="sort-by-price active" ng-if="location == true"
 								ng-model="location"><a class="aTagclass"
 								ng-click="onSortTypeClick()"><span class="spanClass"></span><span
 									class="glyphicon glyphicon-chevron-down"
 									style="color: #2120F5;"></span></a> &nbsp;&nbsp;<i
-								class="glyphicon glyphicon-question-sign"></i></span>
+								class="glyphicon glyphicon-question-sign " ng-click="opensortinghelpInstruction()"></i></span>
 
 						</div>
 
@@ -70,7 +70,7 @@
 							data-placement="bottom"
 							title="Check box to view the full listing of available jobs in the portal">
 							<input type="checkbox" ng-model="allJobs"
-								ng-change="getAllJobsToUser();" name="allJobs">&nbsp;&nbsp;&nbsp;All
+								ng-change="getAllJobsToUser();" name="allJobs">&nbsp;&nbsp;&nbsp;View All
 							Jobs&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" ng-click="onallJobshelpInstruction()"></i>
 						</div>
 						
@@ -132,24 +132,26 @@
 											title="continue applying for a saved job"
 											style="backgorund-color: #1484ff;">Resume</button>
 									</p>
-									<p ng-click="showJobDetails(job);"
+									<p 
 										ng-if="job.jobStatus == 'active'">
-										<span style="cursor: pointer;"><span class="title"
+										<span style="cursor: pointer;" ng-click="showJobDetails(job);"><span class="title"
 											data-toggle="tooltip" data-placement="bottom"
 											title=" Click to View Details">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small
 													data-toggle="tooltip" data-placement="bottom"
 													title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span></span>
+													 <span ng-click="applyWithoutReg(job.requestNumber);" style="cursor:pointer; margin-left: 16%;"><strong>Manually Apply </strong></span>
 									</p>
 
-									<p ng-click="showDraftJobDetails(job);"
+									<p 
 										ng-if="job.jobStatus == 'Draft'">
-										<span style="cursor: pointer;"><span class="title"
+										<span style="cursor: pointer;" ng-click="showDraftJobDetails(job);"><span class="title"
 											data-toggle="tooltip" data-placement="bottom"
 											title="Click to View Details">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small
 													data-toggle="tooltip" data-placement="bottom"
 													title="Job Id">&nbsp;&nbsp; Job Id&nbsp; <ins>{{job.requestNumber}}</ins></small></strong></span></span>
+													<span ng-click="applyWithoutReg(job.requestNumber);" style="cursor:pointer; margin-left: 16%;"><strong>Manually Apply </strong></span>
 									</p>
 
 									<p class="">
@@ -164,10 +166,10 @@
 													class="glyphicon glyphicon-screenshot"
 													data-toggle="tooltip" data-placement="bottom"
 													title="Performance Level"></i>&nbsp;{{job.performanceLevel}}
-											</small></strong></span><span class="desc"><strong><!-- <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-ok" data-toggle="tooltip"
 													data-placement="bottom" title="Clearance Type"></i>&nbsp;{{job.clearanceRequired}}
-											</small> --></strong></span>
+											</small> </strong></span>
 									</p>
 									<p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
@@ -350,7 +352,7 @@
 										<li class="active"><a id="tab1"
 											data-target="#tab1-wizard-custom-circle" data-toggle="tab">
 												<!-- <i class="glyphicon glyphicon-user"></i> -->
-												<p class="anchor">1.Select Skills</p>
+												<p class="anchor">1.Skill Level Justification</p>
 										</a></li>
 										<li><a id="tab2" data-target="#tab2-wizard-custom-circle"
 											data-toggle="tab"> <!-- <i class="glyphicon glyphicon-user"></i> -->
@@ -1331,7 +1333,7 @@ Justification section should contain the following components:
 				      </tr>
 				      
 				       <tr>
-				        <td><strong>Labour Category</strong> {{performanceLevel}}</td>
+				        <td><strong>Labor Category</strong> {{performanceLevel}}</td>
 				        <td> <strong>Skill Level:</strong>{{c.clearance}}</td>
 				      </tr>
 				      
@@ -1447,7 +1449,7 @@ Justification section should contain the following components:
 				      <tr ng-repeat = "e  in educationDetails" >
 				        <td class="col-md-4"  >{{e.degree}}</td>
 				        <td class="col-md-4"  >{{e.instituteName}}</td>
-				        <td class="col-md-4"  >{{e.degree}}</td>
+				        <td class="col-md-4"  >{{e.degree}}/{{e.major}}</td>
 				        <td class="col-md-4"  >{{e.toDate}}</td>
 				      </tr>
 				    </tbody>
@@ -1484,8 +1486,8 @@ Justification section should contain the following components:
 				    <tbody>
 				      <tr >
 				        <td>Employers Name: <strong>{{e.companyName}}</strong></td>
-				        <td>Start Date: <strong>{{e.startdate}}</strong></td>
-				        <td>End Date: <strong>{{e.enddate}}</strong></td>
+				        <td>Start Date: <strong>{{e.startdate}}/{{e.startYear}}</strong></td>
+				        <td>End Date: <strong>{{e.enddate}}/{{e.endYear}}</strong></td>
 				        <td>Position Held:<strong> {{e.position}}</strong></td>
 				      </tr>
 				      <tr>
@@ -2318,6 +2320,27 @@ Justification section should contain the following components:
   </div>
 </div>
 
+<div class="modal fade" id="applyWithoutReegistration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:60%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       <!--  <h4 class="modal-title" id="myModalLabel">Modal title</h4> -->
+      </div>
+      <div class="modal-body">
+      <p >Click on download button to download sample resume format and send filled resume    to  careers@@ardentprinciples.com</p>
+    
+		<button type="button" class="btn btn-success-custom " data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success-custom s" ng-click="downloadSampleResume();"><a ng-href="getapplyWithoutRegResume/{{jobId}}">Download</a></button>
+        
+ </div>
+     <!--  <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 											
 													
 

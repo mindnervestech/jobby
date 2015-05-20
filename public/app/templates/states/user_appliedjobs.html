@@ -125,10 +125,10 @@
 													class="glyphicon glyphicon-screenshot"
 													data-toggle="tooltip" data-placement="bottom"
 													title="Performance Level"></i>&nbsp;{{job.performanceLevel}}
-											</small></strong></span><span class="desc"><strong><!-- <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+											</small></strong></span><span class="desc"><strong> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-ok" data-toggle="tooltip"
 													data-placement="bottom" title="Clearance Required"></i>&nbsp;{{job.clearanceRequired}}
-											</small> --></strong></span>
+											</small> </strong></span>
 									</p> <!-- <p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
 											data-placement="bottom"></small><small><span
@@ -375,7 +375,7 @@
 									<li class="active"><a id="tab1"
 										data-target="#tab1-wizard-custom-circle" data-toggle="tab">
 											<!-- <i class="glyphicon glyphicon-user"></i> -->
-											<p class="anchor">1.Select Skills</p>
+											<p class="anchor">1.Skill Level Justification</p>
 									</a></li>
 									<li><a id="tab2" data-target="#tab2-wizard-custom-circle"
 										data-toggle="tab"> <!-- <i class="glyphicon glyphicon-user"></i> -->
@@ -996,7 +996,7 @@ Justification section should contain the following components:
 				      </tr>
 				      
 				       <tr>
-				        <td><strong>Labour Category</strong> {{performanceLevel}}</td>
+				        <td><strong>Labor Category</strong> {{performanceLevel}}</td>
 				        <td  > <strong>Skill Level:</strong>{{c.clearance}}</td>
 				      </tr>
 				       <tr>
@@ -1148,8 +1148,8 @@ Justification section should contain the following components:
 				    <tbody>
 				      <tr >
 				        <td>Employers Name: {{e.companyName}}</td>
-				        <td>Start Date: {{e.startdate}}</td>
-				        <td>End Date: {{e.enddate}}</td>
+				        <td>Start Date: {{e.startdate}}/{{e.startYear}}</td>
+				        <td>End Date: {{e.enddate}}/{{e.endYear}}</td>
 				        <td>Position Held: {{e.position}}</td>
 				      </tr>
 				      <tr >

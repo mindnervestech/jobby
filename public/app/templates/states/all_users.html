@@ -116,7 +116,7 @@
 												data-toggle="tooltip" data-placement="bottom"
 												title="Logged Out"></i></td>
 												<td>
-											<a target="_blank" href ="/getresume/{{user.email}}">Download</a></td>
+											<span ng-if="user.resumefilepath != null"><a target="_blank" href ="/getresume/{{user.email}}">Download</a></span><span ng-if="user.resumefilepath == null">No resume</span></td>
 										</tr>
 									</tbody>
 								</table>

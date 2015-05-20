@@ -215,7 +215,13 @@ public class Application extends Controller {
 					u.userClearance.add(uc);
 
 				    u.saveManyToManyAssociations("userClearance");
-				   u.save();
+				    u.save();
+				    
+				    
+				    MailUtility mail = new MailUtility();
+
+				    mail.sendRegistrationMail(ui.email,ui.password);
+					mail.sendMailToAdminAboutNewUserRegistration(ui.email); 
 				    
 				    flash("registration_success", " Account is created ! Please  log in");
 					return redirect("/registrationredirect");
@@ -225,17 +231,8 @@ public class Application extends Controller {
 					return redirect("/signup");
 				}
 				
-					
-			
-
-			/*MailUtility mail = new MailUtility();
-			
-			mail.sendRegistrationMail(email,pass);
-			mail.sendMailToAdminAboutNewUserRegistration(email); */
 			
 			
-
-		
 		
 	}
 
@@ -695,7 +692,31 @@ public class Application extends Controller {
 							break;
 						}
 					}
+					
+					
+					
 					c = row.getCell(14);
+					if (c != null) {
+						switch (c.getCellType()) {
+						case Cell.CELL_TYPE_NUMERIC:
+							
+							sd.extrahoursperyear = c.getNumericCellValue() + "";
+							break;
+						case Cell.CELL_TYPE_STRING:
+							if (storeExcelFile != null) {
+								storeExcelFile.extrahoursperyear = c
+										.getStringCellValue();
+							} else {
+								sd.extrahoursperyear = c.getStringCellValue();
+							}
+
+							break;
+						}
+					}
+					
+					//change to 15 from here
+					
+					c = row.getCell(15);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -714,7 +735,7 @@ public class Application extends Controller {
 					}
 
 					if (c != null) {
-						c = row.getCell(15);
+						c = row.getCell(16);
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
 							sd.nonpubComments = c.getNumericCellValue() + "";
@@ -731,7 +752,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(16);
+					c = row.getCell(17);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -749,7 +770,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(17);
+					c = row.getCell(18);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -767,7 +788,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(18);
+					c = row.getCell(19);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -786,7 +807,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(19);
+					c = row.getCell(20);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -804,7 +825,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(20);
+					c = row.getCell(21);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -822,7 +843,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(21);
+					c = row.getCell(22);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -840,7 +861,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(22);
+					c = row.getCell(23);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -858,7 +879,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(23);
+					c = row.getCell(24);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -877,7 +898,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(24);
+					c = row.getCell(25);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -894,7 +915,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(25);
+					c = row.getCell(26);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -911,7 +932,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(26);
+					c = row.getCell(27);
 					if (c != null) {
 						switch (c.getCellType()) {
 
@@ -964,7 +985,7 @@ public class Application extends Controller {
 					//
 					
 					}
-					c = row.getCell(27);
+					c = row.getCell(28);
 					if (c != null) {
 						switch (c.getCellType()) {
 						case Cell.CELL_TYPE_NUMERIC:
@@ -1007,7 +1028,7 @@ public class Application extends Controller {
 						}
 					}
 
-					c = row.getCell(28);
+					c = row.getCell(29);
 					//
 					if (c != null) {
 					switch (c.getCellType()) {
@@ -1327,6 +1348,10 @@ public class Application extends Controller {
 		List<StoreExcelFile> jobs = new ArrayList<>();
 		List<StoreExcelFile> userJobs = null;
 		int count = 0;
+		//String searchId = "dev";
+		/*System.out.println(sortName);
+		if(("Position".equalsIgnoreCase(sortName)) && (searchId.equalsIgnoreCase("undefined")) ){
+			System.out.println("in if ");*/
 		    if("Position".equalsIgnoreCase(sortName) && allJobs == true ){
 				if("All".equalsIgnoreCase(jobType) ){
 					if(sortType == true){
@@ -1397,6 +1422,7 @@ public class Application extends Controller {
 					if(sortType == true){
 						count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
 						userJobs = StoreExcelFile.getAlluserPositionMatchedAsc(currentpage, 10,al);
+						
 						for(StoreExcelFile str:userJobs){
 							AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
 							if(apj == null){
@@ -1451,7 +1477,137 @@ public class Application extends Controller {
 				}
 				
 			}
-			
+		/*    }
+			else if(("Position".equalsIgnoreCase(sortName)) && !(searchId.equalsIgnoreCase("undefined"))){
+				System.out.println(" in elkse");
+		    if("Position".equalsIgnoreCase(sortName) && allJobs == true ){
+		    	
+						if("All".equalsIgnoreCase(jobType) ){
+							if(sortType == true){
+								count = StoreExcelFile.getAllJobsCount(currentpage);
+								userJobs = StoreExcelFile.getAllJobsForUserByPositionAscSerchName(currentpage, 10,searchId);
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+								
+							}else{
+								count = StoreExcelFile.getAllJobsCount(currentpage);
+								userJobs = StoreExcelFile.getAllJobsForUserByPositionDescSearchName(currentpage, 10,searchId);
+								
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+							}
+							
+						}else{
+							if(sortType == true){
+								count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+								userJobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeAscSearchName(currentpage, 10,jobType,searchId);
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+								
+							}else{
+								count = StoreExcelFile.getAllJobsCountjobType(currentpage,jobType);
+								userJobs = StoreExcelFile.getAllJobsForUserByPositionJobTypeDescSortName(currentpage, 10,jobType,searchId);
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+							}
+							
+						}
+				    	
+					} else if("Position".equalsIgnoreCase(sortName) && allJobs == false){
+						String emailId  = session().get("email");
+						UserDetails u = UserDetails.getUserByEmail(emailId);
+						ArrayList<String> al = new ArrayList<>();
+						List<UserPosition> up = u.userPosition;
+						for (UserPosition upd : up) {
+							String pos = upd.position;
+							al.add(pos);
+						}
+						
+						if("All".equalsIgnoreCase(jobType) ){
+							if(sortType == true){
+								count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+								userJobs = StoreExcelFile.getAlluserPositionMatchedAscSearchName(currentpage, 10,al,searchId);
+								
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+							}
+							else{
+								count = StoreExcelFile.getAllJobsCountByuserPositionMatched(currentpage,al);
+								userJobs = StoreExcelFile.getAlluserPositionMatchedDescSearchName(currentpage, 10,al,searchId);
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+							}
+						}else{
+							//count = StoreExcelFile.getAllJobsCountByLocationAndJobTypeAsc(currentpage,jobType);
+							//jobs = StoreExcelFile.getAllJobsForUserByPositionTypeDesc(currentpage, 10,jobType);
+							if(sortType == true){
+								count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+								userJobs = StoreExcelFile.getAlluserPositionMatchedJobTypeAscSearchName(currentpage, 10,al,jobType,searchId);
+								
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+							}
+							else{
+								count = StoreExcelFile.getAllJobsCountByuserPositionMatchedJobType(currentpage,al,jobType);
+								userJobs = StoreExcelFile.getAlluserPositionMatchedJobTypeDescSearchName(currentpage, 10,al,jobType,searchId);
+								
+								for(StoreExcelFile str:userJobs){
+									AppliedJobs apj = AppliedJobs.getUserAppliedJobByReqNumber(str.requestNumber,session().get("email"));
+									if(apj == null){
+										jobs.add(str);
+									}else{
+										count  = count-1;
+									}
+								}
+							}
+						
+						}
+						
+					}
+		    
+			}*/
 
 		    if("Location".equalsIgnoreCase(sortName) && allJobs == true ){
 				if("All".equalsIgnoreCase(jobType) ){
@@ -1926,7 +2082,6 @@ public class Application extends Controller {
 			
 			jobVM.desiredSkill = desSkill;
 			jobVM.maxOffer = s.maxOffer;
-			
 
 			jobVMs.add(jobVM);
 		}
@@ -4579,6 +4734,8 @@ public class Application extends Controller {
 	public static Result saveEditJob() {
 		JsonNode json = request().body().asJson();
 
+		JsonNode jsonnode  =request().body().asJson();
+		
 		JsonNode editJobJson = json.path("editJob");
 		ObjectMapper editJob = new ObjectMapper();
 
@@ -4722,8 +4879,7 @@ public class Application extends Controller {
 			Date date = null ;
 			try {
 				 date = formatter.parse(dateInString);
-		 System.out.println(date);
-			} catch (ParseException e) {
+			 	} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			
@@ -4788,6 +4944,7 @@ public class Application extends Controller {
 	    public String currentjobtitle;
 	    public String phnumber;
 	    public String emailalert;
+	    public String resumefilepath;
 	    
 	}
 	
@@ -4823,6 +4980,7 @@ public class Application extends Controller {
 			userDVM.emailalert = ud.emailalert;
 			//Date d = new Date(ud.lastlogin);
 			userDVM.userLoggedInstatus = ud.userLoggedInstatus;
+			userDVM.resumefilepath = ud.resumefilepath;
 			userDetailsVM.add(userDVM);
 		}
 		

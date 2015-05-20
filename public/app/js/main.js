@@ -1,5 +1,5 @@
 "use strict";
-var App = angular.module('MAdmin', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'ngTable', 'angularFileUpload']).factory('MyHttpInterceptor', function ($q) {
+var App = angular.module('MAdmin', ['ngRoute', 'ui.bootstrap', 'ngDialog', 'ngTable', 'angularFileUpload','ui.sortable']).factory('MyHttpInterceptor', function ($q) {
     return {
         request: function (config) {
                     $('#loading-id').show();
@@ -323,7 +323,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	
 	$scope.position = "notSelected";
 	 $scope.jobType = "All";
-	  $scope.sortType = false;
+	  $scope.sortType = true;
 	  $scope.allPosition;
 	  $scope.sortName = "Position"
 	  $scope.searchId;
@@ -356,7 +356,7 @@ App.controller('ViewAllForAdminJobsController', function ($scope, ngDialog, $htt
 	  // get all jobs  for the Admin
 	   $scope.onJobsForAdminLoad = function(){
 		$scope.jobType = "All";
-		$scope.sortType = false;
+		$scope.sortType = true;
 		$scope.pageno = 0;
 		$scope.matchedpos = false;
 		
@@ -2070,7 +2070,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $http.post('/getAllJobs/'+$scope.pageno+'/'+$scope.jobType+'/'+$scope.location+'/'+$scope.allJobs+'/'+$scope.sortName)
 			.success(function(data) {
 				$scope.jobsData = data.jobs;
-				console.log("$scope.success"+$scope.jobsData);
+				console.log("$scope.success"+JSON.stringify($scope.jobsData));
 				$scope.totalJobs = data.jobsCount;
 				if(data.jobsCount <= 10){
 					$('#next1').hide();
@@ -2136,6 +2136,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 		  $scope.desiredSkills = [];
 		  $scope.errorManaSkillComment = false;
 		  $scope.job_application_success = false;
+		  $scope.userskillsSpecificationError = false;
 		  $scope.mdSkill = $scope.jobData.manadatorySkills;
 		  $scope.dSkills = $scope.jobData.desiredSkill;
 		  $scope.jStatus = $scope.jobData.jobStatus;
@@ -2538,7 +2539,7 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 			$("#tab2").click();
 		}
 		
-		$scope.userskillsSpecificationError = true;
+		$scope.userskillsSpecificationError = false;
 
 		$scope.gotoNext = function(){
 			if($scope.userskillsSpecification != " " && !(angular.isUndefined($scope.userskillsSpecification))){
@@ -2928,6 +2929,13 @@ App.controller('ViewJobsController', function ($scope, ngDialog, $http, $rootSco
 				  
 				  $('#allJobshelpInstruction').modal('show');
 			  }
+			  
+			  
+			  $scope.jobId;
+				$scope.applyWithoutReg = function(id) {
+					$scope.jobId = id;
+					$('#applyWithoutReegistration').modal();
+				}
 });
 
 

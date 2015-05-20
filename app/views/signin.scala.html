@@ -225,7 +225,7 @@
     
     <img src="@routes.Assets.at("app/vendors/images/login/ap-jobs-portal-banner-.png")"  style="width: 100%;">
     <div class="col-md-12">
-    <span><small><strong style="font-size:13px;"> Welcome to Ardent Principles' Job Portal.</strong> We have implemented time saving solutions that simplify the application process for multiple open requisitions. . This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position and access the full functionality of our tool please <strong>register</strong> above. </small></span>
+    <span><small><strong style="font-size:13px;"> Welcome to Ardent Principles' Job Portal.</strong> We have implemented time saving solutions that simplify the application process for multiple open requisitions.This allows you to focus on what truly matters, putting together an application package that fully represent what you have to offer to the customer, in significantly less time! Below, you will find a list of current opportunities. Click on the position title to view all of the details related to the position. To apply for a position and access the full functionality of our tool please <strong>register</strong> above. </small></span>
     </div>
      <div class="col-md-6 control-label" style="margin-top: 2%;">
 							<label>Job Type&nbsp;&nbsp;</label> <select id="jobType"
@@ -379,7 +379,8 @@
 									<p >
 										<span class="title" data-toggle="tooltip" data-placement="bottom" title="View  Job Details" style="cursor:pointer;" ng-click="showJobDetails(job);">{{job.labourCategory}}</span><span
 											class="desc"><strong><small>&nbsp;&nbsp;({{job.positionType}})</small></strong><strong><small style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="Job Id">&nbsp;&nbsp;Job Id&nbsp;<ins>{{job.requestNumber}}</ins></small></strong></span>
-											<span ng-click="applyWithoutReg(job.requestNumber);" style="cursor:pointer; margin-left: 16%;"><strong>Apply with out registration </strong></span>
+											<!-- <span ng-click="applyWithoutReg(job.requestNumber);" style="cursor:pointer; margin-left: 16%;"><strong>Apply with out registration </strong></span> -->
+											
 									</p>
 									<p class="">
 										<strong><small><span><i
@@ -388,9 +389,9 @@
 													class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Request Type"></i>&nbsp;{{job.requestType}}
 											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-screenshot" data-toggle="tooltip" data-placement="bottom" title="Performance level"></i>&nbsp;{{job.performanceLevel}}
-											</small></strong></span><span class="desc"><!-- <strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+											</small></strong></span><span class="desc"><strong><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
 													class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="bottom" title="Clearance Required"></i>&nbsp;{{job.clearanceRequired}}
-											</small></strong> --></span>
+											</small></strong></span>
 									</p>
 									<p class="desc">
 										<small ng-bind="job.workDescription | cut:true:200:'   ...'"
